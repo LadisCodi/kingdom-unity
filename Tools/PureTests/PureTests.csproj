@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The engine-free code — the pure modules and Kingdom — with their tests, built and run outside Unity:
+       `dotnet test Tools/PureTests`. Same sources Unity compiles, same C# version.
+       A new pure module (noEngineReferences) is added to the list below. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../Assets/Codigames/Modules/Clock/**/*.cs" />
+    <Compile Include="../../Assets/Codigames/Modules/Localization/**/*.cs" />
+    <Compile Include="../../Assets/Codigames/Modules/Randomness/**/*.cs" />
+    <Compile Include="../../Assets/Codigames/Kingdom/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+</Project>

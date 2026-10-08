@@ -1,0 +1,16 @@
+{
+    "name": "Codigames.Modules.Lifecycle",
+    "rootNamespace": "Codigames.Modules.Lifecycle",
+    "references": [
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
