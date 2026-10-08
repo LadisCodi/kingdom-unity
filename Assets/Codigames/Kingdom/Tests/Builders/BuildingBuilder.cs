@@ -17,6 +17,13 @@ namespace Codigames.Kingdom.Tests.Builders
         private double _buildSeconds = 10;
         private readonly List<int> _maxCount = new();
         private readonly List<int> _townhallGates = new();
+        private bool _buildable = true;
+        private double _upgradeSeconds = 10;
+        private double _upgradeGrowth = 1.5;
+        private double _lateSeconds;
+        private double _lateGrowth = 1;
+        private double _countGrowth = 1;
+        private double _distanceGrowth = 1;
 
         public BuildingBuilder WithId(string id) { _id = id; return this; }
         public BuildingBuilder WithMaxLevel(int maxLevel) { _maxLevel = maxLevel; return this; }
@@ -26,6 +33,16 @@ namespace Codigames.Kingdom.Tests.Builders
         public BuildingBuilder WithBuildSeconds(double seconds) { _buildSeconds = seconds; return this; }
         public BuildingBuilder WithMaxCountPerTownhallLevel(params int[] caps) { _maxCount.AddRange(caps); return this; }
         public BuildingBuilder WithTownhallGates(params int[] levels) { _townhallGates.AddRange(levels); return this; }
+        public BuildingBuilder NotBuildable() { _buildable = false; return this; }
+        public BuildingBuilder WithBuildGrowth(double count, double distance) { _countGrowth = count; _distanceGrowth = distance; return this; }
+        public BuildingBuilder WithUpgradeCurve(double seconds, double growth, double lateSeconds = 0, double lateGrowth = 1)
+        {
+            _upgradeSeconds = seconds;
+            _upgradeGrowth = growth;
+            _lateSeconds = lateSeconds;
+            _lateGrowth = lateGrowth;
+            return this;
+        }
 
         public static ILevelCost Price(string currency, double amount)
             => new LevelCost(new Dictionary<string, double> { [currency] = amount }, new Dictionary<string, double>());
@@ -36,9 +53,14 @@ namespace Codigames.Kingdom.Tests.Builders
             MaxLevel = _maxLevel,
             Width = _width,
             Height = _height,
-            Buildable = true,
+            Buildable = _buildable,
             Cost = new Cost(_perLevel ?? Enumerable.Range(0, _maxLevel).Select(_ => Price("Gold", 10)).ToList(), _linear, _exponential),
-            Duration = new Duration { BuildSeconds = _buildSeconds },
+            Duration = new Duration
+            {
+                BuildSeconds = _buildSeconds, BuildCountGrowth = _countGrowth, BuildDistanceGrowth = _distanceGrowth,
+                UpgradeSeconds = _upgradeSeconds, UpgradeLevelGrowth = _upgradeGrowth,
+                LateUpgradeSeconds = _lateSeconds, LateUpgradeLevelGrowth = _lateGrowth,
+            },
             Gates = new Gates(_maxCount, _townhallGates, new List<int>()),
         };
 

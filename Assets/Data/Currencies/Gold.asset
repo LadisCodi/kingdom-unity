@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Economy.CurrencyAsset
   _id: Gold
   _scope: 0
-  _start: 0
+  _start: 100
   _capped: 0
   _cap: 0
   _primary: 1

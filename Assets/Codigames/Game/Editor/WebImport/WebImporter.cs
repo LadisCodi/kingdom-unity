@@ -41,6 +41,8 @@ namespace Codigames.Game.Editor.WebImport
         private static int ImportCurrencies()
         {
             var web = Read<Dictionary<string, CurrencyData>>("Game/currencies.json");
+            // A city currency starts at what a new city is handed; the others at their own start.
+            var cityStart = Read<EconomyData>("Game/economy.json").City.InitialCurrencies ?? new Dictionary<string, double>();
             var assets = new List<CurrencyAsset>();
 
             foreach (var (id, row) in web)
@@ -49,7 +51,7 @@ namespace Codigames.Game.Editor.WebImport
                 var so = new SerializedObject(asset);
                 so.FindProperty("_id").stringValue = id;
                 so.FindProperty("_scope").enumValueIndex = (int)SCOPES[id];
-                so.FindProperty("_start").doubleValue = row.Start;
+                so.FindProperty("_start").doubleValue = SCOPES[id] == CurrencyScope.City && cityStart.TryGetValue(id, out var handed) ? handed : row.Start;
                 so.FindProperty("_capped").boolValue = row.Cap.HasValue;
                 so.FindProperty("_cap").doubleValue = row.Cap ?? 0;
                 so.FindProperty("_primary").boolValue = row.Primary;
