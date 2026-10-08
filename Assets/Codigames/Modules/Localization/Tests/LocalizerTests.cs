@@ -22,6 +22,14 @@ namespace Codigames.Modules.Localization.Tests
         }
 
         [Test]
+        public void Capitalized_ShouldRaiseOnlyTheFirstLetter()
+        {
+            Assert.That(_localizer.Capitalized("crop plots"), Is.EqualTo("Crop plots"));
+            Assert.That(_localizer.Capitalized("Housing"), Is.EqualTo("Housing"));
+            Assert.That(_localizer.Capitalized(string.Empty), Is.EqualTo(string.Empty));
+        }
+
+        [Test]
         public void Tr_ShouldReturnTheSourceInTheSourceLanguage()
         {
             Assert.That(_localizer.Tr("Build"), Is.EqualTo("Build"));

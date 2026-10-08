@@ -21,7 +21,7 @@ namespace Codigames.Game.Startup
 
         public async UniTask StartAsync(CancellationToken cancellation)
         {
-            await _ui.ShowMenu<HeaderMenu>();
+            await UniTask.WhenAll(_ui.ShowMenu<HeaderMenu>().AsUniTask(), _ui.ShowMenu<NavMenu>().AsUniTask());
             await _loadingScreen.Hide(cancellation);
         }
     }

@@ -31,7 +31,41 @@ namespace Codigames.Kingdom.City
         public PlacementProblem Check(string definitionId, Vector2Int anchor, string movingId = null)
         {
             var building = _buildings.Get(definitionId);
+            var ground = GroundProblem(building, anchor, movingId);
+            if (ground != PlacementProblem.None || movingId != null) return ground;
 
+            var cap = CityQueries.MaxCount(building, CityQueries.TownhallLevel(_city, _settings));
+            return cap.HasValue && CityQueries.Count(_city, definitionId) >= cap.Value
+                ? PlacementProblem.CountLimit
+                : PlacementProblem.None;
+        }
+
+        // The legal anchor nearest the Townhall, where placing a building starts; null when none is left. Ties
+        // go to the lower y, then the lower x, so the pick never depends on the map's order.
+        public Vector2Int? Nearest(string definitionId)
+        {
+            var building = _buildings.Get(definitionId);
+            Vector2Int? best = null;
+            var bestRings = int.MaxValue;
+
+            foreach (var cell in _map.Cells)
+            {
+                if (GroundProblem(building, cell, null) != PlacementProblem.None) continue;
+
+                var rings = CityQueries.DistanceFromTownhall(_city, _buildings, _settings, cell);
+                if (rings < bestRings || (rings == bestRings && Before(cell, best.Value)))
+                {
+                    best = cell;
+                    bestRings = rings;
+                }
+            }
+
+            return best;
+        }
+
+        // What the ground says: the footprint on the province, on dry land, with nothing on it.
+        private PlacementProblem GroundProblem(IBuildingDefinition building, Vector2Int anchor, string movingId)
+        {
             foreach (var cell in GridMath.Rect(anchor, building.Width, building.Height))
             {
                 if (!_map.Contains(cell)) return PlacementProblem.OutsideProvince;
@@ -43,13 +77,9 @@ namespace Codigames.Kingdom.City
                 if (_map.TerrainAt(cell) == WATER) return PlacementProblem.NeedsLand;
             }
 
-            if (movingId == null)
-            {
-                var cap = CityQueries.MaxCount(building, CityQueries.TownhallLevel(_city, _settings));
-                if (cap.HasValue && CityQueries.Count(_city, definitionId) >= cap.Value) return PlacementProblem.CountLimit;
-            }
-
             return PlacementProblem.None;
         }
+
+        private static bool Before(Vector2Int a, Vector2Int b) => a.Y != b.Y ? a.Y < b.Y : a.X < b.X;
     }
 }

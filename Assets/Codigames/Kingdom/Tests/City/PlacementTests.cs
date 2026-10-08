@@ -1,3 +1,4 @@
+using System.Linq;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.Tests.Builders;
 using Codigames.Modules.Core;
@@ -71,6 +72,38 @@ namespace Codigames.Kingdom.Tests.City
 
             Assert.That(fixture.Ground.Features.ContainsKey(new Vector2Int(0, 0)), Is.False);
             Assert.That(fixture.District("Townhall").Built, Is.True);
+        }
+    
+
+        [Test]
+        public void Nearest_ShouldBeTheFreePlotClosestToTheTownhall()
+        {
+            var fixture = new CityFixture(House(5));
+
+            var nearest = fixture.Placement.Nearest("Housing");
+
+            Assert.That(nearest.HasValue, Is.True);
+            Assert.That(CityQueries.DistanceFromTownhall(fixture.City, fixture.Buildings, fixture.Settings, nearest.Value), Is.EqualTo(1));
+            Assert.That(fixture.Placement.Check("Housing", nearest.Value), Is.EqualTo(PlacementProblem.None));
+        }
+
+        [Test]
+        public void Nearest_ShouldSkipTakenGround()
+        {
+            var fixture = new CityFixture(House(5));
+            var first = fixture.Placement.Nearest("Housing").Value;
+            fixture.Ground.Features[first] = "Trees";
+
+            Assert.That(fixture.Placement.Nearest("Housing"), Is.Not.EqualTo(first));
+        }
+
+        [Test]
+        public void Nearest_ShouldBeNullWhenNoGroundIsLeft()
+        {
+            var fixture = new CityFixture(House(5));
+            foreach (var cell in fixture.Map.Cells.ToList()) fixture.Map.Paint(cell, "Water");
+
+            Assert.That(fixture.Placement.Nearest("Housing"), Is.Null);
         }
     }
 }

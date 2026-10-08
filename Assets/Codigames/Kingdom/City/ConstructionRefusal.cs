@@ -5,6 +5,8 @@ namespace Codigames.Kingdom.City
     {
         None,
         NotBuildable,
+        // The Townhall's level allows no more of it.
+        AtCap,
         Placement,
         NoFreeBuilder,
         CannotAfford,

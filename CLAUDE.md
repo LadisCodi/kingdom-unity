@@ -404,7 +404,7 @@ Layout is in the web's **reference pixels**: the canvas is 1125×2436 with
 *Expand*, so a size in the web's CSS (`calc(var(--rpx) * N)`) is `N` here. A
 three-sliced piece keeps its ends through its import border
 (`ArtImportRules`) and `pixelsPerUnitMultiplier` = source end ÷ drawn end. A
-bar that bleeds under the notch uses `SafeAreaTopBleed`. Text is
+bar that bleeds under the notch or the home bar uses `SafeAreaBleed`. Text is
 TextMeshPro on the web's two families (`Assets/Art/Fonts`): **Nunito** for
 everything (Regular 400, SemiBold 600, Bold 700, ExtraBold 800 for a number
 that leads its row) and **Alegreya Black** for titles.

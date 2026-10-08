@@ -129,5 +129,42 @@ namespace Codigames.Kingdom.Tests.City
             Assert.That(once.District("Housing").Built, Is.EqualTo(stepped.District("Housing").Built));
             Assert.That(once.City.Jobs.Count, Is.EqualTo(stepped.City.Jobs.Count));
         }
+    
+
+        [Test]
+        public void BuildRefusal_ShouldNameTheCap()
+        {
+            var fixture = new CityFixture(new BuildingBuilder().WithId("Housing").WithMaxCountPerTownhallLevel(1)
+                .WithLevelPrices(BuildingBuilder.Price("Gold", 10)).WithBuildSeconds(1).Build());
+            fixture.Construction.Build("Housing", SPOT, 0);
+            fixture.Timeline.Advance(1000);
+
+            Assert.That(fixture.Construction.BuildRefusal("Housing"), Is.EqualTo(ConstructionRefusal.AtCap));
+            Assert.That(fixture.Construction.Build("Housing", new Vector2Int(-3, -3), 1000), Is.EqualTo(ConstructionRefusal.AtCap));
+        }
+
+        [Test]
+        public void Offer_ShouldPriceTheNextInstance()
+        {
+            var house = new BuildingBuilder().WithId("Housing").WithMaxLevel(3)
+                .WithLevelPrices(BuildingBuilder.Price("Gold", 100)).WithInstanceGrowth(0.5, 1).WithBuildSeconds(60).Build();
+            var fixture = new CityFixture(house);
+            fixture.Construction.Build("Housing", SPOT, 0);
+
+            var offer = fixture.Construction.Offer("Housing");
+
+            Assert.That(offer.Ordinal, Is.EqualTo(2));
+            Assert.That(offer.Count, Is.EqualTo(1));
+            Assert.That(offer.Price["Gold"], Is.EqualTo(BuildingPricing.Currencies(house, 2, 1)["Gold"]));
+            Assert.That(offer.Refusal, Is.EqualTo(ConstructionRefusal.NoFreeBuilder));
+        }
+
+        [Test]
+        public void Offer_ShouldSayWhenItCannotBePaid()
+        {
+            var fixture = new CityFixture(House(gold: CityFixture.START_GOLD + 100));
+
+            Assert.That(fixture.Construction.Offer("Housing").Refusal, Is.EqualTo(ConstructionRefusal.CannotAfford));
+        }
     }
 }

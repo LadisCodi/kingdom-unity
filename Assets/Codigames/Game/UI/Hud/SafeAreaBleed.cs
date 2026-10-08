@@ -2,11 +2,14 @@ using UnityEngine;
 
 namespace Codigames.Game.UI.Hud
 {
-    // A top bar that bleeds up under the notch: its height is its own plus the screen's top inset, so what it
-    // holds at its bottom sits just inside the safe area while its material fills the notch.
+    // A bar on a screen edge that bleeds under the notch or the home bar: its height is its own plus that edge's
+    // inset, so what it holds sits just inside the safe area while its material fills the rest.
     [RequireComponent(typeof(RectTransform))]
-    public class SafeAreaTopBleed : MonoBehaviour
+    public class SafeAreaBleed : MonoBehaviour
     {
+        private enum Edge { Top, Bottom }
+
+        [SerializeField] private Edge _edge = Edge.Top;
         [SerializeField, Tooltip("The bar's height inside the safe area, in reference pixels.")]
         private float _height = 107f;
 
@@ -34,7 +37,7 @@ namespace Codigames.Game.UI.Hud
             _lastScreen = new Vector2Int(Screen.width, Screen.height);
             if (_canvas == null) return;
 
-            var insetPixels = Screen.height - Screen.safeArea.yMax;
+            var insetPixels = _edge == Edge.Top ? Screen.height - Screen.safeArea.yMax : Screen.safeArea.yMin;
             var inset = insetPixels / _canvas.rootCanvas.scaleFactor;
             _rect.sizeDelta = new Vector2(_rect.sizeDelta.x, _height + inset);
         }
