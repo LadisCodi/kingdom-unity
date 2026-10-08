@@ -1,0 +1,141 @@
+{
+  "type": "object",
+  "fields": {
+    "fog": {
+      "type": "object",
+      "fields": {
+        "rings": {
+          "type": "list",
+          "of": { "type": "object", "fields": { "distance": { "type": "int" }, "cost": { "type": "int" } } }
+        },
+        "fallbackGrowth": { "type": "float" },
+        "tapsToReveal": { "type": "int" },
+        "minCost": { "type": "int" },
+        "claimDiscoverRadius": { "type": "int" },
+        "watchtowerDiscoverRadius": {
+          "type": "int",
+          "min": 0,
+          "doc": "Cells a claimed Watchtower discovers round it — a shrine's lantern, held higher."
+        },
+        "reachPerTownhallLevel": { "type": "list", "of": { "type": "int" }, "length": { "townhall": true } },
+        "countStep": { "type": "int" },
+        "countGrowth": { "type": "float" },
+        "sight": {
+          "type": "object",
+          "doc": "How far a tall thing is SIGHTED past the fog: a dim silhouette while a revealed cell lies within this many cells of it. A lair's own is on the lair, in the map.",
+          "fields": {
+            "mountainBySize": {
+              "type": "list",
+              "of": { "type": "int", "min": 0 },
+              "length": { "exact": 3 },
+              "doc": "A mountain's sight by its block: 1×1, 2×2, 3×3. 0 is never sighted."
+            },
+            "landmark": { "type": "int", "min": 0, "doc": "A shrine, a ring of stones, a leyspring." },
+            "watchtower": { "type": "int", "min": 0, "doc": "The Watchtower: a tower, seen from further." }
+          }
+        }
+      }
+    },
+    "knowledge": {
+      "type": "object",
+      "fields": {
+        "basePerHour": {
+          "type": "int",
+          "min": 0,
+          "doc": "The drip: Knowledge an hour while the bar is under its cap. Fixed for the whole game."
+        },
+        "cap": {
+          "type": "int",
+          "min": 1,
+          "doc": "The bar. The drip stops while the kingdom holds this much or more; lumps and purchases land over it."
+        },
+        "landmarkClaimLump": { "type": "int", "min": 0, "doc": "Knowledge a landmark pays once, when it is claimed." },
+        "conquestFirstClearLump": { "type": "int", "min": 0, "doc": "What Conquest adds to every lair's first-clear lump." },
+        "goldPriceBase": {
+          "type": "int",
+          "min": 1,
+          "doc": "Gold for the first point of Knowledge bought; the nth point ever bought costs this times n to the exponent, never reset."
+        },
+        "goldPriceExponent": {
+          "type": "float",
+          "min": 1,
+          "max": 4,
+          "doc": "How steeply the Gold price climbs: the nth point ever bought costs the base times n to this. 1 is a straight line; 2 makes the tenth point a hundred times the first."
+        },
+        "gemsPerPoint": { "type": "int", "min": 1, "doc": "Gems for one point of Knowledge. Never rises." }
+      }
+    },
+    "raid": {
+      "type": "object",
+      "fields": {
+        "takeFractionMax": { "type": "float" },
+        "perDay": {
+          "type": "int",
+          "min": 1,
+          "max": 6,
+          "doc": "Raids a standing lair makes each local day, one in each equal slice of the window."
+        },
+        "windowStartHour": {
+          "type": "int",
+          "min": 0,
+          "max": 23,
+          "doc": "The local hour the raid window opens: raids land in the hours the player plays."
+        },
+        "windowEndHour": { "type": "int", "min": 1, "max": 24, "doc": "The local hour the raid window closes." }
+      }
+    },
+    "delve": {
+      "type": "object",
+      "fields": {
+        "firstClearKnowledge": { "type": "int" },
+        "firstFightPower": {
+          "type": "float",
+          "min": 0.05,
+          "max": 1,
+          "doc": "A lair's first fight, as a share of its power; the fights after it ramp evenly up to the full power at the last."
+        }
+      }
+    },
+    "treasure": {
+      "type": "object",
+      "doc": "What the people who fled left on the ground (Docs/features/01-map-and-fog.md §6.2).",
+      "fields": {
+        "everyReveals": {
+          "type": "int",
+          "min": 1,
+          "doc": "A treasure is due every this many cells the player pays to reveal, the first on the very first."
+        },
+        "workSeconds": {
+          "type": "int",
+          "min": 0,
+          "doc": "What a treasure pays: this many seconds of the kingdom's production of its coin."
+        },
+        "floor": {
+          "type": "map",
+          "of": { "type": "int", "min": 0 },
+          "keysRef": "currency",
+          "doc": "The least a treasure of each coin pays, whatever the production."
+        },
+        "weights": {
+          "type": "map",
+          "of": { "type": "int", "min": 0 },
+          "keysRef": "currency",
+          "doc": "How often each coin is the treasure. Stone only once it is on the plank."
+        },
+        "knowledge": {
+          "type": "int",
+          "min": 0,
+          "doc": "What a Knowledge treasure pays, over the bar’s cap like a lump."
+        },
+        "firstCoin": { "type": "text", "ref": "currency", "doc": "The First Morning's treasure: its coin." },
+        "firstAmount": { "type": "int", "min": 0, "doc": "The First Morning's treasure: what it pays." },
+        "itemEvery": {
+          "type": "int",
+          "min": 0,
+          "doc": "Every this many treasures after the first, one item comes with the coin. 0: never."
+        },
+        "items": { "type": "map", "of": { "type": "int", "min": 0 }, "keysRef": "item", "doc": "Which item, by weight." }
+      }
+    }
+  }
+}

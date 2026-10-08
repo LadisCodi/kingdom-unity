@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "fields": {
+    "kind": {
+      "type": "text",
+      "options": ["city", "world"],
+      "doc": "A city relic is hosted in a Shrine, a world relic in a Chapel; a source drops one kind (relic-restoration.md §1, §2)."
+    },
+    "door": {
+      "type": "text",
+      "doc": "Where its first fragment is found by play: a lair for a city relic (its prize, when claimed), or a world source — room, boss, portal, scouting."
+    },
+    "passiveBase": { "type": "float" },
+    "passivePerLevel": { "type": "float" },
+    "activeManaCost": {
+      "type": "int",
+      "min": 0,
+      "doc": "The Mana a cast costs. On a city relic, what one activation in its Shrine costs (09-relics.md §2)."
+    },
+    "activeDurationSeconds": { "type": "int" },
+    "activeRadius": {
+      "type": "int",
+      "min": 0,
+      "doc": "How far the ability reaches at level 1, plus one ring for each of relics.artifactRadiusSteps passed. On a city relic, its Shrine aura: every cell this many from the Shrine (Chebyshev)."
+    },
+    "activePower": { "type": "int" },
+    "activePowerPerLevel": { "type": "float" },
+    "activeDurationPerLevel": { "type": "int" },
+    "activeCharges": { "type": "int" },
+    "activeChargesPerLevel": { "type": "int" }
+  }
+}

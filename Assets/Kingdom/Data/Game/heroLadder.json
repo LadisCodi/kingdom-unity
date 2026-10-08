@@ -1,0 +1,23 @@
+{
+  "heroLadder": {
+    "ascensionStars": 5,
+    "ascensionStepsPerStar": 6,
+    "recruitFragments": { "Common": 15, "Rare": 25, "Legendary": 40 },
+    "bagOpen": { "Common": 3, "Rare": 2, "Legendary": 1 },
+    "fragmentsPerStepBase": 1,
+    "fragmentsPerStepGrowth": 2,
+    "ascensionStardustBase": 4,
+    "ascensionStardustGrowth": 2,
+    "xpLevelCostBase": 20,
+    "xpLevelCostGrowth": 1.0165,
+    "heroLevelsPerStar": 0,
+    "heroLevelsPerAscension": 10,
+    "statsPerAscension": 0.02,
+    "heroMaxLevel": 310,
+    "skillRankLevels": [71, 131, 191, 251],
+    "skillRankStardust": [100, 200, 400, 800],
+    "skillRankMaterial": [2, 4, 8, 12],
+    "skillRankStep": 0.25,
+    "firstCallsNewHero": 2
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "type": "object",
+  "fields": {
+    "tap": {
+      "type": "object",
+      "fields": {
+        "manaCost": { "type": "int", "min": 0, "doc": "What every player tap costs." },
+        "workSeconds": { "type": "int", "min": 1, "doc": "A tap pays this many seconds of what it touches produces." }
+      }
+    },
+    "storage": {
+      "type": "object",
+      "fields": {
+        "collectSeconds": {
+          "type": "int",
+          "min": 1,
+          "doc": "A store is ready to collect — its bubble shows and a tap collects rather than opening the building — once it holds this many seconds of what the building makes now, or is full."
+        }
+      }
+    },
+    "taxes": { "type": "object", "fields": { "goldPerPopulationPerMinute": { "type": "int" } } },
+    "mana": {
+      "type": "object",
+      "fields": {
+        "baseCap": { "type": "int" },
+        "basePerHour": { "type": "int" },
+        "sanctumCapPerLevel": { "type": "list", "of": { "type": "int" }, "length": { "exact": 10 } },
+        "sanctumPerHourPerLevel": { "type": "list", "of": { "type": "int" }, "length": { "exact": 10 } },
+        "landmarkCap": { "type": "int" },
+        "meditationCap": { "type": "int" },
+        "gemRefillCosts": { "type": "list", "of": { "type": "int" } }
+      }
+    },
+    "city": {
+      "type": "object",
+      "fields": {
+        "initialCurrencies": { "type": "map", "of": { "type": "int" }, "keysRef": "currency" },
+        "initialPopulation": { "type": "int" },
+        "populationCostFirst": { "type": "list", "of": { "type": "int" } },
+        "populationCostGrowth": { "type": "float" },
+        "lateUpgradeFromLevel": { "type": "int" }
+      }
+    },
+    "kingdom": {
+      "type": "object",
+      "fields": {
+        "startBuilders": { "type": "int" },
+        "maxBuilders": { "type": "int" },
+        "builderGemCostBase": { "type": "int" },
+        "builderGemCostGrowth": { "type": "int" }
+      }
+    },
+    "harmony": {
+      "type": "object",
+      "fields": {
+        "surplusTiers": {
+          "type": "list",
+          "of": { "type": "object", "fields": { "at": { "type": "float" }, "bonus": { "type": "float" } } }
+        }
+      }
+    },
+    "worker": { "type": "object", "fields": { "moveSpeedTilesPerSecond": { "type": "int" } } },
+    "training": {
+      "type": "object",
+      "fields": { "seconds": { "type": "int" }, "villagerSecondsGrowth": { "type": "float", "min": 1 } }
+    },
+    "rush": { "type": "object", "fields": { "secondsPerGem": { "type": "int" } } },
+    "bag": {
+      "type": "object",
+      "fields": {
+        "chestFloorPerHour": {
+          "type": "int",
+          "min": 0,
+          "doc": "What a chest pays at least, per hour of its size, for a coin the city makes little or none of yet."
+        }
+      }
+    },
+    "notices": {
+      "type": "object",
+      "fields": {
+        "shown": {
+          "type": "int",
+          "min": 2,
+          "doc": "How many bubbles the notices column shows; with more notices than this, the last is +N (Docs/features/26-notices.md §3)."
+        },
+        "kept": {
+          "type": "int",
+          "min": 1,
+          "doc": "How many unread news the save keeps; past it, the oldest is dropped (26-notices.md §7)."
+        }
+      }
+    }
+  }
+}

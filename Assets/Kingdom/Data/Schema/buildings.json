@@ -1,0 +1,168 @@
+{
+  "type": "object",
+  "fields": {
+    "name": {
+      "type": "text",
+      "doc": "What a card calls it; read aloud, so the crop plots are two words in lower case."
+    },
+    "promise": {
+      "type": "text",
+      "maxLength": 42,
+      "doc": "The build card's one line: what it does for you, present tense, no full stop. The card holds 42 characters."
+    },
+    "description": { "type": "text", "doc": "The long form, on the district card and the upgrade sheet." },
+    "glyph": { "type": "text", "doc": "Placeholder while the art is missing." },
+    "sprite": {
+      "type": "text",
+      "doc": "Art file stem in src/render/assets. Tiers are its _l<n> files: a level draws the highest one at or below it."
+    },
+    "buildable": { "type": "bool", "doc": "Off for the Townhall, which the city starts with." },
+    "buildTab": {
+      "type": "text",
+      "options": ["Economy", "Military", "Decoration"],
+      "doc": "The Build menu tab it is listed under."
+    },
+    "harvestSources": {
+      "type": "list",
+      "of": { "type": "text", "ref": "harvest" },
+      "doc": "What its workers go out and harvest in its reach."
+    },
+    "plants": {
+      "type": "text",
+      "options": ["Trees", "Crops"],
+      "nullable": true,
+      "doc": "A PLANTABLE: placing it puts this feature on the ground instead of raising a building (Docs/features/27-plantables.md)."
+    },
+    "trains": {
+      "type": "list",
+      "of": { "type": "text", "ref": "trainable" },
+      "doc": "What it turns out: units, or the Villager."
+    },
+    "crew": {
+      "type": "list",
+      "of": { "type": "text", "ref": "character" },
+      "doc": "Who works it, from the character atlas; cast by a stable hash of each worker."
+    },
+    "size": { "type": "object", "fields": { "x": { "type": "int" }, "y": { "type": "int" } } },
+    "maxLevel": { "type": "int", "min": 1, "max": 20, "doc": "How many levels it has. Level 1 is the build." },
+    "populationCapacityPerLevel": { "type": "list", "of": { "type": "int" }, "length": { "sibling": "maxLevel", "upTo": true } },
+    "taxBonusPerLevel": { "type": "list", "of": { "type": "float" }, "length": { "sibling": "maxLevel", "upTo": true } },
+    "goldPerMinutePerLevel": {
+      "type": "list",
+      "of": { "type": "int", "min": 1 },
+      "length": { "sibling": "maxLevel", "upTo": true },
+      "doc": "Gold a minute it makes by itself, with nobody living in it, into its store, by level. Empty = it makes none of its own."
+    },
+    "storageCapacityPerLevel": {
+      "type": "list",
+      "of": { "type": "int", "min": 1 },
+      "length": { "sibling": "maxLevel", "upTo": true },
+      "doc": "What it holds uncollected, in units, by level. Required on anything that makes Gold or harvests; empty on everything else."
+    },
+    "fogRevealRadius": { "type": "int", "min": 0 },
+    "fogRevealRadiusPerLevel": {
+      "type": "list",
+      "of": { "type": "int", "min": 0 },
+      "length": { "sibling": "maxLevel", "upTo": true, "orEmpty": true },
+      "doc": "The reveal radius by level, the last holding for the levels past it; an upgrade reveals its ring. Empty: fogRevealRadius at every level."
+    },
+    "fogDiscoverRadius": { "type": "int", "min": 0 },
+    "maxWorkersPerLevel": { "type": "list", "of": { "type": "int" }, "length": { "sibling": "maxLevel", "upTo": true } },
+    "maxCountPerTownhallLevel": {
+      "type": "list",
+      "of": { "type": "int" },
+      "length": { "townhall": true, "upTo": true },
+      "doc": "How many the city may own at each Townhall level."
+    },
+    "influenceRadiusPerLevel": { "type": "list", "of": { "type": "int" }, "length": { "sibling": "maxLevel", "upTo": true } },
+    "requiredTownhallLevelPerLevel": {
+      "type": "list",
+      "of": { "type": "int" },
+      "length": { "sibling": "maxLevel", "offset": -1, "upTo": true },
+      "doc": "Entry 0 gates level 2."
+    },
+    "requiredPopulationPerLevel": {
+      "type": "list",
+      "of": { "type": "int" },
+      "length": { "sibling": "maxLevel", "offset": -1, "upTo": true },
+      "doc": "Villagers each level asks for; entry 0 gates level 2."
+    },
+    "armyCapPerLevel": { "type": "list", "of": { "type": "int" }, "length": { "sibling": "maxLevel", "upTo": true } },
+    "bedsPerLevel": { "type": "list", "of": { "type": "int" }, "length": { "sibling": "maxLevel", "upTo": true } },
+    "heroXpBonusPerLevel": {
+      "type": "list",
+      "of": { "type": "int", "min": 0 },
+      "length": { "sibling": "maxLevel", "upTo": true },
+      "doc": "Percent more Hero XP the kingdom earns while this stands, the TOTAL at each level. Only the Tavern has any."
+    },
+    "armySlotsPerLevel": {
+      "type": "list",
+      "of": { "type": "int", "min": 0 },
+      "length": { "sibling": "maxLevel", "upTo": true, "orEmpty": true },
+      "doc": "Armies more the kingdom can have out on the world board while this stands, the TOTAL at each level. Only the War Camp has any."
+    },
+    "costPerLevel": {
+      "type": "list",
+      "of": {
+        "type": "object",
+        "fields": {
+          "cost": {
+            "type": "map",
+            "of": { "type": "int", "min": 0 },
+            "keysRef": "currency",
+            "doc": "Currencies, multiplied by the instance ordinal."
+          },
+          "goods": {
+            "type": "map",
+            "of": { "type": "int", "min": 0 },
+            "keysRef": "good",
+            "doc": "Refined goods and precious materials; never multiplied. Precious materials are never asked while the world is shut."
+          },
+          "anyPrecious": {
+            "type": "int",
+            "min": 0,
+            "nullable": true,
+            "doc": "Precious material of any kind, paid from what the player holds most of (Docs/features/19-world-map.md §7.6). Never asked while the world is shut."
+          }
+        }
+      },
+      "length": { "sibling": "maxLevel" },
+      "doc": "What each level costs, level 1 being the build."
+    },
+    "instanceLinearGrowth": { "type": "float", "min": 0, "doc": "M(N) = linear × (N − 1) + exponential^(N − 1)." },
+    "instanceExponentialGrowth": { "type": "float", "min": 1 },
+    "buildDurationSeconds": { "type": "int", "min": 0 },
+    "buildDurationDistrictGrowth": { "type": "float" },
+    "buildDurationDistanceGrowth": { "type": "float" },
+    "upgradeDurationSeconds": { "type": "int", "min": 0 },
+    "upgradeDurationLevelGrowth": { "type": "float" },
+    "upgradeDurationLateSeconds": { "type": "int" },
+    "upgradeDurationLateLevelGrowth": { "type": "float" },
+    "extraUnitsPerDeliveryPerLevel": { "type": "list", "of": { "type": "int" }, "length": { "sibling": "maxLevel", "upTo": true } },
+    "strikeSpeedPerLevel": { "type": "list", "of": { "type": "float" }, "length": { "sibling": "maxLevel", "upTo": true } },
+    "produces": { "type": "text", "nullable": true, "ref": "good" },
+    "queueLengthPerLevel": { "type": "list", "of": { "type": "int" }, "length": { "sibling": "maxLevel", "upTo": true } },
+    "harmonySupply": { "type": "int", "min": 0, "doc": "Non-zero makes it a decoration." },
+    "harmonyCostPerLevel": {
+      "type": "list",
+      "of": { "type": "int" },
+      "length": { "sibling": "maxLevel", "upTo": true },
+      "doc": "Harmony demanded: a TOTAL at each level, entry 0 gating the build."
+    },
+    "hostsRelic": {
+      "type": "bool",
+      "doc": "Holds one city relic, whose effect acts over its aura while an activation lasts (09-relics.md §2.1). A host has one level: how long and how far the relic acts is the relic's own level. It is moved, never built for Gold."
+    },
+    "repairItem": {
+      "type": "text",
+      "ref": "item",
+      "emptyOk": true,
+      "doc": "An item repairing this building's ruin also asks for, and spends (01-map-and-fog.md §6.3). Empty: none."
+    },
+    "repairDurationSeconds": {
+      "type": "int",
+      "min": 0,
+      "doc": "How long repairing its ruin in the fog takes, flat: no growth with the ordinal or the distance (01-map-and-fog.md §6.3). 0: as long as building it. A plantable's ruin grows for its source's growSeconds instead."
+    }
+  }
+}

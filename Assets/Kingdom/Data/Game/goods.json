@@ -1,0 +1,72 @@
+{
+  "Planks": {
+    "name": "Planks",
+    "tier": 1,
+    "input": { "Wood": 10 },
+    "inputMana": 0,
+    "inputGood": null,
+    "inputGoodAmount": 0,
+    "workSeconds": 1200,
+    "precious": false
+  },
+  "CutStone": {
+    "name": "Cut Stone",
+    "tier": 1,
+    "input": { "Stone": 10 },
+    "inputMana": 0,
+    "inputGood": null,
+    "inputGoodAmount": 0,
+    "workSeconds": 1800,
+    "precious": false
+  },
+  "Iron": {
+    "name": "Iron",
+    "tier": 1,
+    "input": { "Gold": 200, "Stone": 20 },
+    "inputMana": 0,
+    "inputGood": null,
+    "inputGoodAmount": 0,
+    "workSeconds": 3600,
+    "precious": false
+  },
+  "Runestone": {
+    "name": "Runestone",
+    "tier": 2,
+    "input": {},
+    "inputMana": 20,
+    "inputGood": "CutStone",
+    "inputGoodAmount": 2,
+    "workSeconds": 10800,
+    "precious": false
+  },
+  "Starmetal": {
+    "name": "Starmetal",
+    "tier": 3,
+    "input": {},
+    "inputMana": 0,
+    "inputGood": null,
+    "inputGoodAmount": 0,
+    "workSeconds": null,
+    "precious": true
+  },
+  "Heartwood": {
+    "name": "Heartwood",
+    "tier": 3,
+    "input": {},
+    "inputMana": 0,
+    "inputGood": null,
+    "inputGoodAmount": 0,
+    "workSeconds": null,
+    "precious": true
+  },
+  "Moonglass": {
+    "name": "Moonglass",
+    "tier": 3,
+    "input": {},
+    "inputMana": 0,
+    "inputGood": null,
+    "inputGoodAmount": 0,
+    "workSeconds": null,
+    "precious": true
+  }
+}

@@ -2,7 +2,7 @@
 
 > **Scope:** how the web prototype becomes a native Unity game — the phases,
 > what each delivers, and what has to be decided before each starts.
-> **Status:** phase 0 done; phase 1 next.
+> **Status:** phase 0 done; phase 1 in progress (1a done).
 
 ## 1. Principles
 
@@ -63,3 +63,34 @@
 
 - Target platforms: mobile only, or mobile + WebGL for testers.
 - The web repo after the remake: frozen, or kept alive in parallel.
+
+## 6. Phase 1 — the sim in C#
+
+Four deliveries, each proven against the web prototype before the next:
+
+| # | Delivers | Proven by |
+|---|---|---|
+| 1a | the data files as-is; generated classes; `GameData` (the derivations of `definitions.ts`); `GameState` types; `Rand`, `JsMath`, `RoundPrice` | round-trip of every file; the definitions golden |
+| 1b | new game; `Advance` with its boundaries; the economy — wallet, stores, rent, Mana, Knowledge, modifiers, construction, districts, fog, harvest, workers, research, techs' effects | each module's web tests, ported; scripted runs vs goldens |
+| 1c | army, training, wounded, lairs and raids, heroes, battle | the same |
+| 1d | quests, events and timeline, notices, store and offers, Bag, relics, the client half of the world | the same |
+
+**Porting rules.**
+
+- One web module → one C# static class of pure functions, same name
+  (`mana.ts` → `Mana`), in `Sim/<Domain>/`. Its functions take
+  `(GameState state, GameData data, …, double now)`; no class holds state.
+- Port literally: same order of operations, same rounding, same iteration
+  order. Comments carry the web's *why* where it is not obvious.
+- `JsMath.Round` for `Math.round`; `Math.Floor`/`Ceiling` are the same in both.
+- Iteration order: a `Dictionary` enumerates in insertion order, like a JS
+  object — except that **JS puts integer-like keys first, ascending**. Where
+  the web keys an object by a number, sort.
+- Numbers are `double`; ids are strings; a TS union is a set of string
+  constants.
+- A module's web tests (`tests/<module>.test.ts`) are ported to NUnit in
+  `Tests/Sim/<Domain>/` with the module.
+- State-level parity: `Tools/Parity` runs scripted command sequences through
+  the web sim and writes the state after each step; the C# replay must write
+  the same JSON.
+
