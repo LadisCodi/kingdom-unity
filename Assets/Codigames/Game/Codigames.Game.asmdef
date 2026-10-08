@@ -23,7 +23,9 @@
         "Unity.Cinemachine",
         "LeanTouch",
         "LeanCommon",
-        "CW.Common"
+        "CW.Common",
+        "Codigames.Modules.Wallet",
+        "Codigames.Modules.Timeline"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
