@@ -1,0 +1,78 @@
+# 6 · Construction — builders, and the offer a refusal raises
+
+> **Scope.** How many things the city can build at once, what happens when it
+> cannot build one more, and the builder purchase surface.
+>
+> **Status: built.**
+
+## 1. The rule
+
+- There is no waiting line. A build starts if a builder is free; otherwise it is
+  refused.
+- Jobs in flight = builder count.
+- An upgrade, or the repair of an abandoned building
+  ([`01-map-and-fog.md`](01-map-and-fog.md) §6.3), occupies a builder exactly
+  as a build does.
+- **A job at work shows on the map** as it does on the card: the working
+  hammer flies over the building, and the blue glass bar on its plot holds
+  the time left.
+- **A build cannot be cancelled.** It is paid for when it starts, and a
+  building put in the wrong place is moved rather than undone
+  ([`05-city-and-districts.md`](05-city-and-districts.md) §4.2) — which is why
+  a move works on an unfinished building.
+
+## 2. The offer
+
+- A build or upgrade refused for want of a builder opens a sheet. No toast.
+  The same holds on the world map: a claim or a world build refused for want
+  of a builder opens the same sheet.
+- Two states, one sheet:
+
+| State | Shows |
+|---|---|
+| Below the ceiling | every busy builder's job with its time left and a Gem **Finish**, and a Gem **Hire** in the next empty slot. A builder out on the world map shows its job and time left, with no Finish |
+| **At** the ceiling | the same, and **no hire** |
+
+- Placement mode stays open behind the sheet. Dismissing it returns the player
+  to the positioned ghost.
+- A job that ends while the sheet is open — on its own or by Finish — turns
+  its builder's row into the job the sheet was raised for: the Build for the
+  positioned ghost, or the claim or world build that was refused.
+
+## 3. The price
+
+- `round(base × growth^purchased)`: the same escalating-slot curve as the
+  hero slots.
+- `purchased` is **derived**, `builders − startBuilders`, not stored. A
+  *granted* builder (a quest, an event) makes the next *bought* one dearer.
+- Every Gem sink is priced on the 500-Gems-a-dollar ladder
+  ([`14-monetization.md`](14-monetization.md) §2.2). Each builder is the next
+  pack up (`×2`).
+- The up-front Gem faucet is 1,250 Gems: 500 to start, 750 across the quest
+  chain ([`14-monetization.md`](14-monetization.md) §1.1).
+
+| Builder | Gems | Pack |
+|---|---|---|
+| 2nd | **2,500** | $4.99 |
+| 3rd | 5,000 | $9.99 |
+| 4th | 10,000 | $19.99 |
+
+- A builder unlocks nothing; it lets two things happen at once.
+
+## 4. Dials, in the order to reach for them
+
+| Dial | Value | Key |
+|---|---|---|
+| Builders at the start | 1 | `kingdom.startBuilders` |
+| Ceiling | 4 | `kingdom.maxBuilders` |
+| Price of the next builder | `round(2500 × 2^purchased)` | `kingdom.builderGemCostBase`, `…Growth` |
+
+## 5. Deliberately not in this design
+
+- A waiting line, and any promotion or reordering logic (§1).
+- A `buildQueueCapacity` dial alongside the builder count.
+- A free trial of a builder.
+- A store card for builders ([`14-monetization.md`](14-monetization.md) §2).
+- Cancelling a build, and the refund that went with it (§1).
+
+**Open questions:** OQ-31, OQ-32.

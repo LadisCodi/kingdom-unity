@@ -1,0 +1,264 @@
+# Art direction — the world
+
+> **Scope.** How every asset of the **world** looks: the style, the isometric
+> projection the city stands in, terrain, buildings, units, the hex board and
+> the map's states.
+>
+> **Not in scope: the chrome.** Menus, sheets, cards, icons and type are
+> [`ui-menus-redesign.md`](ui-menus-redesign.md).
+>
+> **Status: designed.**
+
+## 1. The anchor
+
+In one line: **a bright stylized-3D diorama under a midday sun** — saturated
+spring greens, cream stone, golden timber, blue and gold heraldry; rounded
+chunky silhouettes; smooth simplified materials with no photographic texture;
+every object readable at thumbnail size.
+
+- Every asset is made against one style reference and matches the assets
+  already made before inventing anything new.
+- **The style is not pixel art, and nothing in the world is ever scaled with
+  nearest-neighbour.**
+
+## 2. Two cameras, one hand
+
+| | **The city** | **The world board** |
+|---|---|---|
+| Camera | **isometric 2:1** (§3) | **a slight tilt** (§7.1) |
+| The unit | a square cell, drawn as a diamond | a pointy-top hexagon |
+| What it is for | *a diorama you look into* | *a map you read* |
+| Palette | the same | the same |
+
+- **One palette, one terrain set, one light.** The two scales differ in camera,
+  never in colour: a single set of terrain art serves both.
+- The world board's tilt is slight: rows stay straight and every hex is the
+  same size, so hexes, distance, borders and ownership still count at a glance
+  ([`../features/19-world-map.md`](../features/19-world-map.md) §1.2).
+- What carries continuity between them is the palette, the light and the
+  silhouettes — not the camera.
+
+## 3. The isometric projection
+
+**2:1, the mobile builder standard.** A cell's ground is a diamond **128 × 64**
+world pixels at zoom 1.
+
+```
+screenX = (cell.x - cell.y) * 64
+screenY = (cell.x + cell.y) * 32
+```
+
+- **No rounding drift and no seams** between neighbouring tiles at any zoom.
+- **Draw order is `x + y` ascending** — the painter's algorithm. Tiles further
+  from the camera are drawn first.
+- **A sprite's anchor is the centre of its ground diamond**, not its own centre
+  and not a corner.
+- **Buildings rise; they never lean forward.** A sprite may overlap the tiles
+  *behind* it (north), never the tiles *in front* (south). That is what keeps
+  the painter's algorithm correct with no depth sorting inside a tile.
+
+### 3.1 Canvas sizes
+
+**A `w × h` plot's ground diamond is `(w+h)·64` wide and `(w+h)·32` tall** — it
+is the span of the cells' screen positions plus half a tile each side, and it is
+always 2:1. Canvas height is that diamond plus the footprint's headroom.
+
+| Footprint | Ground diamond | Canvas | Anchor (from canvas top-left) | Headroom |
+|---|---|---|---|---|
+| **1 × 1** | 128 × 64 | **128 × 192** | (64, 160) | 128 |
+| **2 × 1** | **192 × 96** | **192 × 224** | (96, 176) | 128 |
+| **2 × 2** | 256 × 128 | **256 × 320** | (128, 256) | 192 |
+| **3 × 3** | 384 × 192 | 384 × 448 | (192, 384) | 256 |
+
+- The ground diamond always sits flush with the **bottom** of the canvas.
+  Headroom is everything above it, and it is where the building stands.
+- **Author at 2× and downscale** with a smooth filter. Never author at final
+  size, and never upscale.
+
+## 4. Terrain
+
+- Six terrains, full-bleed and self-tiling, one diamond each: **Grassland,
+  Plains, Desert, Snow, Tundra, Water**.
+- A terrain tile is **quiet**. It is the floor everything else stands on, it is
+  seen a thousand times a session, and anything eye-catching in it competes with
+  the things that matter. Variation belongs in features, not in the ground.
+- **No visible grid lines.** The diamond's edge reads from the terrain's own
+  softly rounded, raised diorama edge.
+- Water is the one exception to the quiet rule: clear cyan, gently animated.
+
+## 5. Buildings
+
+- **Silhouette first.** A building is identified at thumbnail size by its
+  outline, before any detail resolves. If two buildings share a silhouette, one
+  of them is wrong.
+- Compact proportions with **slightly oversized roofs, doors, windows and the
+  feature that says what the building does** — the mill's wheel, the barracks'
+  banner, the sanctum's crystal.
+- **Levels read as growth, not as replacement.** A building's levels keep its
+  silhouette and its palette and add mass, storeys and props. A player should
+  never have to re-learn a building because it levelled.
+- **A level draws the highest art tier at or below it**, so levelled art can
+  land one tier at a time.
+- **A building stands on the terrain, not on a plate**: no ground block of turf
+  or soil under it, and every prop inside its own plot.
+- **Small decorative details, used sparingly.** Tidy vegetation, clustered
+  rounded canopies, no clutter.
+
+## 6. Units and characters
+
+- Units are **gameplay-scale figures integrated into the environment**. They
+  never pose, never face the camera, and are never the subject.
+- **A villager stands ~48 px tall** on a 128 × 64 tile — about a third of a 1×1
+  building's headroom. Big enough to read as a person, small enough that the
+  city reads as a city.
+- **A portrait is a face; a unit is a silhouette.** Portraits follow their own
+  discipline.
+- Walk cycles are 4 frames, work loops 2.
+
+## 7. The hex board
+
+- **Pointy-top hexagons, a slight tilt** (§7.1).
+- Two zoom registers ([`../features/19-world-map.md`](../features/19-world-map.md)
+  §1.2), one asset set serving both:
+
+| Register | Hex width on screen | Its job |
+|---|---|---|
+| Tactical | ~130 pt | look at a place |
+| Strategic | ~45 pt | count hexes and plan |
+
+- **Author at the tactical size and downscale.** A hex asset is **256 px wide ×
+  296 px tall** (pointy-top: height = width × 2/√3), authored at 2×.
+- **A hex is a terrain plate plus one sprite for its combination** of
+  terrain and features — a forested mountain is one drawing, not a mountain
+  beside some trees. Only the combinations that occur get art.
+- **An improvement's art includes the feature it works** (the Logging Camp
+  among its trees); what it does not work stays drawn behind it.
+- **Three or four content elements read comfortably on a tactical hex.** Past
+  that, the hex is overloaded and something must be dropped or merged.
+- Ownership reads as a **border colour on the hex edge**, never as a tint over
+  the ground — a tinted hex fights the terrain it is meant to identify. It is
+  painted on the ground: over the plate, under everything that stands on the
+  hex.
+
+### 7.1 The tilt
+
+- **The ground is squashed to 72 % top to bottom** — the board seen from a
+  little south of overhead. No vanishing point: a far hex is as big as a near
+  one.
+- **Only the ground tilts.** Terrain plates, hex edges, borders, rims and
+  route rings are squashed; castles, trees, mountains, buildings and figures
+  stand upright, their foot on the squashed ground.
+- **A tile has thickness**: a side 16 % of the hex's radius deep under its two
+  lower edges, the right face in shade, packed earth. Only revealed and sensed
+  hexes are tiles; an Unknown hex is the cloud bank (§8.1).
+- The row in front hides that side, and the clouds hide it where explored
+  ground meets them: the board stands in the clouds, never floats on them.
+- **Hex art is authored flat** (256 × 296) and squashed when drawn.
+
+## 8. States the map has to show
+
+Every one of these is a treatment of the same asset, never a second asset.
+
+| State | Treatment |
+|---|---|
+| **Undiscovered** | the cloud bank (§8.1); the hex or cell is not there |
+| **Discovered / Sensed** | under low mist, desaturated (§8.1); silhouettes rise out of the clouds — on the world board, a thin veil of the bank's clouds |
+| **Revealed** | full colour, the default |
+| **Exhausted** (a harvest cell) | the same tile, spent — stumps, bare soil, still clearly the same place |
+| **Under construction** | scaffold and a pit, at the building's own footprint |
+| **Selected / valid target** | a warm rim on the diamond's edge, never a fill; painted on the ground, under what stands there |
+| **Inactive** (a world hex off the chain) | greyed toward the Sensed treatment, buildings intact |
+
+- **Unexplored ground is under a sunlit sea of clouds — and still the same
+  stylized world.** It is never dark, and never a flat grey void.
+
+### 8.1 The fog: a sea of clouds
+
+The fog that swallowed the kingdom is a bright sea of clouds lying on the
+province under the midday sun.
+
+| Fog state ([`../features/01-map-and-fog.md`](../features/01-map-and-fog.md) §4) | Drawn as |
+|---|---|
+| **Revealed** | full colour — the only coloured ground on screen |
+| **Discovered, payable** | a thin see-through veil, ankle-high: terrain desaturated with a pale sheen, tree crowns standing out of it almost whole |
+| **Discovered, not payable** | a low cushion of cloud, almost opaque: terrain hidden, only the tips of tall things poking out |
+| **Undiscovered** | the cloud bank: one seamless field of sculpted cumulus filling everything, off the map's edge too; toward a seen cell only the tallest puffs remain, so its edge is the outline of the clouds, inside the fogged cell |
+
+- **The clouds are a stylized material**, like the tree canopies: chunky,
+  softly bevelled, three flat tones and a clean edge — never photographic,
+  wispy, grey or gloomy.
+
+| Tone | Value |
+|---|---|
+| Cloud top, sunlit | `#EAE2EB` |
+| Cloud mid | `#BCC2F7` |
+| Cloud shadow | `#ABB5F3` |
+| The not-payable cushion | `#DFD8EB` |
+
+- **One cushion a cell.** Every fogged cell carries its own mist on its own
+  diamond, dipping a little at the edges, so the grid reads from the dips and
+  no line is drawn.
+- **Density is height.** The veil, then the cushion, then the bank: the fog
+  rises step by step away from the cleared ground.
+- **A sighted thing rises out of the cloud tops**
+  ([`../features/01-map-and-fog.md`](../features/01-map-and-fog.md) §4.1) as a
+  flat, pale shape in the cloud-shadow tone, hazy at its foot: something
+  stands there, not what.
+- **A treasure's chest and an abandoned building's ruin** show through the
+  veil as themselves, desaturated with the ground.
+- **A tap tears the cushion**: each of the five takes a fifth of the mist off
+  the cell, torn from the middle, with curling wisps lifting away.
+- **A reveal blows it away**: the last wisps lift and fade in under a second,
+  and the colour floods back into the cell from its centre.
+- **The bank drifts**: the whole field slides slowly across the province,
+  one texture repeat every ten minutes, with a slow boil over it; it never
+  covers a cell the player can see.
+- **The world board stands in the same bank**: every Unknown hex and
+  everything past the board's edge, at full thickness up to every seen hex.
+  The tallest puffs lap over a seen hex's edges — a fifth of a hex over its
+  two near edges, a tenth over its two far ones.
+- **A Sensed hex is under a thin veil** of the same clouds, drifting with
+  the bank: the terrain shows through, pale; it spills a little onto clear
+  ground beside it. What stands on it rises out as a silhouette in the
+  cloud-shadow tone, palest at its foot.
+- **A reveal lifts the clouds** over about a second: the bank thins to a
+  veil, its tallest puffs last, and the veil lifts.
+- **Cloud shadows** — the texture at far larger scale — drift slowly over
+  seen ground the other way.
+- **Far out, the puffs grow**: past 75 % zoom the texture at twice the size
+  takes over, so the bank never becomes a busy speckle.
+- **Layers, bottom to top:** plates and sides; the bank, the veil and the
+  shadows; the rims on the hex edges (ownership, selection); everything that
+  stands on a hex; every other mark on the board.
+- **A tap on a hex answers at once**: a brief warm flash on it, its rim
+  swelling, before the sheet is read.
+- **An explorer's route fades as it goes into the bank.**
+- **Art:** the bank is one tileable texture; the cushion and the payable
+  patch are sprites.
+- **What is drawn over the fog stays over it**: the reach line, the lair's
+  ground, the progress bar of a tap.
+
+## 9. The dials, in the order to reach for them
+
+| Dial | Moves | Reach for it when |
+|---|---|---|
+| **Tile diamond** (128 × 64) | everything | never, in practice — this is the one number everything else is derived from |
+| **Headroom per footprint** (§3.1) | how much a building towers | buildings hide each other, or look squat |
+| **Villager height** (48 px) | whether the city reads as a city | people vanish, or dominate |
+| **Hex width** (256 px authored) | how much a hex can hold | content stops fitting at the tactical size |
+| **Board tilt** (72 %) | how much depth the board has | the board reads flat, or distance stops reading |
+| **Tile thickness** (16 % of the radius) | how solid a tile feels | the rim looks like a wall, or not at all |
+| **Terrain busyness** | how much the ground competes | the map feels noisy and nothing pops |
+
+## 10. Deliberately not in this design
+
+- **Pixel art** and **nearest-neighbour scaling**, anywhere in the world.
+- **A top-down camera** that shows the top face of everything.
+- **A second palette for the world board** (§2).
+- **A dark fog of war**, and weather: no cloud moves across the map, and the
+  fog has no night.
+- **Perspective on the hex board** — a vanishing point, far hexes smaller
+  (§7.1).
+- **Visible grid lines** on the city ground (§4).
+- **Loose props laid out side by side** on a hex (§7).
+- **Chrome.** It is specified elsewhere and this document does not touch it.

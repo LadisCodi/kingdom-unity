@@ -1,0 +1,265 @@
+# 16 · Wonders — the ladder with no top
+
+> **Scope.** The buildings whose upgrade ladder never ends: the one Gold sink
+> in the game with no last level.
+>
+> **Status: designed, not built.** Late-game content by construction (§5.2), so
+> it waits behind work a player meets sooner.
+>
+> **The three balance numbers are not in this document** (§6, **OQ-58**). They
+> live in the game data; this document owns the concept, the fit and the mechanism.
+
+## 1. The Gold sinks it sits beside
+
+Every other Gold sink is one-time ([`03-economy.md`](03-economy.md) §7):
+
+| Sink | Total | Ceiling |
+|---|---|---|
+| Landmark claims | **537,000 Gold** | eleven landmarks; 2,000 · 10,000 · 25,000 ×5 · 100,000 ×4 |
+| The whole map's fog | **2,522,803,392 Gold** | a last cell |
+| The technology tree, 167 technologies | **592,385 Gold** | a last node |
+| Buildings and their levels | on a curve | `maxCountPerTownhallLevel`, and `maxLevel` on every district |
+| | **≈ 2,524,000,000 Gold** | nothing after it |
+
+- A Wonder is the upgrade ladder with `maxLevel` removed, standing on the map.
+
+## 2. What a Wonder is
+
+**A district you place, whose level ladder is a curve rather than a table.**
+
+| | How it expresses a level | Can it be infinite? |
+|---|---|---|
+| a building | tables — `maxLevel`, `populationCapacityPerLevel`, `maxWorkersPerLevel`, `influenceRadiusPerLevel`, `requiredTownhallLevelPerLevel`, `requiredTechPerLevel`, `armyCapPerLevel`, all indexed by level | no — a table has a last row |
+| a Wonder | formulas — `costBase`, `costGrowth`, `effectPerLevel` (§6) | yes — nothing stops it |
+
+- From the district: placement, footprint, art, being a thing on the map.
+- From a formula: the ladder. Level `L` costs `round(costBase × costGrowth^L)`
+  Gold and is worth `effectPerLevel × L`.
+- **No per-level table anywhere in a Wonder's definition.**
+- Adding Wonders is additive — new `buildings` entries.
+
+### 2.1 The shell test
+
+A Wonder is a shell around existing systems (**OQ-6**):
+
+- No currency of its own — Gold.
+- No screen of its own — tap it, the district card opens.
+- No economy of its own — one number per level, resolved by the helper that
+  already owns that number.
+- If a Wonder ever needs a second currency or its own menu, it is cut.
+
+## 3. Two rules
+
+Both are structural, not numerical.
+
+### 3.1 A Wonder's effect is never denominated in Gold
+
+- A Wonder that raises `taxRate` is forbidden.
+- A production Wonder pays materials, and nothing in the city turns materials
+  back into Gold — so there is no loop to close at all.
+
+### 3.2 One of each; the level is the only ladder
+
+- Hard count cap of **one, ever** — not one per Townhall level.
+- Per-level cost restarts at zero for a new copy of a building, so a second
+  copy would beat one deep Wonder at every level.
+- Invariant: **a Wonder's level is the only way to buy more of its effect.**
+  No second copy, no alternative scaling source of the same stat, no bundle.
+- There is exactly one Everspring in the world; it is a landmark of the
+  player's own city (art: **OQ-57**), and its level is the number on the card
+  (§9).
+
+## 4. A level is instant on payment
+
+- A Wonder level does not go through the build queue. It is bought like an
+  upgrade and lands the moment it is paid.
+- No builder is occupied. `upgradeDuration` and `upgradeDurationLevelGrowth`
+  do not apply. This keeps the second-builder offer and the *no waiting
+  line* rule of [`06`](06-construction.md) intact.
+- No boundary in the offline replay: nothing scheduled, nothing expiring.
+- A Wonder level is a purchase, not a construction.
+- No anticipation beat: no progress bar, nothing to come back for. The pull is
+  the next level's visible price (§9).
+
+## 5. The prototype set
+
+Three Wonders. Each effect is a stat that already exists.
+
+| Wonder | Stat | A level buys |
+|---|---|---|
+| **The Everspring** | `cellRecovery` | the ground regrows faster — the reward-side exit for map density (**OQ-54**) |
+| **The Astral Spire** | `manaRegen` | more Mana per hour — more taps |
+| **The Bell of Toil** | `workerYield` | the crew strikes harder |
+
+Not in the set:
+
+- A Gold Wonder (§3.1).
+- A fog-discount Wonder — the Pitons ladder already does that (**OQ-23**).
+- A combat Wonder — the army cap is a city-building decision
+  ([`combat.md`](combat.md) §14).
+- A build-speed Wonder — `buildSpeed` is a modifier stat already.
+
+Names are a first pass, under the same standing offer as the tome titles
+(**OQ-15**).
+
+### 5.1 The building
+
+| | |
+|---|---|
+| **Houses** | nobody |
+| **Employs** | nobody — no crew, no claims, no travel |
+| **Area of influence** | none |
+| **Footprint** | large — the ground is the permanent half of the price (§8) |
+| **Movable** | yes — promise 1 |
+| **Count** | one (§3.2) |
+| **Destroyed or downgraded** | never — promise 1 |
+
+- A Wonder produces nothing and stores nothing.
+- It acts only as a term in another helper's formula (§7).
+
+### 5.2 Unlock gate
+
+- The gate is the Townhall's final level, as for every other district.
+- While any one-time sink (§1) is unbought a Wonder is the wrong purchase; the
+  gate keeps it out of the build menu until then.
+- A Wonder is late-game content; a player who does not reach the last era
+  never meets it.
+
+### 5.3 Cosmetic tiers
+
+- The building's art changes every N levels, computed as `L % N`, never from a
+  table.
+- Tiers have zero economic effect (§3.1).
+- This is also the cosmetic probe **OQ-26** asks for.
+- Art bill: one tier per Wonder per band (**OQ-57**).
+
+## 6. The shape of the ladder
+
+```
+cost(L)   = wonder.cost_base × wonder.cost_growth ^ L      Gold
+effect(L) = wonder.effect_per_level × L
+```
+
+Two lines, three numbers. The numbers live in the game data (**OQ-58**); the
+shape is fixed here.
+
+### 6.1 Exponential cost, linear effect
+
+- `costGrowth` is the strongest dial in the feature — the analogue of
+  `tap.workSeconds`. It decides whether a Wonder is a sink or a formality.
+- Cost compounds; effect does not. The marginal level gets worse forever.
+- A Wonder is a place to park a surplus, never a Gold investment.
+- A production Wonder's payback is `cost(L)` over a linear return, which
+  grows without bound. Whether early levels sit on the wrong side of that
+  line is a number (**OQ-58**).
+
+### 6.2 An unbounded effect
+
+- Every reward in this game is priced in a duration of the player's own
+  production (a tap pays seconds of work; a Survey chest pays hours of
+  production), so doubling output doubles both sides and nothing is trivialised.
+- Exceptions priced in absolute Gold: the fog, the technology tree, the
+  landmark claims. A deep Wonder trivialises them. Acceptable because all three
+  are one-time and bought long before a Wonder is deep; eras re-pricing the
+  tree is the answer ([`07-research.md`](07-research.md) §1).
+- Anything absolute-priced added after Wonders exist must answer this section.
+
+## 7. Mechanism
+
+1. **`maxLevel` stops being a wall.** A Wonder's `maxLevel` is absent, not a
+   big number.
+2. **Per-level tables are empty for a Wonder** — no population, workers, army
+   cap or per-level tech gate. `requiredTechPerLevel` in particular: a Wonder
+   is gated once, at unlock.
+3. **The level is a number.** The district card already writes `Lv N` with
+   no denominator; a Wonder adds the next level's price.
+4. **The purchase is an instant upgrade, not a construction** (§4): pay,
+   increment, done, no queue item.
+
+Shared with every building: placement, footprint, moving, art.
+
+### 7.1 One stat per Wonder
+
+| Wonder | Stat | The number it moves |
+|---|---|---|
+| The Everspring | `cellRecovery` | how fast harvested ground regrows |
+| The Astral Spire | `manaRegen` | Mana regeneration |
+| The Bell of Toil | `workerYield` | what a crew's strike yields |
+
+- Cost shape: one entry plus one place where the stat is read, as for a
+  modifier stat. The stat existing guarantees that place exists.
+- This bounds the set: a fourth Wonder is an entry and a line; a tenth is ten
+  lines across the sim. Ten Wonders is not ten entries of data (OQ-6, OQ-57).
+- Resolution order: base → the completed technologies → modifier stack. **A
+  Wonder level belongs to the base stage, not the modifier stack** — never a
+  synthetic entry on the stack.
+
+## 8. The ground
+
+- A Wonder stands on the province with a footprint deliberately larger than it
+  needs (§5.1), and the ground is the half of its price that is not Gold.
+- The plot is not bounded, so that ground is not
+  scarce in itself: what a big footprint costs is **the fog that revealed it**
+  and the **adjacency** it displaces ([`03-economy.md`](03-economy.md) §3.1).
+
+## 9. What the player sees
+
+Tapping a Wonder opens the district card, like any other building. The card
+differs in three ways:
+
+1. **The level as a number** — `Lv 27`, with no `/5` denominator.
+2. **The next level's price, always shown**, even when unaffordable. It is
+   information on the card, not a priced refusal
+   ([`06-construction.md`](06-construction.md)).
+3. **What the next level adds**, in the same words as the current effect, so
+   the flattening (§6.1) is visible.
+
+- No progress bar, no timer, no *ready to collect* (§4).
+- A Wonder never generates a notification, never glows, and never asks for
+  anything.
+
+## 10. Dials, in the order to reach for them
+
+| Dial | Value | Key |
+|---|---|---|
+| Cost growth — sink or formality (§6) | unset (**OQ-58**) | `wonder.costGrowth` |
+| Cost base — where level 1 lands relative to a building | unset (**OQ-58**) | `wonder.costBase` |
+| Effect per level, per Wonder — how fast the ladder flattens | unset (**OQ-58**) | `wonder.effectPerLevel` |
+| Unlock gate — the Townhall level that lists each Wonder (§5.2) | final Townhall level | — |
+| Footprint — the non-Gold half of the price (§5.1, §8) | large | — |
+| The set — one entry plus one call site each (§7.1) | three | — |
+
+## 11. Acceptance
+
+- A player who has bought every technology and every
+  landmark still has a priced thing to spend Gold on, and can see its cost.
+- A Wonder level adds no boundary: the replay assertion holds across a Wonder
+  purchase during an offline advance.
+- No Wonder's effect is denominated in Gold (§3.1), asserted by a test over the
+  definitions.
+- A second copy cannot be built at any Townhall level (§3.2).
+- A deep Wonder renders in the district card without a denominator, with the
+  next level's price and what it adds (§9).
+- No new wallet row, screen, currency or goal type.
+
+## 12. Deliberately not in this design
+
+- A Wonder that pays Gold (§3.1).
+- A second copy of a Wonder (§3.2).
+- A level that goes through the build queue (§4).
+- A `maxLevel` set to a large number instead of absent (§7).
+- A per-level table of any kind.
+- A second currency to feed a Wonder (OQ-6).
+- Level stars.
+- Workers, residents or an area of influence (§5.1).
+- A Wonder that is destroyed, downgraded or lost — promise 1.
+- A Wonder-specific screen.
+- A notification, a glow or anything that asks for attention (§9).
+- Donating to another player's Wonder — [`15-social.md`](15-social.md), if at
+  all (**OQ-59**).
+- A Wonder that unlocks a mechanic rather than scaling a number.
+- Prestige, or spending a Wonder for a permanent bonus.
+- Generated orders as the repeating Gold sink ([`12-quests.md`](12-quests.md)
+  §5).
+
+**Open questions:** **OQ-57**, **OQ-58**, **OQ-59**.
