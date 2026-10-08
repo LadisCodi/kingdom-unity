@@ -43,3 +43,6 @@ MonoBehaviour:
   _promise: A seat in the shade
   _description: A bench under a young tree, where the street stops to talk.
   _buildTab: Decoration
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: f31fe91afbdbc7266998186656397ed4, type: 3}

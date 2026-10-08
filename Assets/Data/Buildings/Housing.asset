@@ -125,3 +125,14 @@ MonoBehaviour:
   _promise: Villagers live here and pay taxes
   _description: A snug home for villagers, who pay their rent in gold.
   _buildTab: Economy
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 1695d15f2dfca78dc828817b869e9d04, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: 346601f5c263a1151a4d3622c2bee7da, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: eb2a08174f15ba1fcb5515dc1b0ec279, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: 8b53dc3e4ccf248458cb9ff03ecf02ff, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: a467ac57be0013a2cbe8ce8e6e0b3d01, type: 3}

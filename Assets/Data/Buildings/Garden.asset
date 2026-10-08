@@ -45,3 +45,6 @@ MonoBehaviour:
   _promise: Beds of flowers
   _description: Bright flowerbeds that make the whole street smile.
   _buildTab: Decoration
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 26257b9e2d25cdfca8b0357fc8b2a66a, type: 3}

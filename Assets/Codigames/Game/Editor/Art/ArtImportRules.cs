@@ -8,18 +8,27 @@ namespace Codigames.Game.Editor.Art
     // - Art/Features: standing on their cell, pivot at the bottom centre, as wide as their footprint
     //   (a "_2x2" / "_3x3" suffix says how many cells across).
     // - Art/Buildings: pivot at the bottom centre; the view scales each to its footprint.
+    // - Art/UI: sprites at 100 px a unit; a piece drawn three-sliced keeps its ends (its border below).
     public class ArtImportRules : AssetPostprocessor
     {
+        // The width of each three-sliced piece's ends, in pixels, as the web drew them.
+        private static readonly System.Collections.Generic.Dictionary<string, int> SLICED_ENDS = new()
+        {
+            ["bar-base"] = 54, ["bar-fill-blue"] = 54, ["bar-fill-green"] = 54, ["bar-border"] = 64,
+        };
+
         private const string TERRAIN = "Assets/Art/Terrain/";
         private const string FEATURES = "Assets/Art/Features/";
         private const string BUILDINGS = "Assets/Art/Buildings/";
+        private const string UI = "Assets/Art/UI/";
 
         private void OnPreprocessTexture()
         {
             var isTerrain = assetPath.StartsWith(TERRAIN);
             var isFeature = assetPath.StartsWith(FEATURES);
             var isBuilding = assetPath.StartsWith(BUILDINGS);
-            if (!isTerrain && !isFeature && !isBuilding) return;
+            var isUi = assetPath.StartsWith(UI);
+            if (!isTerrain && !isFeature && !isBuilding && !isUi) return;
 
             var importer = (TextureImporter)assetImporter;
             importer.textureType = TextureImporterType.Sprite;
@@ -32,7 +41,14 @@ namespace Codigames.Game.Editor.Art
             importer.ReadTextureSettings(settings);
             settings.spriteMeshType = SpriteMeshType.FullRect;
 
-            if (isTerrain)
+            if (isUi)
+            {
+                settings.spriteAlignment = (int)SpriteAlignment.Center;
+                importer.spritePixelsPerUnit = 100;
+                var stem = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+                if (SLICED_ENDS.TryGetValue(stem, out var end)) settings.spriteBorder = new Vector4(end, 0, end, 0);
+            }
+            else if (isTerrain)
             {
                 settings.spriteAlignment = (int)SpriteAlignment.Center;
                 importer.spritePixelsPerUnit = 256;

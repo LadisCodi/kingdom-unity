@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Codigames.Game.Cameras;
+using Codigames.Game.City;
 using Codigames.Game.Feedback;
 using Codigames.Game.Map;
+using Codigames.Game.Session;
 using Codigames.Game.UI;
 using Codigames.Kingdom.Map;
 using Codigames.Modules.Cameras;
@@ -17,6 +19,8 @@ namespace Codigames.Game.Startup
     public class GameLifetimeScope : LifetimeScope
     {
         [SerializeField] private ProvinceMap _province;
+        [SerializeField] private CityView _cityView;
+        [SerializeField] private GroundView _groundView;
         [SerializeField] private MenuCatalog _menuCatalog;
         [SerializeField] private WorldFeedbackCatalog _worldFeedbackCatalog;
         [SerializeField] private QuickInfoMessageSettings _quickInfoMessageSettings;
@@ -28,6 +32,9 @@ namespace Codigames.Game.Startup
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(_province).AsSelf().As<IProvinceMap>();
+            KingdomInstaller.Install(builder);
+            builder.RegisterComponent(_cityView);
+            builder.RegisterComponent(_groundView);
             RegisterUI(builder);
             RegisterFeedback(builder);
             RegisterCamera(builder);

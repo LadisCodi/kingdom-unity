@@ -44,3 +44,6 @@ MonoBehaviour:
   _description: A few raised beds of flowers and a watering can. Neighbours smile
     when they pass.
   _buildTab: Decoration
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: e5d964076d0eb4974975f024af68f5da, type: 3}

@@ -82,3 +82,10 @@ MonoBehaviour:
   _description: Where heroes come for a hot meal and a hard job. The banner hangs
     by the fire.
   _buildTab: Economy
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 1188641500f4bd22f95c225d5b668635, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: 9ca6b063740805ecfaaad9d07e830dd1, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: 6b440e07550a8fa37b9b4dada45bf564, type: 3}

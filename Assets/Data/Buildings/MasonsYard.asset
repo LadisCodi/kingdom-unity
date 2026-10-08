@@ -149,3 +149,14 @@ MonoBehaviour:
   _promise: Villagers dress Stone into blocks
   _description: Masons shape raw stone into fine building blocks.
   _buildTab: Economy
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 18b0f2fa9ed47f5ab9c840cd2097e053, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: 12f0aa2e89e8d2df2b5a5b50f2a05334, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: f66d451f39fdc90678c7ea8cf0371232, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: aae31947ce71772f1a10089459ab1116, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: 37cb88c99701a06d09e8ecf9e6a47e37, type: 3}

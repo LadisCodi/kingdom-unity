@@ -81,6 +81,7 @@ namespace Codigames.Game.Editor.WebImport
                 so.FindProperty("_promise").stringValue = row.Promise;
                 so.FindProperty("_description").stringValue = row.Description;
                 so.FindProperty("_buildTab").stringValue = row.BuildTab;
+                SetArt(so.FindProperty("_art"), row.Sprite);
 
                 var perLevel = so.FindProperty("_cost._perLevel");
                 perLevel.arraySize = row.CostPerLevel.Count;
@@ -164,6 +165,28 @@ namespace Codigames.Game.Editor.WebImport
                 var line = list.GetArrayElementAtIndex(i++);
                 line.FindPropertyRelative("_id").stringValue = id;
                 line.FindPropertyRelative("_value").doubleValue = value;
+            }
+        }
+
+        // A building's tiers, from its sprite stem: <stem>_l<n>.png from level n, or <stem>.png alone.
+        private static void SetArt(SerializedProperty list, string stem)
+        {
+            var tiers = new List<(int Level, Sprite Sprite)>();
+            for (var level = 1; level <= 20; level++)
+            {
+                var sprite = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/Buildings/{stem}_l{level}.png");
+                if (sprite != null) tiers.Add((level, sprite));
+            }
+
+            var single = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/Buildings/{stem}.png");
+            if (tiers.Count == 0 && single != null) tiers.Add((1, single));
+
+            list.arraySize = tiers.Count;
+            for (var i = 0; i < tiers.Count; i++)
+            {
+                var tier = list.GetArrayElementAtIndex(i);
+                tier.FindPropertyRelative("_fromLevel").intValue = tiers[i].Level;
+                tier.FindPropertyRelative("_sprite").objectReferenceValue = tiers[i].Sprite;
             }
         }
 

@@ -129,3 +129,14 @@ MonoBehaviour:
   _promise: Villagers work Wood into Planks
   _description: Rough logs go in, and smooth planks come out.
   _buildTab: Economy
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 4f206b8a8d76386b6a2ad7de2809959a, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: ff680e1bcba80fc16957e9c174b26297, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: 2ed844cccbb597450a4a6abb00cd293f, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: d04715b10686b65898b526b09f4f57e6, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: 624141efceb42e02aa4e349374d0058f, type: 3}
