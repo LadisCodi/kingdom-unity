@@ -2,7 +2,7 @@
 
 > **Scope:** how the web prototype becomes a native Unity game — the phases,
 > what each delivers, and what has to be decided before each starts.
-> **Status:** phase 0 in progress.
+> **Status:** phase 0 done; phase 1 next.
 
 ## 1. Principles
 
@@ -28,7 +28,27 @@
 | 5 | **The rest** | tutorials and dialogue, gacha, offers, friends, notices, Spanish, analytics |
 | 6 | **On device** | sprite atlases, profiling on iOS and Android, a dev panel |
 
-## 3. Decisions taken
+## 3. Phase 0 — what is in
+
+- Repo, Git Flow, LFS, working rules, the clean design docs.
+- Packages: VContainer, UniTask, Newtonsoft, Cinemachine, UIParticle,
+  SoftMask, UI Effect, Graphy; Odin, DOTween, LeanTouch, Feel, All In 1
+  Sprite Shader and VFX Toolkit (demos removed).
+- Assemblies `Kingdom.Sim` (engine-free), `Kingdom.Game`, `Kingdom.Editor`,
+  `Kingdom.Tests`.
+- `Rand`, bit-identical to the web prototype (golden tests).
+- From ProtoLab, adapted: the menu framework (`UIManager`, `Menu`,
+  presenters, `MenuFactory` over a `MenuCatalog`), widgets and pools, the
+  safe-area fitter, button press feedback, the camera, world feedback and
+  quick-info messages (Feel), the sound service (over `MMSoundManager`).
+- `IClock`, `Localization` (English as the key, Spanish overlays),
+  `NumberFormat` (locale-aware, the web's rules), the app lifecycle signal.
+- Scenes `Boot` and `Game`, the root scope prefab with the loading screen.
+- **Deferred to phase 3:** the nav bar. ProtoLab's bar morphs into a close
+  button and tabs; the design's bar steps aside while a menu is open
+  (`art/ui-menus-redesign.md` §5.4, §6.5), so it is built to the design.
+
+## 4. Decisions taken
 
 - **Game data:** the web prototype's JSON, as-is, is the source of truth;
   edited inside Unity with Odin editor windows, validated by the same rules
@@ -39,7 +59,7 @@
   domain modules and save model are not (`CLAUDE.md`, *What comes from
   ProtoLab*).
 
-## 4. Decisions still open
+## 5. Decisions still open
 
 - Target platforms: mobile only, or mobile + WebGL for testers.
 - The web repo after the remake: frozen, or kept alive in parallel.

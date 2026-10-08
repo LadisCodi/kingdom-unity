@@ -1,0 +1,19 @@
+{
+    "name": "Kingdom.Editor",
+    "rootNamespace": "Kingdom.Editor",
+    "references": [
+        "Kingdom.Sim",
+        "Kingdom.Game"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

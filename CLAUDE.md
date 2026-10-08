@@ -100,6 +100,17 @@ Packages/                              UPM packages
 - **Third-party code is never edited.** Asset Store packages in `Plugins/`,
   everything else through UPM.
 
+### How the game starts
+
+- `VContainerSettings` (preloaded) names the **root scope**:
+  `Prefabs/App/ProjectLifetimeScope.prefab` — the clock, localization,
+  number format, sound and the loading screen; it lives as long as the app.
+- `Boot` (scene 0): `BootLifetimeScope` → `BootFlow` covers the screen and
+  loads `Game`.
+- `Game`: `GameLifetimeScope` (UI root, menus, camera, feedback) →
+  `GameStartupFlow` readies the game and lifts the loading screen.
+- Play in the editor always starts from `Boot` (`Editor/PlayFromBoot.cs`).
+
 ### Inside a domain
 
 - **`Sim/<Domain>/`** — state types (plain, serialisable data), the rules
@@ -204,6 +215,11 @@ format with `CultureInfo.InvariantCulture`).
   which cannot, use `[Inject]` on a method or field. Don't `new` up services.
   Entry points are `IStartable` / `ITickable`, registered with
   `RegisterEntryPoint<T>()`.
+  The one exception is the menu framework's base classes
+  (`AbstractMenuPresenter`), which take their plumbing with `[Inject]` so a
+  presenter does not repeat it in its constructor.
+- **Localization and number formatting are injected services**
+  (`Localization`, `NumberFormat`), never statics.
 - **Async**: **UniTask** (`async UniTask`), never coroutines.
 - **Tweens**: **DOTween** for UI and feedback motion; kill tweens with their
   owner.
@@ -321,14 +337,34 @@ Not taken: its domain modules (Currencies, Generators, Production, Economy,
 Stats, Requirements, Queues, Timer, Offline) — the sim, ported from the web
 prototype, owns the domain — and its save model.
 
+## Driving the editor
+
+The editor is usually open on the project: never run Unity in batch mode
+against it. Drive it with the Unity CLI (`unity status`, then
+`unity command <name> --project-path <project>`):
+
+- `recompile` + `recompile_status`, then `console_status` / `console` for
+  errors; `run_tests --mode EditMode` runs the suite in the open editor.
+- `editor_play` / `editor_stop`, `capture_game_view` (its `save_path` is
+  relative to `Assets/` — write it under `Temp/` outside, or delete it after).
+- Scenes, prefabs and assets are made by editor code, never by writing YAML:
+  `eval` runs a method body (no `using`s — fully qualified names); anything
+  longer is a temporary class in `Editor/`, compiled, run, then deleted.
+  After `NewScene`, reload assets with `AssetDatabase.LoadAssetAtPath` before
+  assigning them — references held across it are lost.
+- **VContainer rewrites a new file named `*LifetimeScope.cs`** with its empty
+  template when Unity imports it. Create the file, let it import, then write
+  its content.
+
 ## Tests and the gate
 
 - NUnit, EditMode, under `Assets/Kingdom/Tests/` mirroring the folders it
   tests. Class `{Component}Tests`, methods `Method_Should{Behavior}`.
 - **The sim is tested without a scene.** Every rule in `Sim/` has tests;
   every invariant has a test that fails when it breaks.
-- **The gate**: EditMode tests green and the project compiles for the
-  target platform. GitHub runs no tests — the gate is local, before a branch
+- **The gate**: the project compiles with no errors or warnings, EditMode
+  tests are green, and Play from `Boot` reaches `Game` with an empty
+  console. GitHub runs no tests — the gate is local, before a branch
   is pushed for a PR. Red means no PR.
 
 ## Branching — Git Flow
