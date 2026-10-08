@@ -9,7 +9,8 @@ namespace Codigames.Game.Data.City
     [Serializable]
     public class BuildingCostData : IBuildingCost
     {
-        [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "")]
+        [Tooltip("One entry per level: the first is the build.")]
+        [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = nameof(LevelCostData.Summary))]
         [SerializeField] private List<LevelCostData> _perLevel = new();
         [SerializeField, MinValue(0)] private double _instanceLinearGrowth = 2;
         [SerializeField, MinValue(1)] private double _instanceExponentialGrowth = 1.2;
