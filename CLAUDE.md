@@ -8,7 +8,7 @@ its renderer or UI.
 
 Unity **6000.3.19f1**, URP 2D, Input System. Packages: **VContainer** (DI),
 **UniTask** (async), **Odin Inspector**, **DOTween**, **TextMeshPro**,
-**Newtonsoft.Json**, **Cinemachine** (the camera), **LeanTouch** (touch
+**Newtonsoft.Json**, **Feel** (feedbacks, with Nice Vibrations), **Cinemachine** (the camera), **LeanTouch** (touch
 gestures), **UIParticle** (particles inside uGUI), **NUnit** (Unity Test
 Framework).
 
@@ -216,6 +216,30 @@ format with `CultureInfo.InvariantCulture`).
   (`RegisterComponent`). No singletons, no static mutable state.
 - **No allocation in per-frame code** (`Update`, `LateUpdate`, render
   loops): no LINQ, no closures, no string building.
+
+## Feedback
+
+**Code decides WHEN, the editor decides HOW.** Every moment the player should
+feel — a collect, a build finishing, a level-up, a price you can't pay — is
+a named Feel `MMF_Player` serialised on its view or prefab; code only calls
+`PlayFeedbacks()`. No duration, curve or intensity of a feedback is written in
+code.
+
+- Feel lives only in `Game`, in views. A use case applies the command to the
+  sim, then tells the view, which plays its feedback.
+- **Feel** for authored feedback; **DOTween** for motion computed in code
+  (menus opening, a bar following a value, a list reordering); **particles**
+  are played from a feedback, not by loose components.
+- **One sound channel**: Feel's `MMSoundManager` (music, SFX and ambience
+  tracks); `SoundService` is a thin layer over it, so the settings' volumes
+  reach everything.
+- **Haptics** through Nice Vibrations, behind the settings' vibration toggle.
+  `.haptic` clips cannot be imported on Linux (no editor plugin there) —
+  use its presets, or import clips on macOS/Windows.
+- **Camera shake** through Cinemachine Impulse.
+- Anything played often (floating numbers on taps) is **pooled**; never one
+  instantiate per tap.
+- Feel's demos are not in the project; reimport them elsewhere to browse.
 
 ## UI
 
