@@ -3,6 +3,7 @@
     "rootNamespace": "Codigames.Modules.Audio.Tests",
     "references": [
         "Codigames.Modules.Audio",
+        "Codigames.Modules.Core",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

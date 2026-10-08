@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Codigames.Modules.Audio;
+using Codigames.Modules.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -12,34 +13,21 @@ namespace Codigames.Game.Audio
         [TableList]
         [SerializeField] private List<UnitySound> _sounds = new();
 
-        private Dictionary<string, UnitySound> _byId;
+        private Catalog<ISound> _catalog;
 
-        public bool TryGet(string soundId, out ISound sound)
-        {
-            _byId ??= BuildLookup();
+        private Catalog<ISound> Sounds => _catalog ??= new Catalog<ISound>(_sounds);
 
-            if (_byId.TryGetValue(soundId, out var found) && found.Clip != null)
-            {
-                sound = found;
-                return true;
-            }
+        public IReadOnlyList<ISound> Items => Sounds.Items;
 
-            sound = null;
-            return false;
-        }
+        public bool Contains(string id) => Sounds.Contains(id);
 
-        private Dictionary<string, UnitySound> BuildLookup()
-        {
-            var map = new Dictionary<string, UnitySound>();
+        public bool TryGet(string id, out ISound item) => Sounds.TryGet(id, out item);
 
-            foreach (var entry in _sounds)
-            {
-                if (entry != null && !string.IsNullOrEmpty(entry.Id)) map[entry.Id] = entry;
-            }
+        public ISound Get(string id) => Sounds.Get(id);
 
-            return map;
-        }
+        public TItem Get<TItem>(string id) where TItem : ISound => Sounds.Get<TItem>(id);
 
-        private void OnValidate() => _byId = null;
+        // An edit in the inspector rebuilds the lookup.
+        private void OnValidate() => _catalog = null;
     }
 }

@@ -1,8 +1,9 @@
+using Codigames.Modules.Core;
+
 namespace Codigames.Modules.Audio
 {
     // Port: the game's sounds by id.
-    public interface ISoundCatalog
+    public interface ISoundCatalog : ICatalog<ISound>
     {
-        bool TryGet(string soundId, out ISound sound);
     }
 }

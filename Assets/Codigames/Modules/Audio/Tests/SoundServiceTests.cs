@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Codigames.Modules.Core;
 using NUnit.Framework;
 
 namespace Codigames.Modules.Audio.Tests
@@ -7,14 +8,14 @@ namespace Codigames.Modules.Audio.Tests
     {
         private sealed class FakeSound : ISound
         {
+            public FakeSound(string id) => Id = id;
+            public string Id { get; }
             public SoundTrack Track => SoundTrack.Ui;
         }
 
-        private sealed class FakeCatalog : ISoundCatalog
+        private sealed class FakeCatalog : Catalog<ISound>, ISoundCatalog
         {
-            public readonly Dictionary<string, ISound> Sounds = new();
-
-            public bool TryGet(string soundId, out ISound sound) => Sounds.TryGetValue(soundId, out sound);
+            public FakeCatalog(params ISound[] sounds) : base(sounds) { }
         }
 
         private sealed class FakePlayer : ISoundPlayer
@@ -27,26 +28,22 @@ namespace Codigames.Modules.Audio.Tests
             public void SetVolume(SoundTrack track, float volume) => Volumes[track] = volume;
         }
 
-        private FakeCatalog _catalog;
+        private readonly FakeSound _click = new("click");
         private FakePlayer _player;
         private SoundService _service;
 
         [SetUp]
         public void SetUp()
         {
-            _catalog = new FakeCatalog();
             _player = new FakePlayer();
-            _service = new SoundService(_catalog, _player);
+            _service = new SoundService(new FakeCatalog(_click), _player);
         }
 
         [Test]
         public void Play_ShouldPlayTheCataloguedSound()
         {
-            var click = new FakeSound();
-            _catalog.Sounds["click"] = click;
-
             Assert.That(_service.Play("click", 0.5f), Is.True);
-            Assert.That(_player.Played, Is.EqualTo(new[] { ((ISound)click, 0.5f) }));
+            Assert.That(_player.Played, Is.EqualTo(new[] { ((ISound)_click, 0.5f) }));
         }
 
         [Test]
