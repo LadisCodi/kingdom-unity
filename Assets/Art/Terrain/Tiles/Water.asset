@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68756597de5e977449af488e10e2814d, type: 3}
+  m_Name: Water
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Map.VariantTile
+  _id: Water
+  _variants:
+  - {fileID: 21300000, guid: 200e023803ee658429ba31a8f3d9785a, type: 3}
+  - {fileID: 21300000, guid: d79532127041bfed1bb73a9cf1964505, type: 3}
+  - {fileID: 21300000, guid: 9da378b62804add6bb6c07fbbdc5f9c4, type: 3}
+  - {fileID: 21300000, guid: 366fc9e126b7df1a8b4318897bade4e2, type: 3}
