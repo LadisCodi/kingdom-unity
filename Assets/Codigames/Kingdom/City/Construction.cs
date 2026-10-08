@@ -38,11 +38,11 @@ namespace Codigames.Kingdom.City
 
         public ConstructionRefusal Build(string definitionId, Vector2Int anchor, double now)
         {
-            if (!_buildings.TryGet(definitionId, out var building)) return ConstructionRefusal.NotFound;
-            if (!building.Buildable) return ConstructionRefusal.NotBuildable;
+            var refusal = BuildRefusal(definitionId);
+            if (refusal != ConstructionRefusal.None && refusal != ConstructionRefusal.CannotAfford) return refusal;
             if (_placement.Check(definitionId, anchor) != PlacementProblem.None) return ConstructionRefusal.Placement;
-            if (!CityQueries.HasFreeBuilder(_city)) return ConstructionRefusal.NoFreeBuilder;
 
+            var building = _buildings.Get(definitionId);
             var ordinal = CityQueries.Count(_city, definitionId) + 1;
             if (!_treasury.TryPay(BuildingPricing.Currencies(building, ordinal, 1))) return ConstructionRefusal.CannotAfford;
 
@@ -61,6 +61,35 @@ namespace Codigames.Kingdom.City
             var rings = CityQueries.DistanceFromTownhall(_city, _buildings, _settings, anchor);
             Start(district, 1, BuildingDurations.BuildSeconds(building.Duration, ordinal - 1, rings), now);
             return ConstructionRefusal.None;
+        }
+
+        // What stands between the city and one more of a kind, wherever it goes.
+        public ConstructionRefusal BuildRefusal(string definitionId)
+        {
+            if (!_buildings.TryGet(definitionId, out var building)) return ConstructionRefusal.NotFound;
+            if (!building.Buildable) return ConstructionRefusal.NotBuildable;
+
+            var count = CityQueries.Count(_city, definitionId);
+            var cap = CityQueries.MaxCount(building, CityQueries.TownhallLevel(_city, _settings));
+            if (cap.HasValue && count >= cap.Value) return ConstructionRefusal.AtCap;
+            if (!CityQueries.HasFreeBuilder(_city)) return ConstructionRefusal.NoFreeBuilder;
+
+            return _treasury.CanAfford(BuildingPricing.Currencies(building, count + 1, 1))
+                ? ConstructionRefusal.None
+                : ConstructionRefusal.CannotAfford;
+        }
+
+        // One more of a kind, as the build menu shows it: its wait is the one on the plot nearest the Townhall.
+        public BuildOffer Offer(string definitionId)
+        {
+            var building = _buildings.Get(definitionId);
+            var count = CityQueries.Count(_city, definitionId);
+            var nearest = _placement.Nearest(definitionId);
+            var rings = nearest.HasValue ? CityQueries.DistanceFromTownhall(_city, _buildings, _settings, nearest.Value) : 0;
+
+            return new BuildOffer(definitionId, count + 1, BuildingPricing.Currencies(building, count + 1, 1),
+                BuildingDurations.BuildSeconds(building.Duration, count, rings), count,
+                CityQueries.MaxCount(building, CityQueries.TownhallLevel(_city, _settings)), BuildRefusal(definitionId));
         }
 
         public ConstructionRefusal Upgrade(string districtId, double now)

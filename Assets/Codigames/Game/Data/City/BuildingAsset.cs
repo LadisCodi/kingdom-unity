@@ -8,7 +8,7 @@ namespace Codigames.Game.Data.City
 {
     // A building, whole: its rules (what Kingdom reads) and what the player sees of it.
     [CreateAssetMenu(fileName = "Building", menuName = "Kingdom/Data/Building")]
-    public class BuildingAsset : DefinitionAsset, IBuildingDefinition
+    public class BuildingAsset : DefinitionAsset, IBuildingDefinition, IBuildingCard
     {
         [TabGroup("Rules")]
         [SerializeField, Range(1, BuildingRules.MAX_LEVEL)] private int _maxLevel = 1;

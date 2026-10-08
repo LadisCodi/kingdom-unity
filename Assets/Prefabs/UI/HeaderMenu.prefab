@@ -182,7 +182,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfd60eff31b0193efb4fb14498745731, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.UI.Hud.SafeAreaTopBleed
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.UI.Hud.SafeAreaBleed
   _height: 107
 --- !u!114 &5695169005391069480
 MonoBehaviour:

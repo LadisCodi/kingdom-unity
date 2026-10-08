@@ -54,6 +54,8 @@ namespace Codigames.Game.Startup
             builder.RegisterEntryPoint<MenuBackInputHandler>();
 
             builder.Register<HeaderMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<NavMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<BuildMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
         }
 
         private void RegisterFeedback(IContainerBuilder builder)

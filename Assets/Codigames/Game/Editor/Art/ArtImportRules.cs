@@ -8,15 +8,21 @@ namespace Codigames.Game.Editor.Art
     // - Art/Features: standing on their cell, pivot at the bottom centre, as wide as their footprint
     //   (a "_2x2" / "_3x3" suffix says how many cells across).
     // - Art/Buildings: pivot at the bottom centre; the view scales each to its footprint.
-    // - Art/UI: sprites at 100 px a unit; a piece drawn three-sliced keeps its ends (its border below).
+    // - Art/UI: sprites at 100 px a unit; a sliced piece keeps its border (below). plate-fill and plate-rim are
+    //   a white rounded plate and its rim, generated, tinted wherever a card or a chip needs one.
     public class ArtImportRules : AssetPostprocessor
     {
-        // The width of each three-sliced piece's ends, in pixels, as the web drew them.
-        private static readonly System.Collections.Generic.Dictionary<string, int> SLICED_ENDS = new()
+        // The border each sliced piece keeps, in source pixels (left, bottom, right, top), as the web slices it.
+        private static readonly System.Collections.Generic.Dictionary<string, Vector4> SLICED = new()
         {
-            ["bar-base"] = 54, ["bar-fill-blue"] = 54, ["bar-fill-green"] = 54, ["bar-border"] = 64,
-            ["hud-slot"] = 50,
+            ["bar-base"] = Ends(54), ["bar-fill-blue"] = Ends(54), ["bar-fill-green"] = Ends(54), ["bar-border"] = Ends(64),
+            ["hud-slot"] = Ends(50),
+            ["nav-tab"] = new Vector4(30, 50, 30, 30), ["nav-tab-down"] = new Vector4(30, 50, 30, 30),
+            ["window-frame"] = new Vector4(64, 64, 64, 64), ["window-header"] = Ends(60),
+            ["plate-fill"] = new Vector4(26, 26, 26, 26), ["plate-rim"] = new Vector4(26, 26, 26, 26),
         };
+
+        private static Vector4 Ends(int width) => new(width, 0, width, 0);
 
         private const string TERRAIN = "Assets/Art/Terrain/";
         private const string FEATURES = "Assets/Art/Features/";
@@ -47,7 +53,7 @@ namespace Codigames.Game.Editor.Art
                 settings.spriteAlignment = (int)SpriteAlignment.Center;
                 importer.spritePixelsPerUnit = 100;
                 var stem = System.IO.Path.GetFileNameWithoutExtension(assetPath);
-                if (SLICED_ENDS.TryGetValue(stem, out var end)) settings.spriteBorder = new Vector4(end, 0, end, 0);
+                if (SLICED.TryGetValue(stem, out var border)) settings.spriteBorder = border;
             }
             else if (isTerrain)
             {

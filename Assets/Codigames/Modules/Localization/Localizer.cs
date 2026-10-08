@@ -61,6 +61,10 @@ namespace Codigames.Modules.Localization
             return Fill(form, args);
         }
 
+        // A text that heads its line starts with a capital, in the player's culture: "crop plots" → "Crop plots".
+        public string Capitalized(string text)
+            => string.IsNullOrEmpty(text) ? text : Culture.TextInfo.ToUpper(text[0]) + text.Substring(1);
+
         private string Translate(string key) => TryGetLine(key, out var line) ? line : WithoutContext(key);
 
         private bool TryGetLine(string key, out string line)
