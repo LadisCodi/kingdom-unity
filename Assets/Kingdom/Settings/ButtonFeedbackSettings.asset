@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07131de72e4e822eebdaec47419213d9, type: 3}
+  m_Name: ButtonFeedbackSettings
+  m_EditorClassIdentifier: Kingdom.Game::Kingdom.Game.UI.ButtonFeedbackSettings
+  _pressSound: ui.button.press
+  _soundVolume: 1
+  _pressedScale: 0.9
+  _pressDuration: 0.08
+  _releaseDuration: 0.12
+  _pressEase: 6
+  _releaseEase: 27
