@@ -1,45 +1,48 @@
 using System;
-using Cysharp.Threading.Tasks;
-using VContainer;
+using System.Threading.Tasks;
 
 namespace Codigames.Modules.UI
 {
-    public abstract class AbstractMenuPresenter<TMenu> : IMenuPresenter
-        where TMenu : Menu
+    // The shared lifecycle of a presenter: resolve the view, bind it, wire its events, show it; and the same
+    // backwards to hide it. A presenter overrides the hooks, never Show or Hide.
+    public abstract class AbstractMenuPresenter<TView> : IMenuPresenter where TView : class, IMenuView
     {
-        [Inject] private readonly MenuFactory _menuFactory;
+        private readonly IMenuViewFactory _views;
+        private bool _viewEventsSubscribed;
 
-        protected TMenu Menu { get; private set; }
+        protected AbstractMenuPresenter(IMenuViewFactory views)
+        {
+            _views = views;
+        }
 
-        public Type MenuType => typeof(TMenu);
+        public Type MenuType => typeof(TView);
         public bool IsShown { get; private set; }
-
         public bool HasFocus { get; private set; }
 
-        private bool _menuEventsSubscribed;
+        protected TView View { get; private set; }
 
-        public async UniTask Show()
+        public async Task Show()
         {
-            Menu ??= _menuFactory.Resolve<TMenu>();
+            View ??= _views.Resolve<TView>();
 
-            Bind(Menu);
-            SubscribeToMenuEvents(Menu);
-            await PreShowInternal(Menu);
-            await Menu.Show();
-            await PostShowInternal(Menu);
+            BindInternal(View);
+            SubscribeToViewEvents(View);
+            await PreShowInternal(View);
+            await View.Show();
+            await PostShowInternal(View);
 
             IsShown = true;
         }
 
-        public async UniTask Hide()
+        public async Task Hide()
         {
-            if (Menu == null) return;
+            if (View == null) return;
 
-            await PreHideInternal(Menu);
-            await Menu.Hide();
-            await PostHideInternal(Menu);
-            UnsubscribeFromMenuEvents(Menu);
-            Unbind(Menu);
+            await PreHideInternal(View);
+            await View.Hide();
+            await PostHideInternal(View);
+            UnsubscribeFromViewEvents(View);
+            UnbindInternal(View);
 
             IsShown = false;
         }
@@ -47,98 +50,49 @@ namespace Codigames.Modules.UI
         public void OnFocusGained()
         {
             HasFocus = true;
-            Menu?.OnFocusGained();
+            View?.OnFocusGained();
             OnFocusGainedInternal();
         }
 
         public void OnFocusLost()
         {
             HasFocus = false;
-            Menu?.OnFocusLost();
+            View?.OnFocusLost();
             OnFocusLostInternal();
         }
 
-        private void Bind(TMenu menu) => BindInternal(menu);
-        private void Unbind(TMenu menu) => UnbindInternal(menu);
-
-        // The single, explicit place where the presenter wires up the view's events. Common subscriptions
-        // (e.g. a shared close button) live here; per-menu ones in the override. Show() can run again while
-        // the menu is already shown (e.g. re-showing an open menu), so if we're already subscribed we
-        // unsubscribe first — this keeps handlers from stacking without each presenter guarding it.
-        private void SubscribeToMenuEvents(TMenu menu)
+        // Show can run again while the menu is shown; unsubscribing first keeps handlers from stacking.
+        private void SubscribeToViewEvents(TView view)
         {
-            if (_menuEventsSubscribed) UnsubscribeFromMenuEventsInternal(menu);
+            if (_viewEventsSubscribed) UnsubscribeFromViewEventsInternal(view);
 
-            SubscribeToMenuEventsInternal(menu);
-            _menuEventsSubscribed = true;
+            SubscribeToViewEventsInternal(view);
+            _viewEventsSubscribed = true;
         }
 
-        private void UnsubscribeFromMenuEvents(TMenu menu)
+        private void UnsubscribeFromViewEvents(TView view)
         {
-            if (!_menuEventsSubscribed) return;
+            if (!_viewEventsSubscribed) return;
 
-            UnsubscribeFromMenuEventsInternal(menu);
-            _menuEventsSubscribed = false;
+            UnsubscribeFromViewEventsInternal(view);
+            _viewEventsSubscribed = false;
         }
 
-        // Set view references and push its initial state here (no event wiring).
-        protected virtual void BindInternal(TMenu menu) { }
-        protected virtual void UnbindInternal(TMenu menu) { }
+        // Set the view's references and push its initial state (no event wiring).
+        protected virtual void BindInternal(TView view) { }
+        protected virtual void UnbindInternal(TView view) { }
 
-        // Subscribe/unsubscribe to the view's events here.
-        protected virtual void SubscribeToMenuEventsInternal(TMenu menu) { }
-        protected virtual void UnsubscribeFromMenuEventsInternal(TMenu menu) { }
+        // Subscribe to / unsubscribe from the view's events.
+        protected virtual void SubscribeToViewEventsInternal(TView view) { }
+        protected virtual void UnsubscribeFromViewEventsInternal(TView view) { }
 
-        // React to becoming / stopping being the top-most menu (the view is already notified).
+        // Becoming / stopping being the top-most menu (the view is already told).
         protected virtual void OnFocusGainedInternal() { }
         protected virtual void OnFocusLostInternal() { }
 
-        protected virtual UniTask PreShowInternal(TMenu menu) => UniTask.CompletedTask;
-        protected virtual UniTask PostShowInternal(TMenu menu) => UniTask.CompletedTask;
-        protected virtual UniTask PreHideInternal(TMenu menu) => UniTask.CompletedTask;
-        protected virtual UniTask PostHideInternal(TMenu menu) => UniTask.CompletedTask;
-    }
-
-    public abstract class AbstractMenuPresenter<TMenu, TData> : AbstractMenuPresenter<TMenu>, IMenuPresenter<TData>
-        where TMenu : Menu
-    {
-        [Inject] protected readonly UIManager UIManager;
-
-        protected TData Data { get; private set; }
-
-        public async UniTask Show(TData data)
-        {
-            SetData(data);
-            await Show();
-        }
-
-        private void SetData(TData data)
-        {
-            if (Data != null) ClearData();
-
-            Data = data;
-            SetDataInternal(data);
-            SubscribeToDataEventsInternal(data);
-        }
-
-        private void ClearData()
-        {
-            if (Data == null) return;
-
-            UnsubscribeToDataEventsInternal(Data);
-            ClearDataInternal();
-            Data = default;
-        }
-
-        protected override async UniTask PostHideInternal(TMenu menu)
-        {
-            await base.PostHideInternal(menu);
-            ClearData();
-        }
-
-        protected virtual void SetDataInternal(TData data) { }
-        protected virtual void ClearDataInternal() { }
-        protected virtual void SubscribeToDataEventsInternal(TData data) { }
-        protected virtual void UnsubscribeToDataEventsInternal(TData data) { }
+        protected virtual Task PreShowInternal(TView view) => Task.CompletedTask;
+        protected virtual Task PostShowInternal(TView view) => Task.CompletedTask;
+        protected virtual Task PreHideInternal(TView view) => Task.CompletedTask;
+        protected virtual Task PostHideInternal(TView view) => Task.CompletedTask;
     }
 }

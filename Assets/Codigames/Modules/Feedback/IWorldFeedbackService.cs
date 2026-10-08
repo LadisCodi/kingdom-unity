@@ -1,11 +1,10 @@
-using UnityEngine;
+using Codigames.Modules.Core;
 
 namespace Codigames.Modules.Feedback
 {
     public interface IWorldFeedbackService
     {
-        // A pooled feedback placed at the position; the caller configures it and calls Play, and it returns
-        // to its pool when it finishes.
-        T Spawn<T>(Vector3 worldPosition) where T : WorldFeedbackView;
+        // A feedback of this kind placed at a world position; the caller configures it and plays it.
+        T Spawn<T>(Vector3 worldPosition) where T : class, IWorldFeedback;
     }
 }

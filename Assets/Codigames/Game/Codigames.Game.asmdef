@@ -3,6 +3,7 @@
     "rootNamespace": "Codigames.Game",
     "references": [
         "Codigames.Kingdom",
+        "Codigames.Modules.Core",
         "Codigames.Modules.UI",
         "Codigames.Modules.Audio",
         "Codigames.Modules.Cameras",
@@ -16,7 +17,12 @@
         "UniTask.DOTween",
         "DOTween.Modules",
         "MoreMountains.Tools",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "Unity.InputSystem",
+        "Unity.Cinemachine",
+        "LeanTouch",
+        "LeanCommon",
+        "CW.Common"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

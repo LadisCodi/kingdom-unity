@@ -2,12 +2,7 @@
     "name": "Codigames.Modules.Cameras",
     "rootNamespace": "Codigames.Modules.Cameras",
     "references": [
-        "LeanTouch",
-        "LeanCommon",
-        "CW.Common",
-        "Unity.Cinemachine",
-        "Unity.InputSystem",
-        "DOTween.Modules"
+        "Codigames.Modules.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -17,5 +12,5 @@
     "autoReferenced": false,
     "defineConstraints": [],
     "versionDefines": [],
-    "noEngineReferences": false
+    "noEngineReferences": true
 }

@@ -1,9 +1,7 @@
 {
     "name": "Codigames.Modules.Audio",
     "rootNamespace": "Codigames.Modules.Audio",
-    "references": [
-        "MoreMountains.Tools"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
@@ -12,5 +10,5 @@
     "autoReferenced": false,
     "defineConstraints": [],
     "versionDefines": [],
-    "noEngineReferences": false
+    "noEngineReferences": true
 }
