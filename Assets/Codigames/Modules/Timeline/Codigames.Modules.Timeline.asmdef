@@ -1,12 +1,7 @@
 {
-    "name": "Codigames.Kingdom",
-    "rootNamespace": "Codigames.Kingdom",
-    "references": [
-        "Codigames.Modules.Core",
-        "Codigames.Modules.Grid",
-        "Codigames.Modules.Wallet",
-        "Codigames.Modules.Timeline"
-    ],
+    "name": "Codigames.Modules.Timeline",
+    "rootNamespace": "Codigames.Modules.Timeline",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
