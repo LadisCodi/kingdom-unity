@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Codigames.Kingdom.City;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -35,6 +36,9 @@ namespace Codigames.Game.Data.City
         [SerializeField] private string _description;
         [TabGroup("Presentation"), ValueDropdown(nameof(BuildTabs))]
         [SerializeField] private string _buildTab;
+        [TabGroup("Presentation"), Tooltip("By tier: a level draws the highest tier at or below it.")]
+        [ListDrawerSettings(ShowFoldout = false)]
+        [SerializeField] private List<LevelArt> _art = new();
 
         public int MaxLevel => _maxLevel;
         public int Width => _width;
@@ -48,6 +52,16 @@ namespace Codigames.Game.Data.City
         public string Promise => _promise;
         public string Description => _description;
         public string BuildTab => _buildTab;
+
+        // The art a level draws: the highest tier at or below it, or the lowest tier when none is.
+        public Sprite ArtFor(int level)
+        {
+            var tiers = _art.Where(t => t?.Sprite != null).OrderBy(t => t.FromLevel).ToList();
+            if (tiers.Count == 0) return null;
+
+            var reached = tiers.LastOrDefault(t => t.FromLevel <= level);
+            return (reached ?? tiers[0]).Sprite;
+        }
 
         private static IEnumerable<string> BuildTabs => new[] { "Economy", "Military", "Decoration" };
 

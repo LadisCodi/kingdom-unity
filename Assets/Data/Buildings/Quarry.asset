@@ -129,3 +129,14 @@ MonoBehaviour:
   _promise: Workers cut stone from nearby rock
   _description: Its workers cut stone and iron from the hills nearby.
   _buildTab: Economy
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 194bbc1a80fdc61e28250be2a609830a, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: 0c7dbac52c7d8bbd5b8a237797ddde31, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: 31d1af1192ed1ec008ca07ee222ab039, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: 5d728d2513baac0548915bb32e6b165f, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: 411c41664cd728369853c60f0cb52480, type: 3}

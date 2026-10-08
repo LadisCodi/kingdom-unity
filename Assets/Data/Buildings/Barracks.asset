@@ -147,3 +147,14 @@ MonoBehaviour:
   _promise: Trains soldiers and raises the army cap
   _description: Trains sturdy foot soldiers.
   _buildTab: Military
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 93ddf9401abedde33b23896b76669bae, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: c18153018597461cda2ca16b71001b79, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: 50f1cff2b1d00bdcaa3bdddaeffa372b, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: 28a88bd7bf88d2037bf2f2073527c0f5, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: aaf0956eac92f6ab7a9f633b83b949f8, type: 3}

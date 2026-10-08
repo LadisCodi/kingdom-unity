@@ -129,3 +129,14 @@ MonoBehaviour:
   _promise: Villagers pour Mana into cut stone
   _description: Carvers bind magic into stone, rune by rune.
   _buildTab: Economy
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: db72e98c73f0288b395a3d9227765533, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: a6d0fca03b04c92ae8495d6115f032e8, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: 2a7e5fcf759bc2cb8bf33e60231ec209, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: 26cc7b3c243388a1495dd8506218f52f, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: 3d796ff8c47bfb4dabbf7ffb31b0fa1b, type: 3}

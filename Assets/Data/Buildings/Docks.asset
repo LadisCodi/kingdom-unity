@@ -129,3 +129,14 @@ MonoBehaviour:
   _promise: Boats bring in fish
   _description: Fishing boats set out from here and come home full.
   _buildTab: Economy
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: f438bb6af5104349781c472bbf8d63ac, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: 90b9de0b2ba47e48099d9809afa340ce, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: 0a1cde035dfa1ee8086ae705f55906d9, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: 297aed3cb3722c04585cb25e25e787c7, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: 874acaa49e9a60b11a248b0aa023d8f1, type: 3}

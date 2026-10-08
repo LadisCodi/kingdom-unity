@@ -149,3 +149,14 @@ MonoBehaviour:
   _promise: Trains Lancers, who stop a charge
   _description: Trains lancers, who hold the line against a charge.
   _buildTab: Military
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 93a3f3706e3d40a40bea4e60f120a323, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: 3981a2cc3197dd0a694d9638ed411a16, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: 9f673ddf1bd9d86b2942b8b7918c5e21, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: 20017e47a3b6d5ea79366dc8497df40b, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: f96a46cf2960529bab404d6834099e84, type: 3}

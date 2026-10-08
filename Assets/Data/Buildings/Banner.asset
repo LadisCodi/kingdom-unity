@@ -44,3 +44,6 @@ MonoBehaviour:
   _description: The royal banner on its little green, bunting and all. Oakville is
     home again.
   _buildTab: Decoration
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 899ac0a35466a496a93c7d638bff08b5, type: 3}

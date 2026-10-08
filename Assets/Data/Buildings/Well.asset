@@ -45,3 +45,6 @@ MonoBehaviour:
   _promise: Cobbled stone and a bucket
   _description: Fresh water, and a spot where neighbours stop to chat.
   _buildTab: Decoration
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 7458be22bd56806459f30313c8418438, type: 3}

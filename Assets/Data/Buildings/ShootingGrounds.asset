@@ -149,3 +149,14 @@ MonoBehaviour:
   _promise: Trains Archers, all attack and no armour
   _description: Trains archers, deadly at range but fragile up close.
   _buildTab: Military
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: d61699884f4c9d5bd81bcf1c20215ae6, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: 2b4847d2c8b11f6568ab7a2721384d43, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: e20cc0db8718ff36b8275cc2258a99cb, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: f520f476f8bb428faadd07ffee12ade8, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: 09798919feebdbc4f91af553b8325da6, type: 3}

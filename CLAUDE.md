@@ -245,8 +245,15 @@ Tools/                     outside Unity: PureTests, Codegen, WebData (the web's
   format, sound and the loading screen; it lives as long as the app.
 - `Boot` (scene 0): `BootLifetimeScope` → `BootFlow` covers the screen and
   loads `Game`.
-- `Game`: `GameLifetimeScope` (UI root, menus, camera, feedback) →
-  `GameStartupFlow` readies the game and lifts the loading screen.
+- `Game`: `GameLifetimeScope` (the province, UI root, menus, camera,
+  feedback) → `GameStartupFlow` readies the game and lifts the loading
+  screen. `KingdomInstaller` registers Kingdom there: one `KingdomState`
+  (new, for now), the services that change it, and the `Timeline` every timed
+  system is on. `KingdomTicker` is **the one tick driver**: every frame it
+  advances the timeline to `IClock.NowMs`.
+- The city is drawn by `CityView` (a `DistrictView` per district: its tier's
+  art on its plot, faint with the web's wood-and-glass bar while it is built)
+  and `GroundView` (the features layer kept to the ground's state).
 - Play in the editor always starts from `Boot` (`Game/Editor/PlayFromBoot.cs`).
 
 ## Five invariants. Breaking one is a bug even if the tests pass.

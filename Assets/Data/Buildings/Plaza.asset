@@ -47,3 +47,6 @@ MonoBehaviour:
   _promise: A paved square for market day
   _description: A paved square where the town comes alive on market day.
   _buildTab: Decoration
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 6315ffc8838562275aaa04acfb93bc7d, type: 3}

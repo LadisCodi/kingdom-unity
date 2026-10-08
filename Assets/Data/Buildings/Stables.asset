@@ -149,3 +149,14 @@ MonoBehaviour:
   _promise: Trains Cavalry, fast and expensive
   _description: Trains riders, swift and fierce but costly to keep.
   _buildTab: Military
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: f97906197b200e0058121362806ce522, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: 3b17717bc5822e7bcae04781c25eeccc, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: fef8850c07ffe5669bc97eedc05ebb56, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: 3a938916f9feca0f7a1aa421765b368a, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: 9e4d698037211df97bfd1d8d7418cad6, type: 3}

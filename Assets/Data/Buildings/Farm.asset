@@ -129,3 +129,14 @@ MonoBehaviour:
   _promise: Workers harvest crops nearby
   _description: Its farmhands reap the fields nearby and fill the granary.
   _buildTab: Economy
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 7eadd203ae47a4e1880958c7030eeea0, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: 869fa445f2a3ae91a8ae9b94d6c6b243, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: 93259a731ad2adf7aa175b9f5b222969, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: 4c297dbea3d1ec5488e06a7138106201, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: 1f0f03740e2122272a681d5528fbbd57, type: 3}

@@ -151,3 +151,14 @@ MonoBehaviour:
   _promise: Trains new villagers
   _description: The heart of the city, where new villagers begin their lives.
   _buildTab: Economy
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 916693f7d9424bfd8915e1020a2b0041, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: 7971db0a1df535ed295411c02c3659d1, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: 84eccd555feb531149258879418b5b12, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: 4ec98a2925a56de2ea7b91bf145c0e77, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: 5e83971a252e1ed3782877b05e48cca7, type: 3}

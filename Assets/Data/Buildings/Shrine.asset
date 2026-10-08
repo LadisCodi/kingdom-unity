@@ -42,3 +42,6 @@ MonoBehaviour:
   _description: An old temple of runes. Repaired, it holds one city relic, whose
     power reaches every building in its aura.
   _buildTab: Decoration
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 65d14af3b869f4e948f84d65ea73ed59, type: 3}

@@ -43,3 +43,6 @@ MonoBehaviour:
   _promise: Neatly clipped bushes
   _description: Three bushes in tubs, clipped with great care by somebody small.
   _buildTab: Decoration
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 3cc88e433087debc88b7984b6bd77cf0, type: 3}

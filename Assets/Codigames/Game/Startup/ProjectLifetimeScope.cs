@@ -52,7 +52,7 @@ namespace Codigames.Game.Startup
         private void RegisterBalance(IContainerBuilder builder)
         {
             builder.RegisterInstance(_currencies).As<ICatalog<ICurrencyDefinition>>();
-            builder.RegisterInstance(_buildings).As<ICatalog<IBuildingDefinition>>();
+            builder.RegisterInstance(_buildings).AsSelf().As<ICatalog<IBuildingDefinition>>();
             builder.RegisterInstance(_construction).As<IConstructionSettings>();
         }
     }

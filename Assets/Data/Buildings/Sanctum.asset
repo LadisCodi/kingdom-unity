@@ -129,3 +129,14 @@ MonoBehaviour:
   _promise: Holds more Mana while you are away
   _description: Stores Mana within its enchanted walls.
   _buildTab: Economy
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: afa5cda8a3990f3a59a8cd3aeeaf2ea6, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: 2c6718201e60f9525aca4526b4f1c1f1, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: c0d42261729e75bcca347ac0433eeb3f, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: 26a90f7fa6b4a938692c615b34035b1b, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: d9f85e2c0bd45739abf24709f522b588, type: 3}

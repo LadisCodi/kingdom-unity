@@ -129,3 +129,14 @@ MonoBehaviour:
   _promise: Workers fell the forest around it
   _description: Woodcutters fell the forest nearby and stack the timber.
   _buildTab: Economy
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: eadcc2666141d0f52bde13e6173792f3, type: 3}
+  - _fromLevel: 2
+    _sprite: {fileID: 21300000, guid: 788886f38d682f80982ab49ea26fd8d9, type: 3}
+  - _fromLevel: 3
+    _sprite: {fileID: 21300000, guid: ca97ad6e9e7e28a7a9d596ecb9ed7ac3, type: 3}
+  - _fromLevel: 4
+    _sprite: {fileID: 21300000, guid: ab7d5890cc4c5546192c650e68b8702e, type: 3}
+  - _fromLevel: 8
+    _sprite: {fileID: 21300000, guid: b78a815c0b761af0f9a61b9541184378, type: 3}
