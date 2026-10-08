@@ -8,7 +8,9 @@ its renderer or UI.
 
 Unity **6000.3.19f1**, URP 2D, Input System. Packages: **VContainer** (DI),
 **UniTask** (async), **Odin Inspector**, **DOTween**, **TextMeshPro**,
-**Newtonsoft.Json**, **NUnit** (Unity Test Framework).
+**Newtonsoft.Json**, **Cinemachine** (the camera), **LeanTouch** (touch
+gestures), **UIParticle** (particles inside uGUI), **NUnit** (Unity Test
+Framework).
 
 **Read [`Docs/overview.md`](Docs/overview.md) before changing behaviour** — the
 game in five minutes. Then:
@@ -257,7 +259,8 @@ referenced:
   `AbstractMenuPresenter`, `MenuBackInputHandler`; `Widget`,
   `StateDrivenWidget`, `StateView` and their pools; `MainNavBar`,
   `SecondaryNavBar`, `SafeAreaFitter`; `ButtonPressScaleFeedback`.
-- `CameraManager` (pan, zoom, inertia).
+- `CameraManager` (pan, zoom, inertia): LeanTouch gestures move a target a
+  Cinemachine camera follows; zoom drives its orthographic size.
 - The startup flow (`SplashStartupFlow`, `GameStartupFlow`) and the
   `LifetimeScope` skeleton.
 - `SoundService`; the app-lifecycle save hook.
