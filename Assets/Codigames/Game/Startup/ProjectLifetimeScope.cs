@@ -4,7 +4,6 @@ using Codigames.Modules.Audio;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Lifecycle;
 using Codigames.Modules.Localization;
-using Codigames.Modules.UI;
 using MoreMountains.Tools;
 using UnityEngine;
 using VContainer;
@@ -26,10 +25,10 @@ namespace Codigames.Game.Startup
             builder.Register<Localizer>(Lifetime.Singleton).WithParameter("sourceCulture", "en-US");
             builder.Register<NumberFormat>(Lifetime.Singleton);
 
-            builder.RegisterInstance(_soundCatalog);
+            builder.RegisterInstance(_soundCatalog).As<ISoundCatalog>();
             builder.RegisterComponent(_soundManager);
+            builder.Register<ISoundPlayer, FeelSoundPlayer>(Lifetime.Singleton);
             builder.Register<ISoundService, SoundService>(Lifetime.Singleton);
-            builder.Register<IUISoundPlayer, UISoundPlayer>(Lifetime.Singleton);
 
             builder.RegisterComponent(_loadingScreen);
             builder.Register<AppLifecycle>(Lifetime.Singleton).AsImplementedInterfaces();

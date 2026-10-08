@@ -1,182 +1,160 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cysharp.Threading.Tasks;
-using UnityEngine;
-using VContainer;
+using System.Threading.Tasks;
 
 namespace Codigames.Modules.UI
 {
-public class UIManager
-{
-    private readonly IObjectResolver _resolver;
-    private readonly MenuCatalog _catalog;
-
-    private Dictionary<Type, IMenuPresenter> _presenters;
-    private Dictionary<Type, IMenuPresenter> Presenters =>
-        _presenters ??= _resolver.Resolve<IEnumerable<IMenuPresenter>>().ToDictionary(p => p.MenuType);
-
-    // Closeable menus in open order (top = last). Persistent menus (header, main, nav bar) aren't closeable
-    // and never enter the stack. The top-most one has focus and is the target of a close request.
-    private readonly List<IClosableMenuPresenter> _stack = new();
-
-    public event Action<IMenuPresenter> MenuWillShow;
-    public event Action<IMenuPresenter> MenuShown;
-    public event Action<IMenuPresenter> MenuWillHide;
-    public event Action<IMenuPresenter> MenuHidden;
-
-    public UIManager(IObjectResolver resolver, MenuCatalog catalog)
+    // Opens and closes menus. Closable menus form a stack in open order (top = last): the top-most has focus
+    // and is what a close request closes. Opening a menu covers the top one, or replaces it when both belong
+    // to one group; closing the top reveals what it covered. Persistent menus never enter the stack.
+    public class UIManager
     {
-        _resolver = resolver;
-        _catalog = catalog;
-    }
+        private readonly Func<IEnumerable<IMenuPresenter>> _presenterSource;
+        private readonly IMenuGroups _groups;
+        private readonly List<IClosableMenuPresenter> _stack = new();
+        private Dictionary<Type, IMenuPresenter> _presenters;
 
-    public bool IsShown<TMenu>() where TMenu : Menu => IsShown(typeof(TMenu));
-
-    public bool IsShown(Type menuType) => Presenters.TryGetValue(menuType, out var presenter) && presenter.IsShown;
-
-    // True while at least one closeable (overlay) menu is open on top of the persistent menus. Persistent
-    // menus (header, main, nav bar) never enter the stack, so this is false on the plain main screen.
-    public bool HasOverlayOpen => _stack.Count > 0;
-
-    // Closes the top-most closeable menu through its own close flow (no-op if only persistent menus are up).
-    // Invoked by the nav bar close button and by Escape / the Android back button.
-    public void CloseTopMost()
-    {
-        if (_stack.Count > 0) _stack[_stack.Count - 1].RequestClose();
-    }
-
-    public UniTask ShowMenu<TMenu>() where TMenu : Menu => ShowMenu(typeof(TMenu));
-
-    public async UniTask ShowMenu(Type menuType)
-    {
-        if (!TryGetPresenter(menuType, out var presenter)) return;
-
-        await ShowInternal(presenter, presenter.Show());
-    }
-
-    public async UniTask ShowMenu<TMenu, TData>(TData data) where TMenu : Menu
-    {
-        if (!TryGetPresenter(typeof(TMenu), out var presenter)) return;
-
-        if (presenter is not IMenuPresenter<TData> dataPresenter)
+        // The presenters arrive lazily: a presenter may itself depend on the UIManager.
+        public UIManager(Func<IEnumerable<IMenuPresenter>> presenterSource, IMenuGroups groups)
         {
-            Debug.LogError($"Presenter for {typeof(TMenu).Name} does not accept data of type {typeof(TData).Name}.");
-            return;
+            _presenterSource = presenterSource;
+            _groups = groups;
         }
 
-        await ShowInternal(presenter, dataPresenter.Show(data));
-    }
+        public event Action<IMenuPresenter> MenuWillShow;
+        public event Action<IMenuPresenter> MenuShown;
+        public event Action<IMenuPresenter> MenuWillHide;
+        public event Action<IMenuPresenter> MenuHidden;
 
-    private async UniTask ShowInternal(IMenuPresenter presenter, UniTask showing)
-    {
-        MenuWillShow?.Invoke(presenter);
+        // True while a closable menu is open over the persistent ones.
+        public bool HasOverlayOpen => _stack.Count > 0;
 
-        // Closeable menus go on the stack, covering or replacing whatever was on top; the cover/replace
-        // animation plays alongside this menu's show.
-        if (presenter is IClosableMenuPresenter closable)
-            await UniTask.WhenAll(showing, EnterStack(closable));
-        else
-            await showing;
+        private Dictionary<Type, IMenuPresenter> Presenters => _presenters ??= _presenterSource().ToDictionary(p => p.MenuType);
 
-        MenuShown?.Invoke(presenter);
-    }
+        private IClosableMenuPresenter Top => _stack.Count > 0 ? _stack[_stack.Count - 1] : null;
 
-    public UniTask HideMenu<TMenu>() where TMenu : Menu => HideMenu(typeof(TMenu));
+        public bool IsShown<TView>() where TView : IMenuView => IsShown(typeof(TView));
 
-    public async UniTask HideMenu(Type menuType)
-    {
-        if (!Presenters.TryGetValue(menuType, out var presenter)) return;
+        public bool IsShown(Type menuType) => Presenters.TryGetValue(menuType, out var presenter) && presenter.IsShown;
 
-        if (presenter is IClosableMenuPresenter closable && _stack.Contains(closable))
+        // Closes the top-most closable menu through its own close flow; nothing when only persistent menus are up.
+        public void CloseTopMost() => Top?.RequestClose();
+
+        public Task ShowMenu<TView>() where TView : IMenuView => ShowMenu(typeof(TView));
+
+        public Task ShowMenu(Type menuType)
         {
-            await ExitStack(closable);
-            return;
+            var presenter = PresenterOf(menuType);
+            return ShowInternal(presenter, presenter.Show());
         }
 
-        if (presenter.IsShown) await ClosePresenter(presenter);
-    }
-
-    public async UniTask HideAllMenus()
-    {
-        _stack.Clear();
-
-        foreach (var presenter in Presenters.Values.Where(p => p.IsShown).ToArray())
+        public Task ShowMenu<TView, TData>(TData data) where TView : IMenuView
         {
-            await ClosePresenter(presenter);
+            var presenter = PresenterOf(typeof(TView));
+
+            if (presenter is not IDataMenuPresenter<TData> dataPresenter)
+                throw new InvalidOperationException($"The presenter of {typeof(TView).Name} takes no data of type {typeof(TData).Name}.");
+
+            return ShowInternal(presenter, dataPresenter.Show(data));
         }
-    }
 
-    // Makes `entering` the top of the stack. A same-group top is replaced (closed and removed); a
-    // different-group top is hidden but kept in the stack, to be revealed when `entering` is later closed.
-    // Returns the covered/replaced menu's hide animation so it plays alongside `entering`'s show.
-    private UniTask EnterStack(IClosableMenuPresenter entering)
-    {
-        var previous = Top;
-        var covered = UniTask.CompletedTask;
+        public Task HideMenu<TView>() where TView : IMenuView => HideMenu(typeof(TView));
 
-        if (previous != null && previous != entering)
+        public async Task HideMenu(Type menuType)
         {
-            previous.OnFocusLost();
+            if (!Presenters.TryGetValue(menuType, out var presenter)) return;
 
-            if (AreGrouped(previous, entering))
+            if (presenter is IClosableMenuPresenter closable && _stack.Contains(closable))
             {
-                _stack.Remove(previous);
-                covered = ClosePresenter(previous);
+                await ExitStack(closable);
+                return;
+            }
+
+            if (presenter.IsShown) await Close(presenter);
+        }
+
+        public async Task HideAllMenus()
+        {
+            _stack.Clear();
+
+            foreach (var presenter in Presenters.Values.Where(p => p.IsShown).ToArray())
+            {
+                await Close(presenter);
+            }
+        }
+
+        private async Task ShowInternal(IMenuPresenter presenter, Task showing)
+        {
+            MenuWillShow?.Invoke(presenter);
+
+            if (presenter is IClosableMenuPresenter closable) await Task.WhenAll(showing, EnterStack(closable));
+            else await showing;
+
+            MenuShown?.Invoke(presenter);
+        }
+
+        // Makes `entering` the top: a top of the same group is replaced, any other is covered (hidden but kept,
+        // to be revealed when `entering` closes). Returns the covered or replaced menu's hide, which plays
+        // alongside `entering`'s show.
+        private Task EnterStack(IClosableMenuPresenter entering)
+        {
+            var previous = Top;
+            var covered = Task.CompletedTask;
+
+            if (previous != null && previous != entering)
+            {
+                previous.OnFocusLost();
+
+                if (_groups.AreGrouped(previous.MenuType, entering.MenuType))
+                {
+                    _stack.Remove(previous);
+                    covered = Close(previous);
+                }
+                else
+                {
+                    covered = previous.Hide();
+                }
+            }
+
+            if (!_stack.Contains(entering)) _stack.Add(entering);
+            entering.OnFocusGained();
+
+            return covered;
+        }
+
+        // Removes `leaving` and closes it; when it was the top, the menu it covered becomes the top and is shown.
+        private async Task ExitStack(IClosableMenuPresenter leaving)
+        {
+            var wasTop = Top == leaving;
+            _stack.Remove(leaving);
+
+            if (wasTop) leaving.OnFocusLost();
+
+            var closing = Close(leaving);
+            var revealed = wasTop ? Top : null;
+
+            if (revealed != null)
+            {
+                revealed.OnFocusGained();
+                await Task.WhenAll(closing, revealed.Show());
             }
             else
             {
-                covered = previous.Hide();
+                await closing;
             }
         }
 
-        if (!_stack.Contains(entering)) _stack.Add(entering);
-        entering.OnFocusGained();
-
-        return covered;
-    }
-
-    // Removes `leaving` from the stack and closes it. If it was the top, the menu it was covering becomes the
-    // new top and is shown again.
-    private async UniTask ExitStack(IClosableMenuPresenter leaving)
-    {
-        var wasTop = Top == leaving;
-        _stack.Remove(leaving);
-
-        if (wasTop) leaving.OnFocusLost();
-
-        var closing = ClosePresenter(leaving);
-        var revealed = wasTop ? Top : null;
-
-        if (revealed != null)
+        private async Task Close(IMenuPresenter presenter)
         {
-            revealed.OnFocusGained();
-            await UniTask.WhenAll(closing, revealed.Show());
+            MenuWillHide?.Invoke(presenter);
+            await presenter.Hide();
+            MenuHidden?.Invoke(presenter);
         }
-        else
-        {
-            await closing;
-        }
+
+        private IMenuPresenter PresenterOf(Type menuType)
+            => Presenters.TryGetValue(menuType, out var presenter)
+                ? presenter
+                : throw new InvalidOperationException($"No presenter registered for the menu {menuType.Name}.");
     }
-
-    private async UniTask ClosePresenter(IMenuPresenter presenter)
-    {
-        MenuWillHide?.Invoke(presenter);
-        await presenter.Hide();
-        MenuHidden?.Invoke(presenter);
-    }
-
-    private IClosableMenuPresenter Top => _stack.Count > 0 ? _stack[_stack.Count - 1] : null;
-
-    private bool AreGrouped(IMenuPresenter a, IMenuPresenter b)
-        => _catalog.AreGrouped(a.MenuType, b.MenuType);
-
-    private bool TryGetPresenter(Type menuType, out IMenuPresenter presenter)
-    {
-        if (Presenters.TryGetValue(menuType, out presenter)) return true;
-
-        Debug.LogError($"No presenter registered for menu {menuType.Name}.");
-        return false;
-    }
-}
 }

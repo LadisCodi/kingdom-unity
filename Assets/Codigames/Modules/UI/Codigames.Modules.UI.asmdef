@@ -1,13 +1,7 @@
 {
     "name": "Codigames.Modules.UI",
     "rootNamespace": "Codigames.Modules.UI",
-    "references": [
-        "VContainer",
-        "UniTask",
-        "UniTask.DOTween",
-        "DOTween.Modules",
-        "Unity.InputSystem"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
@@ -16,5 +10,5 @@
     "autoReferenced": false,
     "defineConstraints": [],
     "versionDefines": [],
-    "noEngineReferences": false
+    "noEngineReferences": true
 }

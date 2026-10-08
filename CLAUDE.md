@@ -62,16 +62,24 @@ Example — sound: the module's `ISoundCatalog` returns an `ISound`, never an
 played, the catalog is a ScriptableObject that returns `UnitySound`s, and the
 player implements `ISoundPlayer` with Feel's `MMSoundManager`.
 
-- **Independent.** A module depends on **no other module and no package**.
-  Copy its folder to another project, implement its ports, and it works.
+- **Independent.** A module depends on **no other module and no package** —
+  only on `Modules/Core` (below). Copy its folder and `Core` to another
+  project, implement its ports, and it works.
+- **`Modules/Core` is the base, not a peer.** It holds what every module may
+  share and nothing with behaviour of a system: our own `Vector2` and
+  `Vector3` (public fields, so they serialise exactly as written),
+  `IIdentifiable`, `ICatalog<T>` / `Catalog<T>` (definitions by id, in
+  authored order) and `IRegistry<T>` / `Registry<T>` (live instances by id,
+  announcing what comes and goes). The hierarchy is `Core → Module`; never
+  `Module → Module`.
 - **Ports for everything outside.** What a module needs from the world is an
   interface it declares (`ISoundPlayer`, `IAppLifecycleNotifier`); `Game`
   implements it and registers it in DI. The module never asks who.
 - **Engine types never cross into a module.** No `GameObject`,
   `MonoBehaviour`, `Transform`, `Vector3`, `AudioClip`, `Sprite`, no tween,
   no Feel player: a module speaks in its own interfaces and in .NET types
-  (`System.Numerics.Vector2`/`Vector3` for positions, `Task` for what takes
-  time). `Game` converts at the edge.
+  (`Core`'s `Vector2`/`Vector3` for positions, `Task` for what takes time).
+  `Game` converts at the edge.
 - **No DI framework, no attributes from packages.** Dependencies arrive in
   the constructor; registration and `[Inject]` belong to `Game`.
 - **Behaviour lives in the module, the engine in `Game`.** A module holds the
@@ -117,8 +125,9 @@ player implements `ISoundPlayer` with Feel's `MMSoundManager`.
 - **Game implements them with ScriptableObjects** in `Assets/Data/`, one asset
   per entry, edited in Odin (and in one *Kingdom › Data* window). Odin
   attributes go on the ScriptableObjects' own fields.
-- A definition exposes a **stable `Id`**; state and saves reference ids, never
-  assets. A definition may point to another by reference (a building's
+- A definition is `IIdentifiable` — a **stable `Id`**; state and saves
+  reference ids, never assets. Each collection reaches Kingdom as an
+  `ICatalog<T>` (`Core`), which `Game` fills from the ScriptableObjects. A definition may point to another by reference (a building's
   required technology is the technology's asset).
 - Lists are `IReadOnlyList<T>`; nothing in Kingdom changes a definition.
 - **What a legal definition is** lives in Kingdom (pure), and is checked by
@@ -249,9 +258,7 @@ new building, unit, hero, quest or technology is a data entry, not a class.
 - **DI with VContainer**, registered in `Game`'s `LifetimeScope`s. Plain C#
   classes take their dependencies in the **constructor**; `MonoBehaviour`s,
   which cannot, use `[Inject]` on a method. Don't `new` up services. Entry
-  points are `IStartable` / `ITickable` (`RegisterEntryPoint<T>()`). The one
-  exception is the menu framework's base classes (`AbstractMenuPresenter`),
-  which take their plumbing with `[Inject]` so a presenter does not repeat it.
+  points are `IStartable` / `ITickable` (`RegisterEntryPoint<T>()`).
 - **Localization and number formatting are injected services**
   (`Localizer`, `NumberFormat`), never statics.
 - **Async**: **UniTask** (`async UniTask`), never coroutines.
@@ -319,8 +326,14 @@ code.
 
 ## UI
 
-uGUI, **MVP**, on the UI module (`Codigames.Modules.UI`). A menu is three
-files in `Game/UI/`, each in its own sub-folder:
+uGUI, **MVP**. The UI module (`Codigames.Modules.UI`) holds the logic — the
+menu stack and its groups (`UIManager`), presenters (`AbstractMenuPresenter`,
+`AbstractDataMenuPresenter`) and the contracts `IMenuView`,
+`IMenuViewFactory`, `IMenuGroups`. `Game/UI` holds the Unity half: `Menu`
+(the `MonoBehaviour` every menu view derives from), widgets, `MenuFactory`
+(views from `MenuCatalog`'s prefabs), `UIRoot`, the safe area, button
+feedback and the back button. A menu is three files in `Game/UI/`, each in its
+own sub-folder:
 
 - **Data** — `Game/UI/Data/{X}Data.cs`: an immutable DTO (get-only
   properties set in the constructor) the presenter pushes to the view. Only
@@ -330,8 +343,10 @@ files in `Game/UI/`, each in its own sub-folder:
   only**: serialised references exposed as get-only properties, no logic.
   Override lifecycle hooks, never `Show`/`Hide`.
 - **Presenter** — `Game/UI/Presenters/{X}MenuPresenter.cs`: derives
-  `AbstractMenuPresenter<{X}Menu>`. Holds the logic: injected services,
-  subscribe in `BindInternal`, unsubscribe in `UnbindInternal`.
+  `AbstractMenuPresenter<{X}Menu>` (or `AbstractDataMenuPresenter`). Holds
+  the logic: services in its constructor (with the `IMenuViewFactory` it
+  passes to the base), state pushed in `BindInternal`, view events wired in
+  `SubscribeToViewEventsInternal`.
 
 The prefab's file name **equals the class name**; show a menu through the
 `UIManager` (`await uiManager.ShowMenu<XMenu>()`).
@@ -352,16 +367,18 @@ Rules the player sees:
 
 ## What comes from ProtoLab
 
-`~/Proyectos/Codigames/ProtoLab` is the team's Unity base. *Being split so
-its modules hold no Unity (see Modules): the engine half of each moves to
-`Game`.* Its menu framework,
-widgets, safe area and button feedback (`Modules/UI`), camera
-(`Modules/Cameras`), sound service (`Modules/Audio`), floating feedback and
-quick-info messages (`Modules/Feedback`) and app-lifecycle signal
-(`Modules/Lifecycle`, pure, with its hook in `Game/App`) were **copied and
-adapted** — namespaces renamed,
-lookups replaced by injection, cross-module calls replaced by ports. A
-module improved here can go back to ProtoLab as it is.
+`~/Proyectos/Codigames/ProtoLab` is the team's Unity base. Its pieces were
+**copied and split**: the behaviour into engine-free modules, the Unity half
+into `Game`.
+
+| ProtoLab piece | Module (pure) | `Game` (Unity) |
+|---|---|---|
+| menu framework, widgets, safe area, button feedback | `UI`: `UIManager`, presenters, contracts | `Game/UI`: `Menu`, widgets, `MenuFactory`, `MenuCatalog`, `UIRoot`, `SafeAreaFitter`, `ButtonPressScaleFeedback`, `MenuBackInputHandler` |
+| `CameraManager` | `Cameras`: `CameraController` (drag, inertia, elastic bounds, zoom, glide) | `Game/Cameras`: `CinemachineCameraRig`, `CameraInputHook` (LeanTouch), `CameraSettings`, `CameraTicker` |
+| `SoundService` | `Audio`: `SoundService`, `ISound`, `ISoundCatalog`, `ISoundPlayer` | `Game/Audio`: `UnitySound`, `SoundCatalog`, `FeelSoundPlayer` |
+| world feedback, quick-info messages | `Feedback`: the contracts | `Game/Feedback`: the Feel views, pools and catalogs |
+| app lifecycle hook | `Lifecycle`: `AppLifecycle` | `Game/App/AppLifecycleHook` |
+| `AbstractCatalog`, `AbstractRegistry` | `Core`: `Catalog<T>`, `Registry<T>` | the ScriptableObjects that fill them |
 
 ## Driving the editor
 
@@ -387,8 +404,8 @@ against it. Drive it with the Unity CLI (`unity status`, then
 - NUnit. Each module has `Tests/`; Kingdom has `Kingdom/Tests/`; Game has
   `Game/Tests/`. Class `{Component}Tests`, methods `Method_Should{Behavior}`.
 - **Pure code is tested without Unity**: `dotnet test Tools/PureTests` builds
-  the pure modules and Kingdom with their tests (C# 9, warnings are errors) in
-  seconds. A new pure module is added to its list.
+  every module and Kingdom with their tests (C# 9, warnings are errors) in
+  seconds.
 - Every rule in Kingdom has tests; every invariant has a test that fails when
   it breaks.
 - **The gate**: `dotnet test Tools/PureTests` green; Unity compiles with no

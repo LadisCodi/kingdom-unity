@@ -713,7 +713,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1480592033}
-  - component: {fileID: 1480592032}
+  - component: {fileID: 1480592035}
+  - component: {fileID: 1480592034}
   m_Layer: 0
   m_Name: CameraRig
   m_TagString: Untagged
@@ -721,32 +722,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1480592032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1480592031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13289aee957f026cba9927e287127a75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Kingdom.Game::Kingdom.Game.Cameras.CameraManager
-  _gameplayCamera: {fileID: 401269615}
-  _virtualCamera: {fileID: 311992720}
-  _targetTransform: {fileID: 1851232898}
-  _zoomSensitivity: 1
-  _minZoom: 3
-  _maxZoom: 20
-  _zoomElasticFactor: 0.2
-  _useInertia: 1
-  _damping: 5
-  _centerDuration: 0.4
-  _minLimit: {x: 0, y: 0}
-  _maxLimit: {x: 0, y: 0}
-  _elasticFactor: 0.4
-  _snapBackSpeed: 10
 --- !u!4 &1480592033
 Transform:
   m_ObjectHideFlags: 0
@@ -764,6 +739,33 @@ Transform:
   - {fileID: 311992718}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1480592034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1480592031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0255d57327926db1ea33fce79d9cbab4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Cameras.CameraInputHook
+--- !u!114 &1480592035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1480592031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab53498e6f1c1d3d1b9b3c35f0a88f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Cameras.CinemachineCameraRig
+  _camera: {fileID: 401269615}
+  _virtualCamera: {fileID: 311992720}
+  _target: {fileID: 1851232898}
 --- !u!1 &1851232897
 GameObject:
   m_ObjectHideFlags: 0
@@ -832,7 +834,9 @@ MonoBehaviour:
   _worldFeedbackCatalog: {fileID: 11400000, guid: 2b3cc82e2020b8ef7969ca7a100dfe77, type: 2}
   _quickInfoMessageSettings: {fileID: 11400000, guid: d2ea249f972202ee68155316b2c34292, type: 2}
   _uiRoot: {fileID: 1237387551}
-  _cameraManager: {fileID: 1480592032}
+  _cameraRig: {fileID: 1480592035}
+  _cameraInput: {fileID: 1480592034}
+  _cameraSettings: {fileID: 11400000, guid: a1a8ecb3854c4e3959f3d5b04189ec8f, type: 2}
 --- !u!4 &2026217827
 Transform:
   m_ObjectHideFlags: 0
