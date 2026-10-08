@@ -1,5 +1,23 @@
 {
   "dependencies": {
+    "com.coffee.softmask-for-ugui": {
+      "version": "3.6.5",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      },
+      "url": "https://package.openupm.com"
+    },
+    "com.coffee.ui-effect": {
+      "version": "5.11.7",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      },
+      "url": "https://package.openupm.com"
+    },
     "com.coffee.ui-particle": {
       "version": "4.14.1",
       "depth": 0,
@@ -12,6 +30,13 @@
     },
     "com.cysharp.unitask": {
       "version": "2.5.11",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
+    "com.tayx.graphy": {
+      "version": "4.0.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {},

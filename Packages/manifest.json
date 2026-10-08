@@ -1,7 +1,10 @@
 {
   "dependencies": {
+    "com.coffee.softmask-for-ugui": "3.6.5",
+    "com.coffee.ui-effect": "5.11.7",
     "com.coffee.ui-particle": "4.14.1",
     "com.cysharp.unitask": "2.5.11",
+    "com.tayx.graphy": "4.0.0",
     "com.unity.2d.animation": "13.0.5",
     "com.unity.2d.aseprite": "3.0.2",
     "com.unity.2d.psdimporter": "12.0.2",
@@ -64,8 +67,11 @@
       "name": "package.openupm.com",
       "url": "https://package.openupm.com",
       "scopes": [
+        "com.coffee.softmask-for-ugui",
+        "com.coffee.ui-effect",
         "com.coffee.ui-particle",
         "com.cysharp.unitask",
+        "com.tayx.graphy",
         "jp.hadashikick.vcontainer"
       ]
     }
