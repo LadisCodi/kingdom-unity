@@ -241,7 +241,7 @@ MonoBehaviour:
     m_Value: 0
   OutputChannel: 1
   StandbyUpdate: 2
-  m_StreamingVersion: 0
+  m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
     TrackingTarget: {fileID: 1851232898}
@@ -317,9 +317,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
+  near clip plane: 0.1
+  far clip plane: 5000
+  field of view: 40
   orthographic: 1
   orthographic size: 4.3
   m_Depth: 0
@@ -577,6 +577,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Province
       objectReference: {fileID: 0}
+    - target: {fileID: 3973594058670456045, guid: 6eef39f8e3c7ad4508988dda1fecb03a, type: 3}
+      propertyPath: m_ChunkCullingBounds.x
+      value: 2.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 3973594058670456045, guid: 6eef39f8e3c7ad4508988dda1fecb03a, type: 3}
+      propertyPath: m_ChunkCullingBounds.y
+      value: 2.55
+      objectReference: {fileID: 0}
     - target: {fileID: 5190491077672890692, guid: 6eef39f8e3c7ad4508988dda1fecb03a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -616,6 +624,14 @@ PrefabInstance:
     - target: {fileID: 5190491077672890692, guid: 6eef39f8e3c7ad4508988dda1fecb03a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7938749885841032876, guid: 6eef39f8e3c7ad4508988dda1fecb03a, type: 3}
+      propertyPath: m_ChunkCullingBounds.x
+      value: 0.78
+      objectReference: {fileID: 0}
+    - target: {fileID: 7938749885841032876, guid: 6eef39f8e3c7ad4508988dda1fecb03a, type: 3}
+      propertyPath: m_ChunkCullingBounds.y
+      value: 0.13999999
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -698,7 +714,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1125, y: 2436}
-  m_ScreenMatchMode: 0
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96

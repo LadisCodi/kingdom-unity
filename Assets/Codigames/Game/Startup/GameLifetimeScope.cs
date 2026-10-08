@@ -5,6 +5,7 @@ using Codigames.Game.Feedback;
 using Codigames.Game.Map;
 using Codigames.Game.Session;
 using Codigames.Game.UI;
+using Codigames.Game.UI.Presenters;
 using Codigames.Kingdom.Map;
 using Codigames.Modules.Cameras;
 using Codigames.Modules.Feedback;
@@ -51,6 +52,8 @@ namespace Codigames.Game.Startup
             builder.Register(resolver => new UIManager(
                 () => resolver.Resolve<IEnumerable<IMenuPresenter>>(), resolver.Resolve<IMenuGroups>()), Lifetime.Singleton);
             builder.RegisterEntryPoint<MenuBackInputHandler>();
+
+            builder.Register<HeaderMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
         }
 
         private void RegisterFeedback(IContainerBuilder builder)

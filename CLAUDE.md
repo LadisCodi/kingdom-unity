@@ -384,18 +384,30 @@ own sub-folder:
 - **Data** — `Game/UI/Data/{X}Data.cs`: an immutable DTO (get-only
   properties set in the constructor) the presenter pushes to the view. Only
   for data-driven menus.
-- **Menu (view)** — `Game/UI/Menus/{X}Menu.cs`: derives
-  `Menu<{X}MenuPresenter>` (or `Menu<{X}MenuPresenter, {X}Data>`). **View
-  only**: serialised references exposed as get-only properties, no logic.
-  Override lifecycle hooks, never `Show`/`Hide`.
+- **Menu (view)** — `Game/UI/Menus/{X}Menu.cs`: derives `Menu`. **View
+  only**: serialised references, setters and C# events for what the player
+  does, no logic. Override lifecycle hooks, never `Show`/`Hide`.
 - **Presenter** — `Game/UI/Presenters/{X}MenuPresenter.cs`: derives
   `AbstractMenuPresenter<{X}Menu>` (or `AbstractDataMenuPresenter`). Holds
   the logic: services in its constructor (with the `IMenuViewFactory` it
   passes to the base), state pushed in `BindInternal`, view events wired in
   `SubscribeToViewEventsInternal`.
 
-The prefab's file name **equals the class name**; show a menu through the
-`UIManager` (`await uiManager.ShowMenu<XMenu>()`).
+The prefab's file name **equals the class name** (`Assets/Prefabs/UI/`, listed
+in `MenuCatalog`); register the presenter `As<IMenuPresenter>()` in
+`GameLifetimeScope` and show the menu through the `UIManager`
+(`await uiManager.ShowMenu<XMenu>()`). A **persistent** menu (the header) is
+not closable and is shown by `GameStartupFlow`. Pieces a menu repeats live in
+`Game/UI/Hud` or `Game/UI/Widgets`.
+
+Layout is in the web's **reference pixels**: the canvas is 1125×2436 with
+*Expand*, so a size in the web's CSS (`calc(var(--rpx) * N)`) is `N` here. A
+three-sliced piece keeps its ends through its import border
+(`ArtImportRules`) and `pixelsPerUnitMultiplier` = source end ÷ drawn end. A
+bar that bleeds under the notch uses `SafeAreaTopBleed`. Text is
+TextMeshPro on the web's two families (`Assets/Art/Fonts`): **Nunito** for
+everything (Regular 400, SemiBold 600, Bold 700, ExtraBold 800 for a number
+that leads its row) and **Alegreya Black** for titles.
 
 Rules the player sees:
 
