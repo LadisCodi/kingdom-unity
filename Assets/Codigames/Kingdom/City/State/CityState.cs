@@ -1,0 +1,17 @@
+using System.Collections.Generic;
+
+namespace Codigames.Kingdom.City.State
+{
+    // The city: its buildings, the jobs its builders are on, and how many builders it has.
+    public class CityState
+    {
+        public List<DistrictState> Districts { get; set; } = new();
+        public List<ConstructionJob> Jobs { get; set; } = new();
+        public int Builders { get; set; }
+
+        // Ids are handed out in order and never reused.
+        public int NextId { get; set; } = 1;
+
+        public string NewId(string prefix) => prefix + "-" + NextId++;
+    }
+}

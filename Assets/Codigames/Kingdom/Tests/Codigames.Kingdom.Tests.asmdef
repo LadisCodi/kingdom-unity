@@ -4,6 +4,9 @@
     "references": [
         "Codigames.Kingdom",
         "Codigames.Modules.Core",
+        "Codigames.Modules.Timeline",
+        "Codigames.Modules.Wallet",
+        "Codigames.Modules.Grid",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

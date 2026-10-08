@@ -1,0 +1,133 @@
+using Codigames.Kingdom.City;
+using Codigames.Kingdom.Tests.Builders;
+using Codigames.Modules.Core;
+using NUnit.Framework;
+
+namespace Codigames.Kingdom.Tests.City
+{
+    public class ConstructionTests
+    {
+        private static readonly Vector2Int SPOT = new(3, 3);
+
+        private static IBuildingDefinition House(double gold = 100)
+            => new BuildingBuilder().WithId("Housing").WithMaxLevel(3)
+                .WithLevelPrices(BuildingBuilder.Price("Gold", gold), BuildingBuilder.Price("Gold", gold), BuildingBuilder.Price("Gold", gold))
+                .WithBuildSeconds(60).WithUpgradeCurve(120, 1).WithTownhallGates(1, 2).Build();
+
+        [Test]
+        public void Build_ShouldPayAndPutABuilderToWork()
+        {
+            var fixture = new CityFixture(House());
+
+            Assert.That(fixture.Construction.Build("Housing", SPOT, 1000), Is.EqualTo(ConstructionRefusal.None));
+            Assert.That(fixture.Treasury.Get("Gold"), Is.EqualTo(CityFixture.START_GOLD - 100));
+            Assert.That(fixture.City.Jobs, Has.Count.EqualTo(1));
+            Assert.That(fixture.District("Housing").Built, Is.False);
+        }
+
+        [Test]
+        public void Build_ShouldFinishAtItsMoment()
+        {
+            var fixture = new CityFixture(House());
+            fixture.Construction.Build("Housing", SPOT, 0);
+
+            fixture.Timeline.Advance(59_999);
+            Assert.That(fixture.District("Housing").Built, Is.False);
+
+            fixture.Timeline.Advance(60_000);
+            Assert.That(fixture.District("Housing").Built, Is.True);
+            Assert.That(fixture.City.Jobs, Is.Empty);
+        }
+
+        [Test]
+        public void Build_ShouldBeRefusedWithNoFreeBuilder()
+        {
+            var fixture = new CityFixture(House());
+            fixture.Construction.Build("Housing", SPOT, 0);
+
+            Assert.That(fixture.Construction.Build("Housing", new Vector2Int(-3, -3), 0), Is.EqualTo(ConstructionRefusal.NoFreeBuilder));
+        }
+
+        [Test]
+        public void Build_ShouldBeRefusedWhenItCannotBePaid()
+        {
+            var fixture = new CityFixture(House(gold: CityFixture.START_GOLD + 100));
+
+            Assert.That(fixture.Construction.Build("Housing", SPOT, 0), Is.EqualTo(ConstructionRefusal.CannotAfford));
+            Assert.That(fixture.City.Districts, Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        public void Build_ShouldRefuseTheTownhall()
+        {
+            var fixture = new CityFixture(House());
+
+            Assert.That(fixture.Construction.Build("Townhall", SPOT, 0), Is.EqualTo(ConstructionRefusal.NotBuildable));
+        }
+
+        [Test]
+        public void Upgrade_ShouldRaiseTheLevelWhenTheJobEnds()
+        {
+            var fixture = new CityFixture(House());
+            fixture.Construction.Build("Housing", SPOT, 0);
+            fixture.Timeline.Advance(60_000);
+            var house = fixture.District("Housing");
+
+            Assert.That(fixture.Construction.Upgrade(house.Id, 60_000), Is.EqualTo(ConstructionRefusal.None));
+            fixture.Timeline.Advance(180_000);
+
+            Assert.That(house.Level, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void Upgrade_ShouldWaitForTheTownhallsLevel()
+        {
+            var fixture = new CityFixture(House());
+            fixture.Construction.Build("Housing", SPOT, 0);
+            fixture.Timeline.Advance(60_000);
+            var house = fixture.District("Housing");
+            house.Level = 2;
+
+            Assert.That(fixture.Construction.Upgrade(house.Id, 60_000), Is.EqualTo(ConstructionRefusal.NeedsTownhallLevel));
+        }
+
+        [Test]
+        public void Upgrade_ShouldStopAtTheMaxLevel()
+        {
+            var fixture = new CityFixture(House());
+            var townhall = fixture.District("Townhall");
+            townhall.Level = 5;
+
+            Assert.That(fixture.Construction.Upgrade(townhall.Id, 0), Is.EqualTo(ConstructionRefusal.MaxLevel));
+        }
+
+        [Test]
+        public void Move_ShouldBeFreeAndKeepTheJob()
+        {
+            var fixture = new CityFixture(House());
+            fixture.Construction.Build("Housing", SPOT, 0);
+            var house = fixture.District("Housing");
+            var gold = fixture.Treasury.Get("Gold");
+
+            Assert.That(fixture.Construction.Move(house.Id, new Vector2Int(-3, -3)), Is.EqualTo(ConstructionRefusal.None));
+            Assert.That(house.Anchor, Is.EqualTo(new Vector2Int(-3, -3)));
+            Assert.That(fixture.Treasury.Get("Gold"), Is.EqualTo(gold));
+            Assert.That(fixture.City.Jobs, Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        public void ALongAbsence_ShouldEndAsManyShortSteps()
+        {
+            var once = new CityFixture(House());
+            var stepped = new CityFixture(House());
+            once.Construction.Build("Housing", SPOT, 0);
+            stepped.Construction.Build("Housing", SPOT, 0);
+
+            once.Timeline.Advance(500_000);
+            for (var t = 1_000; t <= 500_000; t += 1_000) stepped.Timeline.Advance(t);
+
+            Assert.That(once.District("Housing").Built, Is.EqualTo(stepped.District("Housing").Built));
+            Assert.That(once.City.Jobs.Count, Is.EqualTo(stepped.City.Jobs.Count));
+        }
+    }
+}
