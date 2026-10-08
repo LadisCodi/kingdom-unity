@@ -15,6 +15,7 @@ namespace Codigames.Game.Editor.Art
         private static readonly System.Collections.Generic.Dictionary<string, int> SLICED_ENDS = new()
         {
             ["bar-base"] = 54, ["bar-fill-blue"] = 54, ["bar-fill-green"] = 54, ["bar-border"] = 64,
+            ["hud-slot"] = 50,
         };
 
         private const string TERRAIN = "Assets/Art/Terrain/";

@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d83431a50c898d78484477fa4f5a0f6d, type: 3}
   m_Name: MenuCatalog
   m_EditorClassIdentifier: Kingdom.Game::Kingdom.Game.UI.MenuCatalog
-  _menus: []
+  _menus:
+  - {fileID: 5695169005391069480, guid: 24823630bd830639486974922d59b86a, type: 3}
   _groups: []

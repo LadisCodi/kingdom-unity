@@ -51,7 +51,7 @@ namespace Codigames.Game.Startup
         // The balance, as Kingdom reads it: catalogs of definitions and settings, from the data assets.
         private void RegisterBalance(IContainerBuilder builder)
         {
-            builder.RegisterInstance(_currencies).As<ICatalog<ICurrencyDefinition>>();
+            builder.RegisterInstance(_currencies).As<ICatalog<ICurrencyDefinition>>().As<IPlankCurrencies>();
             builder.RegisterInstance(_buildings).AsSelf().As<ICatalog<IBuildingDefinition>>();
             builder.RegisterInstance(_construction).As<IConstructionSettings>();
         }

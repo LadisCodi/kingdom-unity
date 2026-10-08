@@ -17,4 +17,6 @@ MonoBehaviour:
   _start: 100
   _capped: 0
   _cap: 0
-  _primary: 1
+  _icon: {fileID: 21300000, guid: 5d171768d4d8c5ec68ded1ea8d9a370f, type: 3}
+  _place: 1
+  _sold: 0

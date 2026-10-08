@@ -27,6 +27,13 @@ namespace Codigames.Game.Editor.WebImport
             ["Stardust"] = CurrencyScope.Kingdom, ["HeroXp"] = CurrencyScope.Kingdom, ["Gems"] = CurrencyScope.Player,
         };
 
+        // Where each reads on the header's plank, from the web's header (game.ts visibleCurrencies).
+        private static readonly Dictionary<string, PlankPlace> PLANK = new()
+        {
+            ["Gold"] = PlankPlace.Coin, ["Food"] = PlankPlace.Coin, ["Wood"] = PlankPlace.Coin,
+            ["Stone"] = PlankPlace.CoinWhenHeld, ["Mana"] = PlankPlace.Right, ["Gems"] = PlankPlace.Right,
+        };
+
         [MenuItem("Kingdom/Import web prototype data")]
         public static void ImportAll()
         {
@@ -54,7 +61,9 @@ namespace Codigames.Game.Editor.WebImport
                 so.FindProperty("_start").doubleValue = SCOPES[id] == CurrencyScope.City && cityStart.TryGetValue(id, out var handed) ? handed : row.Start;
                 so.FindProperty("_capped").boolValue = row.Cap.HasValue;
                 so.FindProperty("_cap").doubleValue = row.Cap ?? 0;
-                so.FindProperty("_primary").boolValue = row.Primary;
+                so.FindProperty("_icon").objectReferenceValue = CurrencyIcon(id);
+                so.FindProperty("_place").enumValueIndex = (int)(PLANK.TryGetValue(id, out var place) ? place : PlankPlace.Hidden);
+                so.FindProperty("_sold").boolValue = id == "Gems";
                 so.ApplyModifiedPropertiesWithoutUndo();
                 assets.Add(asset);
             }
@@ -169,6 +178,11 @@ namespace Codigames.Game.Editor.WebImport
         }
 
         // A building's tiers, from its sprite stem: <stem>_l<n>.png from level n, or <stem>.png alone.
+        // The header's small cut of an icon when it has one, else the icon.
+        private static Sprite CurrencyIcon(string id)
+            => AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/UI/Icons/{id}-sm.png")
+               ?? AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/UI/Icons/{id}.png");
+
         private static void SetArt(SerializedProperty list, string stem)
         {
             var tiers = new List<(int Level, Sprite Sprite)>();

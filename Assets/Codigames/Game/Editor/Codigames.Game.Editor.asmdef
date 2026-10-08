@@ -5,7 +5,8 @@
         "Codigames.Game",
         "Codigames.Kingdom",
         "Codigames.Modules.Core",
-        "VContainer"
+        "VContainer",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [
         "Editor"
