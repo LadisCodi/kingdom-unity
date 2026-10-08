@@ -1,0 +1,49 @@
+# Unity generated folders (rebuilt when the project opens)
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emory[Cc]aptures/
+/[Rr]ecordings/
+/Assets/Plugins/Editor/JetBrains*
+
+# Build outputs
+/[Bb]uild/
+/[Bb]uilds/
+*.apk
+*.aab
+*.app
+*.ipa
+
+# IDE generated files
+*.csproj
+*.sln
+*.slnx
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+.vs/
+.idea/
+.vscode/
+ExportedObj/
+.consulo/
+
+# Generated meta files for IDE assemblies
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Crash reports
+sysinfo.txt
+crashlytics-build.properties
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local agent settings
+settings.local.json
