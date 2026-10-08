@@ -1,0 +1,84 @@
+{
+  "type": "object",
+  "fields": {
+    "army": {
+      "type": "object",
+      "fields": {
+        "typeAdvantage": { "type": "float" },
+        "typeDisadvantage": { "type": "float" },
+        "threatFloorFraction": { "type": "float" },
+        "woundedShare": { "type": "float" },
+        "healCostShare": { "type": "float" },
+        "healTimeShare": { "type": "float" }
+      }
+    },
+    "combat": {
+      "type": "object",
+      "fields": {
+        "tickMs": { "type": "int" },
+        "attackStepPerMille": {
+          "type": "int",
+          "min": 0,
+          "doc": "Per mille of damage each point of Attack over the target's Defence adds (Heroes III: 50)."
+        },
+        "attackCapPerMille": { "type": "int", "min": 0, "doc": "The most an Attack lead can add, per mille (1500 = +150%)." },
+        "defenceStepPerMille": {
+          "type": "int",
+          "min": 0,
+          "doc": "Per mille of damage each point of Defence over the attacker's Attack takes off (Heroes III: 25)."
+        },
+        "defenceCapPerMille": {
+          "type": "int",
+          "min": 0,
+          "max": 1000,
+          "doc": "The most a Defence lead can take off, per mille (750 = −75%)."
+        },
+        "timeoutTicks": { "type": "int" },
+        "fieldGap": {
+          "type": "int",
+          "min": 0,
+          "doc": "Field units between the two front rows when the fight opens (combat.md §3)."
+        },
+        "fieldRowPitch": {
+          "type": "int",
+          "min": 1,
+          "doc": "Field units between one row of a side and the next behind it (combat.md §3)."
+        },
+        "fieldColPitch": {
+          "type": "int",
+          "min": 1,
+          "doc": "Field units between two slots side by side in a row (combat.md §3)."
+        },
+        "typeAdvantageNum": { "type": "int" },
+        "typeAdvantageDen": { "type": "int" },
+        "typeDisadvantageNum": { "type": "int" },
+        "typeDisadvantageDen": { "type": "int" },
+        "genSlotsMin": { "type": "int" },
+        "genSlotsMax": { "type": "int" },
+        "genVillainThreshold": { "type": "int" },
+        "genVillainShare": { "type": "float" },
+        "genVillainSlots": { "type": "int" },
+        "heroPowerPerDmg": { "type": "float" },
+        "fightMana": {
+          "type": "int",
+          "min": 0,
+          "doc": "What one attack costs in Mana — a lair, a camp, a rival, a dungeon room, a Portal floor (Docs/features/08-magic.md §1). Moving, claiming and garrisoning are free."
+        }
+      }
+    },
+    "party": {
+      "type": "object",
+      "fields": {
+        "troopSlots": { "type": "int" },
+        "heroSlots": { "type": "int" },
+        "heroSlotGemCostBase": { "type": "int" },
+        "heroSlotGemCostGrowth": { "type": "int" },
+        "heroRecoverHours": {
+          "type": "float",
+          "min": 0.1,
+          "doc": "Hours a hero takes to come back from 0 HP to full; a hurt hero recovers the same share per hour."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "type": "object",
+  "fields": {
+    "survey": {
+      "type": "object",
+      "doc": "The Survey: one ladder over the whole province, climbed by cells revealed (Docs/features/25-the-survey.md). Every list is one entry a level; their length IS the ladder.",
+      "fields": {
+        "cells": {
+          "type": "list",
+          "of": { "type": "int" },
+          "doc": "The cells revealed each level asks for, rising; the last is the province bought out."
+        },
+        "goldFloorPerMinute": {
+          "type": "int",
+          "min": 0,
+          "doc": "The least a minute of a free cell’s purse pays, whatever the kingdom makes."
+        },
+        "freeGoldMinutes": {
+          "type": "list",
+          "of": { "type": "int" },
+          "doc": "Free column: a purse of this many minutes of the kingdom’s Gold production."
+        },
+        "freeKnowledge": {
+          "type": "list",
+          "of": { "type": "int" },
+          "doc": "Free column: Knowledge, over the bar’s cap like a lump."
+        },
+        "freeSilverKeys": { "type": "list", "of": { "type": "int" }, "doc": "Free column: silver keys." },
+        "freeGoldKeys": { "type": "list", "of": { "type": "int" }, "doc": "Free column: gold keys." },
+        "freeFragments": {
+          "type": "list",
+          "of": { "type": "int", "min": 0 },
+          "doc": "Free column: relic fragments a level pays, of relics already met."
+        },
+        "freeGems": { "type": "list", "of": { "type": "int" }, "doc": "Free column: Gems." },
+        "paidGems": { "type": "list", "of": { "type": "int" }, "doc": "Paid column: Gems." },
+        "paidGoldKeys": { "type": "list", "of": { "type": "int" }, "doc": "Paid column: gold keys." },
+        "paidSilverKeys": { "type": "list", "of": { "type": "int", "min": 0 }, "doc": "Paid column: silver keys." },
+        "paidHeroXp": {
+          "type": "list",
+          "of": { "type": "int", "min": 0 },
+          "doc": "Paid column: Hero XP, with the Tavern’s and the tree’s bonuses on it as any Hero XP."
+        },
+        "paidStardust": { "type": "list", "of": { "type": "int" }, "doc": "Paid column: Stardust." },
+        "freeItems": {
+          "type": "list",
+          "of": { "type": "text", "ref": "item", "emptyOk": true },
+          "doc": "Free column: an item to put in the Bag, or empty for none."
+        },
+        "paidItems": {
+          "type": "list",
+          "of": { "type": "text", "ref": "item", "emptyOk": true },
+          "doc": "Paid column: an item to put in the Bag, or empty for none."
+        }
+      }
+    }
+  }
+}

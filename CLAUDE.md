@@ -178,17 +178,49 @@ format with `CultureInfo.InvariantCulture`).
 
 ## Game data
 
-- **JSON is the source of truth**: one file per collection, plus the region
-  map and the tech tree, in the same shape as the web prototype's data
-  (so the parity runs and the world server read the very same files). The
-  sim parses them with Newtonsoft into plain C# definitions; it never sees
-  a `TextAsset` — the Game layer hands it the text.
-- **Edited inside Unity** with Odin editor windows, which validate as you
-  type with the same rules the test runs. Until a collection has its window,
-  it is edited in the web prototype's data editor and copied over.
+- **JSON is the source of truth** (`Assets/Kingdom/Data/`): one file per
+  collection in `Game/`, what each field is in `Schema/`, plus
+  `tech-tree.json` and `region-map.json` — the web prototype's files, as-is.
+- **The sim's classes for them are generated** from the schemas:
+  `dotnet run --project Tools/Codegen` writes `Sim/Data/Generated/*.g.cs`.
+  Never edit a generated file; change the schema and regenerate.
+- **`GameData`** loads them and derives what `definitions.ts` derived — the
+  gates every technology states once, the troops by rank, the bands of each
+  book, lairs, relics, heroes. It is passed in, never a static.
+- **Presentation is not the sim's**: names, prose, glyphs and sprites the web
+  hard-coded in `definitions.ts` go to the Game layer's catalogs, keyed by id.
+- **Edited inside Unity** with Odin editor windows, validated with the same
+  rules the tests run. Until a collection has its window, it is edited in the
+  web prototype's data editor and copied over.
 - **No ScriptableObjects for balance.** ScriptableObjects are for
   presentation config only: sprites, prefabs, colours, sounds, tween
   timings — what a thing *looks like*, keyed by the data's ids.
+
+## The sim outside Unity
+
+`Kingdom.Sim` touches nothing of Unity, so it also builds and tests as plain
+.NET — seconds, no editor, several agents at once:
+
+```bash
+dotnet test Tools/SimTests          # Sim + Tests/Sim, C# 9 like Unity, warnings are errors
+dotnet run --project Tools/Codegen  # regenerate the data classes from the schemas
+```
+
+**Parity with the web prototype is proven, not believed.** `Tools/Parity/*.ts`
+import the web sim (`~/Proyectos/Codigames/kingdom`) and write goldens to
+`Assets/Kingdom/Tests/Golden/`, stamped with the web commit; the parity tests
+compare the C# result field by field (`JsonParity`):
+
+```bash
+cd ~/Proyectos/Codigames/kingdom && npx tsx ../kingdom-unity/Tools/Parity/<exporter>.ts
+```
+
+Porting rules (`Docs/plans/unity-remake.md` §6 has the full list):
+
+- Port the web's behaviour literally: the same order of operations, the same
+  rounding, the same iteration order.
+- **`JsMath.Round`, never `Math.Round`** (JavaScript rounds halves up).
+- Numbers in state and data are `double`, as in JavaScript; ids are strings.
 
 ## Saves
 

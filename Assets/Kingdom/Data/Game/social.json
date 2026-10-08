@@ -1,0 +1,20 @@
+{
+  "friends": {
+    "max": 10,
+    "maxSent": 10,
+    "requestRows": 3,
+    "requestHours": 48,
+    "messageDays": 30
+  },
+  "trade": {
+    "materialLot": 5,
+    "wishes": 3,
+    "wishHours": 48,
+    "fillsPerDay": 5
+  },
+  "friendHelp": {
+    "perDay": 5,
+    "helperManaMinutes": 10,
+    "giftItem": "ConstructionSpeedup5m"
+  }
+}
