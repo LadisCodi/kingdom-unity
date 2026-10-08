@@ -81,6 +81,8 @@ Packages/                              UPM packages
 - **No `Resources/` folder.** Prefabs, sprites and sounds reach code
   through **catalogs** registered in the `LifetimeScope`, keyed by the data's
   ids — typed, never looked up by a string path.
+  The one exception is a third-party package that loads its own settings
+  from there (`Assets/Resources/DOTweenSettings.asset`).
 - **File names come from data ids** (`Farm_l1.png`, `Farm_l3.png` — a level
   draws the highest `_l<n>` at or below it), so an editor script fills the
   catalogs and a test catches a building with no sprite or a sprite nothing
