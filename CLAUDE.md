@@ -44,28 +44,45 @@ Modules  ←  Kingdom  ←  Game
 
 | Layer | Assembly | What it is | Unity? |
 |---|---|---|---|
-| `Modules/<Module>/` | `Codigames.Modules.<Module>` | **game-agnostic systems**: a wallet, timed queues, stores that fill, modifiers, fog of war, the menu framework… | only the presentation ones (UI, camera, audio, feedback) |
+| `Modules/<Module>/` | `Codigames.Modules.<Module>` | **game-agnostic systems**: a wallet, timed queues, stores that fill, modifiers, fog of war, the logic of menus, sound, camera… | **never** (`noEngineReferences`) |
 | `Kingdom/` | `Codigames.Kingdom` | **this game's rules**: what a Farm is, how a tap pays, when a lair raids. Composes modules and implements their ports. | **never** (`noEngineReferences`) |
 | `Game/` | `Codigames.Game` | **the game in Unity**: views, presenters, `LifetimeScope`s, ScriptableObjects, adapters for the ports. | yes |
 
 ### Modules
 
-- **Independent.** A module depends on **no other module** — only on .NET and
-  on third-party packages. Copy its folder to another project, implement its
-  ports, and it works.
+**The code in Modules knows nothing of Unity — nor of any other package.**
+Every module is `noEngineReferences`, references no other assembly but .NET,
+and is tested with `dotnet test`. Whatever needs Unity or a package is
+abstracted behind an interface the module declares, and implemented in
+`Game`.
+
+Example — sound: the module's `ISoundCatalog` returns an `ISound`, never an
+`AudioClip`; its `SoundService` plays through an `ISoundPlayer` port. In
+`Game`, a `UnitySound : ISound` holds the `AudioClip` and what it needs to be
+played, the catalog is a ScriptableObject that returns `UnitySound`s, and the
+player implements `ISoundPlayer` with Feel's `MMSoundManager`.
+
+- **Independent.** A module depends on **no other module and no package**.
+  Copy its folder to another project, implement its ports, and it works.
 - **Ports for everything outside.** What a module needs from the world is an
-  interface it declares (`IQuickInfoMessageLayer`, `IUISoundPlayer`); someone
-  outside implements it and registers it in DI. The module never asks who.
+  interface it declares (`ISoundPlayer`, `IAppLifecycleNotifier`); `Game`
+  implements it and registers it in DI. The module never asks who.
+- **Engine types never cross into a module.** No `GameObject`,
+  `MonoBehaviour`, `Transform`, `Vector3`, `AudioClip`, `Sprite`, no tween,
+  no Feel player: a module speaks in its own interfaces and in .NET types
+  (`System.Numerics.Vector2`/`Vector3` for positions, `Task` for what takes
+  time). `Game` converts at the edge.
+- **No DI framework, no attributes from packages.** Dependencies arrive in
+  the constructor; registration and `[Inject]` belong to `Game`.
+- **Behaviour lives in the module, the engine in `Game`.** A module holds the
+  rules (a menu stack and its groups, a camera's inertia and bounds, a pool);
+  `Game` holds the MonoBehaviours, prefabs, ScriptableObjects and package
+  calls that make them real. Something that merely *starts* in Unity — an app
+  callback, a frame tick, a touch — reaches the module through a hook in
+  `Game` that calls its methods (`AppLifecycle` ← `Game/App/AppLifecycleHook`).
 - **Generic, not Kingdom-shaped.** A module knows "a currency", "a cell", "a
   job in a queue" — never "Gold", "the Farm" or "Housing". Where it needs a
   game's type it is generic over it (`FogOfWar<TCell>`) or asks a port.
-- **Pure unless its job is presentation.** A module is `noEngineReferences`
-  and tested with `dotnet test`, unless its job is drawing, input, sound or
-  the camera. Something that merely *starts* in Unity — an app callback, a
-  frame tick, a file — is a pure module with methods to call, and a hook in
-  `Game` calls them (`AppLifecycle` ← `Game/App/AppLifecycleHook`). A module
-  never creates GameObjects to listen for itself. A pure module does not use
-  VContainer either — registration belongs to `Game`.
 - **Inside**, ProtoLab's shape: `Domain/` (contracts, value objects, ports),
   `Core/` (entities, abstract bases holding shared logic), `Services/`. These
   role folders organise; they do not add to the namespace.
@@ -262,7 +279,8 @@ a named Feel `MMF_Player` serialised on its view or prefab; code only calls
 `PlayFeedbacks()`. No duration, curve or intensity of a feedback is written in
 code.
 
-- Feel lives in views — the Feedback module's and `Game`'s. A use case applies the command to the
+- Feel lives only in `Game`, in views; the Feedback module only declares
+  what a feedback is. A use case applies the command to the
   sim, then tells the view, which plays its feedback.
 - **Feel** for authored feedback; **DOTween** for motion computed in code
   (menus opening, a bar following a value, a list reordering); **particles**
@@ -334,7 +352,9 @@ Rules the player sees:
 
 ## What comes from ProtoLab
 
-`~/Proyectos/Codigames/ProtoLab` is the team's Unity base. Its menu framework,
+`~/Proyectos/Codigames/ProtoLab` is the team's Unity base. *Being split so
+its modules hold no Unity (see Modules): the engine half of each moves to
+`Game`.* Its menu framework,
 widgets, safe area and button feedback (`Modules/UI`), camera
 (`Modules/Cameras`), sound service (`Modules/Audio`), floating feedback and
 quick-info messages (`Modules/Feedback`) and app-lifecycle signal
@@ -419,7 +439,8 @@ any number that has been argued twice.
 
 - Don't reference `UnityEngine` (or anything with a clock, a file or a
   network) from `Kingdom` or a pure module.
-- Don't make a module depend on another module, or on Kingdom.
+- Don't make a module depend on Unity, a package, another module or
+  Kingdom.
 - Don't translate the web prototype's code. Read it to understand a rule;
   build the rule the way this architecture asks.
 - Don't hand-edit scenes, prefabs or `.asset` YAML when the editor (or an
