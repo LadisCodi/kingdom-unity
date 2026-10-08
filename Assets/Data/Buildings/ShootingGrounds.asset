@@ -1,0 +1,151 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d63499bd92dabf8868ec548a90183a, type: 3}
+  m_Name: ShootingGrounds
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.City.BuildingAsset
+  _id: ShootingGrounds
+  _maxLevel: 10
+  _width: 2
+  _height: 2
+  _buildable: 1
+  _cost:
+    _perLevel:
+    - _currencies:
+      - _id: Gold
+        _value: 4900
+      - _id: Wood
+        _value: 200
+      - _id: Stone
+        _value: 75
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 17000
+      - _id: Wood
+        _value: 660
+      - _id: Stone
+        _value: 250
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 37000
+      - _id: Wood
+        _value: 1500
+      - _id: Stone
+        _value: 570
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 92000
+      - _id: Wood
+        _value: 3700
+      - _id: Stone
+        _value: 1400
+      _goods:
+      - _id: Starmetal
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 230000
+      - _id: Wood
+        _value: 9100
+      - _id: Stone
+        _value: 3400
+      _goods:
+      - _id: Heartwood
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 520000
+      - _id: Wood
+        _value: 21000
+      - _id: Stone
+        _value: 7800
+      _goods:
+      - _id: Iron
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 1200000
+      - _id: Wood
+        _value: 47000
+      - _id: Stone
+        _value: 17000
+      _goods:
+      - _id: Iron
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 2500000
+      - _id: Wood
+        _value: 100000
+      - _id: Stone
+        _value: 38000
+      _goods:
+      - _id: Iron
+        _value: 4
+      - _id: Starmetal
+        _value: 4
+      - _id: Heartwood
+        _value: 4
+      - _id: Moonglass
+        _value: 4
+    - _currencies:
+      - _id: Gold
+        _value: 5400000
+      - _id: Wood
+        _value: 220000
+      - _id: Stone
+        _value: 81000
+      _goods:
+      - _id: Iron
+        _value: 5
+      - _id: Starmetal
+        _value: 8
+      - _id: Heartwood
+        _value: 8
+      - _id: Moonglass
+        _value: 8
+    - _currencies:
+      - _id: Gold
+        _value: 11000000
+      - _id: Wood
+        _value: 450000
+      - _id: Stone
+        _value: 170000
+      _goods:
+      - _id: Iron
+        _value: 6
+      - _id: Starmetal
+        _value: 12
+      - _id: Heartwood
+        _value: 12
+      - _id: Moonglass
+        _value: 12
+    _instanceLinearGrowth: 1
+    _instanceExponentialGrowth: 1.2
+  _duration:
+    _buildSeconds: 300
+    _buildCountGrowth: 1
+    _buildDistanceGrowth: 1.22
+    _upgradeSeconds: 120
+    _upgradeLevelGrowth: 1.6
+    _lateUpgradeSeconds: 7200
+    _lateUpgradeLevelGrowth: 1.7
+  _gates:
+    _maxCountPerTownhallLevel: 01000000
+    _requiredTownhallLevelPerLevel: 01000000020000000300000003000000060000000700000008000000090000000a000000
+    _requiredPopulationPerLevel: 
+  _displayName: Shooting Grounds
+  _promise: Trains Archers, all attack and no armour
+  _description: Trains archers, deadly at range but fragile up close.
+  _buildTab: Military

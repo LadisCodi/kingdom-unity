@@ -1,0 +1,151 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d63499bd92dabf8868ec548a90183a, type: 3}
+  m_Name: Infirmary
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.City.BuildingAsset
+  _id: Infirmary
+  _maxLevel: 10
+  _width: 2
+  _height: 2
+  _buildable: 1
+  _cost:
+    _perLevel:
+    - _currencies:
+      - _id: Gold
+        _value: 5400
+      - _id: Wood
+        _value: 200
+      - _id: Stone
+        _value: 100
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 18000
+      - _id: Wood
+        _value: 660
+      - _id: Stone
+        _value: 330
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 41000
+      - _id: Wood
+        _value: 1500
+      - _id: Stone
+        _value: 760
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 100000
+      - _id: Wood
+        _value: 3700
+      - _id: Stone
+        _value: 1800
+      _goods:
+      - _id: Moonglass
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 240000
+      - _id: Wood
+        _value: 9100
+      - _id: Stone
+        _value: 4500
+      _goods:
+      - _id: Starmetal
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 560000
+      - _id: Wood
+        _value: 21000
+      - _id: Stone
+        _value: 10000
+      _goods:
+      - _id: Iron
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 1300000
+      - _id: Wood
+        _value: 47000
+      - _id: Stone
+        _value: 23000
+      _goods:
+      - _id: Iron
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 2800000
+      - _id: Wood
+        _value: 100000
+      - _id: Stone
+        _value: 51000
+      _goods:
+      - _id: Iron
+        _value: 4
+      - _id: Starmetal
+        _value: 4
+      - _id: Heartwood
+        _value: 4
+      - _id: Moonglass
+        _value: 4
+    - _currencies:
+      - _id: Gold
+        _value: 6000000
+      - _id: Wood
+        _value: 220000
+      - _id: Stone
+        _value: 110000
+      _goods:
+      - _id: Iron
+        _value: 5
+      - _id: Starmetal
+        _value: 8
+      - _id: Heartwood
+        _value: 8
+      - _id: Moonglass
+        _value: 8
+    - _currencies:
+      - _id: Gold
+        _value: 12000000
+      - _id: Wood
+        _value: 450000
+      - _id: Stone
+        _value: 230000
+      _goods:
+      - _id: Iron
+        _value: 6
+      - _id: Starmetal
+        _value: 12
+      - _id: Heartwood
+        _value: 12
+      - _id: Moonglass
+        _value: 12
+    _instanceLinearGrowth: 1
+    _instanceExponentialGrowth: 1.2
+  _duration:
+    _buildSeconds: 60
+    _buildCountGrowth: 1
+    _buildDistanceGrowth: 1.22
+    _upgradeSeconds: 120
+    _upgradeLevelGrowth: 1.6
+    _lateUpgradeSeconds: 7200
+    _lateUpgradeLevelGrowth: 1.7
+  _gates:
+    _maxCountPerTownhallLevel: 01000000
+    _requiredTownhallLevelPerLevel: 01000000020000000300000003000000060000000700000008000000090000000a000000
+    _requiredPopulationPerLevel: 
+  _displayName: Infirmary
+  _promise: Mends wounded soldiers cheaply
+  _description: Heals wounded soldiers so they can fight again.
+  _buildTab: Military

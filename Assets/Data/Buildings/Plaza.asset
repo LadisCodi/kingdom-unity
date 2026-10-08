@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d63499bd92dabf8868ec548a90183a, type: 3}
+  m_Name: Plaza
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.City.BuildingAsset
+  _id: Plaza
+  _maxLevel: 1
+  _width: 2
+  _height: 2
+  _buildable: 1
+  _cost:
+    _perLevel:
+    - _currencies:
+      - _id: Gold
+        _value: 36000
+      - _id: Stone
+        _value: 2000
+      _goods:
+      - _id: Planks
+        _value: 4
+      - _id: CutStone
+        _value: 4
+    _instanceLinearGrowth: 0.5
+    _instanceExponentialGrowth: 1
+  _duration:
+    _buildSeconds: 420
+    _buildCountGrowth: 1.2
+    _buildDistanceGrowth: 1.22
+    _upgradeSeconds: 0
+    _upgradeLevelGrowth: 1.5
+    _lateUpgradeSeconds: 0
+    _lateUpgradeLevelGrowth: 0
+  _gates:
+    _maxCountPerTownhallLevel: 00000000000000000000000000000000000000000000000000000000010000000200000003000000
+    _requiredTownhallLevelPerLevel: 
+    _requiredPopulationPerLevel: 
+  _displayName: Plaza
+  _promise: A paved square for market day
+  _description: A paved square where the town comes alive on market day.
+  _buildTab: Decoration

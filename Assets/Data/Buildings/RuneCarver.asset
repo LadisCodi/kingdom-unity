@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d63499bd92dabf8868ec548a90183a, type: 3}
+  m_Name: RuneCarver
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.City.BuildingAsset
+  _id: RuneCarver
+  _maxLevel: 10
+  _width: 2
+  _height: 2
+  _buildable: 1
+  _cost:
+    _perLevel:
+    - _currencies:
+      - _id: Gold
+        _value: 24000
+      - _id: Stone
+        _value: 500
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 40000
+      - _id: Stone
+        _value: 830
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 80000
+      - _id: Stone
+        _value: 1700
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 180000
+      - _id: Stone
+        _value: 3600
+      _goods:
+      - _id: Starmetal
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 380000
+      - _id: Stone
+        _value: 8000
+      _goods:
+      - _id: Heartwood
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 880000
+      - _id: Stone
+        _value: 18000
+      _goods:
+      - _id: Iron
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 1900000
+      - _id: Stone
+        _value: 41000
+      _goods:
+      - _id: Iron
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 4300000
+      - _id: Stone
+        _value: 89000
+      _goods:
+      - _id: Iron
+        _value: 4
+      - _id: Starmetal
+        _value: 2
+      - _id: Heartwood
+        _value: 2
+      - _id: Moonglass
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 9100000
+      - _id: Stone
+        _value: 190000
+      _goods:
+      - _id: Iron
+        _value: 5
+      - _id: Starmetal
+        _value: 4
+      - _id: Heartwood
+        _value: 4
+      - _id: Moonglass
+        _value: 4
+    - _currencies:
+      - _id: Gold
+        _value: 19000000
+      - _id: Stone
+        _value: 400000
+      _goods:
+      - _id: Iron
+        _value: 6
+      - _id: Starmetal
+        _value: 6
+      - _id: Heartwood
+        _value: 6
+      - _id: Moonglass
+        _value: 6
+    _instanceLinearGrowth: 2
+    _instanceExponentialGrowth: 1.2
+  _duration:
+    _buildSeconds: 180
+    _buildCountGrowth: 1.2
+    _buildDistanceGrowth: 1.22
+    _upgradeSeconds: 360
+    _upgradeLevelGrowth: 1.6
+    _lateUpgradeSeconds: 7200
+    _lateUpgradeLevelGrowth: 1.7
+  _gates:
+    _maxCountPerTownhallLevel: 00000000000000000000000001000000010000000100000001000000020000000200000002000000
+    _requiredTownhallLevelPerLevel: 00000000000000000000000000000000060000000700000008000000090000000a000000
+    _requiredPopulationPerLevel: 
+  _displayName: Rune Carver
+  _promise: Villagers pour Mana into cut stone
+  _description: Carvers bind magic into stone, rune by rune.
+  _buildTab: Economy

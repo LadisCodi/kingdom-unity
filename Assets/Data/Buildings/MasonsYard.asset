@@ -1,0 +1,151 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d63499bd92dabf8868ec548a90183a, type: 3}
+  m_Name: MasonsYard
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.City.BuildingAsset
+  _id: MasonsYard
+  _maxLevel: 10
+  _width: 2
+  _height: 2
+  _buildable: 1
+  _cost:
+    _perLevel:
+    - _currencies:
+      - _id: Gold
+        _value: 7200
+      - _id: Wood
+        _value: 250
+      - _id: Stone
+        _value: 150
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 13000
+      - _id: Wood
+        _value: 440
+      - _id: Stone
+        _value: 280
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 26000
+      - _id: Wood
+        _value: 900
+      - _id: Stone
+        _value: 560
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 56000
+      - _id: Wood
+        _value: 1900
+      - _id: Stone
+        _value: 1200
+      _goods:
+      - _id: Heartwood
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 130000
+      - _id: Wood
+        _value: 4300
+      - _id: Stone
+        _value: 2700
+      _goods:
+      - _id: Moonglass
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 290000
+      - _id: Wood
+        _value: 9700
+      - _id: Stone
+        _value: 6100
+      _goods:
+      - _id: Planks
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 650000
+      - _id: Wood
+        _value: 22000
+      - _id: Stone
+        _value: 14000
+      _goods:
+      - _id: Planks
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 1400000
+      - _id: Wood
+        _value: 47000
+      - _id: Stone
+        _value: 30000
+      _goods:
+      - _id: Planks
+        _value: 4
+      - _id: Starmetal
+        _value: 2
+      - _id: Heartwood
+        _value: 2
+      - _id: Moonglass
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 2900000
+      - _id: Wood
+        _value: 100000
+      - _id: Stone
+        _value: 63000
+      _goods:
+      - _id: Planks
+        _value: 5
+      - _id: Starmetal
+        _value: 4
+      - _id: Heartwood
+        _value: 4
+      - _id: Moonglass
+        _value: 4
+    - _currencies:
+      - _id: Gold
+        _value: 6100000
+      - _id: Wood
+        _value: 210000
+      - _id: Stone
+        _value: 130000
+      _goods:
+      - _id: Planks
+        _value: 6
+      - _id: Starmetal
+        _value: 6
+      - _id: Heartwood
+        _value: 6
+      - _id: Moonglass
+        _value: 6
+    _instanceLinearGrowth: 2
+    _instanceExponentialGrowth: 1.2
+  _duration:
+    _buildSeconds: 90
+    _buildCountGrowth: 1.2
+    _buildDistanceGrowth: 1.22
+    _upgradeSeconds: 180
+    _upgradeLevelGrowth: 1.6
+    _lateUpgradeSeconds: 7200
+    _lateUpgradeLevelGrowth: 1.7
+  _gates:
+    _maxCountPerTownhallLevel: 00000000000000000000000001000000010000000100000001000000020000000200000002000000
+    _requiredTownhallLevelPerLevel: 00000000000000000000000000000000060000000700000008000000090000000a000000
+    _requiredPopulationPerLevel: 
+  _displayName: Mason's Yard
+  _promise: Villagers dress Stone into blocks
+  _description: Masons shape raw stone into fine building blocks.
+  _buildTab: Economy

@@ -304,6 +304,9 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
+  _currencies: {fileID: 11400000, guid: aac6aa195c71d844dbec88cdf15db72f, type: 2}
+  _buildings: {fileID: 11400000, guid: 2f036e2d5070832dd996cfbeaa22c970, type: 2}
+  _construction: {fileID: 11400000, guid: 88ee4745ec7edc426bd4b1e393dcb88b, type: 2}
   _soundCatalog: {fileID: 11400000, guid: 83451c6dc2a68dd0d98655410dd96f32, type: 2}
   _soundManager: {fileID: 6239535257238415513}
   _loadingScreen: {fileID: 4772335900836516188}

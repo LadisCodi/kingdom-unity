@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c40c17745ef1849ea6c79f5aba4494a, type: 3}
+  m_Name: Currencies
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Economy.CurrencyCollection
+  _entries:
+  - {fileID: 11400000, guid: e9a19c606ca1e91819674948c36179fb, type: 2}
+  - {fileID: 11400000, guid: c0db1a9c41b2a21b083fa72530d7df12, type: 2}
+  - {fileID: 11400000, guid: bfeea387b6af11dce9acd0acb1b1511d, type: 2}
+  - {fileID: 11400000, guid: 818872cfb28a2a0139818c342952c764, type: 2}
+  - {fileID: 11400000, guid: c438ef522ebb84a539400d332b11c4a5, type: 2}
+  - {fileID: 11400000, guid: c11ef2f6441d7a98193b4cb102abd632, type: 2}
+  - {fileID: 11400000, guid: c9109af192f6f043f886220ebf8d90e9, type: 2}
+  - {fileID: 11400000, guid: 73e95b5fe479706129d189c5ff9534c7, type: 2}
+  - {fileID: 11400000, guid: 97c536b5530dfc2a583e6d306a9bf3dc, type: 2}

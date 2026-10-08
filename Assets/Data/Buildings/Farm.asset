@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d63499bd92dabf8868ec548a90183a, type: 3}
+  m_Name: Farm
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.City.BuildingAsset
+  _id: Farm
+  _maxLevel: 10
+  _width: 1
+  _height: 1
+  _buildable: 1
+  _cost:
+    _perLevel:
+    - _currencies:
+      - _id: Gold
+        _value: 45
+      - _id: Wood
+        _value: 30
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 83
+      - _id: Wood
+        _value: 55
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 2000
+      - _id: Wood
+        _value: 110
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 3800
+      - _id: Wood
+        _value: 210
+      _goods:
+      - _id: Heartwood
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 7900
+      - _id: Wood
+        _value: 440
+      _goods:
+      - _id: Moonglass
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 18000
+      - _id: Wood
+        _value: 1000
+      _goods:
+      - _id: Planks
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 40000
+      - _id: Wood
+        _value: 2200
+      _goods:
+      - _id: Planks
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 89000
+      - _id: Wood
+        _value: 4900
+      _goods:
+      - _id: Planks
+        _value: 4
+      - _id: Starmetal
+        _value: 2
+      - _id: Heartwood
+        _value: 2
+      - _id: Moonglass
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 180000
+      - _id: Wood
+        _value: 10000
+      _goods:
+      - _id: Planks
+        _value: 5
+      - _id: Starmetal
+        _value: 4
+      - _id: Heartwood
+        _value: 4
+      - _id: Moonglass
+        _value: 4
+    - _currencies:
+      - _id: Gold
+        _value: 400000
+      - _id: Wood
+        _value: 22000
+      _goods:
+      - _id: Planks
+        _value: 6
+      - _id: Starmetal
+        _value: 6
+      - _id: Heartwood
+        _value: 6
+      - _id: Moonglass
+        _value: 6
+    _instanceLinearGrowth: 2
+    _instanceExponentialGrowth: 1.2
+  _duration:
+    _buildSeconds: 20
+    _buildCountGrowth: 1.2
+    _buildDistanceGrowth: 1.22
+    _upgradeSeconds: 30
+    _upgradeLevelGrowth: 1.5
+    _lateUpgradeSeconds: 7200
+    _lateUpgradeLevelGrowth: 1.7
+  _gates:
+    _maxCountPerTownhallLevel: 01000000010000000200000003000000030000000400000004000000050000000500000005000000
+    _requiredTownhallLevelPerLevel: 02000000030000000300000004000000060000000700000008000000090000000a000000
+    _requiredPopulationPerLevel: 
+  _displayName: Farm
+  _promise: Workers harvest crops nearby
+  _description: Its farmhands reap the fields nearby and fill the granary.
+  _buildTab: Economy

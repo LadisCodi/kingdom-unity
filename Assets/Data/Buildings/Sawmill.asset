@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d63499bd92dabf8868ec548a90183a, type: 3}
+  m_Name: Sawmill
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.City.BuildingAsset
+  _id: Sawmill
+  _maxLevel: 10
+  _width: 1
+  _height: 1
+  _buildable: 1
+  _cost:
+    _perLevel:
+    - _currencies:
+      - _id: Gold
+        _value: 30
+      - _id: Wood
+        _value: 20
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 99
+      - _id: Wood
+        _value: 66
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 3800
+      - _id: Wood
+        _value: 210
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 13000
+      - _id: Wood
+        _value: 710
+      _goods:
+      - _id: Moonglass
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 43000
+      - _id: Wood
+        _value: 2400
+      _goods:
+      - _id: Starmetal
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 100000
+      - _id: Wood
+        _value: 5600
+      _goods:
+      - _id: Planks
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 220000
+      - _id: Wood
+        _value: 12000
+      _goods:
+      - _id: Planks
+        _value: 4
+    - _currencies:
+      - _id: Gold
+        _value: 490000
+      - _id: Wood
+        _value: 27000
+      _goods:
+      - _id: Planks
+        _value: 5
+      - _id: Starmetal
+        _value: 2
+      - _id: Heartwood
+        _value: 2
+      - _id: Moonglass
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 1000000
+      - _id: Wood
+        _value: 58000
+      _goods:
+      - _id: Planks
+        _value: 6
+      - _id: Starmetal
+        _value: 4
+      - _id: Heartwood
+        _value: 4
+      - _id: Moonglass
+        _value: 4
+    - _currencies:
+      - _id: Gold
+        _value: 2200000
+      - _id: Wood
+        _value: 120000
+      _goods:
+      - _id: Planks
+        _value: 7
+      - _id: Starmetal
+        _value: 6
+      - _id: Heartwood
+        _value: 6
+      - _id: Moonglass
+        _value: 6
+    _instanceLinearGrowth: 2.5
+    _instanceExponentialGrowth: 1.2
+  _duration:
+    _buildSeconds: 20
+    _buildCountGrowth: 1.2
+    _buildDistanceGrowth: 1.22
+    _upgradeSeconds: 30
+    _upgradeLevelGrowth: 1.5
+    _lateUpgradeSeconds: 7200
+    _lateUpgradeLevelGrowth: 1.7
+  _gates:
+    _maxCountPerTownhallLevel: 01000000020000000300000004000000040000000500000005000000060000000600000006000000
+    _requiredTownhallLevelPerLevel: 01000000020000000300000004000000060000000700000008000000090000000a000000
+    _requiredPopulationPerLevel: 
+  _displayName: Sawmill
+  _promise: Workers fell the forest around it
+  _description: Woodcutters fell the forest nearby and stack the timber.
+  _buildTab: Economy
