@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Codigames.Game.Cameras;
 using Codigames.Game.Feedback;
+using Codigames.Game.Map;
 using Codigames.Game.UI;
+using Codigames.Kingdom.Map;
 using Codigames.Modules.Cameras;
 using Codigames.Modules.Feedback;
 using Codigames.Modules.UI;
@@ -14,6 +16,7 @@ namespace Codigames.Game.Startup
     // The Game scene's scope: what lives while the province and the world map are on screen.
     public class GameLifetimeScope : LifetimeScope
     {
+        [SerializeField] private ProvinceMap _province;
         [SerializeField] private MenuCatalog _menuCatalog;
         [SerializeField] private WorldFeedbackCatalog _worldFeedbackCatalog;
         [SerializeField] private QuickInfoMessageSettings _quickInfoMessageSettings;
@@ -24,6 +27,7 @@ namespace Codigames.Game.Startup
 
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.RegisterComponent(_province).AsSelf().As<IProvinceMap>();
             RegisterUI(builder);
             RegisterFeedback(builder);
             RegisterCamera(builder);
@@ -53,7 +57,8 @@ namespace Codigames.Game.Startup
         private void RegisterCamera(IContainerBuilder builder)
         {
             builder.RegisterComponent(_cameraRig).As<ICameraRig>();
-            builder.RegisterInstance(_cameraSettings).As<ICameraSettings>();
+            // Tuned in its asset, bounded by the province.
+            builder.Register<ICameraSettings>(resolver => new ProvinceCameraSettings(_cameraSettings, _province), Lifetime.Singleton);
             builder.Register<CameraController>(Lifetime.Singleton);
             builder.RegisterComponent(_cameraInput);
             builder.RegisterEntryPoint<CameraTicker>();

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: CameraSettings
   m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Cameras.CameraSettings
   _zoomSensitivity: 1
-  _minZoom: 3
-  _maxZoom: 20
+  _minZoom: 1.27
+  _maxZoom: 7.93
   _zoomElasticFactor: 0.2
   _useInertia: 1
   _damping: 5

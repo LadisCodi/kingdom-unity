@@ -2,7 +2,8 @@
     "name": "Codigames.Kingdom",
     "rootNamespace": "Codigames.Kingdom",
     "references": [
-        "Codigames.Modules.Core"
+        "Codigames.Modules.Core",
+        "Codigames.Modules.Grid"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

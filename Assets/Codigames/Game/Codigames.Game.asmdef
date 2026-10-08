@@ -4,6 +4,7 @@
     "references": [
         "Codigames.Kingdom",
         "Codigames.Modules.Core",
+        "Codigames.Modules.Grid",
         "Codigames.Modules.UI",
         "Codigames.Modules.Audio",
         "Codigames.Modules.Cameras",

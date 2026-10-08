@@ -10,8 +10,8 @@ namespace Codigames.Game.Cameras
     {
         [Header("Zoom (orthographic size)")]
         [SerializeField, Range(0.1f, 10f)] private float _zoomSensitivity = 1f;
-        [SerializeField] private float _minZoom = 3f;
-        [SerializeField] private float _maxZoom = 20f;
+        [SerializeField] private float _minZoom = 1.27f;
+        [SerializeField] private float _maxZoom = 7.93f;
         [SerializeField, Range(0f, 1f)] private float _zoomElasticFactor = 0.2f;
 
         [Header("Inertia")]
@@ -19,7 +19,7 @@ namespace Codigames.Game.Cameras
         [SerializeField] private float _damping = 5f;
         [SerializeField] private float _centerDuration = 0.4f;
 
-        [Header("Bounds")]
+        [Header("Bounds"), Tooltip("Where the view may pan when nothing else bounds it; the province's own edges do in the game.")]
         [SerializeField] private UnityEngine.Vector2 _minLimit = new(-20f, -20f);
         [SerializeField] private UnityEngine.Vector2 _maxLimit = new(20f, 20f);
         [SerializeField, Range(0f, 1f)] private float _elasticFactor = 0.4f;

@@ -4,7 +4,8 @@
     "references": [
         "Codigames.Game",
         "Codigames.Kingdom",
-        "Codigames.Modules.Core"
+        "Codigames.Modules.Core",
+        "VContainer"
     ],
     "includePlatforms": [
         "Editor"

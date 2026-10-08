@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68756597de5e977449af488e10e2814d, type: 3}
+  m_Name: Tundra
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Map.VariantTile
+  _id: Tundra
+  _variants:
+  - {fileID: 21300000, guid: d290b8ff5978acaf49467dd0e5e22f1e, type: 3}
+  - {fileID: 21300000, guid: c21979644404fc8ed8c6c8e5c993c7e2, type: 3}
+  - {fileID: 21300000, guid: e83d894d93467c648a2801b7f04ef64b, type: 3}
+  - {fileID: 21300000, guid: fa55976a5fb02ebd3a3dc142374089fe, type: 3}

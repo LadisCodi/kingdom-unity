@@ -217,6 +217,27 @@ Tools/                     outside Unity: PureTests, Codegen, WebData (the web's
   world map, two views of one scene).
 - **Third-party code is never edited.**
 
+### The province map
+
+- **Painted with Tilemaps**, in `Prefabs/Map/Province.prefab` (placed in the
+  `Game` scene): an isometric `Grid` (cell 1 × 0.5), a `Terrain` layer and a
+  `Features` layer of `VariantTile`s — a tile stands for an id ("Grassland",
+  "Trees") and draws one of its variants by a hash of the cell, as the web did.
+  Edit it with the Tile Palette.
+- **Coordinates**: Kingdom works in the province's cells (the design's: x
+  grows east-south, y west-south on screen); `ProvinceCoordinates` converts to
+  Unity's isometric cells. `ProvinceMap` reads the tilemaps for Kingdom
+  (`IProvinceMap`).
+- **Depth**: the 2D renderer sorts by screen height (custom axis 0, 1, 0);
+  standing sprites have their pivot at the bottom centre and are as wide as
+  their footprint's diamond.
+- **The camera** matches the web's: about three cells across at the start,
+  bounded by the painted province.
+- **Art from the web**: terrain textures are baked to diamonds by
+  `Tools/Art/bake-terrain.sh`; features and buildings are copied as they are.
+  `Game/Editor/Art/ArtImportRules` sets each folder's import settings. The
+  web's map came in through *Kingdom › Import web prototype map*.
+
 ### How the game starts
 
 - `Settings/VContainerSettings` (preloaded) names the **root scope**:

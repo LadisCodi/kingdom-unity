@@ -1,0 +1,16 @@
+{
+    "name": "Codigames.Modules.Grid",
+    "rootNamespace": "Codigames.Modules.Grid",
+    "references": [
+        "Codigames.Modules.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}
