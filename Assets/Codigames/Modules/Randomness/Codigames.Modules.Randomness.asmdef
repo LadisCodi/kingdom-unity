@@ -1,0 +1,14 @@
+{
+    "name": "Codigames.Modules.Randomness",
+    "rootNamespace": "Codigames.Modules.Randomness",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

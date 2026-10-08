@@ -1,10 +1,11 @@
 # Kingdom (Unity) — working notes for Claude
 
 An accessible 4X for mobile: a square-grid city-builder on a fog-shrouded
-province that opens onto a shared hex world map. A **native Unity remake** of
-the web prototype (`~/Proyectos/Codigames/kingdom`), rebuilt from scratch with
-Unity's own tools — Sprite Renderers, URP 2D, particles, uGUI — not a port of
-its renderer or UI.
+province that opens onto a shared hex world map. **Rebuilt from scratch in
+Unity** from the design in `Docs/`. The web prototype
+(`~/Proyectos/Codigames/kingdom`) is a reference to consult, never code to
+port: nothing is translated line by line, and nothing has to give the web's
+exact numbers.
 
 Unity **6000.3.19f1**, URP 2D, Input System. Packages: **VContainer** (DI),
 **UniTask** (async), **Odin Inspector**, **DOTween**, **TextMeshPro**,
@@ -33,206 +34,188 @@ Unity build has is tracked only in the remake plan.
 
 ## Architecture
 
-All game code lives under `Assets/Kingdom/`, in two layers. Keep the boundary
-clean — it is what lets the simulation be tested without a scene and later
-run on a server.
+Three layers of code under `Assets/Codigames/`. **The namespace is the path**
+(`Assets/Codigames/Modules/Wallet` → `Codigames.Modules.Wallet`). Each layer
+only knows the ones to its left:
 
-- **`Sim/`** (assembly `Kingdom.Sim`, `noEngineReferences: true`) — the
-  simulation core. Plain C#: no `UnityEngine`, no VContainer, no clock, no
-  I/O. State plus pure functions of `(state, …, now)`. Everything the game
-  *is* lives here; everything the game *looks like* does not.
-- **`Game/`** (assembly `Kingdom.Game`) — Unity: `MonoBehaviour` views, scene
-  wiring, DI `LifetimeScope`s, use cases, presenters, persistence, audio,
-  input. Depends on `Sim`, never the reverse.
-- **`Editor/`** (assembly `Kingdom.Editor`) — editor-only tools.
-- **`Tests/`** (assembly `Kingdom.Tests`, EditMode) — NUnit, mirroring the
-  folders it tests.
+```
+Modules  ←  Kingdom  ←  Game
+```
 
-Namespaces follow the layer and the domain — `Kingdom.Sim.Economy`,
-`Kingdom.Game.City` — not every sub-folder.
+| Layer | Assembly | What it is | Unity? |
+|---|---|---|---|
+| `Modules/<Module>/` | `Codigames.Modules.<Module>` | **game-agnostic systems**: a wallet, timed queues, stores that fill, modifiers, fog of war, the menu framework… | only the presentation ones (UI, camera, audio, feedback) |
+| `Kingdom/` | `Codigames.Kingdom` | **this game's rules**: what a Farm is, how a tap pays, when a lair raids. Composes modules and implements their ports. | **never** (`noEngineReferences`) |
+| `Game/` | `Codigames.Game` | **the game in Unity**: views, presenters, `LifetimeScope`s, ScriptableObjects, adapters for the ports. | yes |
+
+### Modules
+
+- **Independent.** A module depends on **no other module** — only on .NET and
+  on third-party packages. Copy its folder to another project, implement its
+  ports, and it works.
+- **Ports for everything outside.** What a module needs from the world is an
+  interface it declares (`IQuickInfoMessageLayer`, `IUISoundPlayer`); someone
+  outside implements it and registers it in DI. The module never asks who.
+- **Generic, not Kingdom-shaped.** A module knows "a currency", "a cell", "a
+  job in a queue" — never "Gold", "the Farm" or "Housing". Where it needs a
+  game's type it is generic over it (`FogOfWar<TCell>`) or asks a port.
+- **Pure where it can be.** A module with logic is `noEngineReferences` and is
+  tested with `dotnet test`; only presentation modules touch Unity. A pure
+  module does not use VContainer either — registration belongs to `Game`.
+- **Inside**, ProtoLab's shape: `Domain/` (contracts, value objects, ports),
+  `Core/` (entities, abstract bases holding shared logic), `Services/`. These
+  role folders organise; they do not add to the namespace.
+- **Tests** in `<Module>/Tests/`, an assembly of their own.
+
+### Kingdom
+
+- The rules of this game, **pure C#**: no `UnityEngine`, no clock, no files,
+  no network. Everything the game *is*; nothing it *looks like*.
+- **Composes modules** and implements their ports with Kingdom's rules (fog
+  adjacency is 4-way; a cell's reveal price comes from its ring).
+- **Asks the outside through ports** of its own: the clock, where the save
+  lives, the balance (below).
+- Organised by domain (`Kingdom/City/`, `Kingdom/Harvest/`, `Kingdom/Fog/` …).
+
+### Game
+
+- The **composition root**: the `LifetimeScope`s register modules, Kingdom
+  and the adapters that implement every port.
+- Views, presenters, use cases, ScriptableObjects, editor tools.
+- Nothing depends on `Game`.
+- Organised by domain (`Game/City/`, `Game/UI/` …); inside a domain:
+  `UseCases/` (every player action goes through one: it calls Kingdom, then
+  drives UI and feedback), `Services/`, `View/` (a view never mutates state),
+  `Editor/`.
+
+### Balance: definitions are interfaces
+
+- **Kingdom declares what it reads** as small, read-only interfaces —
+  `IBuildingCost`, `IBuildingProduction`, `ITechnologyDefinition` — split by
+  responsibility, so harvest never sees what a Farm costs.
+- **Game implements them with ScriptableObjects** in `Assets/Data/`, one asset
+  per entry, edited in Odin (and in one *Kingdom › Data* window). Odin
+  attributes go on the ScriptableObjects' own fields.
+- A definition exposes a **stable `Id`**; state and saves reference ids, never
+  assets. A definition may point to another by reference (a building's
+  required technology is the technology's asset).
+- Lists are `IReadOnlyList<T>`; nothing in Kingdom changes a definition.
+- **What a legal definition is** lives in Kingdom (pure), and is checked by
+  the Odin window, before a build, and by a test that loads every asset.
+- Kingdom's tests build their own small definitions (test builders), never the
+  real balance.
+- *Until the balance is migrated, the web prototype's JSON is in
+  `Assets/Data/` and loaded by `GameData`; that loader and the generated
+  classes go away with the migration.*
+
+### SOLID, always
+
+Every change is checked against these. When something does not fit, stop and
+ask rather than bend the structure.
+
+- **Single responsibility.** One reason to change per class. Entities hold
+  data and simple self-mutators; logic that relates several things lives in a
+  service; a service does one job. A class that needs "and" to describe it is
+  two classes.
+- **Open/closed.** The game grows by adding data, new implementations of a
+  port and new modules — not by editing a module for Kingdom's sake. A
+  `switch` over kinds that grows with content is a missing abstraction.
+- **Liskov.** Any implementation of a port or definition can stand in for
+  another: no implementation throws "not supported", no caller checks the
+  concrete type.
+- **Interface segregation.** Interfaces are small and named for one need.
+  A caller depends only on what it uses; a wide interface is split by
+  responsibility.
+- **Dependency inversion.** Depend on abstractions owned by the layer that
+  uses them: a module's ports are declared in the module, Kingdom's in
+  Kingdom; Game implements them. Dependencies arrive by constructor injection.
+
+Two corollaries:
+- **An interface where there is a contract** — a port, a definition, a
+  service with (or that will have) more than one implementation. Not for a
+  class that is just an internal detail.
+- **No static mutable state, no singletons.** Static is only for pure
+  functions and constants.
 
 ### Project layout
 
-Code is organised by domain; assets by type — art arrives by type, and
-atlases and import settings are set per type.
+Code under `Assets/Codigames/`; content outside it, by type.
 
 ```
 Assets/
-├─ Kingdom/
-│  ├─ Sim/  Game/  Editor/  Tests/     the four assemblies (Tests/Parity/ holds the golden runs)
-│  ├─ Data/                            the game data, JSON
-│  │  ├─ Game/  Schema/                one file per collection
-│  │  ├─ region-map.json  tech-tree.json
-│  │  └─ Localization/es/
-│  ├─ Art/                             final sprites only
-│  │  ├─ Buildings/  Terrain/  Features/  Fog/
-│  │  ├─ Characters/  Heroes/  Units/
-│  │  ├─ UI/ (Materials/, Icons/, Currencies/)
-│  │  ├─ World/
-│  │  └─ Fonts/
-│  ├─ Audio/ (Music/, Sfx/, Ambience/)
-│  ├─ VFX/                             particles, their materials, shaders
-│  ├─ Prefabs/ (UI/Menus/, UI/Widgets/, City/, World/)
-│  ├─ Catalogs/                        presentation ScriptableObjects: data id → sprite / prefab / sound
-│  ├─ Atlases/                         SpriteAtlas per group
-│  ├─ Scenes/                          Boot, Game, Dev/
-│  └─ Settings/                        URP, input actions, import presets
-└─ Plugins/                            Asset Store packages (Odin, DOTween, LeanTouch)
-Packages/                              UPM packages
+├─ Codigames/
+│  ├─ Modules/<Module>/    Codigames.Modules.<Module> (+ Tests/)
+│  ├─ Kingdom/             Codigames.Kingdom (+ Tests/)
+│  └─ Game/                Codigames.Game (+ Editor/, Tests/)
+├─ Data/                   balance: ScriptableObjects (JSON until migrated)
+├─ Art/                    final sprites only: Buildings/ Terrain/ Characters/ UI/ …
+├─ Audio/  VFX/  Prefabs/  Scenes/
+├─ Catalogs/               presentation ScriptableObjects: id → sprite / prefab / sound
+├─ Settings/               URP, input actions, import presets, VContainer
+└─ Plugins/                Asset Store packages (never edited)
+Tools/                     .NET tools outside Unity (PureTests, Codegen)
 ```
 
-- **No `Resources/` folder.** Prefabs, sprites and sounds reach code
-  through **catalogs** registered in the `LifetimeScope`, keyed by the data's
-  ids — typed, never looked up by a string path.
-  The one exception is a third-party package that loads its own settings
-  from there (`Assets/Resources/DOTweenSettings.asset`).
-- **File names come from data ids** (`Farm_l1.png`, `Farm_l3.png` — a level
-  draws the highest `_l<n>` at or below it), so an editor script fills the
-  catalogs and a test catches a building with no sprite or a sprite nothing
-  uses.
-- **Import settings are per folder**, through Presets filtered by path
-  (buildings pivot bottom-centre, UI no mipmaps and 9-sliced). Dropping a
-  PNG in its folder needs no manual import tweaking.
-- **Source art stays out of `Assets/`** — PSDs, generated art, mockups live
-  in the art repo. Only the final, cut and normalised sprite comes in.
+- **No `Resources/` folder.** Prefabs, sprites and sounds reach code through
+  **catalogs** registered in a `LifetimeScope`, keyed by ids. The one
+  exception is a package that loads its own settings from there
+  (`Assets/Resources/DOTweenSettings.asset`).
+- **File names come from ids** (`Farm_l1.png`, `Farm_l3.png` — a level draws
+  the highest `_l<n>` at or below it), so an editor script fills catalogs and
+  a test catches a missing sprite.
+- **Import settings are per folder**, through Presets filtered by path.
+- **Source art stays out of `Assets/`**; only the final, cut sprite comes in.
 - **Two scenes**: `Boot` (splash, loading) and `Game` (the province and the
   world map, two views of one scene).
-- **Third-party code is never edited.** Asset Store packages in `Plugins/`,
-  everything else through UPM.
+- **Third-party code is never edited.**
 
 ### How the game starts
 
-- `VContainerSettings` (preloaded) names the **root scope**:
-  `Prefabs/App/ProjectLifetimeScope.prefab` — the clock, localization,
-  number format, sound and the loading screen; it lives as long as the app.
+- `Settings/VContainerSettings` (preloaded) names the **root scope**:
+  `Prefabs/App/ProjectLifetimeScope.prefab` — clock, localization, number
+  format, sound and the loading screen; it lives as long as the app.
 - `Boot` (scene 0): `BootLifetimeScope` → `BootFlow` covers the screen and
   loads `Game`.
 - `Game`: `GameLifetimeScope` (UI root, menus, camera, feedback) →
   `GameStartupFlow` readies the game and lifts the loading screen.
-- Play in the editor always starts from `Boot` (`Editor/PlayFromBoot.cs`).
+- Play in the editor always starts from `Boot` (`Game/Editor/PlayFromBoot.cs`).
 
-### Inside a domain
+## Five invariants. Breaking one is a bug even if the tests pass.
 
-- **`Sim/<Domain>/`** — state types (plain, serialisable data), the rules
-  that change them, and the interfaces (ports) for anything the outside
-  world provides.
-- **`Game/<Domain>/`**:
-  - `UseCases/` — every player action goes through a use case: it calls the
-    sim, then drives UI, feedback and presentation. **All use cases live in
-    the Game layer.**
-  - `Services/` — Game-side services and adapters that implement sim ports.
-  - `Persistence/` — save participants.
-  - `View/` — `MonoBehaviour`s that show state. A view never mutates state.
+**1. One-call offline replay equals stepped ticking.** Advancing to `now`
+walks to the *earliest next boundary* and applies discrete work exactly at
+it; boundaries are in **absolute time**, never relative to a tick. A new
+scheduled or expiring thing registers its next boundary and what happens at
+it — nothing else. Tests assert one big advance equals many small ones.
 
-### Entities vs. services
+**2. There is no offline cap.** An absence is replayed in full. Production is
+bounded by ceilings of its own — each building's store, the Mana pool, the
+Knowledge bar, the queues. **Anything time-based that produces needs a
+ceiling of its own**; say which it is in the doc.
 
-- **State objects are data**: their own fields plus simple self-mutators.
-  They take no services.
-- **Logic that relates several pieces of state lives in services/rules.**
-  The dependency points service → state, never the reverse.
-- A **registry holds the active set**; callers pull from it and pass the
-  pieces into the services.
-- **Interfaces for contracts that have, or will have, more than one
-  implementation** — sim ports, the world-server client, storage. Don't add
-  an interface or an abstract base class for a type with one implementation.
-
-## Six invariants. Breaking one is a bug even if the tests pass.
-
-**1. One-call offline replay equals stepped ticking.** `Advance(state,
-toTime)` walks to the *earliest next boundary* and applies discrete work
-exactly at it; boundaries are in **absolute time**, never relative to a tick.
-Any new scheduled or expiring thing is a candidate in the next-boundary search
-plus a branch in the apply-due step — nothing else. The step cap is a
-seatbelt, not a design limit: never register a source that fires more often
-than the sim needs to observe it. Tests assert one big `Advance` equals many
-small ones.
-
-**2. There is no offline cap.** An absence is replayed in full by the one
-`Advance`. Production is bounded by ceilings of its own — each building's
-store, the Mana pool, the Knowledge bar, the queues. **Anything time-based
-that produces needs a ceiling of its own**; say which it is in the doc.
-
-**3. `now` is always passed in.** The sim never reads a clock: no
-`DateTime.Now`, no `Time.time`, no `Stopwatch`. The Game layer reads time
-only through one injected `IClock`, and exactly **one tick driver** asks it
-and passes `now` down. A use case that needs the time takes it from the
-clock, never from `DateTime.UtcNow`. Do not add a second driver.
-`Time.deltaTime` is for presentation only — camera, tweens, particles —
-never for anything the game remembers.
+**3. `now` is always passed in.** Kingdom never reads a clock. Game reads time
+only through the injected `IClock`, and exactly **one tick driver** asks it
+and passes `now` down. `Time.deltaTime` is for presentation only — camera,
+tweens, particles — never for anything the game remembers.
 
 **4. Randomness is counter/hash, not a stream.** `Rand(seed, ...parts)` where
-`parts` identify **the event**, never the moment of the query — a stream
-would desync because `Advance` groups work differently in replay than live.
-Integer arithmetic on `uint` in `unchecked` blocks so it is bit-identical
-everywhere. Never `System.Random` or `UnityEngine.Random` in the sim.
+`parts` identify **the event**, never the moment of the query, so replay and
+live play roll the same. Never `System.Random` or `UnityEngine.Random` in
+Kingdom.
 
-**5. Every number is data.** Balance lives in data files, never in code;
-code reads them. A new building, unit, hero, quest or technology is a data
-entry, not a class. What a legal data file is lives in one place and is
-checked by a test. See *Game data* below.
-
-**6. The sim is deterministic and portable.** `double`, never `float`, in sim
-state and rules; no `Dictionary` iteration order that leaks into results
-(sort, or use ordered collections); nothing culture-dependent (parse and
-format with `CultureInfo.InvariantCulture`).
-
-## Game data
-
-- **JSON is the source of truth** (`Assets/Kingdom/Data/`): one file per
-  collection in `Game/`, what each field is in `Schema/`, plus
-  `tech-tree.json` and `region-map.json` — the web prototype's files, as-is.
-- **The sim's classes for them are generated** from the schemas:
-  `dotnet run --project Tools/Codegen` writes `Sim/Data/Generated/*.g.cs`.
-  Never edit a generated file; change the schema and regenerate.
-- **`GameData`** loads them and derives what `definitions.ts` derived — the
-  gates every technology states once, the troops by rank, the bands of each
-  book, lairs, relics, heroes. It is passed in, never a static.
-- **Presentation is not the sim's**: names, prose, glyphs and sprites the web
-  hard-coded in `definitions.ts` go to the Game layer's catalogs, keyed by id.
-- **Edited inside Unity** with Odin editor windows, validated with the same
-  rules the tests run. Until a collection has its window, it is edited in the
-  web prototype's data editor and copied over.
-- **No ScriptableObjects for balance.** ScriptableObjects are for
-  presentation config only: sprites, prefabs, colours, sounds, tween
-  timings — what a thing *looks like*, keyed by the data's ids.
-
-## The sim outside Unity
-
-`Kingdom.Sim` touches nothing of Unity, so it also builds and tests as plain
-.NET — seconds, no editor, several agents at once:
-
-```bash
-dotnet test Tools/SimTests          # Sim + Tests/Sim, C# 9 like Unity, warnings are errors
-dotnet run --project Tools/Codegen  # regenerate the data classes from the schemas
-```
-
-**Parity with the web prototype is proven, not believed.** `Tools/Parity/*.ts`
-import the web sim (`~/Proyectos/Codigames/kingdom`) and write goldens to
-`Assets/Kingdom/Tests/Golden/`, stamped with the web commit; the parity tests
-compare the C# result field by field (`JsonParity`):
-
-```bash
-cd ~/Proyectos/Codigames/kingdom && npx tsx ../kingdom-unity/Tools/Parity/<exporter>.ts
-```
-
-Porting rules (`Docs/plans/unity-remake.md` §6 has the full list):
-
-- Port the web's behaviour literally: the same order of operations, the same
-  rounding, the same iteration order.
-- **`JsMath.Round`, never `Math.Round`** (JavaScript rounds halves up).
-- Numbers in state and data are `double`, as in JavaScript; ids are strings.
+**5. Every number is data.** Balance lives in `Assets/Data`, never in code. A
+new building, unit, hero, quest or technology is a data entry, not a class.
 
 ## Saves
 
-- **One typed `GameState`** — the sim's state, serialised whole with
-  Newtonsoft. No `Dictionary<string, object>` blobs, no per-system save
-  participants writing untyped data.
-- **`SaveVersion`** in the save; **migrations are ordered, gapless and
-  append-only**, one per version that renames, reshapes or changes meaning.
-  An additive change (a new optional field with a default) needs no
-  migration, only the bump. A save from a newer build is refused, never
-  downgraded.
-- Saved on pause, on focus loss and on quit, and after every command.
+- **One typed state**, owned by Kingdom, serialised whole. No
+  `Dictionary<string, object>` blobs, no untyped per-system participants.
+- **A save version**; **migrations are ordered, gapless and append-only**,
+  one per version that renames, reshapes or changes meaning. An additive
+  change (a new optional field with a default) needs only the bump. A save
+  from a newer build is refused, never downgraded.
+- Where the save is written is a port; Game writes it on pause, on focus
+  loss, on quit and after every command.
 
 ## Code conventions
 
@@ -240,20 +223,18 @@ Porting rules (`Docs/plans/unity-remake.md` §6 has the full list):
   interfaces; `_camelCase` private fields; `UPPER_CASE` constants.
 - **Encapsulation**: the public surface is **properties** backed by
   `_`-prefixed private fields; put validation or change notification in the
-  setter. Serialised view references are `[SerializeField] private` with a
+  setter. Serialised references are `[SerializeField] private` with a
   get-only property.
-- **DI with VContainer**: register in the relevant `LifetimeScope`. Plain C#
+- **DI with VContainer**, registered in `Game`'s `LifetimeScope`s. Plain C#
   classes take their dependencies in the **constructor**; `MonoBehaviour`s,
-  which cannot, use `[Inject]` on a method or field. Don't `new` up services.
-  Entry points are `IStartable` / `ITickable`, registered with
-  `RegisterEntryPoint<T>()`.
-  The one exception is the menu framework's base classes
-  (`AbstractMenuPresenter`), which take their plumbing with `[Inject]` so a
-  presenter does not repeat it in its constructor.
+  which cannot, use `[Inject]` on a method. Don't `new` up services. Entry
+  points are `IStartable` / `ITickable` (`RegisterEntryPoint<T>()`). The one
+  exception is the menu framework's base classes (`AbstractMenuPresenter`),
+  which take their plumbing with `[Inject]` so a presenter does not repeat it.
 - **Localization and number formatting are injected services**
-  (`Localization`, `NumberFormat`), never statics.
+  (`Localizer`, `NumberFormat`), never statics.
 - **Async**: **UniTask** (`async UniTask`), never coroutines.
-- **Tweens**: **DOTween** for UI and feedback motion; kill tweens with their
+- **Tweens**: **DOTween** for motion computed in code; kill tweens with their
   owner.
 - **Lifecycle**: base `MonoBehaviour`s use the Template Method pattern —
   override the hooks (`PreShowInternal`, …), never the orchestrating method.
@@ -262,11 +243,12 @@ Porting rules (`Docs/plans/unity-remake.md` §6 has the full list):
 - **Small files, one type per file**, file name = type name.
 - **References are injected or serialised, never searched for.** No
   `GameObject.Find`, `FindWithTag`, `FindObjectOfType` /
-  `FindFirstObjectByType`, and no `GetComponent` in per-frame code. Scene
-  objects a service needs are registered in the `LifetimeScope`
-  (`RegisterComponent`). No singletons, no static mutable state.
-- **No allocation in per-frame code** (`Update`, `LateUpdate`, render
-  loops): no LINQ, no closures, no string building.
+  `FindFirstObjectByType`, and no `GetComponent` in per-frame code.
+- **No allocation in per-frame code** (`Update`, `LateUpdate`): no LINQ, no
+  closures, no string building.
+- **Determinism in Kingdom**: no iteration order that leaks into results
+  without being defined; parse and format with
+  `CultureInfo.InvariantCulture`.
 
 ## Feedback
 
@@ -276,7 +258,7 @@ a named Feel `MMF_Player` serialised on its view or prefab; code only calls
 `PlayFeedbacks()`. No duration, curve or intensity of a feedback is written in
 code.
 
-- Feel lives only in `Game`, in views. A use case applies the command to the
+- Feel lives in views — the Feedback module's and `Game`'s. A use case applies the command to the
   sim, then tells the view, which plays its feedback.
 - **Feel** for authored feedback; **DOTween** for motion computed in code
   (menus opening, a bar following a value, a list reordering); **particles**
@@ -298,7 +280,7 @@ code.
   wind sway — come from **All In 1 Sprite Shader** (its URP 2D variant, so
   2D lights apply). **Particles** use **All In 1 VFX Toolkit**'s shader;
   its effect prefabs are a starting library: copy one into
-  `Assets/Kingdom/VFX/`, restyle it to the art direction, never edit the
+  `Assets/VFX/`, restyle it to the art direction, never edit the
   original.
 - **Own Shader Graph shaders only for what is Kingdom's**: the fog of war,
   water and terrain motion, the tutorial cut-out.
@@ -315,8 +297,8 @@ code.
 
 ## UI
 
-uGUI, **MVP**. A menu is three files in `Game/UI/`, each in its own
-sub-folder (these sub-folders *do* carry into the namespace):
+uGUI, **MVP**, on the UI module (`Codigames.Modules.UI`). A menu is three
+files in `Game/UI/`, each in its own sub-folder:
 
 - **Data** — `Game/UI/Data/{X}Data.cs`: an immutable DTO (get-only
   properties set in the constructor) the presenter pushes to the view. Only
@@ -337,10 +319,10 @@ Rules the player sees:
 - **The UI is made of materials** (`Docs/art/ui-menus-redesign.md`): wood,
   parchment, rope, cloth, wax, brass — lit from above, never flat fills or
   plastic gloss. Ask "what is this made of?" before drawing any new UI.
-- **Every number the player reads goes through one formatter**, in the
+- **Every number the player reads goes through `NumberFormat`**, in the
   viewer's locale. Never `ToString()` a count the player reads.
-- **Every text the player reads is localised** (English source, Spanish
-  translation). No literal strings in views.
+- **Every text the player reads goes through `Localizer`** (English source,
+  Spanish translation). No literal strings in views.
 - **No emoji glyphs** as icons, anywhere.
 - **Countdowns derive from a timestamp**, never a decremented counter.
 - **A calculated price or reward is rounded to three significant figures**;
@@ -348,26 +330,13 @@ Rules the player sees:
 
 ## What comes from ProtoLab
 
-`~/Proyectos/Codigames/ProtoLab` is the team's Unity base. Its pieces are
-**copied and adapted** into `Kingdom.Game` (namespaces renamed, the
-multi-game `gameId` paths removed, tag lookups replaced by injection), never
-referenced:
-
-- UI: `UIManager` (menu stack, grouping, close-top-most), `Menu`,
-  `AbstractMenuPresenter`, `MenuBackInputHandler`; `Widget`,
-  `StateDrivenWidget`, `StateView` and their pools; `MainNavBar`,
-  `SecondaryNavBar`, `SafeAreaFitter`; `ButtonPressScaleFeedback`.
-- `CameraManager` (pan, zoom, inertia): LeanTouch gestures move a target a
-  Cinemachine camera follows; zoom drives its orthographic size.
-- The startup flow (`SplashStartupFlow`, `GameStartupFlow`) and the
-  `LifetimeScope` skeleton.
-- `SoundService`; the app-lifecycle save hook.
-- `WorldFeedback` (floating numbers), `QuickInfoMessages`, `Prettifier`
-  (made locale-aware: it becomes the one number formatter).
-
-Not taken: its domain modules (Currencies, Generators, Production, Economy,
-Stats, Requirements, Queues, Timer, Offline) — the sim, ported from the web
-prototype, owns the domain — and its save model.
+`~/Proyectos/Codigames/ProtoLab` is the team's Unity base. Its menu framework,
+widgets, safe area and button feedback (`Modules/UI`), camera
+(`Modules/Cameras`), sound service (`Modules/Audio`), floating feedback and
+quick-info messages (`Modules/Feedback`) and app-lifecycle hook
+(`Modules/Lifecycle`) were **copied and adapted** — namespaces renamed,
+lookups replaced by injection, cross-module calls replaced by ports. A
+module improved here can go back to ProtoLab as it is.
 
 ## Driving the editor
 
@@ -381,7 +350,7 @@ against it. Drive it with the Unity CLI (`unity status`, then
   relative to `Assets/` — write it under `Temp/` outside, or delete it after).
 - Scenes, prefabs and assets are made by editor code, never by writing YAML:
   `eval` runs a method body (no `using`s — fully qualified names); anything
-  longer is a temporary class in `Editor/`, compiled, run, then deleted.
+  longer is a temporary class in `Game/Editor/`, compiled, run, then deleted.
   After `NewScene`, reload assets with `AssetDatabase.LoadAssetAtPath` before
   assigning them — references held across it are lost.
 - **VContainer rewrites a new file named `*LifetimeScope.cs`** with its empty
@@ -390,14 +359,17 @@ against it. Drive it with the Unity CLI (`unity status`, then
 
 ## Tests and the gate
 
-- NUnit, EditMode, under `Assets/Kingdom/Tests/` mirroring the folders it
-  tests. Class `{Component}Tests`, methods `Method_Should{Behavior}`.
-- **The sim is tested without a scene.** Every rule in `Sim/` has tests;
-  every invariant has a test that fails when it breaks.
-- **The gate**: the project compiles with no errors or warnings, EditMode
-  tests are green, and Play from `Boot` reaches `Game` with an empty
-  console. GitHub runs no tests — the gate is local, before a branch
-  is pushed for a PR. Red means no PR.
+- NUnit. Each module has `Tests/`; Kingdom has `Kingdom/Tests/`; Game has
+  `Game/Tests/`. Class `{Component}Tests`, methods `Method_Should{Behavior}`.
+- **Pure code is tested without Unity**: `dotnet test Tools/PureTests` builds
+  the pure modules and Kingdom with their tests (C# 9, warnings are errors) in
+  seconds. A new pure module is added to its list.
+- Every rule in Kingdom has tests; every invariant has a test that fails when
+  it breaks.
+- **The gate**: `dotnet test Tools/PureTests` green; Unity compiles with no
+  errors or warnings; EditMode tests green; Play from `Boot` reaches `Game`
+  with an empty console. GitHub runs no tests — the gate is local, before a
+  branch is pushed for a PR. Red means no PR.
 
 ## Branching — Git Flow
 
@@ -441,9 +413,10 @@ any number that has been argued twice.
 ## Don't
 
 - Don't reference `UnityEngine` (or anything with a clock, a file or a
-  network) from `Sim/`.
-- Don't port the web prototype's renderer or UI code. The sim's rules are
-  ported faithfully; everything visual is rebuilt the Unity way.
+  network) from `Kingdom` or a pure module.
+- Don't make a module depend on another module, or on Kingdom.
+- Don't translate the web prototype's code. Read it to understand a rule;
+  build the rule the way this architecture asks.
 - Don't hand-edit scenes, prefabs or `.asset` YAML when the editor (or an
   editor script) can do it.
 - Don't push to `main` or open a release unless asked.

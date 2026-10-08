@@ -1,0 +1,30 @@
+{
+    "name": "Codigames.Game",
+    "rootNamespace": "Codigames.Game",
+    "references": [
+        "Codigames.Kingdom",
+        "Codigames.Modules.UI",
+        "Codigames.Modules.Audio",
+        "Codigames.Modules.Cameras",
+        "Codigames.Modules.Feedback",
+        "Codigames.Modules.Lifecycle",
+        "Codigames.Modules.Localization",
+        "Codigames.Modules.Clock",
+        "Codigames.Modules.Randomness",
+        "VContainer",
+        "UniTask",
+        "UniTask.DOTween",
+        "DOTween.Modules",
+        "MoreMountains.Tools",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
