@@ -1,7 +1,9 @@
 {
     "name": "Codigames.Modules.Audio",
     "rootNamespace": "Codigames.Modules.Audio",
-    "references": [],
+    "references": [
+        "Codigames.Modules.Core"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
