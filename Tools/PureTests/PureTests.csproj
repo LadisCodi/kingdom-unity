@@ -13,6 +13,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../../Assets/Codigames/Modules/Clock/**/*.cs" />
+    <Compile Include="../../Assets/Codigames/Modules/Lifecycle/**/*.cs" />
     <Compile Include="../../Assets/Codigames/Modules/Localization/**/*.cs" />
     <Compile Include="../../Assets/Codigames/Modules/Randomness/**/*.cs" />
     <Compile Include="../../Assets/Codigames/Kingdom/**/*.cs" />

@@ -59,9 +59,13 @@ Modules  ←  Kingdom  ←  Game
 - **Generic, not Kingdom-shaped.** A module knows "a currency", "a cell", "a
   job in a queue" — never "Gold", "the Farm" or "Housing". Where it needs a
   game's type it is generic over it (`FogOfWar<TCell>`) or asks a port.
-- **Pure where it can be.** A module with logic is `noEngineReferences` and is
-  tested with `dotnet test`; only presentation modules touch Unity. A pure
-  module does not use VContainer either — registration belongs to `Game`.
+- **Pure unless its job is presentation.** A module is `noEngineReferences`
+  and tested with `dotnet test`, unless its job is drawing, input, sound or
+  the camera. Something that merely *starts* in Unity — an app callback, a
+  frame tick, a file — is a pure module with methods to call, and a hook in
+  `Game` calls them (`AppLifecycle` ← `Game/App/AppLifecycleHook`). A module
+  never creates GameObjects to listen for itself. A pure module does not use
+  VContainer either — registration belongs to `Game`.
 - **Inside**, ProtoLab's shape: `Domain/` (contracts, value objects, ports),
   `Core/` (entities, abstract bases holding shared logic), `Services/`. These
   role folders organise; they do not add to the namespace.
@@ -333,8 +337,9 @@ Rules the player sees:
 `~/Proyectos/Codigames/ProtoLab` is the team's Unity base. Its menu framework,
 widgets, safe area and button feedback (`Modules/UI`), camera
 (`Modules/Cameras`), sound service (`Modules/Audio`), floating feedback and
-quick-info messages (`Modules/Feedback`) and app-lifecycle hook
-(`Modules/Lifecycle`) were **copied and adapted** — namespaces renamed,
+quick-info messages (`Modules/Feedback`) and app-lifecycle signal
+(`Modules/Lifecycle`, pure, with its hook in `Game/App`) were **copied and
+adapted** — namespaces renamed,
 lookups replaced by injection, cross-module calls replaced by ports. A
 module improved here can go back to ProtoLab as it is.
 

@@ -1,35 +1,23 @@
 using System;
-using Object = UnityEngine.Object;
-using UnityEngine;
-using VContainer.Unity;
 
 namespace Codigames.Modules.Lifecycle
 {
-    // Raised when the game may be stopped: whatever must survive (the save) is written on this signal.
-    public class AppLifecycle : IStartable, IDisposable
+    // Turns the platform's pause, focus and quit reports into one signal: the app may be stopped now
+    // (backgrounded on mobile, focus lost on desktop, quitting).
+    public class AppLifecycle : IAppLifecycle, IAppLifecycleNotifier
     {
-        private AppLifecycleHook _hook;
-
         public event Action Suspending;
 
-        public void Start()
+        public void Paused(bool paused)
         {
-            var go = new GameObject(nameof(AppLifecycleHook));
-            Object.DontDestroyOnLoad(go);
-
-            _hook = go.AddComponent<AppLifecycleHook>();
-            _hook.Suspending += OnSuspending;
+            if (paused) Suspending?.Invoke();
         }
 
-        public void Dispose()
+        public void FocusChanged(bool hasFocus)
         {
-            if (_hook == null) return;
-
-            _hook.Suspending -= OnSuspending;
-            Object.Destroy(_hook.gameObject);
-            _hook = null;
+            if (!hasFocus) Suspending?.Invoke();
         }
 
-        private void OnSuspending() => Suspending?.Invoke();
+        public void Quitting() => Suspending?.Invoke();
     }
 }

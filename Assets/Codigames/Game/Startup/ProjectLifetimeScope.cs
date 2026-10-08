@@ -18,6 +18,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private SoundCatalog _soundCatalog;
         [SerializeField] private MMSoundManager _soundManager;
         [SerializeField] private LoadingScreen _loadingScreen;
+        [SerializeField] private AppLifecycleHook _lifecycleHook;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -31,7 +32,8 @@ namespace Codigames.Game.Startup
             builder.Register<IUISoundPlayer, UISoundPlayer>(Lifetime.Singleton);
 
             builder.RegisterComponent(_loadingScreen);
-            builder.RegisterEntryPoint<AppLifecycle>().AsSelf();
+            builder.Register<AppLifecycle>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.RegisterComponent(_lifecycleHook);
         }
     }
 }
