@@ -119,24 +119,42 @@ player implements `ISoundPlayer` with Feel's `MMSoundManager`.
 
 ### Balance: definitions are interfaces
 
-- **Kingdom declares what it reads** as small, read-only interfaces —
-  `IBuildingCost`, `IBuildingProduction`, `ITechnologyDefinition` — split by
-  responsibility, so harvest never sees what a Farm costs.
+- **Kingdom declares what it reads** as small, read-only interfaces. A
+  definition is its identity plus **parts**, each its own responsibility —
+  `IBuildingDefinition` exposes `Cost`, `Duration` and `Gates` — so a rule
+  reads only the part it needs.
+- A definition is `IIdentifiable`: a **stable `Id`**. State and saves
+  reference ids, never assets. A definition may point to another by
+  reference (the construction settings' Townhall is the building's asset).
+- Each collection reaches Kingdom as an `ICatalog<T>` (`Core`); global
+  numbers as a settings interface (`IConstructionSettings`). Registered in
+  `ProjectLifetimeScope`.
+- **What a legal definition is** lives in Kingdom (`BuildingRules`,
+  `ConstructionRules`): pure, tested with small definitions built in the test
+  (`Kingdom/Tests/Builders`), never with the real balance.
 - **Game implements them with ScriptableObjects** in `Assets/Data/`, one asset
-  per entry, edited in Odin (and in one *Kingdom › Data* window). Odin
-  attributes go on the ScriptableObjects' own fields.
-- A definition is `IIdentifiable` — a **stable `Id`**; state and saves
-  reference ids, never assets. Each collection reaches Kingdom as an
-  `ICatalog<T>` (`Core`), which `Game` fills from the ScriptableObjects. A definition may point to another by reference (a building's
-  required technology is the technology's asset).
-- Lists are `IReadOnlyList<T>`; nothing in Kingdom changes a definition.
-- **What a legal definition is** lives in Kingdom (pure), and is checked by
-  the Odin window, before a build, and by a test that loads every asset.
-- Kingdom's tests build their own small definitions (test builders), never the
-  real balance.
-- *Until the balance is migrated, the web prototype's JSON is in
-  `Assets/Data/` and loaded by `GameData`; that loader and the generated
-  classes go away with the migration.*
+  per entry (`Assets/Data/<Collection>/<Id>.asset`) and one per collection
+  (`Assets/Data/<Collection>.asset`, its entries in authored order):
+  - `DefinitionAsset` — an entry: its `Id` (the asset name by default) and its
+    `Problems()`, which are Kingdom's rules;
+  - `DefinitionCollection<TDefinition, TAsset>` — a collection, which **is**
+    the `ICatalog<TDefinition>`; a new collection derives from it and adds
+    nothing but its title;
+  - `DataSettings` — a group of global numbers.
+  The parts are `[Serializable]` classes inside the asset (`BuildingCostData`
+  …). Odin attributes go on the assets' own fields; what only the player sees
+  (names, prose, the build tab) sits on the asset beside the rules, never on
+  Kingdom's interfaces.
+- **The *Kingdom › Data* window** (Odin) lists every collection with its
+  entries and every settings group, creates entries, and shows each item's
+  problems as it is edited. **`DataValidator`** gathers every problem —
+  entries, settings, rules across collections — for the window, *Validate
+  all* and the `Balance_ShouldHaveNoProblems` test.
+- **The web prototype's balance** (`Tools/WebData`, its JSON and schemas) is
+  imported once per collection, when its system is rebuilt: *Kingdom ›
+  Import web prototype data* (`Game/Editor/WebImport`). After that the assets
+  are the source of truth. The importer's classes are generated from the web
+  schemas (`dotnet run --project Tools/Codegen`).
 
 ### SOLID, always
 
@@ -177,13 +195,13 @@ Assets/
 │  ├─ Modules/<Module>/    Codigames.Modules.<Module> (+ Tests/)
 │  ├─ Kingdom/             Codigames.Kingdom (+ Tests/)
 │  └─ Game/                Codigames.Game (+ Editor/, Tests/)
-├─ Data/                   balance: ScriptableObjects (JSON until migrated)
+├─ Data/                   balance: one ScriptableObject per entry, one per collection
 ├─ Art/                    final sprites only: Buildings/ Terrain/ Characters/ UI/ …
 ├─ Audio/  VFX/  Prefabs/  Scenes/
 ├─ Catalogs/               presentation ScriptableObjects: id → sprite / prefab / sound
 ├─ Settings/               URP, input actions, import presets, VContainer
 └─ Plugins/                Asset Store packages (never edited)
-Tools/                     .NET tools outside Unity (PureTests, Codegen)
+Tools/                     outside Unity: PureTests, Codegen, WebData (the web's balance, to import)
 ```
 
 - **No `Resources/` folder.** Prefabs, sprites and sounds reach code through
@@ -387,7 +405,9 @@ against it. Drive it with the Unity CLI (`unity status`, then
 `unity command <name> --project-path <project>`):
 
 - `recompile` + `recompile_status`, then `console_status` / `console` for
-  errors; `run_tests --mode EditMode` runs the suite in the open editor.
+  errors; `run_tests --mode EditMode` runs the suite in the open editor. Let
+  the test run finish its cleanup (a few seconds) before `editor_play`, or its
+  own errors land in the console.
 - `editor_play` / `editor_stop`, `capture_game_view` (its `save_path` is
   relative to `Assets/` — write it under `Temp/` outside, or delete it after).
 - Scenes, prefabs and assets are made by editor code, never by writing YAML:
@@ -402,7 +422,7 @@ against it. Drive it with the Unity CLI (`unity status`, then
 ## Tests and the gate
 
 - NUnit. Each module has `Tests/`; Kingdom has `Kingdom/Tests/`; Game has
-  `Game/Tests/`. Class `{Component}Tests`, methods `Method_Should{Behavior}`.
+  `Game/Tests/` (EditMode, with the editor: the balance test lives there). Class `{Component}Tests`, methods `Method_Should{Behavior}`.
 - **Pure code is tested without Unity**: `dotnet test Tools/PureTests` builds
   every module and Kingdom with their tests (C# 9, warnings are errors) in
   seconds.

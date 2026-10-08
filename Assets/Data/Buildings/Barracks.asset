@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d63499bd92dabf8868ec548a90183a, type: 3}
+  m_Name: Barracks
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.City.BuildingAsset
+  _id: Barracks
+  _maxLevel: 10
+  _width: 2
+  _height: 2
+  _buildable: 1
+  _cost:
+    _perLevel:
+    - _currencies:
+      - _id: Gold
+        _value: 3600
+      - _id: Wood
+        _value: 200
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 12000
+      - _id: Wood
+        _value: 500
+      - _id: Stone
+        _value: 170
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 26000
+      - _id: Wood
+        _value: 1100
+      - _id: Stone
+        _value: 380
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 67000
+      - _id: Wood
+        _value: 2800
+      - _id: Stone
+        _value: 920
+      _goods:
+      - _id: Heartwood
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 170000
+      - _id: Wood
+        _value: 6800
+      - _id: Stone
+        _value: 2300
+      _goods:
+      - _id: Moonglass
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 380000
+      - _id: Wood
+        _value: 16000
+      - _id: Stone
+        _value: 5200
+      _goods:
+      - _id: Iron
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 850000
+      - _id: Wood
+        _value: 35000
+      - _id: Stone
+        _value: 12000
+      _goods:
+      - _id: Iron
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 1800000
+      - _id: Wood
+        _value: 76000
+      - _id: Stone
+        _value: 25000
+      _goods:
+      - _id: Iron
+        _value: 4
+      - _id: Starmetal
+        _value: 4
+      - _id: Heartwood
+        _value: 4
+      - _id: Moonglass
+        _value: 4
+    - _currencies:
+      - _id: Gold
+        _value: 3800000
+      - _id: Wood
+        _value: 160000
+      - _id: Stone
+        _value: 54000
+      _goods:
+      - _id: Iron
+        _value: 5
+      - _id: Starmetal
+        _value: 8
+      - _id: Heartwood
+        _value: 8
+      - _id: Moonglass
+        _value: 8
+    - _currencies:
+      - _id: Gold
+        _value: 8200000
+      - _id: Wood
+        _value: 340000
+      - _id: Stone
+        _value: 110000
+      _goods:
+      - _id: Iron
+        _value: 6
+      - _id: Starmetal
+        _value: 12
+      - _id: Heartwood
+        _value: 12
+      - _id: Moonglass
+        _value: 12
+    _instanceLinearGrowth: 1
+    _instanceExponentialGrowth: 1.2
+  _duration:
+    _buildSeconds: 60
+    _buildCountGrowth: 1
+    _buildDistanceGrowth: 1.22
+    _upgradeSeconds: 90
+    _upgradeLevelGrowth: 1.6
+    _lateUpgradeSeconds: 7200
+    _lateUpgradeLevelGrowth: 1.7
+  _gates:
+    _maxCountPerTownhallLevel: 01000000
+    _requiredTownhallLevelPerLevel: 01000000020000000300000003000000060000000700000008000000090000000a000000
+    _requiredPopulationPerLevel: 
+  _displayName: Barracks
+  _promise: Trains soldiers and raises the army cap
+  _description: Trains sturdy foot soldiers.
+  _buildTab: Military

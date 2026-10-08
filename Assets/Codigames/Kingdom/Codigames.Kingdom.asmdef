@@ -1,14 +1,14 @@
 {
     "name": "Codigames.Kingdom",
     "rootNamespace": "Codigames.Kingdom",
-    "references": [],
+    "references": [
+        "Codigames.Modules.Core"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": true,
-    "precompiledReferences": [
-        "Newtonsoft.Json.dll"
-    ],
+    "overrideReferences": false,
+    "precompiledReferences": [],
     "autoReferenced": false,
     "defineConstraints": [],
     "versionDefines": [],

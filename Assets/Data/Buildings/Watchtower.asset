@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d63499bd92dabf8868ec548a90183a, type: 3}
+  m_Name: Watchtower
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.City.BuildingAsset
+  _id: Watchtower
+  _maxLevel: 1
+  _width: 1
+  _height: 1
+  _buildable: 0
+  _cost:
+    _perLevel:
+    - _currencies:
+      - _id: Gold
+        _value: 200
+      - _id: Wood
+        _value: 100
+      _goods: []
+    _instanceLinearGrowth: 0
+    _instanceExponentialGrowth: 1
+  _duration:
+    _buildSeconds: 60
+    _buildCountGrowth: 1
+    _buildDistanceGrowth: 1
+    _upgradeSeconds: 0
+    _upgradeLevelGrowth: 1.5
+    _lateUpgradeSeconds: 0
+    _lateUpgradeLevelGrowth: 0
+  _gates:
+    _maxCountPerTownhallLevel: 01000000010000000100000001000000010000000100000001000000010000000100000001000000
+    _requiredTownhallLevelPerLevel: 
+    _requiredPopulationPerLevel: 
+  _displayName: Watchtower
+  _promise: Sees past the province, to the world
+  _description: "The old tower on the northern hills. Repaired, its lens looks past
+    the mountains \u2014 to the world and the kingdoms in it."
+  _buildTab: Decoration

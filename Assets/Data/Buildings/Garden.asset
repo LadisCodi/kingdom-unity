@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d63499bd92dabf8868ec548a90183a, type: 3}
+  m_Name: Garden
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.City.BuildingAsset
+  _id: Garden
+  _maxLevel: 1
+  _width: 1
+  _height: 1
+  _buildable: 1
+  _cost:
+    _perLevel:
+    - _currencies:
+      - _id: Gold
+        _value: 13000
+      - _id: Wood
+        _value: 500
+      - _id: Food
+        _value: 250
+      _goods: []
+    _instanceLinearGrowth: 0.35
+    _instanceExponentialGrowth: 1
+  _duration:
+    _buildSeconds: 60
+    _buildCountGrowth: 1.1
+    _buildDistanceGrowth: 1.22
+    _upgradeSeconds: 0
+    _upgradeLevelGrowth: 1.5
+    _lateUpgradeSeconds: 0
+    _lateUpgradeLevelGrowth: 0
+  _gates:
+    _maxCountPerTownhallLevel: 000000000000000000000000000000000400000006000000080000000a0000000c0000000e000000
+    _requiredTownhallLevelPerLevel: 
+    _requiredPopulationPerLevel: 
+  _displayName: Garden
+  _promise: Beds of flowers
+  _description: Bright flowerbeds that make the whole street smile.
+  _buildTab: Decoration

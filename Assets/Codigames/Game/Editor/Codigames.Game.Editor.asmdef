@@ -2,15 +2,24 @@
     "name": "Codigames.Game.Editor",
     "rootNamespace": "Codigames.Game.Editor",
     "references": [
-        "Codigames.Game"
+        "Codigames.Game",
+        "Codigames.Kingdom",
+        "Codigames.Modules.Core"
     ],
     "includePlatforms": [
         "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll",
+        "Sirenix.OdinInspector.Attributes.dll",
+        "Sirenix.OdinInspector.Editor.dll",
+        "Sirenix.Utilities.dll",
+        "Sirenix.Utilities.Editor.dll",
+        "Sirenix.Serialization.dll"
+    ],
     "autoReferenced": false,
     "defineConstraints": [],
     "versionDefines": [],

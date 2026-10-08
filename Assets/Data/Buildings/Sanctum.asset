@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d63499bd92dabf8868ec548a90183a, type: 3}
+  m_Name: Sanctum
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.City.BuildingAsset
+  _id: Sanctum
+  _maxLevel: 10
+  _width: 2
+  _height: 2
+  _buildable: 1
+  _cost:
+    _perLevel:
+    - _currencies:
+      - _id: Gold
+        _value: 9000
+      - _id: Stone
+        _value: 100
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 17000
+      - _id: Stone
+        _value: 220
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 38000
+      - _id: Stone
+        _value: 500
+      _goods: []
+    - _currencies:
+      - _id: Gold
+        _value: 92000
+      - _id: Stone
+        _value: 1200
+      _goods:
+      - _id: Moonglass
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 230000
+      - _id: Stone
+        _value: 3000
+      _goods:
+      - _id: Starmetal
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 520000
+      - _id: Stone
+        _value: 6900
+      _goods:
+      - _id: CutStone
+        _value: 2
+    - _currencies:
+      - _id: Gold
+        _value: 1200000
+      - _id: Stone
+        _value: 16000
+      _goods:
+      - _id: CutStone
+        _value: 3
+    - _currencies:
+      - _id: Gold
+        _value: 2500000
+      - _id: Stone
+        _value: 34000
+      _goods:
+      - _id: Runestone
+        _value: 2
+      - _id: Starmetal
+        _value: 4
+      - _id: Heartwood
+        _value: 4
+      - _id: Moonglass
+        _value: 4
+    - _currencies:
+      - _id: Gold
+        _value: 5400000
+      - _id: Stone
+        _value: 72000
+      _goods:
+      - _id: Runestone
+        _value: 3
+      - _id: Starmetal
+        _value: 8
+      - _id: Heartwood
+        _value: 8
+      - _id: Moonglass
+        _value: 8
+    - _currencies:
+      - _id: Gold
+        _value: 11000000
+      - _id: Stone
+        _value: 150000
+      _goods:
+      - _id: Runestone
+        _value: 4
+      - _id: Starmetal
+        _value: 12
+      - _id: Heartwood
+        _value: 12
+      - _id: Moonglass
+        _value: 12
+    _instanceLinearGrowth: 1
+    _instanceExponentialGrowth: 1.2
+  _duration:
+    _buildSeconds: 90
+    _buildCountGrowth: 1
+    _buildDistanceGrowth: 1.22
+    _upgradeSeconds: 120
+    _upgradeLevelGrowth: 1.6
+    _lateUpgradeSeconds: 7200
+    _lateUpgradeLevelGrowth: 1.7
+  _gates:
+    _maxCountPerTownhallLevel: 01000000
+    _requiredTownhallLevelPerLevel: 02000000030000000300000004000000060000000700000008000000090000000a000000
+    _requiredPopulationPerLevel: 
+  _displayName: Sanctum
+  _promise: Holds more Mana while you are away
+  _description: Stores Mana within its enchanted walls.
+  _buildTab: Economy
