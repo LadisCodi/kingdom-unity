@@ -46,6 +46,53 @@ run on a server.
 Namespaces follow the layer and the domain — `Kingdom.Sim.Economy`,
 `Kingdom.Game.City` — not every sub-folder.
 
+### Project layout
+
+Code is organised by domain; assets by type — art arrives by type, and
+atlases and import settings are set per type.
+
+```
+Assets/
+├─ Kingdom/
+│  ├─ Sim/  Game/  Editor/  Tests/     the four assemblies (Tests/Parity/ holds the golden runs)
+│  ├─ Data/                            the game data, JSON
+│  │  ├─ Game/  Schema/                one file per collection
+│  │  ├─ region-map.json  tech-tree.json
+│  │  └─ Localization/es/
+│  ├─ Art/                             final sprites only
+│  │  ├─ Buildings/  Terrain/  Features/  Fog/
+│  │  ├─ Characters/  Heroes/  Units/
+│  │  ├─ UI/ (Materials/, Icons/, Currencies/)
+│  │  ├─ World/
+│  │  └─ Fonts/
+│  ├─ Audio/ (Music/, Sfx/, Ambience/)
+│  ├─ VFX/                             particles, their materials, shaders
+│  ├─ Prefabs/ (UI/Menus/, UI/Widgets/, City/, World/)
+│  ├─ Catalogs/                        presentation ScriptableObjects: data id → sprite / prefab / sound
+│  ├─ Atlases/                         SpriteAtlas per group
+│  ├─ Scenes/                          Boot, Game, Dev/
+│  └─ Settings/                        URP, input actions, import presets
+└─ Plugins/                            Asset Store packages (Odin, DOTween, LeanTouch)
+Packages/                              UPM packages
+```
+
+- **No `Resources/` folder.** Prefabs, sprites and sounds reach code
+  through **catalogs** registered in the `LifetimeScope`, keyed by the data's
+  ids — typed, never looked up by a string path.
+- **File names come from data ids** (`Farm_l1.png`, `Farm_l3.png` — a level
+  draws the highest `_l<n>` at or below it), so an editor script fills the
+  catalogs and a test catches a building with no sprite or a sprite nothing
+  uses.
+- **Import settings are per folder**, through Presets filtered by path
+  (buildings pivot bottom-centre, UI no mipmaps and 9-sliced). Dropping a
+  PNG in its folder needs no manual import tweaking.
+- **Source art stays out of `Assets/`** — PSDs, generated art, mockups live
+  in the art repo. Only the final, cut and normalised sprite comes in.
+- **Two scenes**: `Boot` (splash, loading) and `Game` (the province and the
+  world map, two views of one scene).
+- **Third-party code is never edited.** Asset Store packages in `Plugins/`,
+  everything else through UPM.
+
 ### Inside a domain
 
 - **`Sim/<Domain>/`** — state types (plain, serialisable data), the rules
