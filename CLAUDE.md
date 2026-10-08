@@ -9,7 +9,10 @@ its renderer or UI.
 Unity **6000.3.19f1**, URP 2D, Input System. Packages: **VContainer** (DI),
 **UniTask** (async), **Odin Inspector**, **DOTween**, **TextMeshPro**,
 **Newtonsoft.Json**, **Feel** (feedbacks, with Nice Vibrations), **Cinemachine** (the camera), **LeanTouch** (touch
-gestures), **UIParticle** (particles inside uGUI), **NUnit** (Unity Test
+gestures), **UIParticle** (particles inside uGUI), **SoftMask** and **UI Effect** (soft
+masks and effects on uGUI), **All In 1 Sprite Shader** and **All In 1 VFX
+Toolkit** (sprite effects, particles), **Graphy** (on-device performance
+monitor), **NUnit** (Unity Test
 Framework).
 
 **Read [`Docs/overview.md`](Docs/overview.md) before changing behaviour** — the
@@ -240,6 +243,27 @@ code.
 - Anything played often (floating numbers on taps) is **pooled**; never one
   instantiate per tap.
 - Feel's demos are not in the project; reimport them elsewhere to browse.
+
+## Visual effects
+
+- **Sprite effects** — outline, glow, greyscale, hit flash, dissolve, shine,
+  wind sway — come from **All In 1 Sprite Shader** (its URP 2D variant, so
+  2D lights apply). **Particles** use **All In 1 VFX Toolkit**'s shader;
+  its effect prefabs are a starting library: copy one into
+  `Assets/Kingdom/VFX/`, restyle it to the art direction, never edit the
+  original.
+- **Own Shader Graph shaders only for what is Kingdom's**: the fog of war,
+  water and terrain motion, the tutorial cut-out.
+- **Few shared materials, one per state** (normal, selected, locked…) —
+  never a material per object; enable only the effects in use, since each
+  is a shader variant.
+- **UI effects** (greyscale, shine, transitions, soft edges) through **UI
+  Effect** and **SoftMask** on uGUI; particles inside the UI through
+  **UIParticle**.
+- **Mobile budget**: overdraw is the cost — few particles, small textures,
+  nothing full-screen that runs continuously. **Graphy** shows FPS and
+  memory in dev builds; it is never in a release build.
+- The packs' demo scenes are not in the project.
 
 ## UI
 
