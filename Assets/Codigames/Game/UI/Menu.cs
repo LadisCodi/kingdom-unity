@@ -30,6 +30,9 @@ namespace Codigames.Game.UI
         private Animator _animator;
         private ISoundService _sounds;
 
+        // The game's sounds, for a view that plays its own sequence (the reveal).
+        protected ISoundService Sounds => _sounds;
+
         [VContainer.Inject]
         public void Construct(ISoundService sounds) => _sounds = sounds;
 

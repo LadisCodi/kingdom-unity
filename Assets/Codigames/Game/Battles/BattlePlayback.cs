@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Codigames.Kingdom.Battles;
+using Codigames.Kingdom.Heroes;
 
 namespace Codigames.Game.Battles
 {
@@ -8,6 +10,8 @@ namespace Codigames.Game.Battles
         Playing,
         // The fight is over; the verdict comes down.
         Result,
+        // The spoils deal on the reveal, over the board, until the player collects them.
+        Rewards,
         // The way out is offered.
         Done,
     }
@@ -36,6 +40,9 @@ namespace Codigames.Game.Battles
 
         // The enemy's squads wear a lair's creatures rather than the player's own soldiers.
         public bool Creatures { get; set; }
+
+        // What the fight paid, dealt on the reveal once the verdict has stood.
+        public IReadOnlyList<Prize> Prizes { get; set; } = Array.Empty<Prize>();
 
         public BattleLog Log { get; }
         public string Title { get; }
@@ -82,6 +89,12 @@ namespace Codigames.Game.Battles
             _slow = (_clockAt, _clockAt + ms, factor);
         }
 
+        // The reveal has been collected: the way out is offered.
+        public void TakeRewards()
+        {
+            if (Phase == PlaybackPhase.Rewards) Phase = PlaybackPhase.Done;
+        }
+
         // Moves the phase on to what the clock says; true when it moved.
         public bool Advance(double now)
         {
@@ -95,7 +108,7 @@ namespace Codigames.Game.Battles
 
             if (Phase == PlaybackPhase.Result && elapsed >= EndMs + RESULT_DELAY_MS)
             {
-                Phase = PlaybackPhase.Done;
+                Phase = Prizes.Count > 0 ? PlaybackPhase.Rewards : PlaybackPhase.Done;
                 moved = true;
             }
 
