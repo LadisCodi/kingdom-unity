@@ -31,6 +31,9 @@ namespace Codigames.Game.UI.Data.Research
         // The price paid when its Knowledge is in, and why the button is shut (empty when it is not).
         public IReadOnlyList<PriceTerm> Price { get; set; } = new List<PriceTerm>();
         public bool CanResearch { get; set; }
+
+        // Research, as the button reads it.
+        public string ResearchLabel { get; set; }
         public string Note { get; set; }
     }
 

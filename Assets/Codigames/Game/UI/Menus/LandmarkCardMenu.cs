@@ -1,5 +1,7 @@
 using System;
 using Codigames.Game.UI.Stage;
+using Codigames.Game.UI.Data;
+using Codigames.Game.UI.Kit;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,8 +23,7 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private TMP_Text _uncovered;
         [SerializeField] private TMP_Text _note;
         [SerializeField] private GameObject _claimHost;
-        [SerializeField] private Button _claim;
-        [SerializeField] private TMP_Text _price;
+        [SerializeField] private CostButton _claim;
 
         public event Action CloseTapped;
         public event Action ClaimTapped;
@@ -45,22 +46,21 @@ namespace Codigames.Game.UI.Menus
             _uncovered.text = uncovered;
             _note.text = note;
             _claimHost.SetActive(claimable);
-            _price.text = price;
-            _price.color = affordable ? Color.white : new Color32(0xff, 0xb0, 0xa0, 0xff);
+            _claim.Show(new[] { new PriceTerm("Gold", price, !affordable) }, affordable);
         }
 
         protected override void SubscribeToEventsInternal()
         {
             _close.onClick.AddListener(OnClose);
             _scrim.onClick.AddListener(OnClose);
-            _claim.onClick.AddListener(OnClaim);
+            _claim.Button.onClick.AddListener(OnClaim);
         }
 
         protected override void UnsubscribeFromEventsInternal()
         {
             _close.onClick.RemoveListener(OnClose);
             _scrim.onClick.RemoveListener(OnClose);
-            _claim.onClick.RemoveListener(OnClaim);
+            _claim.Button.onClick.RemoveListener(OnClaim);
         }
 
         private void OnClose() => CloseTapped?.Invoke();

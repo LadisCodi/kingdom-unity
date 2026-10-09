@@ -39,8 +39,8 @@ namespace Codigames.Game.UI.Menus
 
         public void ShowOffer(int index, string count, string price, bool affordable)
         {
-            _offers[index].Count.text = count;
-            _offers[index].Price.text = price;
+            _offers[index].Count.text = "<size=62%><sprite name=\"Knowledge\"></size>" + count;
+            _offers[index].Price.text = "<sprite name=\"" + _offers[index].Currency + "\">" + price;
             _offers[index].Button.interactable = affordable;
         }
 
@@ -71,6 +71,9 @@ namespace Codigames.Game.UI.Menus
             public TMP_Text Count;
             public TMP_Text Price;
             public Button Button;
+
+            // The coin it is paid in: its icon goes in front of the price.
+            public string Currency;
 
             [NonSerialized] public UnityEngine.Events.UnityAction Handler;
         }

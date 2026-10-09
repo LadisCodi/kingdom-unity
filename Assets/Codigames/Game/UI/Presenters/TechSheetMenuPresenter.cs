@@ -213,6 +213,7 @@ namespace Codigames.Game.UI.Presenters
                 .Select(line => new PriceTerm(line.Key, _numbers.Exact(line.Value), _treasury.Get(line.Key) < line.Value))
                 .ToList();
             sheet.CanResearch = sheet.Filled && _research.CanAfford(Data);
+            sheet.ResearchLabel = _localizer.Tr("Research");
             sheet.Note = sheet.Filled ? "" : _localizer.Tr("Assign all its Knowledge to research it");
         }
     }
