@@ -39,11 +39,31 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 00000000000000000100000002000000030000000400000005000000060000000700000008000000
     _requiredTownhallLevelPerLevel: 
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel: []
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
+    _harvestSources: []
+    _harmonySupply: 1
+    _maxWorkersPerLevel: 
+    _influenceRadiusPerLevel: 
+    _strikeSpeedPerLevel: []
+    _extraUnitsPerDeliveryPerLevel: []
+  _fog:
+    _revealRadius: 0
+    _revealRadiusPerLevel: 
+    _discoverRadius: 0
+  _repair:
+    _seconds: 0
+    _item: 
+    _ruinArt: {fileID: 0}
   _displayName: Banner green
   _promise: "The kingdom\u2019s colours"
   _description: The royal banner on its little green, bunting and all. Oakville is
     home again.
   _buildTab: Decoration
+  _crew: []
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: 899ac0a35466a496a93c7d638bff08b5, type: 3}

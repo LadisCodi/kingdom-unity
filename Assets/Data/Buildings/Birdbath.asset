@@ -39,11 +39,31 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 00000000000000000200000003000000040000000500000006000000070000000800000009000000
     _requiredTownhallLevelPerLevel: 
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel: []
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
+    _harvestSources: []
+    _harmonySupply: 2
+    _maxWorkersPerLevel: 
+    _influenceRadiusPerLevel: 
+    _strikeSpeedPerLevel: []
+    _extraUnitsPerDeliveryPerLevel: []
+  _fog:
+    _revealRadius: 0
+    _revealRadiusPerLevel: 
+    _discoverRadius: 0
+  _repair:
+    _seconds: 0
+    _item: 
+    _ruinArt: {fileID: 0}
   _displayName: Bird garden
   _promise: Songbirds on the doorstep
   _description: A carved birdbath and a birdhouse. The birds came back before the
     people did.
   _buildTab: Decoration
+  _crew: []
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: fe486ab116350bc9896b516f40f68178, type: 3}

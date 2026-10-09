@@ -41,10 +41,30 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 00000000000000000000000000000000000000000100000002000000030000000400000005000000
     _requiredTownhallLevelPerLevel: 
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel: []
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
+    _harvestSources: []
+    _harmonySupply: 12
+    _maxWorkersPerLevel: 
+    _influenceRadiusPerLevel: 
+    _strikeSpeedPerLevel: []
+    _extraUnitsPerDeliveryPerLevel: []
+  _fog:
+    _revealRadius: 0
+    _revealRadiusPerLevel: 
+    _discoverRadius: 0
+  _repair:
+    _seconds: 0
+    _item: 
+    _ruinArt: {fileID: 0}
   _displayName: Orchard
   _promise: Two rows of fruit trees
   _description: Rows of fruit trees that sweeten the air of the town.
   _buildTab: Decoration
+  _crew: []
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: 54b055aaeaf4a5c2bbaff07ce8c62fe8, type: 3}

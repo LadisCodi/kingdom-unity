@@ -5,6 +5,7 @@ using Codigames.Game.Data.Economy;
 using Codigames.Game.Data.Fog;
 using Codigames.Game.Data.Harvest;
 using Codigames.Game.Data.Magic;
+using Codigames.Game.Data.Quests;
 using Codigames.Game.Data.Research;
 using Codigames.Game.Data.Sites;
 using Codigames.Game.Localization;
@@ -14,6 +15,7 @@ using Codigames.Kingdom.Economy;
 using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Harvest;
 using Codigames.Kingdom.Magic;
+using Codigames.Kingdom.Quests;
 using Codigames.Kingdom.Research;
 using Codigames.Kingdom.Sites;
 using Codigames.Modules.Audio;
@@ -48,6 +50,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private KnowledgeSettingsAsset _knowledge;
         [SerializeField] private ProvinceSitesAsset _sites;
         [SerializeField] private TreasureSettingsAsset _treasure;
+        [SerializeField] private QuestCollection _quests;
 
         [Header("App")]
         [SerializeField] private LocalizationCatalog _localization;
@@ -101,6 +104,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_knowledge).As<IKnowledgeSettings>();
             builder.RegisterInstance(_sites).AsSelf().As<IProvinceSites>();
             builder.RegisterInstance(_treasure).As<ITreasureSettings>();
+            builder.RegisterInstance(_quests).As<ICatalog<IQuestDefinition>>();
         }
     }
 }

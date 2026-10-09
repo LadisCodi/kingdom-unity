@@ -15,4 +15,7 @@ MonoBehaviour:
   _id: MountainIron
   _source: {fileID: 11400000, guid: beaed6d379ebcf4d4b7dfd5518b6ffd1, type: 2}
   _respawnTerrain: Grassland
+  _maxFootprint: 1
+  _displayName: Iron mountain
   _tile: {fileID: 11400000, guid: bb264999b26860b05afcd328028363c6, type: 2}
+  _blockTiles: []

@@ -20,6 +20,11 @@ namespace Codigames.Game.Audio
         public const string RESEARCH = "research";
         public const string RESEARCH_COMPLETE = "researchComplete";
         public const string GEM_SPEND = "gemSpend";
+        public const string QUEST = "quest";
+        public const string QUEST_COMPLETE = "questComplete";
+        public const string CHAIN_FINISHED = "chainFinished";
+        public const string SCROLL_OPEN = "scrollOpen";
+        public const string SCROLL_CLOSE = "scrollClose";
 
         // What a tap on each kind of ground sounds like (and a crew's strike, quieter).
         public static string TapOn(string harvestSource) => harvestSource switch

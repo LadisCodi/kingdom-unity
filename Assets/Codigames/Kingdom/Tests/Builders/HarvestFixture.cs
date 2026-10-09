@@ -16,7 +16,13 @@ namespace Codigames.Kingdom.Tests.Builders
         public static readonly Vector2Int BUSH = new(-3, 3);
         public static readonly Vector2Int ROCK = new(3, -3);
 
-        public HarvestFixture(double grasslandWood = 1, params Codigames.Kingdom.Research.ITechnology[] technologies) : base(technologies)
+        public HarvestFixture(double grasslandWood = 1, params Codigames.Kingdom.Research.ITechnology[] technologies)
+            : this(grasslandWood, technologies, new Codigames.Kingdom.City.IBuildingDefinition[0])
+        {
+        }
+
+        public HarvestFixture(double grasslandWood, Codigames.Kingdom.Research.ITechnology[] technologies,
+            params Codigames.Kingdom.City.IBuildingDefinition[] buildings) : base(technologies, buildings)
         {
             Yields = new FakeYields { ["Grassland/Wood"] = grasslandWood };
             Sources = new Catalog<IHarvestSource>(new IHarvestSource[]

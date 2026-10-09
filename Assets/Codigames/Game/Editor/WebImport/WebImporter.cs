@@ -7,6 +7,7 @@ using Codigames.Game.Data.Economy;
 using Codigames.Game.Data.Fog;
 using Codigames.Game.Data.Harvest;
 using Codigames.Game.Data.Magic;
+using Codigames.Game.Data.Quests;
 using Codigames.Game.Data.Research;
 using Codigames.Game.Data.Sites;
 using Codigames.Game.Editor.Data;
@@ -48,11 +49,12 @@ namespace Codigames.Game.Editor.WebImport
             ["Fish"] = "Food", ["MountainIron"] = "Stone", ["MountainGold"] = "Gold",
         };
 
-        private static readonly (string Id, string Source, string RespawnTerrain, int MaxFootprint)[] FEATURES =
+        private static readonly (string Id, string Source, string RespawnTerrain, int MaxFootprint, string Name)[] FEATURES =
         {
-            ("Trees", "Forest", "Grassland", 1), ("Mountain", "Stone", "Grassland", 3), ("MountainIron", "MountainIron", "Grassland", 1),
-            ("MountainGold", "MountainGold", "Grassland", 1), ("BerryBush", "Berries", "Grassland", 1), ("WildAnimals", "Meat", "Grassland", 1),
-            ("FishShoal", "Fish", "Water", 1), ("Crops", "Crops", "Grassland", 1),
+            ("Trees", "Forest", "Grassland", 1, "Forest"), ("Mountain", "Stone", "Grassland", 3, "Mountain"),
+            ("MountainIron", "MountainIron", "Grassland", 1, "Iron mountain"), ("MountainGold", "MountainGold", "Grassland", 1, "Gold mountain"),
+            ("BerryBush", "Berries", "Grassland", 1, "Berry bush"), ("WildAnimals", "Meat", "Grassland", 1, "Wild animals"),
+            ("FishShoal", "Fish", "Water", 1, "Fish shoal"), ("Crops", "Crops", "Grassland", 1, "Crop plot"),
         };
 
         [MenuItem("Kingdom/Import web prototype data")]
@@ -68,6 +70,7 @@ namespace Codigames.Game.Editor.WebImport
             var technologies = ImportResearch();
             ImportSites();
             ImportTreasure();
+            ImportQuests();
 
             AssetDatabase.SaveAssets();
             Debug.Log($"#Data# Imported {currencies} currencies, {buildings.Count} buildings and {technologies} technologies from the web prototype.");
@@ -148,6 +151,7 @@ namespace Codigames.Game.Editor.WebImport
                 SetInts(so.FindProperty("_production._populationCapacityPerLevel"), row.PopulationCapacityPerLevel);
                 SetDoubles(so.FindProperty("_production._taxBonusPerLevel"), row.TaxBonusPerLevel);
                 SetStrings(so.FindProperty("_production._harvestSources"), row.HarvestSources);
+                so.FindProperty("_production._harmonySupply").doubleValue = row.HarmonySupply;
                 SetInts(so.FindProperty("_production._maxWorkersPerLevel"), row.MaxWorkersPerLevel);
                 SetInts(so.FindProperty("_production._influenceRadiusPerLevel"), row.InfluenceRadiusPerLevel);
                 SetDoubles(so.FindProperty("_production._strikeSpeedPerLevel"), row.StrikeSpeedPerLevel);
@@ -202,7 +206,7 @@ namespace Codigames.Game.Editor.WebImport
             SetEntries(LoadOrCreate<HarvestSourceCollection>(null, "HarvestSources"), sources.Values.ToList<DefinitionAsset>());
 
             var features = new List<DefinitionAsset>();
-            foreach (var (id, source, respawnTerrain, maxFootprint) in FEATURES)
+            foreach (var (id, source, respawnTerrain, maxFootprint, name) in FEATURES)
             {
                 var asset = LoadOrCreate<FeatureAsset>("Features", id);
                 var so = new SerializedObject(asset);
@@ -211,6 +215,7 @@ namespace Codigames.Game.Editor.WebImport
                 so.FindProperty("_respawnTerrain").stringValue = respawnTerrain;
                 so.FindProperty("_tile").objectReferenceValue = AssetDatabase.LoadAssetAtPath<TileBase>($"Assets/Art/Features/Tiles/{id}.asset");
                 so.FindProperty("_maxFootprint").intValue = maxFootprint;
+                so.FindProperty("_displayName").stringValue = name;
                 var blocks = so.FindProperty("_blockTiles");
                 blocks.arraySize = Mathf.Max(0, maxFootprint - 1);
                 for (var size = 2; size <= maxFootprint; size++)
@@ -399,6 +404,75 @@ namespace Codigames.Game.Editor.WebImport
             settings.ApplyModifiedPropertiesWithoutUndo();
 
             return assets.Count;
+        }
+
+        // The chain, in its order. The web's separate reward fields (Gems, Stardust, Mana) join the currencies.
+        private static void ImportQuests()
+        {
+            var assets = new List<DefinitionAsset>();
+            foreach (var row in Read<List<QuestData>>("Game/quests.json"))
+            {
+                var asset = LoadOrCreate<QuestAsset>("Quests", row.Id);
+                var so = new SerializedObject(asset);
+                so.FindProperty("_id").stringValue = row.Id;
+                so.FindProperty("_name").stringValue = row.Name;
+                so.FindProperty("_goalType").enumValueIndex = (int)System.Enum.Parse<Kingdom.Quests.GoalType>(row.GoalType);
+                so.FindProperty("_goalTarget").stringValue = row.GoalTarget ?? "";
+                so.FindProperty("_goalAmount").doubleValue = row.GoalAmount;
+                so.FindProperty("_goalLevel").intValue = (int)(row.GoalLevel ?? 0);
+
+                var reward = new Dictionary<string, double>(row.Reward ?? new Dictionary<string, double>());
+                if (row.RewardMana > 0) reward["Mana"] = row.RewardMana;
+                if (row.RewardGems > 0) reward["Gems"] = row.RewardGems;
+                if (row.RewardStardust > 0) reward["Stardust"] = row.RewardStardust;
+                SetAmounts(so.FindProperty("_reward"), reward);
+                so.FindProperty("_rewardKnowledge").doubleValue = row.RewardKnowledge;
+                SetAmounts(so.FindProperty("_rewardItems"), row.RewardItems);
+                so.FindProperty("_autoClaim").boolValue = row.AutoClaim;
+                so.FindProperty("_tutorialRentSeconds").doubleValue = row.TutorialRentSeconds ?? 0;
+                so.FindProperty("_mark").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/UI/Icons/{GoalIcon(row)}.png");
+                so.ApplyModifiedPropertiesWithoutUndo();
+                assets.Add(asset);
+            }
+
+            SetEntries(LoadOrCreate<QuestCollection>(null, "Quests"), assets);
+        }
+
+        // The web's questIcon.ts: a goal's mark on the tracker.
+        private static string GoalIcon(QuestData quest)
+        {
+            var target = quest.GoalTarget;
+            string District() => target switch
+            {
+                null => "build",
+                "AnyDecoration" => "harmony",
+                "AnyProducer" => "build",
+                "AnyHall" => "army",
+                "AnyWorkshop" => "anvil",
+                _ => target,
+            };
+            return quest.GoalType switch
+            {
+                "CollectResource" or "HoldResource" => target ?? "quest",
+                "BuildDistrict" or "RepairDistrict" or "UpgradeDistrict" or "WorkInReach" => District(),
+                "CompleteTech" or "CompleteTechs" => "research",
+                "ReachPopulation" => "population",
+                "AssignWorkers" => "workers",
+                "TrainArmy" => "army",
+                "CollectTaps" => "showme",
+                "DiscoverCells" => "tile",
+                "DiscoverFeature" => target switch
+                {
+                    "Trees" => "tree", "BerryBush" => "Berries", "WildAnimals" => "Meat", "FishShoal" => "Fish", "Mountain" => "Stone",
+                    "MountainIron" => "Iron", "MountainGold" => "Gold", "Crops" => "FarmLands", _ => "compass",
+                },
+                "FindLairs" => "dungeon",
+                "ClearLairs" => "power",
+                "ClaimLandmarks" => target switch { "Leyspring" => "Mana", "Watchtower" => "Watchtower", _ => "landmark" },
+                "OwnArtifacts" => "relics",
+                "OwnHeroes" => "helmet",
+                _ => "quest",
+            };
         }
 
         private static void ImportTreasure()

@@ -64,6 +64,8 @@ namespace Codigames.Kingdom.Tests.Builders
             return this;
         }
 
+        public BuildingBuilder WithHarmony(double supply) { _production.HarmonySupply = supply; return this; }
+
         public BuildingBuilder WithFog(int reveal, int discover, params int[] revealPerLevel)
         {
             _fog.RevealRadius = reveal;
@@ -133,6 +135,7 @@ namespace Codigames.Kingdom.Tests.Builders
         private sealed class Production : IBuildingProduction
         {
             public IReadOnlyList<double> GoldPerMinutePerLevel { get; set; } = new double[0];
+            public double HarmonySupply { get; set; }
             public IReadOnlyList<double> StorageCapacityPerLevel { get; set; } = new double[0];
             public IReadOnlyList<int> PopulationCapacityPerLevel { get; set; } = new int[0];
             public IReadOnlyList<double> TaxBonusPerLevel { get; set; } = new double[0];

@@ -15,4 +15,7 @@ MonoBehaviour:
   _id: WildAnimals
   _source: {fileID: 11400000, guid: 97e11e21121cd467b94b73a18b8ecb88, type: 2}
   _respawnTerrain: Grassland
+  _maxFootprint: 1
+  _displayName: Wild animals
   _tile: {fileID: 11400000, guid: 866881bc26a890214a1f32a135581f8d, type: 2}
+  _blockTiles: []
