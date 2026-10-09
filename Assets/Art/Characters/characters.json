@@ -1,0 +1,322 @@
+{
+ "carpenter_action_1": {
+  "feet": 38,
+  "height": 128
+ },
+ "carpenter_action_2": {
+  "feet": 42,
+  "height": 128
+ },
+ "carpenter_action_3": {
+  "feet": 55,
+  "height": 128
+ },
+ "carpenter_idle_1": {
+  "feet": 63,
+  "height": 128
+ },
+ "carpenter_idle_2": {
+  "feet": 35,
+  "height": 128
+ },
+ "farmer_action_1": {
+  "feet": 31,
+  "height": 128
+ },
+ "farmer_action_2": {
+  "feet": 44,
+  "height": 128
+ },
+ "farmer_action_3": {
+  "feet": 37,
+  "height": 128
+ },
+ "farmer_idle_1": {
+  "feet": 42,
+  "height": 128
+ },
+ "farmer_idle_2": {
+  "feet": 41,
+  "height": 128
+ },
+ "farmer_walk_1": {
+  "feet": 39,
+  "height": 128
+ },
+ "farmer_walk_2": {
+  "feet": 32,
+  "height": 128
+ },
+ "farmer_walk_3": {
+  "feet": 38,
+  "height": 128
+ },
+ "farmer_walk_4": {
+  "feet": 29,
+  "height": 128
+ },
+ "fisher_boat_action_1": {
+  "feet": 43,
+  "height": 128
+ },
+ "fisher_boat_action_2": {
+  "feet": 61,
+  "height": 128
+ },
+ "fisher_boat_action_3": {
+  "feet": 63,
+  "height": 128
+ },
+ "fisher_boat_idle_1": {
+  "feet": 57,
+  "height": 128
+ },
+ "fisher_boat_idle_2": {
+  "feet": 57,
+  "height": 128
+ },
+ "fisher_boat_walk_1": {
+  "feet": 56,
+  "height": 128
+ },
+ "fisher_boat_walk_2": {
+  "feet": 55,
+  "height": 128
+ },
+ "fisher_boat_walk_3": {
+  "feet": 56,
+  "height": 128
+ },
+ "fisher_boat_walk_4": {
+  "feet": 55,
+  "height": 128
+ },
+ "quarryman_action_1": {
+  "feet": 39,
+  "height": 128
+ },
+ "quarryman_action_2": {
+  "feet": 56,
+  "height": 128
+ },
+ "quarryman_action_3": {
+  "feet": 43,
+  "height": 128
+ },
+ "quarryman_idle_1": {
+  "feet": 47,
+  "height": 128
+ },
+ "quarryman_idle_2": {
+  "feet": 51,
+  "height": 128
+ },
+ "quarryman_walk_1": {
+  "feet": 48,
+  "height": 128
+ },
+ "quarryman_walk_2": {
+  "feet": 30,
+  "height": 128
+ },
+ "quarryman_walk_3": {
+  "feet": 47,
+  "height": 128
+ },
+ "quarryman_walk_4": {
+  "feet": 31,
+  "height": 128
+ },
+ "rune_carver_action_1": {
+  "feet": 42,
+  "height": 128
+ },
+ "rune_carver_action_2": {
+  "feet": 39,
+  "height": 128
+ },
+ "rune_carver_action_3": {
+  "feet": 34,
+  "height": 128
+ },
+ "rune_carver_idle_1": {
+  "feet": 47,
+  "height": 128
+ },
+ "rune_carver_idle_2": {
+  "feet": 50,
+  "height": 128
+ },
+ "smith_action_1": {
+  "feet": 31,
+  "height": 128
+ },
+ "smith_action_2": {
+  "feet": 22,
+  "height": 128
+ },
+ "smith_action_3": {
+  "feet": 22,
+  "height": 128
+ },
+ "smith_idle_1": {
+  "feet": 52,
+  "height": 128
+ },
+ "smith_idle_2": {
+  "feet": 52,
+  "height": 128
+ },
+ "stonemason_action_1": {
+  "feet": 34,
+  "height": 128
+ },
+ "stonemason_action_2": {
+  "feet": 32,
+  "height": 128
+ },
+ "stonemason_action_3": {
+  "feet": 34,
+  "height": 128
+ },
+ "stonemason_idle_1": {
+  "feet": 42,
+  "height": 128
+ },
+ "stonemason_idle_2": {
+  "feet": 38,
+  "height": 128
+ },
+ "villager_1_idle_1": {
+  "feet": 25,
+  "height": 128
+ },
+ "villager_1_idle_2": {
+  "feet": 26,
+  "height": 128
+ },
+ "villager_1_walk_1": {
+  "feet": 33,
+  "height": 128
+ },
+ "villager_1_walk_2": {
+  "feet": 25,
+  "height": 128
+ },
+ "villager_1_walk_3": {
+  "feet": 34,
+  "height": 128
+ },
+ "villager_1_walk_4": {
+  "feet": 26,
+  "height": 128
+ },
+ "villager_2_idle_1": {
+  "feet": 42,
+  "height": 128
+ },
+ "villager_2_idle_2": {
+  "feet": 47,
+  "height": 128
+ },
+ "villager_2_walk_1": {
+  "feet": 31,
+  "height": 128
+ },
+ "villager_2_walk_2": {
+  "feet": 33,
+  "height": 128
+ },
+ "villager_2_walk_3": {
+  "feet": 26,
+  "height": 128
+ },
+ "villager_2_walk_4": {
+  "feet": 34,
+  "height": 128
+ },
+ "villager_3_idle_1": {
+  "feet": 32,
+  "height": 128
+ },
+ "villager_3_idle_2": {
+  "feet": 32,
+  "height": 128
+ },
+ "villager_3_walk_1": {
+  "feet": 35,
+  "height": 128
+ },
+ "villager_3_walk_2": {
+  "feet": 38,
+  "height": 128
+ },
+ "villager_3_walk_3": {
+  "feet": 34,
+  "height": 128
+ },
+ "villager_3_walk_4": {
+  "feet": 37,
+  "height": 128
+ },
+ "villager_4_idle_1": {
+  "feet": 29,
+  "height": 128
+ },
+ "villager_4_idle_2": {
+  "feet": 30,
+  "height": 128
+ },
+ "villager_4_walk_1": {
+  "feet": 21,
+  "height": 128
+ },
+ "villager_4_walk_2": {
+  "feet": 31,
+  "height": 128
+ },
+ "villager_4_walk_3": {
+  "feet": 19,
+  "height": 128
+ },
+ "villager_4_walk_4": {
+  "feet": 32,
+  "height": 128
+ },
+ "woodcutter_action_1": {
+  "feet": 37,
+  "height": 128
+ },
+ "woodcutter_action_2": {
+  "feet": 54,
+  "height": 128
+ },
+ "woodcutter_action_3": {
+  "feet": 39,
+  "height": 128
+ },
+ "woodcutter_idle_1": {
+  "feet": 42,
+  "height": 128
+ },
+ "woodcutter_idle_2": {
+  "feet": 43,
+  "height": 128
+ },
+ "woodcutter_walk_1": {
+  "feet": 44,
+  "height": 128
+ },
+ "woodcutter_walk_2": {
+  "feet": 28,
+  "height": 128
+ },
+ "woodcutter_walk_3": {
+  "feet": 47,
+  "height": 128
+ },
+ "woodcutter_walk_4": {
+  "feet": 27,
+  "height": 128
+ }
+}

@@ -37,8 +37,11 @@ namespace Codigames.Kingdom.Economy
             construction.JobCompleted += (job, district) => Wake(district, job.CompletesAt);
         }
 
-        // A store was collected: the district, and what moved to the treasury.
-        public event Action<DistrictState, IReadOnlyDictionary<string, double>> Collected;
+        // A store was collected: the district, what moved to the treasury, and when.
+        public event Action<DistrictState, IReadOnlyDictionary<string, double>, double> Collected;
+
+        // A haul landed in a store: the district, the currency, the amount.
+        public event Action<DistrictState, string, double> Deposited;
 
         // Gold a minute the district makes now.
         public double GoldPerMinute(DistrictState district)
@@ -104,8 +107,17 @@ namespace Codigames.Kingdom.Economy
             district.Store.Held.Clear();
 
             Wake(district, now);
-            if (moved.Count > 0) Collected?.Invoke(district, moved);
+            if (moved.Count > 0) Collected?.Invoke(district, moved, now);
             return moved;
+        }
+
+        // A crew's haul lands in the store, whole, even past its capacity.
+        public void Deposit(DistrictState district, string currency, double amount)
+        {
+            if (amount <= 0) return;
+            district.Store.Held.TryGetValue(currency, out var held);
+            district.Store.Held[currency] = held + amount;
+            Deposited?.Invoke(district, currency, amount);
         }
 
         // Counts what the district has made until `now` at its current rate, before something changes the rate.

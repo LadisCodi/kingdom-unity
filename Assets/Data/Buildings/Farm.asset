@@ -140,6 +140,32 @@ MonoBehaviour:
     - 360000
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+    _harvestSources:
+    - Crops
+    _maxWorkersPerLevel: 03000000030000000300000003000000030000000300000003000000030000000300000003000000
+    _influenceRadiusPerLevel: 01000000010000000100000001000000010000000100000001000000010000000100000001000000
+    _strikeSpeedPerLevel:
+    - 1
+    - 1.25
+    - 1.5
+    - 1.75
+    - 2
+    - 2.2
+    - 2.4
+    - 2.6
+    - 2.8
+    - 3
+    _extraUnitsPerDeliveryPerLevel:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
   _fog:
     _revealRadius: 0
     _revealRadiusPerLevel: 
@@ -148,6 +174,8 @@ MonoBehaviour:
   _promise: Workers harvest crops nearby
   _description: Its farmhands reap the fields nearby and fill the granary.
   _buildTab: Economy
+  _crew:
+  - farmer
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: 7eadd203ae47a4e1880958c7030eeea0, type: 3}

@@ -110,24 +110,22 @@ namespace Codigames.Kingdom.Harvest
             var wanted = Math.Max(1, Math.Floor(total));
             _state.Carry[source.Currency] = Math.Max(0, total - wanted);
 
-            if (source.Stock <= 0)
-            {
-                _treasury.Add(source.Currency, wanted);
-                return new TapResult(TapRefusal.None, source.Currency, wanted);
-            }
-
-            // What the cell cannot give is lost, not carried.
-            var depot = DepotOf(cell, source);
-            var paid = Math.Min(wanted, depot.Units);
-            depot.Units -= (int)paid;
+            var paid = Draw(cell, source, wanted, now, out var emptied);
             _treasury.Add(source.Currency, paid);
-
-            var emptied = depot.Units == 0;
-            if (emptied) Empty(cell, source, now);
-            else DepotChanged?.Invoke(cell);
-
             return new TapResult(TapRefusal.None, source.Currency, paid, emptied);
         }
+
+        // A crew's strike: takes up to `want` units from the cell (all of them from bedrock), the cell emptying as a
+        // tap empties it. Returns what it took.
+        public double Draw(Vector2Int cell, double want, double now)
+        {
+            var source = SourceAt(cell);
+            if (source == null || want <= 0 || IsExhausted(cell, now)) return 0;
+            return Draw(cell, source, want, now, out _);
+        }
+
+        // When an emptied cell is full again; null when it is not empty.
+        public double? RecoversAt(Vector2Int cell) => ExhaustedUntil(cell);
 
         public double? NextBoundary(double after)
         {
@@ -158,6 +156,22 @@ namespace Codigames.Kingdom.Harvest
         }
 
         public void RunUntil(double time) { }
+
+        // Takes from the cell: all it wants from bedrock, else what the depot still holds; the last unit empties it.
+        private double Draw(Vector2Int cell, IHarvestSource source, double want, double now, out bool emptied)
+        {
+            emptied = false;
+            if (source.Stock <= 0) return want;
+
+            var depot = DepotOf(cell, source);
+            var taken = Math.Min(want, depot.Units);
+            depot.Units -= (int)taken;
+
+            emptied = depot.Units == 0;
+            if (emptied) Empty(cell, source, now);
+            else DepotChanged?.Invoke(cell);
+            return taken;
+        }
 
         private CellDepot DepotOf(Vector2Int cell, IHarvestSource source)
         {

@@ -10,6 +10,8 @@
  "Outside the province": "Fuera de la provincia",
  "Something stands there": "Ahí ya hay algo",
  "Storage {held}/{cap}": "Almacén {held}/{cap}",
+ "Train villagers at the Townhall": "Entrena aldeanos en el Ayuntamiento",
  "Villagers {n}/{cap}": "Aldeanos {n}/{cap}",
+ "{n} free villagers": "{n} aldeanos libres",
  "{n} on the way · next in {time}": "{n} en camino · el siguiente en {time}"
 }

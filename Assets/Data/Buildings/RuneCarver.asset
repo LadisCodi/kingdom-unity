@@ -130,6 +130,11 @@ MonoBehaviour:
     _storageCapacityPerLevel: []
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+    _harvestSources: []
+    _maxWorkersPerLevel: 01000000020000000300000003000000040000000400000005000000050000000600000006000000
+    _influenceRadiusPerLevel: 
+    _strikeSpeedPerLevel: []
+    _extraUnitsPerDeliveryPerLevel: []
   _fog:
     _revealRadius: 0
     _revealRadiusPerLevel: 
@@ -138,6 +143,8 @@ MonoBehaviour:
   _promise: Villagers pour Mana into cut stone
   _description: Carvers bind magic into stone, rune by rune.
   _buildTab: Economy
+  _crew:
+  - rune_carver
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: db72e98c73f0288b395a3d9227765533, type: 3}

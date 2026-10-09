@@ -16,5 +16,20 @@ namespace Codigames.Kingdom.City
 
         // How much more its residents pay, as a fraction of the base rent: a total at each level.
         IReadOnlyList<double> TaxBonusPerLevel { get; }
+
+        // The harvest sources its crew works; empty for a building with no crew.
+        IReadOnlyList<string> HarvestSources { get; }
+
+        // How many villagers may work for it.
+        IReadOnlyList<int> MaxWorkersPerLevel { get; }
+
+        // How far round its footprint its crew reaches, in rings.
+        IReadOnlyList<int> InfluenceRadiusPerLevel { get; }
+
+        // How much faster its crew swings than the ground's own rhythm (1 = as authored).
+        IReadOnlyList<double> StrikeSpeedPerLevel { get; }
+
+        // Units each delivery carries on top of what the ground gives.
+        IReadOnlyList<double> ExtraUnitsPerDeliveryPerLevel { get; }
     }
 }

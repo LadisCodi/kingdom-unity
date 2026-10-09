@@ -6,6 +6,7 @@ using Codigames.Game.UI.Data;
 using Codigames.Game.UI.Menus;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
+using Codigames.Kingdom.Crews;
 using Codigames.Kingdom.Economy;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Localization;
@@ -30,14 +31,16 @@ namespace Codigames.Game.UI.Presenters
         private readonly Localizer _localizer;
         private readonly Stores _stores;
         private readonly VillagerTraining _training;
+        private readonly Workforce _crews;
 
         // The second the card was last drawn at: it is redrawn once a second.
         private double _shownSeconds = -1;
 
         public DistrictCardMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, CityState city,
             BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, ICurrencyIcons icons, IClock clock,
-            NumberFormat numbers, Localizer localizer, Stores stores, VillagerTraining training) : base(views)
+            NumberFormat numbers, Localizer localizer, Stores stores, VillagerTraining training, Workforce crews) : base(views)
         {
+            _crews = crews;
             _training = training;
             _stores = stores;
             _ui = ui;
@@ -87,6 +90,8 @@ namespace Codigames.Game.UI.Presenters
             view.CloseTapped += RequestClose;
             view.UpgradeTapped += OnUpgrade;
             view.TrainTapped += OnTrain;
+            view.CrewMinusTapped += OnCrewMinus;
+            view.CrewPlusTapped += OnCrewPlus;
         }
 
         protected override void UnsubscribeFromViewEventsInternal(DistrictCardMenu view)
@@ -94,6 +99,8 @@ namespace Codigames.Game.UI.Presenters
             view.CloseTapped -= RequestClose;
             view.UpgradeTapped -= OnUpgrade;
             view.TrainTapped -= OnTrain;
+            view.CrewMinusTapped -= OnCrewMinus;
+            view.CrewPlusTapped -= OnCrewPlus;
         }
 
         private void OnTreasuryChanged(string currency, double amount) => Refresh();
@@ -110,6 +117,33 @@ namespace Codigames.Game.UI.Presenters
         {
             _training.Train(_clock.NowMs);
             Refresh();
+        }
+
+        private void OnCrewMinus()
+        {
+            _crews.Unassign(Data);
+            Refresh();
+        }
+
+        private void OnCrewPlus()
+        {
+            _crews.Assign(Data, _clock.NowMs);
+            Refresh();
+        }
+
+        // The crew line, on a building that works the ground.
+        private CrewStripData Crew(DistrictState district)
+        {
+            if (!_crews.HasCrew(district)) return null;
+
+            var assigned = _crews.Assigned(district.Id);
+            var limit = _crews.Limit(district);
+            var note = _crews.FreeVillagers > 0 || assigned >= limit
+                ? _localizer.Tr("{n} free villagers", ("n", _numbers.Number(_crews.FreeVillagers)))
+                : _localizer.Tr("Train villagers at the Townhall");
+
+            return new CrewStripData(_numbers.Number(assigned) + " / " + _numbers.Number(limit), assigned > 0,
+                _crews.CanAssign(district), note);
         }
 
         // The villager line, on the Townhall only.
@@ -164,7 +198,7 @@ namespace Codigames.Game.UI.Presenters
 
                 View.Show(new DistrictCardData(name, ordinal, level, building.ArtFor(district.Level), promise, true,
                     doing + " · " + _numbers.Duration(Math.Ceiling(remaining)), progress, string.Empty,
-                    Array.Empty<CostChipData>(), false, string.Empty, store, storeFull, Training(district, now)));
+                    Array.Empty<CostChipData>(), false, string.Empty, store, storeFull, Training(district, now), Crew(district)));
                 return;
             }
 
@@ -178,7 +212,7 @@ namespace Codigames.Game.UI.Presenters
                 : _localizer.Tr("Lv {n}", ("n", _numbers.Number(offer.TargetLevel))) + " · " + _numbers.Duration(offer.Seconds);
 
             View.Show(new DistrictCardData(name, ordinal, level, building.ArtFor(district.Level), promise, false,
-                string.Empty, 0, next, price, offer.Refusal == ConstructionRefusal.None, Reason(offer), store, storeFull, Training(district, now)));
+                string.Empty, 0, next, price, offer.Refusal == ConstructionRefusal.None, Reason(offer), store, storeFull, Training(district, now), Crew(district)));
         }
 
         private string Reason(UpgradeOffer offer) => offer.Refusal switch

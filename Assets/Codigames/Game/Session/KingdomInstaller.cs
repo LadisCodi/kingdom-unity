@@ -2,6 +2,7 @@ using Codigames.Game.Saves;
 using Codigames.Kingdom;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
+using Codigames.Kingdom.Crews;
 using Codigames.Kingdom.Economy;
 using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Harvest;
@@ -45,6 +46,7 @@ namespace Codigames.Game.Session
             builder.Register<ManaPool>(Lifetime.Singleton);
             builder.Register<Stores>(Lifetime.Singleton);
             builder.Register<VillagerTraining>(Lifetime.Singleton);
+            builder.Register<Workforce>(Lifetime.Singleton);
             builder.Register(resolver => new Harvesting(resolver.Resolve<HarvestState>(), resolver.Resolve<GroundState>(),
                 resolver.Resolve<CityState>(), resolver.Resolve<IProvinceMap>(), resolver.Resolve<ICatalog<IBuildingDefinition>>(),
                 resolver.Resolve<ICatalog<IFeatureDefinition>>(), resolver.Resolve<ICatalog<IHarvestSource>>(),
@@ -69,6 +71,9 @@ namespace Codigames.Game.Session
                 var stores = resolver.Resolve<Stores>();
                 stores.WakeAll(state.LastAdvance);
                 timeline.Register(stores);
+
+                // The crews last: their steps run between the boundaries the others draw.
+                timeline.Register(resolver.Resolve<Workforce>());
                 return timeline;
             }, Lifetime.Singleton);
 

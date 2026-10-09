@@ -7,6 +7,7 @@ using Codigames.Game.Data.Harvest;
 using Codigames.Game.Data.Magic;
 using Codigames.Game.Localization;
 using Codigames.Kingdom.City;
+using Codigames.Kingdom.Crews;
 using Codigames.Kingdom.Economy;
 using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Harvest;
@@ -81,7 +82,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_terrains).As<ITerrainYields>();
             builder.RegisterInstance(_tap).As<ITapSettings>();
             builder.RegisterInstance(_mana).As<IManaSettings>();
-            builder.RegisterInstance(_economy).As<IEconomySettings>();
+            builder.RegisterInstance(_economy).As<IEconomySettings>().As<IWorkerSettings>();
             builder.RegisterInstance(_training).As<ITrainingSettings>();
             builder.RegisterInstance(_fog).As<IFogSettings>();
         }

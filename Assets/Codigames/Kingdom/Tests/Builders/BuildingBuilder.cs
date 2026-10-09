@@ -53,6 +53,16 @@ namespace Codigames.Kingdom.Tests.Builders
         public BuildingBuilder WithHousing(params int[] perLevel) { _production.PopulationCapacityPerLevel = perLevel; return this; }
         public BuildingBuilder WithTaxBonus(params double[] perLevel) { _production.TaxBonusPerLevel = perLevel; return this; }
 
+        public BuildingBuilder WithCrew(string source, int workers, int radius, double strikeSpeed = 1, double extraUnits = 0)
+        {
+            _production.HarvestSources = new[] { source };
+            _production.MaxWorkersPerLevel = new[] { workers };
+            _production.InfluenceRadiusPerLevel = new[] { radius };
+            _production.StrikeSpeedPerLevel = new[] { strikeSpeed };
+            _production.ExtraUnitsPerDeliveryPerLevel = new[] { extraUnits };
+            return this;
+        }
+
         public BuildingBuilder WithFog(int reveal, int discover, params int[] revealPerLevel)
         {
             _fog.RevealRadius = reveal;
@@ -110,6 +120,11 @@ namespace Codigames.Kingdom.Tests.Builders
             public IReadOnlyList<double> StorageCapacityPerLevel { get; set; } = new double[0];
             public IReadOnlyList<int> PopulationCapacityPerLevel { get; set; } = new int[0];
             public IReadOnlyList<double> TaxBonusPerLevel { get; set; } = new double[0];
+            public IReadOnlyList<string> HarvestSources { get; set; } = new string[0];
+            public IReadOnlyList<int> MaxWorkersPerLevel { get; set; } = new int[0];
+            public IReadOnlyList<int> InfluenceRadiusPerLevel { get; set; } = new int[0];
+            public IReadOnlyList<double> StrikeSpeedPerLevel { get; set; } = new double[0];
+            public IReadOnlyList<double> ExtraUnitsPerDeliveryPerLevel { get; set; } = new double[0];
         }
 
         private sealed class LevelCost : ILevelCost

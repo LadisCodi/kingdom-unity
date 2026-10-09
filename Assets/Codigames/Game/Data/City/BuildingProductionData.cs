@@ -22,7 +22,24 @@ namespace Codigames.Game.Data.City
         [ListDrawerSettings(ShowIndexLabels = true)]
         [SerializeField] private List<double> _taxBonusPerLevel = new();
 
+        [Header("Crew")]
+        [Tooltip("The harvest sources its crew works; empty for a building with no crew.")]
+        [SerializeField] private List<string> _harvestSources = new();
+        [Tooltip("How many villagers may work for it, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
+        [SerializeField] private List<int> _maxWorkersPerLevel = new();
+        [Tooltip("How far round its footprint its crew reaches, in rings, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
+        [SerializeField] private List<int> _influenceRadiusPerLevel = new();
+        [Tooltip("How much faster its crew swings than the ground's rhythm, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
+        [SerializeField] private List<double> _strikeSpeedPerLevel = new();
+        [Tooltip("Units each delivery carries on top of the ground's, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
+        [SerializeField] private List<double> _extraUnitsPerDeliveryPerLevel = new();
+
         public IReadOnlyList<double> GoldPerMinutePerLevel => _goldPerMinutePerLevel;
+        public IReadOnlyList<string> HarvestSources => _harvestSources;
+        public IReadOnlyList<int> MaxWorkersPerLevel => _maxWorkersPerLevel;
+        public IReadOnlyList<int> InfluenceRadiusPerLevel => _influenceRadiusPerLevel;
+        public IReadOnlyList<double> StrikeSpeedPerLevel => _strikeSpeedPerLevel;
+        public IReadOnlyList<double> ExtraUnitsPerDeliveryPerLevel => _extraUnitsPerDeliveryPerLevel;
         public IReadOnlyList<double> StorageCapacityPerLevel => _storageCapacityPerLevel;
         public IReadOnlyList<int> PopulationCapacityPerLevel => _populationCapacityPerLevel;
         public IReadOnlyList<double> TaxBonusPerLevel => _taxBonusPerLevel;

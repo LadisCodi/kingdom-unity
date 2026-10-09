@@ -41,6 +41,12 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private TMP_Text _onTheWay;
         [SerializeField] private RectTransform _trainPrice;
         [SerializeField] private Button _train;
+        [Header("Crew")]
+        [SerializeField] private GameObject _crewRow;
+        [SerializeField] private TMP_Text _crewCount;
+        [SerializeField] private TMP_Text _crewNote;
+        [SerializeField] private Button _crewMinus;
+        [SerializeField] private Button _crewPlus;
         [SerializeField] private Color _ordinalColor = new Color32(0xf4, 0xe4, 0xc1, 0xcc);
 
         private readonly List<CostChip> _chips = new();
@@ -49,6 +55,8 @@ namespace Codigames.Game.UI.Menus
         public event Action CloseTapped;
         public event Action UpgradeTapped;
         public event Action TrainTapped;
+        public event Action CrewMinusTapped;
+        public event Action CrewPlusTapped;
 
         public void Show(DistrictCardData card)
         {
@@ -78,9 +86,20 @@ namespace Codigames.Game.UI.Menus
 
             ShowChips(_chips, _price, card.Price);
 
+            var crew = card.Crew;
+            _crewRow.SetActive(crew != null);
+            if (crew != null)
+            {
+                _crewCount.text = crew.Count;
+                _crewNote.text = crew.Note;
+                _crewMinus.interactable = crew.CanRemove;
+                _crewPlus.interactable = crew.CanAdd;
+            }
+
             var training = card.Training;
             _trainingRow.SetActive(training != null);
-            _window.sizeDelta = new Vector2(_window.sizeDelta.x, _windowHeight + (training != null ? _trainingHeight : 0));
+            var strip = training != null || crew != null;
+            _window.sizeDelta = new Vector2(_window.sizeDelta.x, _windowHeight + (strip ? _trainingHeight : 0));
             if (training == null) return;
 
             _villagers.text = training.Villagers;
@@ -106,6 +125,8 @@ namespace Codigames.Game.UI.Menus
             _close.onClick.AddListener(OnClose);
             _upgrade.onClick.AddListener(OnUpgrade);
             _train.onClick.AddListener(OnTrain);
+            _crewMinus.onClick.AddListener(OnCrewMinus);
+            _crewPlus.onClick.AddListener(OnCrewPlus);
         }
 
         protected override void UnsubscribeFromEventsInternal()
@@ -113,10 +134,14 @@ namespace Codigames.Game.UI.Menus
             _close.onClick.RemoveListener(OnClose);
             _upgrade.onClick.RemoveListener(OnUpgrade);
             _train.onClick.RemoveListener(OnTrain);
+            _crewMinus.onClick.RemoveListener(OnCrewMinus);
+            _crewPlus.onClick.RemoveListener(OnCrewPlus);
         }
 
         private void OnClose() => CloseTapped?.Invoke();
         private void OnUpgrade() => UpgradeTapped?.Invoke();
         private void OnTrain() => TrainTapped?.Invoke();
+        private void OnCrewMinus() => CrewMinusTapped?.Invoke();
+        private void OnCrewPlus() => CrewPlusTapped?.Invoke();
     }
 }
