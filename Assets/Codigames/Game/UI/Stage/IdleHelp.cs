@@ -33,6 +33,7 @@ namespace Codigames.Game.UI.Stage
         private readonly QuestFocus _focus;
         private readonly ICatalog<ISpeaker> _speakers;
         private readonly Localizer _localizer;
+        private readonly Dev.DevSwitches _dev;
 
         private float _lastActivity;
         private float _lastCheck;
@@ -41,8 +42,9 @@ namespace Codigames.Game.UI.Stage
 
         public IdleHelp(QuestChain chain, ICatalog<IQuestDefinition> quests, IStageContext context, TutorialState tutorial,
             IStageSettings settings, StagePresenter stage, StageView view, IMenuViewFactory views, QuestFocus focus,
-            ICatalog<ISpeaker> speakers, Localizer localizer)
+            ICatalog<ISpeaker> speakers, Localizer localizer, Dev.DevSwitches dev)
         {
+            _dev = dev;
             _chain = chain;
             _quests = quests;
             _context = context;
@@ -77,7 +79,7 @@ namespace Codigames.Game.UI.Stage
 
             var quest = _chain.Active;
             var idle = now - _lastActivity;
-            var stuck = !_stage.IsPlaying && quest != null && !_chain.IsComplete(quest) && !_context.HasOpenSheet && !_tutorial.Veteran;
+            var stuck = !_dev.TutorialsOff && !_stage.IsPlaying && quest != null && !_chain.IsComplete(quest) && !_context.HasOpenSheet && !_tutorial.Veteran;
             _views.Resolve<QuestPill>()?.SetNudging(stuck && idle >= _settings.IdleWiggleSeconds);
 
             if (stuck && _peekUntil == 0 && WindowOpen && idle >= _settings.IdleAdvisorSeconds && now >= _restUntil)
