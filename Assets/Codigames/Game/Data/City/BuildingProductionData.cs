@@ -36,6 +36,8 @@ namespace Codigames.Game.Data.City
         [SerializeField] private List<int> _armyCapPerLevel = new();
         [Tooltip("The wounded an Infirmary keeps, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
         [SerializeField] private List<int> _bedsPerLevel = new();
+        [Tooltip("A Tavern's raise on every Hero XP paid, a percent by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
+        [SerializeField] private List<double> _heroXpBonusPerLevel = new();
         [Tooltip("How many goods a workshop may hold queued, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
         [SerializeField] private List<int> _queueLengthPerLevel = new();
         [Tooltip("How many villagers may work for it, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
@@ -56,6 +58,7 @@ namespace Codigames.Game.Data.City
         public IReadOnlyList<string> Trains => _trains;
         public IReadOnlyList<int> ArmyCapPerLevel => _armyCapPerLevel;
         public IReadOnlyList<int> BedsPerLevel => _bedsPerLevel;
+        public IReadOnlyList<double> HeroXpBonusPerLevel => _heroXpBonusPerLevel;
         public IReadOnlyList<int> QueueLengthPerLevel => _queueLengthPerLevel;
         public IReadOnlyList<int> MaxWorkersPerLevel => _maxWorkersPerLevel;
         public IReadOnlyList<int> InfluenceRadiusPerLevel => _influenceRadiusPerLevel;

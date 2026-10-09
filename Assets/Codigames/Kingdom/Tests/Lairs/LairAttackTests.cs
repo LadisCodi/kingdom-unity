@@ -88,7 +88,14 @@ namespace Codigames.Kingdom.Tests.Lairs
                 Lairs = new Codigames.Kingdom.Lairs.Lairs(State, Held, settings, City, Stores, crews, 42, Bonuses);
                 Army = new Codigames.Kingdom.Army.Army(ArmyState, City, Buildings, Units, Treasury, settings, settings, Gates, Bonuses);
                 Combat = new Combat(Units, new BattleGoldenTests.Settings());
-                Attack = new LairAttack(Lairs, Combat, new EnemyGenerator(Combat), Army, Treasury, 42, 6, Items, Bonuses);
+                var heroes = new Catalog<Codigames.Kingdom.Heroes.IHeroDefinition>(BattleGoldenTests.Heroes().Items.Append(new BattleGoldenTests.FakeHero
+                {
+                    Id = "Merchant", Rarity = Codigames.Kingdom.Heroes.HeroRarity.Common, UnitType = "Warrior", Skill = "Plunder", SkillValue = 15,
+                    Atk = 3, Dmg = 24, Def = 3, Hp = 1152, Cooldown = 12, TroopDmgMult = 1, TroopHpMult = 1,
+                }));
+                Heroes = new Codigames.Kingdom.Heroes.Heroes(HeroesState, heroes, new Codigames.Kingdom.Heroes.HeroLadder(new BattleGoldenTests.Ladder()),
+                    Treasury);
+                Attack = new LairAttack(Lairs, Combat, new EnemyGenerator(Combat), Army, Treasury, 42, 6, Items, Bonuses, Heroes);
                 Stand("Infirmary", new Vector2Int(-3, 3));
                 ArmyState.Troops["Warrior"] = 30;
                 Lairs.ApplyDue(T0);
@@ -104,6 +111,8 @@ namespace Codigames.Kingdom.Tests.Lairs
             public Combat Combat { get; }
             public LairAttack Attack { get; }
             public Grants Items { get; } = new();
+            public Codigames.Kingdom.Heroes.State.HeroesState HeroesState { get; } = new();
+            public Codigames.Kingdom.Heroes.Heroes Heroes { get; }
             public ILairSite Orc => Lairs.Site("Orcs");
 
             protected override IBuildingDefinition[] ExtraBuildings() => new[]
@@ -175,6 +184,50 @@ namespace Codigames.Kingdom.Tests.Lairs
             var report = fixture.Attack.Attack("Orcs", Party(30), T0);
             Assert.That(report.Block, Is.EqualTo(LairBlock.NotEnoughSupplies));
             Assert.That(fixture.Army.Count("Warrior"), Is.EqualTo(30));
+        }
+
+        [Test]
+        public void AHero_ShouldCarryItsWoundsHome()
+        {
+            var fixture = new Fixture();
+            fixture.Heroes.Grant("Warden");
+            var max = fixture.Heroes.MaxHp("Warden");
+
+            var report = fixture.Attack.Attack("Orcs", Party(20), T0, new[] { "Warden" });
+
+            var hero = report.Ours.Slots.Single(s => s.IsHero);
+            var pool = Combat.PoolsAfter(report.Log, Side.Ours)[hero.Id];
+            Assert.That(fixture.Heroes.Hp("Warden", T0), Is.EqualTo((int)System.Math.Floor(pool)).Within(1));
+            Assert.That(fixture.Heroes.Hp("Warden", T0), Is.LessThanOrEqualTo(max));
+        }
+
+        [Test]
+        public void AHeroAlone_OrExhausted_OrNotOwned_ShouldBeRefused()
+        {
+            var fixture = new Fixture();
+            fixture.Heroes.Grant("Warden");
+
+            Assert.That(fixture.Attack.Block("Orcs", new SquadSpec[0], new[] { "Warden" }, T0), Is.EqualTo(LairBlock.NoSoldiers));
+            Assert.That(fixture.Attack.Block("Orcs", Party(5), new[] { "Rogue" }, T0), Is.EqualTo(LairBlock.NoHero));
+            Assert.That(fixture.Attack.Block("Orcs", Party(5), new[] { "Warden", "Warden" }, T0), Is.EqualTo(LairBlock.TooManyHeroes));
+            fixture.Heroes.SetHp("Warden", 0, T0);
+            Assert.That(fixture.Attack.Block("Orcs", Party(5), new[] { "Warden" }, T0), Is.EqualTo(LairBlock.HeroDown));
+        }
+
+        [Test]
+        public void Plunder_ShouldSwellTheHoard_WhenTheLastFightFalls()
+        {
+            var fixture = new Fixture();
+            fixture.Heroes.Grant("Merchant");
+            fixture.ArmyState.Troops["Warrior"] = 300;
+            fixture.State.Lairs["Orcs"].Hoard["Gold"] = 1000;
+            fixture.Attack.Attack("Orcs", Party(100), T0);
+            fixture.Attack.Attack("Orcs", Party(100), T0);
+
+            var report = fixture.Attack.Attack("Orcs", Party(100), T0, new[] { "Merchant" });
+
+            Assert.That(report.Result, Is.EqualTo(LairResult.Cleared));
+            Assert.That(report.Hoard["Gold"], Is.EqualTo(1150));
         }
 
         [Test]

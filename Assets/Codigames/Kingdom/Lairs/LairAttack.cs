@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Codigames.Kingdom.Modifiers;
 using Codigames.Kingdom.Army;
 using Codigames.Kingdom.Bag;
 using Codigames.Kingdom.Battles;
@@ -22,6 +23,11 @@ namespace Codigames.Kingdom.Lairs
         TooManySlots,
         NotEnoughUnits,
         NotEnoughSupplies,
+        // A hero the kingdom does not own.
+        NoHero,
+        TooManyHeroes,
+        // A hero the last fight left with nothing rests until its HP is full.
+        HeroDown,
     }
 
     public enum LairResult
@@ -85,12 +91,16 @@ namespace Codigames.Kingdom.Lairs
         private readonly ITreasury _treasury;
         private readonly IItemGrants _items;
         private readonly IBonuses _bonuses;
+        private readonly Heroes.Heroes _heroes;
+        private IModifiers Stack { get; }
         private readonly uint _seed;
         private readonly int _troopSlots;
 
         public LairAttack(Lairs lairs, Combat combat, EnemyGenerator generator, Army.Army army, ITreasury treasury, uint seed, int troopSlots = 6,
-            IItemGrants items = null, IBonuses bonuses = null)
+            IItemGrants items = null, IBonuses bonuses = null, Heroes.Heroes heroes = null, IModifiers modifiers = null)
         {
+            Stack = modifiers;
+            _heroes = heroes;
             _lairs = lairs;
             _combat = combat;
             _generator = generator;
@@ -123,37 +133,51 @@ namespace Codigames.Kingdom.Lairs
 
         public int Power(ILairSite lair) => Combat.BoardPower(Board(lair));
 
-        // Our side of the board: the squads sent, with the kingdom's drill.
-        public Board PartyBoard(IEnumerable<SquadSpec> slots) => _combat.BuildBoard(slots.Where(s => s.Count > 0).ToList(), Array.Empty<FighterSpec>(), Drill());
+
+        // Our side of the board: the squads sent with the kingdom's drill, and the heroes with what they have left.
+        public Board PartyBoard(IEnumerable<SquadSpec> slots, IReadOnlyList<string> heroes = null, double now = 0)
+            => _combat.BuildBoard(slots.Where(s => s.Count > 0).ToList(), Fighters(heroes, now), Drill());
+
+        private IReadOnlyList<FighterSpec> Fighters(IReadOnlyList<string> heroes, double now)
+            => heroes == null || _heroes == null ? Array.Empty<FighterSpec>()
+                : heroes.Select(h => _heroes.Fighter(h, now, _combat.Settings.TickMs, _combat.Settings.HeroPowerPerDmg)).ToList();
 
         // The party's power: an estimate, never the outcome.
-        public int PartyPower(IEnumerable<SquadSpec> slots) => slots.Where(s => s.Count > 0).Sum(s => _combat.RankOf(s.Troop).Power * s.Count);
+        public int PartyPower(IEnumerable<SquadSpec> slots, IReadOnlyList<string> heroes = null)
+            => Combat.JsRound(slots.Where(s => s.Count > 0).Sum(s => (double)_combat.RankOf(s.Troop).Power * s.Count)
+                              + (heroes == null || _heroes == null ? 0 : heroes.Sum(h => _heroes.Power(h, _combat.Settings.HeroPowerPerDmg))));
 
         public IReadOnlyDictionary<string, double> Supplies => _combat.Settings.FightMana > 0
             ? new Dictionary<string, double> { [MANA] = _combat.Settings.FightMana }
             : new Dictionary<string, double>();
 
-        public LairBlock Block(string id, IReadOnlyList<SquadSpec> slots)
+        public LairBlock Block(string id, IReadOnlyList<SquadSpec> slots, IReadOnlyList<string> heroes = null, double now = 0)
         {
+            heroes ??= Array.Empty<string>();
             var state = _lairs.StateOf(id);
             if (state == null) return LairBlock.LairNotFound;
             if (state.Cleared) return LairBlock.AlreadyCleared;
             if (state.Defeated) return LairBlock.AlreadyDefeated;
+            if (heroes.Any(h => _heroes == null || !_heroes.Owns(h))) return LairBlock.NoHero;
+            if (heroes.Count > (_heroes?.Slots ?? 0)) return LairBlock.TooManyHeroes;
+            if (heroes.Any(h => !_heroes.CanFight(h, now))) return LairBlock.HeroDown;
             var committed = slots.Where(s => s.Count > 0).ToList();
-            // No heroes yet: a party with no soldiers is an empty one.
-            if (committed.Count == 0) return LairBlock.EmptyParty;
+            // A lair wants soldiers: soldiers alone, or with heroes — never a hero alone.
+            if (heroes.Count == 0 && committed.Count == 0) return LairBlock.EmptyParty;
+            if (committed.Count == 0) return LairBlock.NoSoldiers;
             if (committed.Count > _troopSlots) return LairBlock.TooManySlots;
             foreach (var group in committed.GroupBy(s => s.Troop))
                 if (group.Sum(s => s.Count) > _army.Count(group.Key)) return LairBlock.NotEnoughUnits;
             return _treasury.CanAfford(Supplies) ? LairBlock.None : LairBlock.NotEnoughSupplies;
         }
 
-        public LairReport Attack(string id, IReadOnlyList<SquadSpec> slots, double now)
+        public LairReport Attack(string id, IReadOnlyList<SquadSpec> slots, double now, IReadOnlyList<string> heroes = null)
         {
+            heroes ??= Array.Empty<string>();
             var lair = _lairs.Site(id);
             var theirs = lair == null ? null : Board(lair);
             var report = new LairReport { Power = theirs == null ? 0 : Combat.BoardPower(theirs), Supplies = Supplies, Theirs = theirs };
-            report.Block = Block(id, slots);
+            report.Block = Block(id, slots, heroes, now);
             if (report.Block != LairBlock.None)
             {
                 report.Result = LairResult.Blocked;
@@ -162,10 +186,16 @@ namespace Codigames.Kingdom.Lairs
 
             _treasury.TryPay(Supplies);
             var committed = slots.Where(s => s.Count > 0).ToList();
-            var ours = PartyBoard(committed);
+            var ours = PartyBoard(committed, heroes, now);
             report.Ours = ours;
-            report.Attack = PartyPower(committed);
+            report.Attack = PartyPower(committed, heroes);
             report.Log = _combat.Resolve(ours, theirs);
+
+            // Win or lose, every hero keeps what the fight did to it.
+            var pools = Combat.PoolsAfter(report.Log, Side.Ours);
+            foreach (var slot in ours.Slots.Where(s => s.IsHero))
+                _heroes?.SetHp(slot.FighterId, (int)Math.Floor(pools.TryGetValue(slot.Id, out var hp) ? hp : slot.HpPool), now);
+            var spoils = Spoils(ours);
 
             // Who fell, read off the fight: a share carried to the Infirmary's beds, the rest gone.
             var left = Combat.Survivors(report.Log, Side.Ours);
@@ -177,7 +207,8 @@ namespace Codigames.Kingdom.Lairs
             }
 
             report.Losses = losses;
-            report.Wounded = losses.Count > 0 ? _army.Lose(losses, _army.WoundedShare) : 0;
+            // A Field medic carries its points of the fallen home; someone always stays out there.
+            report.Wounded = losses.Count > 0 ? _army.Lose(losses, Math.Min(WOUNDED_SHARE_CAP, Math.Max(0, _army.WoundedShare + spoils.Medic))) : 0;
 
             if (report.Log.Winner != Side.Ours)
             {
@@ -189,13 +220,20 @@ namespace Codigames.Kingdom.Lairs
             // A fight short of the last pays its share of the lair's Hero XP now, so none is fought for nothing.
             if (!_lairs.WinFight(id))
             {
-                report.HeroXp = PayHeroXp(_lairs.FightXp(lair));
+                report.HeroXp = PayHeroXp(Prices.RoundPrice(_lairs.FightXp(lair) * (1 + spoils.Seasoned)));
                 report.Result = LairResult.Won;
                 Attacked?.Invoke(id, report);
                 return report;
             }
 
-            report.Hoard = new Dictionary<string, double>(_lairs.StateOf(id).Hoard);
+            // The last fight: Plunder swells the hoard now; Lore and Seasoned ride on the claim.
+            var beaten = _lairs.StateOf(id);
+            if (spoils.Plunder > 0)
+                foreach (var currency in beaten.Hoard.Keys.ToList())
+                    beaten.Hoard[currency] = Math.Round(beaten.Hoard[currency] * (1 + spoils.Plunder), MidpointRounding.AwayFromZero);
+            beaten.SpoilsLore = spoils.Lore;
+            beaten.SpoilsSeasoned = spoils.Seasoned;
+            report.Hoard = new Dictionary<string, double>(beaten.Hoard);
             report.Knowledge = _lairs.ClearReward(lair).Knowledge;
             report.Result = LairResult.Cleared;
             Attacked?.Invoke(id, report);
@@ -219,11 +257,34 @@ namespace Codigames.Kingdom.Lairs
             return claim;
         }
 
+        private const double WOUNDED_SHARE_CAP = 0.9;
+
+        // Hero XP through the heroes' own counter — the tree, the Taverns, the boons — or, with no heroes, the tree alone.
         private double PayHeroXp(double amount)
         {
+            if (_heroes != null) return _heroes.AddXp(amount);
             var paid = Math.Round(_bonuses.Apply("heroXp", amount), MidpointRounding.AwayFromZero);
             if (paid > 0) _treasury.Add(HERO_XP, paid);
             return paid;
+        }
+
+        // What a won fight pays on top, from the spoils skills on our side: shares, summed across heroes.
+        private static (double Plunder, double Lore, double Seasoned, double Medic) Spoils(Board board)
+        {
+            double plunder = 0, lore = 0, seasoned = 0, medic = 0;
+            foreach (var slot in board.Slots.Where(s => s.IsHero && s.Skill != null))
+            {
+                var share = slot.Skill.Amount / 1000.0;
+                switch (slot.Skill.Id)
+                {
+                    case "Plunder": plunder += share; break;
+                    case "Lore": lore += share; break;
+                    case "Seasoned": seasoned += share; break;
+                    case "FieldMedic": medic += share; break;
+                }
+            }
+
+            return (plunder, lore, seasoned, medic);
         }
 
         private EnemyPlan Plan(ILairSite lair, int? index)
@@ -248,7 +309,7 @@ namespace Codigames.Kingdom.Lairs
             return new TroopBonus(
                 troop => _combat.RankOf(troop).Dmg * Pct(UNIT_ATK, troop),
                 troop => _combat.RankOf(troop).Def * Pct(UNIT_DEF, troop),
-                _ => Math.Max(1, _bonuses.Multiplier(UNIT_HP)));
+                _ => Math.Max(1, Stack.Apply(UNIT_HP, _bonuses.Multiplier(UNIT_HP))));
         }
 
         // What is aimed at exactly this tag, without the unaimed share.

@@ -191,10 +191,10 @@ namespace Codigames.Kingdom.Battles
                         events.Add(new BattleEvent { Kind = BattleEventKind.Skill, Tick = 0, From = new SlotRef((Side)s, slot.Id), Skill = slot.Skill.Id });
 
             // One blow landing: the shield first, then the health. True when it ended the fight.
-            bool Land(int tick, int side, BoardSlot from, BoardSlot target, int hits, int @base, string skill)
+            bool Land(int tick, int side, BoardSlot from, BoardSlot target, int hits, double @base, string skill)
             {
                 var foe = 1 - side;
-                var raw = Math.Max(1, (int)Math.Floor((long)hits * @base * AttackMultiplier(from.Atk, target.Def) / 1000.0));
+                var raw = Math.Max(1, (int)Math.Floor(hits * @base * AttackMultiplier(from.Atk, target.Def) / 1000.0));
                 var (num, den) = Fraction(from.Type, target.Type);
                 var dealt = (int)Math.Floor((long)raw * num / (double)den);
                 var absorbed = Math.Min(shield[foe][target.Id], dealt);
@@ -249,8 +249,8 @@ namespace Codigames.Kingdom.Battles
                         // The most wounded: the lowest share of what it walked in with, compared without a division.
                         targets.Add(hurt.Aggregate((b, s) =>
                         {
-                            var sb = (long)s.HpPool * max[b.Id];
-                            var bs = (long)b.HpPool * max[s.Id];
+                            var sb = s.HpPool * max[b.Id];
+                            var bs = b.HpPool * max[s.Id];
                             return sb < bs || (sb == bs && s.Id < b.Id) ? s : b;
                         }));
                     }
@@ -263,7 +263,7 @@ namespace Codigames.Kingdom.Battles
                 }
                 else if (kind == SkillKind.Daze)
                 {
-                    long Threat(BoardSlot s) => (long)s.Dmg * Math.Min(s.Alive, s.Frontage);
+                    double Threat(BoardSlot s) => s.Dmg * Math.Min(s.Alive, s.Frontage);
                     if (enemies.Count > 0)
                         targets.Add(enemies.Aggregate((b, s) => Threat(s) > Threat(b) || (Threat(s) == Threat(b) && s.Id < b.Id) ? s : b));
                 }
@@ -276,24 +276,25 @@ namespace Codigames.Kingdom.Battles
                     {
                         case SkillKind.Strike:
                             if (target.HpPool <= 0) continue;
-                            if (Land(tick, side, slot, target, 1, (int)Math.Floor((long)slot.Dmg * skill.Amount / 1000.0), skill.Id)) return true;
+                            if (Land(tick, side, slot, target, 1, Math.Floor(slot.Dmg * skill.Amount / 1000.0), skill.Id)) return true;
                             break;
                         case SkillKind.Heal:
                         {
                             var max = maxPool[side][target.Id];
-                            var amount = Math.Max(1, (int)Math.Floor((long)max * skill.Amount / 1000.0));
+                            var amount = Math.Max(1, Math.Floor(max * skill.Amount / 1000.0));
                             var pool = Math.Min(max, target.HpPool + amount);
                             var healed = pool - target.HpPool;
                             target.HpPool = pool;
                             events.Add(new BattleEvent
                             {
-                                Kind = BattleEventKind.Healed, Tick = tick, At = new SlotRef((Side)side, target.Id), Amount = healed, Alive = target.Alive, HpPool = pool,
+                                Kind = BattleEventKind.Healed, Tick = tick, At = new SlotRef((Side)side, target.Id), Amount = (int)Math.Round(healed), Healed = healed,
+                                Alive = target.Alive, HpPool = pool,
                             });
                             break;
                         }
                         case SkillKind.Shield:
                         {
-                            var amount = (int)Math.Floor((long)slot.HpUnit * skill.Amount / 1000.0);
+                            var amount = (int)Math.Floor(slot.HpUnit * skill.Amount / 1000.0);
                             shield[side][target.Id] = Math.Max(shield[side][target.Id], amount);
                             events.Add(new BattleEvent { Kind = BattleEventKind.Shielded, Tick = tick, At = new SlotRef((Side)side, target.Id), Amount = shield[side][target.Id] });
                             break;
@@ -388,9 +389,9 @@ namespace Codigames.Kingdom.Battles
         }
 
         // Each slot's health when the dust settles: a hero carries it into its next fight.
-        public static Dictionary<int, int> PoolsAfter(BattleLog log, Side side)
+        public static Dictionary<int, double> PoolsAfter(BattleLog log, Side side)
         {
-            var output = new Dictionary<int, int>();
+            var output = new Dictionary<int, double>();
             var start = log.Events[0];
             foreach (var (slot, _) in side == Side.Ours ? start.Ours : start.Theirs) output[slot.Id] = slot.HpPool;
             foreach (var e in log.Events)
@@ -412,7 +413,7 @@ namespace Codigames.Kingdom.Battles
 
         private static Board Copy(Board board) => new(board.Slots.Select(s => s.Clone()).ToList());
 
-        private static int MaxPool(BoardSlot s) => s.IsHero ? s.HpUnit : s.Count * s.HpUnit;
+        private static double MaxPool(BoardSlot s) => s.IsHero ? s.HpUnit : s.Count * s.HpUnit;
 
         private static IEnumerable<BoardSlot> Living(Board board) => board.Slots.Where(s => s.HpPool > 0);
 

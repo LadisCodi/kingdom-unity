@@ -18,6 +18,7 @@ namespace Codigames.Kingdom.City
         public const string DISTRICT_PREFIX = "district";
         private const string JOB_PREFIX = "job";
 
+        private readonly Modifiers.IModifiers _modifiers;
         private readonly CityState _city;
         private readonly ITreasury _treasury;
         private readonly Placement _placement;
@@ -31,8 +32,9 @@ namespace Codigames.Kingdom.City
 
         public Construction(CityState city, ITreasury treasury, Placement placement, ICatalog<IBuildingDefinition> buildings,
             IConstructionSettings settings, IResearchGates gates = null, IBonuses bonuses = null, IPlanting planting = null,
-            Harmony harmony = null, Goods.Stockpile stockpile = null)
+            Harmony harmony = null, Goods.Stockpile stockpile = null, Modifiers.IModifiers modifiers = null)
         {
+            _modifiers = modifiers;
             _stockpile = stockpile;
             _harmony = harmony;
             _planting = planting;
@@ -278,7 +280,9 @@ namespace Codigames.Kingdom.City
         private double UpgradeSeconds(IBuildingDefinition building, int target)
             => BuildingDurations.UpgradeSeconds(building.Duration, target, _settings.LateUpgradeFromLevel) / BuildSpeed;
 
-        private double BuildSpeed => Math.Max(1, _bonuses.Multiplier(TechStats.BUILD_SPEED));
+        // The tree's speed, and a boon's (the Pharaoh's builders): each a multiplier, never below the identity.
+        private double BuildSpeed => Math.Max(1, _bonuses.Multiplier(TechStats.BUILD_SPEED))
+                                     * Math.Max(1, Modifiers.ModifiersExtensions.Apply(_modifiers, "buildSpeed", 1));
 
         // The technology still to research, or null when there is none or it is done.
         private string MissingTech(string tech) => tech != null && !_gates.IsOpen(tech) ? tech : null;

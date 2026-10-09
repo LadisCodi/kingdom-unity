@@ -55,16 +55,17 @@ namespace Codigames.Kingdom.Battles
         public int Count;
         public int Frontage;
         public int Atk;
-        public int Dmg;
+        // A hero's damage and health are its level's, unrounded, as the web's are.
+        public double Dmg;
         // A rating the research may leave fractional; the Attack/Defence rule rounds it.
         public double Def;
-        public int HpUnit;
-        public int HpPool;
+        public double HpUnit;
+        public double HpPool;
         public int Cooldown;
         public int Power;
         public SlotSkill Skill;
 
-        public int Alive => (int)Math.Ceiling(HpPool / (double)HpUnit);
+        public int Alive => (int)Math.Ceiling(HpPool / HpUnit);
 
         public BoardSlot Clone() => (BoardSlot)MemberwiseClone();
     }
@@ -152,11 +153,12 @@ namespace Codigames.Kingdom.Battles
         public int Edge;
         // Attack (a skill's strike) and Skill.
         public string Skill;
-        // Healed: how much; Shielded: the shield now; Dazed: the delay in ticks.
+        // Healed: how much (whole for the screen; Healed exact); Shielded: the shield now; Dazed: the delay in ticks.
         public int Amount;
+        public double Healed;
         // Healed and TroopsLost: what is left.
         public int Alive;
-        public int HpPool;
+        public double HpPool;
         // End.
         public Side Winner;
         public EndReason Reason;
@@ -186,11 +188,11 @@ namespace Codigames.Kingdom.Battles
         public string Name;
         public string Type;
         public double Atk;
-        public int Dmg;
+        public double Dmg;
         public double Def;
-        public int Hp;
+        public double Hp;
         // The health it starts with when less than Hp: a hero carries its wounds. Null = full.
-        public int? HpNow;
+        public double? HpNow;
         public int Cooldown;
         public int Power;
         public double TroopDmgMult = 1;

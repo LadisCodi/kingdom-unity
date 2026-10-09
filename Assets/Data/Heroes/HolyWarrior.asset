@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9645b9e17a3d3ba9eada4a7ee50663f7, type: 3}
+  m_Name: HolyWarrior
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Heroes.HeroAsset
+  _id: HolyWarrior
+  _name: The Holy Warrior
+  _title: Digs where the light falls
+  _art: {fileID: 21300000, guid: 2350c404735f2e6d3a1ba466e5640982, type: 3}
+  _portrait: {fileID: 21300000, guid: be3b5d80b84bf59caa7cfaaf79cc7a05, type: 3}
+  _fragment: {fileID: 21300000, guid: 3876845fd4e6781c08775954198c83b2, type: 3}
+  _rarity: 1
+  _bagRank: 1
+  _unitType: Cavalry
+  _skill: WarCry
+  _skillValue: 8
+  _skillEvery: 0
+  _atk: 2
+  _dmg: 54
+  _def: 2
+  _hp: 1104
+  _cooldown: 12
+  _atkPerLevel: 0.024
+  _dmgPerLevel: 2.22
+  _defPerLevel: 0.024
+  _hpPerLevel: 36.63
+  _troopDmgMult: 1.15
+  _troopHpMult: 1.1
+  _troopDefBonus: 1
+  _boonStat: 
+  _boonValue: 1

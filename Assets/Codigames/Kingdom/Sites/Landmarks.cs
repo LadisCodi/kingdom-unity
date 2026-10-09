@@ -28,10 +28,12 @@ namespace Codigames.Kingdom.Sites
         private readonly IBonuses _bonuses;
         private readonly Drip _mana;
         private readonly Lairs.ILairGround _lairs;
+        private readonly Modifiers.IModifiers _modifiers;
 
         public Landmarks(SitesState state, IProvinceSites sites, FogOfWar fog, ITreasury treasury, IKnowledgeSettings knowledge,
-            int discoverRadius, IBonuses bonuses = null, Drip mana = null, Lairs.ILairGround lairs = null)
+            int discoverRadius, IBonuses bonuses = null, Drip mana = null, Lairs.ILairGround lairs = null, Modifiers.IModifiers modifiers = null)
         {
+            _modifiers = modifiers;
             _lairs = lairs;
             _mana = mana;
             _state = state;
@@ -61,7 +63,8 @@ namespace Codigames.Kingdom.Sites
 
         // What a claim pays in Knowledge: the lump, raised by the tree, whole points.
         public double KnowledgeLump
-            => Math.Max(0, Math.Round(_knowledge.LandmarkClaimLump * _bonuses.Multiplier(LANDMARK_KNOWLEDGE) * _bonuses.Multiplier(KNOWLEDGE_YIELD),
+            => Math.Max(0, Math.Round(Modifiers.ModifiersExtensions.Apply(_modifiers, KNOWLEDGE_YIELD,
+                    _knowledge.LandmarkClaimLump * _bonuses.Multiplier(LANDMARK_KNOWLEDGE) * _bonuses.Multiplier(KNOWLEDGE_YIELD)),
                 MidpointRounding.AwayFromZero));
 
         public int DiscoverRadius => _discoverRadius;

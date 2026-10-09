@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9645b9e17a3d3ba9eada4a7ee50663f7, type: 3}
+  m_Name: GoldenDragon
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Heroes.HeroAsset
+  _id: GoldenDragon
+  _name: The Golden Dragon
+  _title: Older than the lair, and bored of it
+  _art: {fileID: 21300000, guid: b4f5b50af5f4a6d0d9b00221553dec72, type: 3}
+  _portrait: {fileID: 21300000, guid: 0e1751d5aadda520f92443017bf61314, type: 3}
+  _fragment: {fileID: 21300000, guid: 00c8d57bcc0ae336e863ca1dbd7ba2b1, type: 3}
+  _rarity: 2
+  _bagRank: 3
+  _unitType: Cavalry
+  _skill: Cleave
+  _skillValue: 120
+  _skillEvery: 4.5
+  _atk: 2
+  _dmg: 78
+  _def: 2
+  _hp: 1488
+  _cooldown: 12
+  _atkPerLevel: 0.032
+  _dmgPerLevel: 2.85
+  _defPerLevel: 0.032
+  _hpPerLevel: 45.67
+  _troopDmgMult: 1.25
+  _troopHpMult: 1.15
+  _troopDefBonus: 2
+  _boonStat: unitHp
+  _boonValue: 1.1

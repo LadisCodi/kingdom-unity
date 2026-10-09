@@ -44,6 +44,8 @@ namespace Codigames.Kingdom
 
         public Lairs.State.LairsState Lairs { get; set; } = new();
 
+        public Heroes.State.HeroesState Heroes { get; set; } = new();
+
         // This kingdom's own randomness: every draw hashes it with the parts that name the event.
         public uint Seed { get; set; }
 

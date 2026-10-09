@@ -1,7 +1,9 @@
 // Dumps the web resolver's and generator's output for the Unity port's golden test.
 import { writeFileSync } from 'node:fs';
 import { buildBoard, generateEnemy, resolveBattle, villainFighter, type BattleEvent, type FighterSpec, type SquadSpec } from '../src/sim/battle';
-import { LAIRS } from '../src/sim/data/definitions';
+import { LAIRS, HEROES, COMBAT } from '../src/sim/data/definitions';
+import { heroBody } from '../src/sim/heroLadder';
+import { slotSkill } from '../src/sim/skills';
 
 const out: string[] = [];
 const ref = (r: { side: string; id: number }) => `${r.side}:${r.id}`;
@@ -82,6 +84,23 @@ fight('strikes', {
 fight('timeout', { squads: [], fighters: [fighter({ id: 'x', hp: 100000, dmg: 1, def: 200, cooldown: 50 })] },
   { squads: [], fighters: [fighter({ id: 'y', type: 'Lancer', hp: 100000, dmg: 1, def: 200, cooldown: 60 })] });
 fight('empty', { squads: [] }, { squads: [{ unitId: 'Warrior', count: 5 }] });
+
+// Heroes at a level and an ascension, one wounded, with their skills at a rank — as partyBoard builds them.
+const heroSpec = (id: keyof typeof HEROES, level: number, ascension: number, rank: number, hpNow?: number): FighterSpec => {
+  const def = HEROES[id];
+  const body = heroBody(def, level, ascension);
+  out.push(`hero|${id}|${level}|${ascension}|${rank}|${hpNow ?? '-'}`);
+  return {
+    id, name: def.name, type: def.unitType, atk: body.atk, dmg: body.dmg, def: body.def, hp: body.hp,
+    ...(hpNow === undefined ? {} : { hpNow }), cooldown: def.cooldown, power: Math.round(body.dmg * COMBAT.heroPowerPerDmg),
+    troopDmgMult: def.troopDmgMult, troopHpMult: def.troopHpMult, troopDefBonus: def.troopDefBonus, skill: slotSkill(def.skill, rank),
+  };
+};
+out.push('# heroes');
+const party = [heroSpec('Warden', 37, 7, 2, 900), heroSpec('Rogue', 12, 1, 1), heroSpec('Bard', 71, 12, 3)];
+const foes = [heroSpec('Cleric', 25, 4, 1), heroSpec('Joker', 50, 9, 2)];
+fight('heroes', { squads: [{ unitId: 'Warrior', count: 80 }, { unitId: 'Archer', count: 60 }], fighters: party },
+  { squads: [{ unitId: 'Lancer_e2', count: 70 }, { unitId: 'Cavalry', count: 40 }], fighters: foes });
 
 writeFileSync(process.argv[2], out.join('\n') + '\n');
 console.log('lines', out.length);

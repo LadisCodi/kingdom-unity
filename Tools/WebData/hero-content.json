@@ -1,0 +1,162 @@
+{
+ "Warden": {
+  "name": "The Warden",
+  "title": "Shield of the old wall",
+  "sprite": "hero_warden"
+ },
+ "Quartermaster": {
+  "name": "The Quartermaster",
+  "title": "Counts every biscuit",
+  "sprite": "hero_quartermaster"
+ },
+ "Scholar": {
+  "name": "The Scholar",
+  "title": "Reads what the walls say",
+  "sprite": "hero_scholar"
+ },
+ "RelicHunter": {
+  "name": "The Relic-hunter",
+  "title": "Knows a good lair by its smell",
+  "sprite": "hero_relic_hunter"
+ },
+ "Scout": {
+  "name": "The Scout",
+  "title": "Goes on ahead",
+  "sprite": "hero_scout"
+ },
+ "Adventurer": {
+  "name": "The Adventurer",
+  "title": "In it for the story",
+  "sprite": "hero_adventurer"
+ },
+ "Bard": {
+  "name": "The Bard",
+  "title": "Sings the road shorter",
+  "sprite": "hero_bard"
+ },
+ "BeastkinHunter": {
+  "name": "The Beastkin Hunter",
+  "title": "Reads a trail nobody else sees",
+  "sprite": "hero_beastkin_hunter"
+ },
+ "Cleric": {
+  "name": "The Cleric",
+  "title": "Keeps the wounded upright",
+  "sprite": "hero_cleric"
+ },
+ "Cook": {
+  "name": "The Cook",
+  "title": "Makes a week of three days’ rations",
+  "sprite": "hero_cook"
+ },
+ "Gardener": {
+  "name": "The Gardener",
+  "title": "Patient with everything that grows",
+  "sprite": "hero_gardener"
+ },
+ "Joker": {
+  "name": "The Joker",
+  "title": "Pockets what nobody was watching",
+  "sprite": "hero_joker"
+ },
+ "Merchant": {
+  "name": "The Merchant",
+  "title": "Never pays the asking price",
+  "sprite": "hero_merchant"
+ },
+ "Priest": {
+  "name": "The Priest",
+  "title": "Says the words that hold a line",
+  "sprite": "hero_priest"
+ },
+ "Rogue": {
+  "name": "The Rogue",
+  "title": "Light fingers, lighter step",
+  "sprite": "hero_rogue"
+ },
+ "ThreeMice": {
+  "name": "Three Mice in a Coat",
+  "title": "Nobody has ever asked",
+  "sprite": "hero_three_mouses"
+ },
+ "Sellsword": {
+  "name": "The Sellsword",
+  "title": "Paid by the day, loyal by the hour",
+  "sprite": "hero_warrior"
+ },
+ "DarkKnight": {
+  "name": "The Dark Knight",
+  "title": "Owes somebody something",
+  "sprite": "hero_dark_knight"
+ },
+ "Paladin": {
+  "name": "The Paladin",
+  "title": "Has never once been late",
+  "sprite": "hero_paladin"
+ },
+ "Wizard": {
+  "name": "The Wizard",
+  "title": "Certain about the wrong things, loudly",
+  "sprite": "hero_wizard"
+ },
+ "Witch": {
+  "name": "The Witch",
+  "title": "Knows which mushrooms",
+  "sprite": "hero_witch"
+ },
+ "Druid": {
+  "name": "The Druid",
+  "title": "Eats what the road offers",
+  "sprite": "hero_druid"
+ },
+ "IceLancer": {
+  "name": "The Ice Lancer",
+  "title": "Colder than the depth she stands in",
+  "sprite": "hero_ice_lancer"
+ },
+ "HolyWarrior": {
+  "name": "The Holy Warrior",
+  "title": "Digs where the light falls",
+  "sprite": "hero_holy_warrior"
+ },
+ "SavageWarrior": {
+  "name": "The Savage",
+  "title": "Takes the whole door with him",
+  "sprite": "hero_savage_warrior"
+ },
+ "Spymaster": {
+  "name": "The Spymaster",
+  "title": "Was already down there yesterday",
+  "sprite": "hero_spymaster"
+ },
+ "ElectricArcher": {
+  "name": "The Storm Archer",
+  "title": "Counts the seconds between",
+  "sprite": "hero_electric_archer"
+ },
+ "GoldenDragon": {
+  "name": "The Golden Dragon",
+  "title": "Older than the lair, and bored of it",
+  "sprite": "hero_golden_dragon"
+ },
+ "VampireLord": {
+  "name": "The Vampire Lord",
+  "title": "Collects, and has done for centuries",
+  "sprite": "hero_vampire_lord"
+ },
+ "Necromancer": {
+  "name": "The Necromancer",
+  "title": "Asks the previous expedition",
+  "sprite": "hero_necromancer"
+ },
+ "Pharao": {
+  "name": "The Pharaoh",
+  "title": "Was buried with better men",
+  "sprite": "hero_pharao"
+ },
+ "ElvenPrincess": {
+  "name": "The Elven Princess",
+  "title": "Travels light, and expects you to",
+  "sprite": "hero_elven_princess"
+ }
+}

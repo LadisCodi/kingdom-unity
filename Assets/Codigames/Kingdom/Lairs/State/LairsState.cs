@@ -22,5 +22,8 @@ namespace Codigames.Kingdom.Lairs.State
         public bool Defeated { get; set; }
         // Claimed: gone for good.
         public bool Cleared { get; set; }
+        // What the party that beat it carries to the claim: the Lore and Seasoned spoils, as shares.
+        public double SpoilsLore { get; set; }
+        public double SpoilsSeasoned { get; set; }
     }
 }

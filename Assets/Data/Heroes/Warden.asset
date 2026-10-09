@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9645b9e17a3d3ba9eada4a7ee50663f7, type: 3}
+  m_Name: Warden
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Heroes.HeroAsset
+  _id: Warden
+  _name: The Warden
+  _title: Shield of the old wall
+  _art: {fileID: 21300000, guid: 31b4494103bebee58a3f1bcb195f56e9, type: 3}
+  _portrait: {fileID: 21300000, guid: d99ff1825c52ca92badb1ba111a09cba, type: 3}
+  _fragment: {fileID: 21300000, guid: 4edddcc75bd57043bb2ecc3a19de6b04, type: 3}
+  _rarity: 0
+  _bagRank: 1
+  _unitType: Warrior
+  _skill: Shield
+  _skillValue: 15
+  _skillEvery: 4.5
+  _atk: 3
+  _dmg: 24
+  _def: 3
+  _hp: 1152
+  _cooldown: 12
+  _atkPerLevel: 0.04
+  _dmgPerLevel: 0.95
+  _defPerLevel: 0.04
+  _hpPerLevel: 45.67
+  _troopDmgMult: 1.1
+  _troopHpMult: 1.05
+  _troopDefBonus: 1
+  _boonStat: 
+  _boonValue: 1

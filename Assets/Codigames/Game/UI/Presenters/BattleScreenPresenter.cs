@@ -59,8 +59,8 @@ namespace Codigames.Game.UI.Presenters
             public bool Hero;
             public int Power;
             public int Troops;
-            public int Pool;
-            public int Max;
+            public double Pool;
+            public double Max;
             public Vector2 Home;
             public Vector2 Pos;
             public readonly List<(int Tick, Vector2 At)> Track = new();
@@ -170,7 +170,7 @@ namespace Codigames.Game.UI.Presenters
             for (var i = 0; i < order.Count; i++) order[i].Item1.View = views[i];
             foreach (var slot in _slots.Values)
             {
-                slot.View.SetLife(slot.Pool / (float)slot.Max, true);
+                slot.View.SetLife((float)(slot.Pool / slot.Max), true);
                 _power[(int)slot.Ref.Side] += slot.Power * slot.Troops;
             }
 
@@ -459,7 +459,7 @@ namespace Codigames.Game.UI.Presenters
         {
             var d = At(to) - At(from);
             var angle = Mathf.Atan2(d.y, d.x);
-            var heavy = Mathf.Min(1, e.Dealt / (float)to.Max / (HEAVY * 2));
+            var heavy = Mathf.Min(1, (float)(e.Dealt / to.Max) / (HEAVY * 2));
             Flinch(to, d.normalized, heavy);
             if (Ranged(from))
             {
@@ -543,13 +543,13 @@ namespace Codigames.Game.UI.Presenters
                 case BattleEventKind.Healed:
                     if (!quiet)
                     {
-                        View.Float(slot.View, At(slot), "heal", e.Amount, FLOAT_HEAL, 20 * BattleScreen.PX);
+                        View.Float(slot.View, At(slot), "heal", (int)Math.Round(e.Healed), FLOAT_HEAL, 20 * BattleScreen.PX);
                         View.Fx.Motes(At(slot), t, 7, FLOAT_HEAL);
                         Play(SoundIds.HEAL, "heal");
                     }
 
                     slot.Pool = e.HpPool;
-                    slot.View.SetLife(slot.Pool / (float)slot.Max);
+                    slot.View.SetLife((float)(slot.Pool / slot.Max));
                     if (e.Alive != slot.Troops && !slot.Hero)
                     {
                         _power[(int)e.At.Side] += (e.Alive - slot.Troops) * slot.Power;
@@ -563,7 +563,7 @@ namespace Codigames.Game.UI.Presenters
                 {
                     _slots.TryGetValue(e.From, out var from);
                     slot.Pool = Math.Max(0, slot.Pool - e.Dealt);
-                    slot.View.SetLife(slot.Pool / (float)slot.Max);
+                    slot.View.SetLife((float)(slot.Pool / slot.Max));
                     if (quiet) return;
                     slot.View.Flash();
                     if (e.Dealt > 0)
@@ -575,7 +575,7 @@ namespace Codigames.Game.UI.Presenters
                     if (e.Absorbed > 0) View.Float(slot.View, At(slot), "shield", e.Absorbed, FLOAT_SHIELD, 15 * BattleScreen.PX);
                     if (from == null) return;
                     Impact(e, from, slot, t);
-                    var heavy = Mathf.Min(1, e.Dealt / (float)slot.Max / (HEAVY * 2));
+                    var heavy = Mathf.Min(1, (float)(e.Dealt / slot.Max) / (HEAVY * 2));
                     Play(HitSound(from), "battle", 0.8f + 0.4f * heavy);
                     return;
                 }
@@ -586,7 +586,7 @@ namespace Codigames.Game.UI.Presenters
                     _power[(int)e.At.Side] -= lost;
                     slot.Troops = e.Alive;
                     slot.Pool = e.HpPool;
-                    slot.View.SetLife(slot.Pool / (float)slot.Max);
+                    slot.View.SetLife((float)(slot.Pool / slot.Max));
                     if (!quiet) ShakeBar(e.At.Side, lost);
                     if (!slot.Hero)
                     {
