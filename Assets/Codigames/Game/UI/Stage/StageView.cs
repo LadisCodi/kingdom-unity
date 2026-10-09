@@ -110,6 +110,13 @@ namespace Codigames.Game.UI.Stage
             _right.Leave();
         }
 
+        // Out of the way while something sits over the line (an unlock splash), and back where it was after.
+        public void SetMuted(bool muted)
+        {
+            _stage.alpha = muted ? 0 : 1;
+            _stage.blocksRaycasts = !muted;
+        }
+
         private void HideBox()
         {
             _acting?.Kill();

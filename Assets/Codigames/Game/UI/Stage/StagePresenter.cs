@@ -167,6 +167,11 @@ namespace Codigames.Game.UI.Stage
                 return;
             }
 
+            // An unlock splash over a line: the line steps out of the way and waits, where it was.
+            var held = _context.HeldBack;
+            _view.SetMuted(held);
+            if (held) return;
+
             var line = Line;
             if (line == null) return;
             Type(Mathf.Min(MAX_STEP, Time.unscaledDeltaTime));
@@ -369,7 +374,7 @@ namespace Codigames.Game.UI.Stage
 
         private void OnFingerTap(LeanFinger finger)
         {
-            if (!WaitsForTap || InGrace) return;
+            if (!WaitsForTap || InGrace || _context.HeldBack) return;
             // The tap is the stage's: it reaches nothing behind it, even when it ends the scene.
             _tookTapAt = Time.frameCount;
             TapLine();

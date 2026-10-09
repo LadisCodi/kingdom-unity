@@ -13,6 +13,7 @@ using Codigames.Game.UI.Hud;
 using Codigames.Game.UI.Presenters;
 using Codigames.Game.UI.Research;
 using Codigames.Game.UI.Stage;
+using Codigames.Game.UI.Unlocks;
 using Codigames.Kingdom;
 using Codigames.Kingdom.Doors;
 using Codigames.Kingdom.Tutorial;
@@ -43,6 +44,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private QuickInfoMessageSettings _quickInfoMessageSettings;
         [SerializeField] private UIRoot _uiRoot;
         [SerializeField] private StageView _stage;
+        [SerializeField] private UnlockSplash _unlockSplash;
         [SerializeField] private CinemachineCameraRig _cameraRig;
         [SerializeField] private CameraInputHook _cameraInput;
         [SerializeField] private CameraSettings _cameraSettings;
@@ -131,6 +133,9 @@ namespace Codigames.Game.Startup
                 resolver.Resolve<KingdomState>().Tutorial, resolver.Resolve<IConditions>(), resolver.Resolve<IScenePurse>(),
                 resolver.Resolve<IMorning>()), Lifetime.Singleton);
             builder.Register<StageContext>(Lifetime.Singleton).As<IStageContext>();
+            builder.Register<Openings>(Lifetime.Singleton);
+            builder.RegisterComponent(_unlockSplash);
+            builder.RegisterEntryPoint<UnlockSplashPresenter>().AsSelf();
             builder.RegisterComponent(_stage);
             builder.RegisterEntryPoint<StagePresenter>().AsSelf();
             builder.RegisterEntryPoint<IdleHelp>();

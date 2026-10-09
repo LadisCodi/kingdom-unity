@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cc38fb6718c0b01282eee221e9042ac, type: 3}
+  m_Name: bookSagas
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Doors.UnlockAsset
+  _id: bookSagas
+  _kind: 1
+  _target: Sagas
+  _title: The Sagas
+  _text: A book found at the Tavern. Its technologies are about heroes, and the Tavern
+    that hosts them.
+  _icon: {fileID: 21300000, guid: db66e0dda9cce630bacb23bbf3d5216f, type: 3}

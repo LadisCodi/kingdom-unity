@@ -25,6 +25,7 @@ namespace Codigames.Game.Audio
         public const string CHAIN_FINISHED = "chainFinished";
         public const string SCROLL_OPEN = "scrollOpen";
         public const string SCROLL_CLOSE = "scrollClose";
+        public const string UNLOCK = "unlock";
 
         // What a tap on each kind of ground sounds like (and a crew's strike, quieter).
         public static string TapOn(string harvestSource) => harvestSource switch
