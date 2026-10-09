@@ -55,6 +55,12 @@ namespace Codigames.Game.Session
             builder.Register<SiteGround>(Lifetime.Singleton).AsSelf().As<ISiteGround>();
             builder.Register(resolver => resolver.Resolve<KingdomState>().Lairs, Lifetime.Singleton);
             builder.Register<LairGround>(Lifetime.Singleton).AsSelf().As<ILairGround>();
+            builder.Register<Kingdom.Battles.Combat>(Lifetime.Singleton);
+            builder.Register<Kingdom.Battles.EnemyGenerator>(Lifetime.Singleton);
+            builder.Register(resolver => new LairAttack(resolver.Resolve<Codigames.Kingdom.Lairs.Lairs>(), resolver.Resolve<Kingdom.Battles.Combat>(),
+                resolver.Resolve<Kingdom.Battles.EnemyGenerator>(), resolver.Resolve<Kingdom.Army.Army>(), resolver.Resolve<ITreasury>(),
+                resolver.Resolve<KingdomState>().Seed, resolver.Resolve<Data.Army.CombatSettingsAsset>().TroopSlots, resolver.Resolve<IItemGrants>(),
+                resolver.Resolve<IBonuses>()), Lifetime.Singleton);
             builder.Register(resolver => new Codigames.Kingdom.Lairs.Lairs(resolver.Resolve<KingdomState>().Lairs, resolver.Resolve<LairGround>(),
                 resolver.Resolve<ILairSettings>(), resolver.Resolve<CityState>(), resolver.Resolve<Stores>(), resolver.Resolve<Workforce>(),
                 resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IBonuses>()), Lifetime.Singleton);

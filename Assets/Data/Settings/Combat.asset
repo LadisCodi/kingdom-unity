@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 160662aa0e9e792499b5be8812867484, type: 3}
+  m_Name: Combat
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Army.CombatSettingsAsset
+  _tickMs: 100
+  _timeoutTicks: 1800
+  _attackStepPerMille: 50
+  _attackCapPerMille: 1500
+  _defenceStepPerMille: 25
+  _defenceCapPerMille: 750
+  _typeAdvantageNum: 3
+  _typeAdvantageDen: 2
+  _typeDisadvantageNum: 3
+  _typeDisadvantageDen: 4
+  _fieldGap: 360
+  _fieldRowPitch: 100
+  _fieldColPitch: 100
+  _genSlotsMin: 2
+  _genSlotsMax: 6
+  _genVillainThreshold: 400
+  _genVillainShare: 0.3
+  _genVillainSlots: 3
+  _troopSlots: 6
+  _heroPowerPerDmg: 1.67
+  _fightMana: 20

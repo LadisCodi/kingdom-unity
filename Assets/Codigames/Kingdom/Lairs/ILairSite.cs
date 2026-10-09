@@ -20,5 +20,8 @@ namespace Codigames.Kingdom.Lairs
         int Power { get; }
         double WarningMinutes { get; }
         IReadOnlyDictionary<string, double> Mix { get; }
+        // What its garrison is rolled under: the event the roll is keyed on, kept when the lair is renamed so a garrison
+        // the player has looked at is never re-rolled.
+        string RollKey { get; }
     }
 }

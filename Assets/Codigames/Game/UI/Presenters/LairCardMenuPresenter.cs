@@ -35,14 +35,16 @@ namespace Codigames.Game.UI.Presenters
         private readonly IClock _clock;
         private readonly ISoundService _sounds;
         private readonly CardFraming _framing;
+        private readonly LairAttack _attack;
 
         private string _signature;
         private string _clockText;
 
         public LairCardMenuPresenter(IMenuViewFactory views, UIManager ui, Kingdom.Lairs.Lairs lairs, ProvinceSitesAsset sites, LairWords words,
             ICurrencyIcons icons, ITreasury treasury, NumberFormat numbers, Localizer localizer, IClock clock, ISoundService sounds,
-            CardFraming framing) : base(views)
+            CardFraming framing, LairAttack attack) : base(views)
         {
+            _attack = attack;
             _ui = ui;
             _lairs = lairs;
             _sites = sites;
@@ -110,9 +112,13 @@ namespace Codigames.Game.UI.Presenters
             _sounds.Play(SoundIds.BUTTON_PRESS);
             if (_lairs.AwaitsClaim(Data))
             {
-                _lairs.Claim(Data, _treasury);
+                // The claim: the reward is paid, the card closes, and the lair is struck from the map.
+                if (_attack.Claim(Data) != null) _sounds.Play(SoundIds.UPGRADE_BOUGHT);
                 RequestClose();
+                return;
             }
+
+            _ = _ui.ShowMenu<AttackSheetMenu, string>(Data);
         }
 
         private void Refresh()

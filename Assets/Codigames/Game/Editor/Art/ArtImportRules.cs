@@ -38,6 +38,9 @@ namespace Codigames.Game.Editor.Art
             ["plaque-blue"] = new Vector4(70, 60, 70, 60), ["plaque-green"] = new Vector4(70, 60, 70, 60),
             // A countdown's nailed plaque (a standing notice, an offer): its nailed ends.
             ["offer-plaque"] = Ends(60),
+            // A head panel's deckled paper, and the painted plank nailed across it: its nails live in the ends.
+            ["panel-paper"] = new Vector4(48, 48, 48, 48), ["plank-red"] = Ends(115), ["plank-blue"] = Ends(115),
+            ["plank-wood"] = Ends(115), ["plank-green"] = Ends(115),
         };
 
         private static Vector4 Ends(int width) => new(width, 0, width, 0);

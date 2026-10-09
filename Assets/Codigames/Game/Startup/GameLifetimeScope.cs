@@ -94,7 +94,7 @@ namespace Codigames.Game.Startup
             builder.Register<RewardHold>(Lifetime.Singleton);
             builder.Register<RewardFlight>(Lifetime.Singleton);
             builder.Register<RewardFragments>(Lifetime.Singleton);
-            builder.RegisterEntryPoint<MusicDirector>();
+            builder.RegisterEntryPoint<MusicDirector>().AsSelf();
             builder.RegisterEntryPoint<AmbienceDirector>();
             RegisterUI(builder);
             RegisterFeedback(builder);
@@ -137,6 +137,10 @@ namespace Codigames.Game.Startup
             builder.Register<NoticeCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<LandmarkCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<LairCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
+            builder.Register<Lairs.AttackParty>(Lifetime.Singleton);
+            builder.Register<Battles.PlaybackPreferences>(Lifetime.Singleton);
+            builder.Register<AttackSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<BattleScreenPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<ResearchMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<TechSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<KnowledgeSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
