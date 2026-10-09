@@ -12,6 +12,9 @@ namespace Codigames.Kingdom.City.State
         // Villagers living in the city, housed in build order.
         public int Population { get; set; }
 
+        // Villagers in training at the Townhall, in order.
+        public List<Trainee> Trainees { get; set; } = new();
+
         // Ids are handed out in order and never reused.
         public int NextId { get; set; } = 1;
 

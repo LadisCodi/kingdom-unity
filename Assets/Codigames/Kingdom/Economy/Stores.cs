@@ -123,6 +123,13 @@ namespace Codigames.Kingdom.Economy
             district.Store.AccruingSince = since + units / perMs;
         }
 
+        // Counts what every building has made until `now`, before something changes the rates (a villager moving
+        // in).
+        public void SettleAll(double now)
+        {
+            foreach (var district in _city.Districts) Settle(district, now);
+        }
+
         // Starts every store that has room and is not already making.
         public void WakeAll(double now)
         {

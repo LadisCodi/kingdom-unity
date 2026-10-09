@@ -125,12 +125,12 @@ namespace Codigames.Kingdom.City
             var refusal = UpgradeRefusal(district);
             if (refusal == ConstructionRefusal.None && !_treasury.CanAfford(price)) refusal = ConstructionRefusal.CannotAfford;
 
-            var gates = building.Gates.RequiredTownhallLevelPerLevel;
             var gateIndex = district.Level - 1;
-            var townhall = gateIndex < gates.Count ? gates[gateIndex] : 0;
+            var townhall = At(building.Gates.RequiredTownhallLevelPerLevel, gateIndex);
+            var population = At(building.Gates.RequiredPopulationPerLevel, gateIndex);
 
             return new UpgradeOffer(target, price,
-                BuildingDurations.UpgradeSeconds(building.Duration, target, _settings.LateUpgradeFromLevel), refusal, townhall);
+                BuildingDurations.UpgradeSeconds(building.Duration, target, _settings.LateUpgradeFromLevel), refusal, townhall, population);
         }
 
         // What stands between a district and its next level, before the price.
@@ -145,10 +145,16 @@ namespace Codigames.Kingdom.City
             if (gateIndex < gates.Count && CityQueries.TownhallLevel(_city, _settings) < gates[gateIndex])
                 return ConstructionRefusal.NeedsTownhallLevel;
 
+            var population = building.Gates.RequiredPopulationPerLevel;
+            if (gateIndex < population.Count && _city.Population < population[gateIndex])
+                return ConstructionRefusal.NeedsPopulation;
+
             return CityQueries.HasFreeBuilder(_city) ? ConstructionRefusal.None : ConstructionRefusal.NoFreeBuilder;
         }
 
         // Free and instant; an unfinished building moves too, keeping its place in the work and its wait.
+        private static int At(System.Collections.Generic.IReadOnlyList<int> list, int index) => index < list.Count ? list[index] : 0;
+
         public ConstructionRefusal Move(string districtId, Vector2Int anchor)
         {
             var district = _city.Districts.FirstOrDefault(d => d.Id == districtId);

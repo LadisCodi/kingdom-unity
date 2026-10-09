@@ -17,6 +17,7 @@ namespace Codigames.Kingdom.Tests.Builders
         private double _buildSeconds = 10;
         private readonly List<int> _maxCount = new();
         private readonly List<int> _townhallGates = new();
+        private readonly List<int> _populationGates = new();
         private bool _buildable = true;
         private double _upgradeSeconds = 10;
         private double _upgradeGrowth = 1.5;
@@ -34,6 +35,7 @@ namespace Codigames.Kingdom.Tests.Builders
         public BuildingBuilder WithBuildSeconds(double seconds) { _buildSeconds = seconds; return this; }
         public BuildingBuilder WithMaxCountPerTownhallLevel(params int[] caps) { _maxCount.AddRange(caps); return this; }
         public BuildingBuilder WithTownhallGates(params int[] levels) { _townhallGates.AddRange(levels); return this; }
+        public BuildingBuilder WithPopulationGates(params int[] villagers) { _populationGates.AddRange(villagers); return this; }
         public BuildingBuilder NotBuildable() { _buildable = false; return this; }
         public BuildingBuilder WithBuildGrowth(double count, double distance) { _countGrowth = count; _distanceGrowth = distance; return this; }
         public BuildingBuilder WithUpgradeCurve(double seconds, double growth, double lateSeconds = 0, double lateGrowth = 1)
@@ -67,7 +69,7 @@ namespace Codigames.Kingdom.Tests.Builders
                 UpgradeSeconds = _upgradeSeconds, UpgradeLevelGrowth = _upgradeGrowth,
                 LateUpgradeSeconds = _lateSeconds, LateUpgradeLevelGrowth = _lateGrowth,
             },
-            Gates = new Gates(_maxCount, _townhallGates, new List<int>()),
+            Gates = new Gates(_maxCount, _townhallGates, _populationGates),
             Production = _production,
         };
 

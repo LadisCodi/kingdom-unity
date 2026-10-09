@@ -313,6 +313,7 @@ MonoBehaviour:
   _tap: {fileID: 11400000, guid: 22d952877041eb838a83bb0350c31131, type: 2}
   _mana: {fileID: 11400000, guid: 67b93fa68d579c88b850d807db62dbcd, type: 2}
   _economy: {fileID: 11400000, guid: bc17387de31e7f77fb12f4ca95333589, type: 2}
+  _training: {fileID: 11400000, guid: 3e78062c450b49edf98970d3dfa959f3, type: 2}
   _soundCatalog: {fileID: 11400000, guid: 83451c6dc2a68dd0d98655410dd96f32, type: 2}
   _soundManager: {fileID: 6239535257238415513}
   _loadingScreen: {fileID: 4772335900836516188}

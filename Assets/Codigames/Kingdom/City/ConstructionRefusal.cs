@@ -12,6 +12,8 @@ namespace Codigames.Kingdom.City
         CannotAfford,
         MaxLevel,
         NeedsTownhallLevel,
+        // The city has too few villagers for the next level.
+        NeedsPopulation,
         AlreadyUnderWay,
         NotFound,
     }
