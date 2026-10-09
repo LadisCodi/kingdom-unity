@@ -40,7 +40,8 @@ namespace Codigames.Game.Startup
             builder.RegisterComponent(_groundView);
             builder.RegisterComponent(_ghostView);
             builder.RegisterEntryPoint<MapGestures>().AsSelf();
-            builder.RegisterEntryPoint<HarvestInput>();
+            builder.Register<HarvestInput>(Lifetime.Singleton);
+            builder.RegisterEntryPoint<MapTaps>();
             RegisterUI(builder);
             RegisterFeedback(builder);
             RegisterCamera(builder);
@@ -62,6 +63,7 @@ namespace Codigames.Game.Startup
             builder.Register<NavMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<BuildMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
             builder.Register<PlacementMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<DistrictCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.RegisterEntryPoint<BuildPlacementFlow>();
         }
 
