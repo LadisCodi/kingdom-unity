@@ -19,3 +19,6 @@ MonoBehaviour:
   _displayName: Iron mountain
   _tile: {fileID: 11400000, guid: bb264999b26860b05afcd328028363c6, type: 2}
   _blockTiles: []
+  _exhaustedTile: {fileID: 11400000, guid: b87cbbc1435e21eb0bfcdc42e9c5aa2e, type: 2}
+  _exhaustedBlockTiles: []
+  _growingTiles: []

@@ -19,3 +19,6 @@ MonoBehaviour:
   _displayName: Crop plot
   _tile: {fileID: 11400000, guid: 7a7e0da8be42d6dab8df2527a510328e, type: 2}
   _blockTiles: []
+  _exhaustedTile: {fileID: 11400000, guid: 3e284eb3ed527d684857611625805ea5, type: 2}
+  _exhaustedBlockTiles: []
+  _growingTiles: []

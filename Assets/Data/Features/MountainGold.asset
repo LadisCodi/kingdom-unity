@@ -19,3 +19,6 @@ MonoBehaviour:
   _displayName: Gold mountain
   _tile: {fileID: 11400000, guid: f398c1db10d92ee9e806815641e244b6, type: 2}
   _blockTiles: []
+  _exhaustedTile: {fileID: 11400000, guid: fb705e9cbf0cba49ea35c2b119c73b5b, type: 2}
+  _exhaustedBlockTiles: []
+  _growingTiles: []

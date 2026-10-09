@@ -3,6 +3,7 @@ using Codigames.Game.Map;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Harvest;
+using Codigames.Kingdom.Harvest.State;
 using Codigames.Kingdom.Map;
 using Codigames.Modules.Clock;
 using UnityEngine;
@@ -14,10 +15,14 @@ namespace Codigames.Game.City
 {
     // Keeps the features layer in step with the ground: a feature gone from the ground (under the Townhall,
     // emptied for good) is gone from the map, one that comes back is drawn again, a cell emptied and growing
-    // back is drawn dim, and nothing under the cloud bank is drawn. A block (a 3 × 3 mountain) is drawn once, on its
-    // bottom cell, so its feet stand on the footprint's bottom corner.
+    // back wears its emptied drawing (or is drawn dim without one), one planted and coming up wears the growth
+    // stage it has reached, and nothing under the cloud bank is drawn. A block (a 3 × 3 mountain) is drawn once, on
+    // its bottom cell, so its feet stand on the footprint's bottom corner.
     public class GroundView : MonoBehaviour
     {
+        // How often a growing cell is looked at again: its stage moves on with time alone.
+        private const float GROWTH_CHECK_SECONDS = 1f;
+
         [SerializeField] private Color _exhausted = new(0.55f, 0.5f, 0.45f, 1f);
         [SerializeField, Tooltip("What stands on ground seen but not yet the kingdom's: drained of colour under the veil.")]
         private Color _discovered = new(0.8f, 0.8f, 0.88f, 1f);
@@ -29,11 +34,14 @@ namespace Codigames.Game.City
         private IClock _clock;
         private FogOfWar _fog;
         private Footprints _footprints;
+        private HarvestState _harvest;
+        private float _nextGrowthCheck;
 
         [Inject]
         public void Construct(GroundState ground, ProvinceMap map, Harvesting harvesting, FeatureCollection features, IClock clock,
-            FogOfWar fog, Footprints footprints)
+            FogOfWar fog, Footprints footprints, HarvestState harvest)
         {
+            _harvest = harvest;
             _footprints = footprints;
             _fog = fog;
             _ground = ground;
@@ -84,7 +92,23 @@ namespace Codigames.Game.City
             }
         }
 
-        private void OnDepotChanged(ModuleVector2Int cell) => Tint(cell);
+        // A cell emptied, grown back or coming up is drawn anew: its drawing may change with it.
+        private void OnDepotChanged(ModuleVector2Int cell)
+        {
+            if (Hidden(cell) || !_ground.Features.TryGetValue(cell, out var featureId)) return;
+            Draw(cell, featureId);
+            Tint(cell);
+        }
+
+        private void Update()
+        {
+            if (_harvest == null || Time.unscaledTime < _nextGrowthCheck) return;
+            _nextGrowthCheck = Time.unscaledTime + GROWTH_CHECK_SECONDS;
+            foreach (var depot in _harvest.Depots)
+            {
+                if (depot.Value.Growing) OnDepotChanged(depot.Key);
+            }
+        }
 
         private void OnFogChanged(System.Collections.Generic.IReadOnlyCollection<ModuleVector2Int> cells) => Refresh();
 
@@ -104,8 +128,24 @@ namespace Codigames.Game.City
             if (tile != null) _map.Features.SetTile(ProvinceCoordinates.ToTilemap(DrawnAt(cell)), tile);
         }
 
+        // Its drawing as it stands now: coming up, emptied, or whole.
         private TileBase TileOf(ModuleVector2Int cell, string featureId)
-            => _features.TryGet(featureId, out var definition) && definition is FeatureAsset feature ? feature.TileFor(_footprints.SizeOf(cell)) : null;
+        {
+            if (!_features.TryGet(featureId, out var definition) || definition is not FeatureAsset feature) return null;
+
+            var now = _clock.NowMs;
+            var size = _footprints.SizeOf(cell);
+            if (_harvesting.IsGrowing(cell, now))
+                return feature.GrowingTile(_harvesting.Regrowth(cell, now) ?? 0) ?? feature.ExhaustedTileFor(size) ?? feature.TileFor(size);
+            if (_harvesting.IsExhausted(cell, now)) return feature.ExhaustedTileFor(size) ?? feature.TileFor(size);
+            return feature.TileFor(size);
+        }
+
+        // Emptied with no drawing of its own: the whole one, dimmed.
+        private bool DrawnDim(ModuleVector2Int cell)
+            => _harvesting.IsExhausted(cell, _clock.NowMs) && _ground.Features.TryGetValue(cell, out var featureId)
+               && _features.TryGet(featureId, out var definition) && definition is FeatureAsset feature
+               && feature.ExhaustedTileFor(_footprints.SizeOf(cell)) == null;
 
         // A block's bottom cell, else the cell itself.
         private ModuleVector2Int DrawnAt(ModuleVector2Int cell)
@@ -119,7 +159,7 @@ namespace Codigames.Game.City
         {
             var position = ProvinceCoordinates.ToTilemap(DrawnAt(cell));
             _map.Features.SetTileFlags(position, TileFlags.None);
-            var colour = _harvesting.IsExhausted(cell, _clock.NowMs) ? _exhausted : Color.white;
+            var colour = DrawnDim(cell) ? _exhausted : Color.white;
             if (_fog.VisibilityAt(cell) == Visibility.Discovered) colour *= _discovered;
             _map.Features.SetColor(position, colour);
         }

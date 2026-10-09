@@ -20,6 +20,12 @@ namespace Codigames.Game.Data.Harvest
         [SerializeField] private TileBase _tile;
         [BoxGroup("Presentation"), Tooltip("A block's drawing, by side from 2 × 2."), ShowIf("@_maxFootprint > 1")]
         [SerializeField] private List<TileBase> _blockTiles = new();
+        [BoxGroup("Presentation"), Tooltip("Drawn while emptied and growing back; empty to draw it dimmed.")]
+        [SerializeField] private TileBase _exhaustedTile;
+        [BoxGroup("Presentation"), Tooltip("An emptied block's drawing, by side from 2 × 2."), ShowIf("@_maxFootprint > 1")]
+        [SerializeField] private List<TileBase> _exhaustedBlockTiles = new();
+        [BoxGroup("Presentation"), Tooltip("Planted and coming up: each stage for an equal share of the wait; empty to draw it emptied.")]
+        [SerializeField] private List<TileBase> _growingTiles = new();
 
         public string Source => _source != null ? _source.Id : null;
         public string RespawnTerrain => _respawnTerrain;
@@ -28,7 +34,20 @@ namespace Codigames.Game.Data.Harvest
         public TileBase Tile => _tile;
 
         // What a block of this side is drawn with: the cell's own tile for one, else its block drawing.
-        public TileBase TileFor(int size)
-            => size <= 1 || size - 2 >= _blockTiles.Count || _blockTiles[size - 2] == null ? _tile : _blockTiles[size - 2];
+        public TileBase TileFor(int size) => Pick(_tile, _blockTiles, size);
+
+        // Emptied: its own drawing when it has one, by side; null when it is drawn dimmed instead.
+        public TileBase ExhaustedTileFor(int size) => _exhaustedTile == null ? null : Pick(_exhaustedTile, _exhaustedBlockTiles, size);
+
+        // Planted and `progress` (0…1) of the way grown: the stage reached, or null with no stages drawn.
+        public TileBase GrowingTile(double progress)
+        {
+            if (_growingTiles.Count == 0) return null;
+            var stage = System.Math.Min(_growingTiles.Count - 1, (int)System.Math.Floor(progress * _growingTiles.Count));
+            return _growingTiles[System.Math.Max(0, stage)];
+        }
+
+        private static TileBase Pick(TileBase single, List<TileBase> blocks, int size)
+            => size <= 1 || size - 2 >= blocks.Count || blocks[size - 2] == null ? single : blocks[size - 2];
     }
 }

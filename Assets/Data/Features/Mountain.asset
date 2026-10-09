@@ -21,3 +21,8 @@ MonoBehaviour:
   _blockTiles:
   - {fileID: 11400000, guid: 9304c63b1bc9be7b5bf795065f0cf694, type: 2}
   - {fileID: 11400000, guid: a75a9f7f5894598b1a8099e9b86a1e7e, type: 2}
+  _exhaustedTile: {fileID: 11400000, guid: 4dcd8c14bf7606285b6fa24f0e0cbde5, type: 2}
+  _exhaustedBlockTiles:
+  - {fileID: 11400000, guid: b21f36b4a71bf497db4c5d6c8796f4d2, type: 2}
+  - {fileID: 11400000, guid: 5ab34f7c19498678587a9cce5498ed47, type: 2}
+  _growingTiles: []
