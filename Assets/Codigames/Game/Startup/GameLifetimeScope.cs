@@ -146,6 +146,7 @@ namespace Codigames.Game.Startup
             builder.Register<HeroCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<RevealScreenPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<StoreMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
+            builder.Register<HeroPickerMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<AdScreenPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<Ads.RewardedAd>(Lifetime.Singleton);
             builder.Register<BattleScreenPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();

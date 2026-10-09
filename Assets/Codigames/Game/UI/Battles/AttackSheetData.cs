@@ -29,6 +29,8 @@ namespace Codigames.Game.UI.Battles
         public bool Short;
         public int Slots;
         public IReadOnlyList<AttackSquadData> Party;
+        // The hero slots, every one to the ceiling; empty when no hero has come yet.
+        public IReadOnlyList<HeroSlotData> Heroes = new List<HeroSlotData>();
         public string RosterHead;
         public IReadOnlyList<AttackSquadData> Roster;
         public IReadOnlyList<PriceTerm> Price;

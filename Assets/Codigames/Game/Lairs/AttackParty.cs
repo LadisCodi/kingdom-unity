@@ -9,7 +9,7 @@ using Codigames.Modules.Core;
 namespace Codigames.Game.Lairs
 {
     // The party on the attack sheet (Docs/proposals/lairs.md §6): squads in the six troop slots, drawn from the army at
-    // home. The player never picks a slot: a tap on a troop sends one squad — as big as the unit's squad, or all of it
+    // home, and the heroes leading it. The player never picks a slot: a tap on a troop sends one squad — as big as the unit's squad, or all of it
     // left — into the next free slot; a tap on a slot sends it home. A screen's state, not the kingdom's.
     public class AttackParty
     {
@@ -18,6 +18,7 @@ namespace Codigames.Game.Lairs
         private readonly LairAttack _attack;
         private readonly ICatalog<IUnitDefinition> _units;
         private readonly List<SquadSpec> _slots = new();
+        private readonly List<string> _heroes = new();
 
         public AttackParty(Army army, Combat combat, LairAttack attack, ICatalog<IUnitDefinition> units)
         {
@@ -28,6 +29,15 @@ namespace Codigames.Game.Lairs
         }
 
         public IReadOnlyList<SquadSpec> Slots => _slots;
+
+        // The heroes leading the party, in their slots' order.
+        public IReadOnlyList<string> Heroes => _heroes;
+
+        public void SetHeroes(IEnumerable<string> heroes)
+        {
+            _heroes.Clear();
+            _heroes.AddRange(heroes);
+        }
 
         public int SlotCount => _attack.TroopSlots;
 
@@ -93,7 +103,7 @@ namespace Codigames.Game.Lairs
         {
             var committed = _slots.Where(s => s.Count > 0).ToList();
             if (committed.Count == 0) return 0;
-            var ours = _attack.PartyBoard(committed);
+            var ours = _attack.PartyBoard(committed, _heroes);
             var log = _combat.Resolve(ours, _attack.Board(lair));
             var left = Combat.Survivors(log, Side.Ours);
             return ours.Slots.Where(s => !s.IsHero).Sum(s => s.Count - (left.TryGetValue(s.Id, out var alive) ? alive : s.Count));
