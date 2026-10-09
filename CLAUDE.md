@@ -453,9 +453,17 @@ sets a weight (`<font-weight=…>`) sits on **Nunito Regular**: the fonts'
 weight tables swap the face, and Regular is the only base that can go down
 to 400. A label on a material of its own (a slab button, a plank, a title
 band) keeps its face and takes a size-only role. Colour stays out of the
-sheet. `TextStyleTests` refuses a menu label with no role. A price over a
-button is `Cost.prefab` (the header coin's 76 rpx); a price in a list row is
-`CostChip.prefab`.
+sheet. `TextStyleTests` refuses a menu label with no role.
+
+**An icon in a text is a sprite in the text**: `<sprite name="Gold">`, from
+TextMeshPro's default sprite asset (`Art/UI/InlineIcons`), which packs every
+currency's icon by id and the UI's own glyphs (`hourglass`, `padlock`,
+`clock`) sized for a 48-rpx figure — the header coin's 76 rpx — and scaled
+with the role. **Kingdom › UI › Rebuild inline icons** after adding a
+currency or a glyph (`InlineIconsTests` catches a miss). A price is
+`PriceLine` (one line, clay where short) on a `PriceLabel`: over a button,
+or `wide` in a buy box; a price in a list row is `CostChip.prefab`. Never an
+`Image` beside a label for an icon that reads as part of the text.
 
 Rules the player sees:
 

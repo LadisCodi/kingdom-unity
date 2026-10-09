@@ -2,7 +2,6 @@ using System.Linq;
 using Codigames.Game.Audio;
 using Codigames.Game.City;
 using Codigames.Game.Data.City;
-using Codigames.Game.Data.Economy;
 using Codigames.Game.Data.Harvest;
 using Codigames.Game.Map;
 using Codigames.Game.UI.Data;
@@ -42,7 +41,6 @@ namespace Codigames.Game.UI.Presenters
         private readonly FeatureCollection _features;
         private readonly CityState _city;
         private readonly GroundState _ground;
-        private readonly ICurrencyIcons _icons;
         private readonly ProvinceMap _map;
         private readonly MapGestures _gestures;
         private readonly GhostView _ghost;
@@ -62,7 +60,7 @@ namespace Codigames.Game.UI.Presenters
 
         public PlacementMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, Placement placement,
             Transplanting transplanting, ITreasury treasury, BuildingCollection buildings, FeatureCollection features, CityState city,
-            GroundState ground, ICurrencyIcons icons, ProvinceMap map, MapGestures gestures, GhostView ghost, CityView cityView,
+            GroundState ground, ProvinceMap map, MapGestures gestures, GhostView ghost, CityView cityView,
             GroundView groundView, CameraController camera, IClock clock, NumberFormat numbers, Localizer localizer, ISoundService sounds)
             : base(views)
         {
@@ -76,7 +74,6 @@ namespace Codigames.Game.UI.Presenters
             _features = features;
             _city = city;
             _ground = ground;
-            _icons = icons;
             _map = map;
             _gestures = gestures;
             _ghost = ghost;
@@ -236,7 +233,7 @@ namespace Codigames.Game.UI.Presenters
             ShowGhost(building.ArtFor(1), null, problem);
 
             var price = offer.Price
-                .Select(p => new CostChipData(_icons.IconOf(p.Key), _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
+                .Select(p => new PriceTerm(p.Key, _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
                 .ToList();
 
             View.Show(new PlacementPanelData(
@@ -260,7 +257,7 @@ namespace Codigames.Game.UI.Presenters
                 _localizer.Capitalized(_localizer.Tr(building.DisplayName)),
                 district != null && _construction.MaxCount(building) != 1 ? "#" + _numbers.Number(district.Ordinal) : string.Empty,
                 art, Unmoved ? _localizer.Tr("Drag it, or tap where it should go") : _localizer.Tr(building.Promise), string.Empty,
-                System.Array.Empty<CostChipData>(), problem == PlacementProblem.None,
+                System.Array.Empty<PriceTerm>(), problem == PlacementProblem.None,
                 Reason(problem, ConstructionRefusal.None, _localizer.Tr("Nowhere legal to put it")), _localizer.Tr("Move")));
         }
 
@@ -275,7 +272,7 @@ namespace Codigames.Game.UI.Presenters
             View.Show(new PlacementPanelData(
                 _localizer.Capitalized(_localizer.Tr(feature?.DisplayName ?? _feature ?? string.Empty)), string.Empty, art,
                 Unmoved ? _localizer.Tr("Drag it, or tap where it should go") : _localizer.Tr("It grows again where it lands"),
-                _numbers.Duration(_transplanting.GrowSeconds(Data.FeatureCell.Value)), System.Array.Empty<CostChipData>(),
+                _numbers.Duration(_transplanting.GrowSeconds(Data.FeatureCell.Value)), System.Array.Empty<PriceTerm>(),
                 problem == PlacementProblem.None, Reason(problem, ConstructionRefusal.None, _localizer.Tr("Nowhere legal to put it")),
                 _localizer.Tr("Move")));
         }

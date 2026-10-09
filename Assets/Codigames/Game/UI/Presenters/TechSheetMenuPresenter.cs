@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Codigames.Game.Audio;
-using Codigames.Game.Data.Economy;
 using Codigames.Game.Data.Research;
 using Codigames.Modules.Feedback;
 using Codigames.Game.UI.Data;
@@ -31,7 +30,6 @@ namespace Codigames.Game.UI.Presenters
         private readonly ICatalog<ITechnology> _technologies;
         private readonly ITechnologyCards _cards;
         private readonly ITreasury _treasury;
-        private readonly ICurrencyIcons _icons;
         private readonly TechProse _prose;
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
@@ -41,7 +39,7 @@ namespace Codigames.Game.UI.Presenters
 
         public TechSheetMenuPresenter(IMenuViewFactory views, UIManager ui, Researching research, KnowledgeBar bar,
             KnowledgeMarket market, ICatalog<ITechnology> technologies, ITechnologyCards cards, ITreasury treasury,
-            ICurrencyIcons icons, TechProse prose, NumberFormat numbers, Localizer localizer, IClock clock, ISoundService sounds,
+            TechProse prose, NumberFormat numbers, Localizer localizer, IClock clock, ISoundService sounds,
             IQuickInfoMessageService messages) : base(views)
         {
             _ui = ui;
@@ -51,7 +49,6 @@ namespace Codigames.Game.UI.Presenters
             _technologies = technologies;
             _cards = cards;
             _treasury = treasury;
-            _icons = icons;
             _prose = prose;
             _numbers = numbers;
             _localizer = localizer;
@@ -213,7 +210,7 @@ namespace Codigames.Game.UI.Presenters
             sheet.Price = tech.Price
                 .Where(line => line.Value > 0)
                 .OrderBy(line => line.Key == KnowledgeMarket.GOLD ? 0 : 1)
-                .Select(line => new CostChipData(_icons.IconOf(line.Key), _numbers.Exact(line.Value), _treasury.Get(line.Key) < line.Value))
+                .Select(line => new PriceTerm(line.Key, _numbers.Exact(line.Value), _treasury.Get(line.Key) < line.Value))
                 .ToList();
             sheet.CanResearch = sheet.Filled && _research.CanAfford(Data);
             sheet.Note = sheet.Filled ? "" : _localizer.Tr("Assign all its Knowledge to research it");

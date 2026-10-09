@@ -6,7 +6,7 @@ namespace Codigames.Game.UI.Data
     // way, and the next one's price.
     public sealed class TrainingStripData
     {
-        public TrainingStripData(string villagers, string onTheWay, IReadOnlyList<CostChipData> price, bool canTrain, string reason)
+        public TrainingStripData(string villagers, string onTheWay, IReadOnlyList<PriceTerm> price, bool canTrain, string reason)
         {
             Villagers = villagers;
             OnTheWay = onTheWay;
@@ -21,7 +21,7 @@ namespace Codigames.Game.UI.Data
         // "2 on the way · next in 12s"; empty when nobody is.
         public string OnTheWay { get; }
 
-        public IReadOnlyList<CostChipData> Price { get; }
+        public IReadOnlyList<PriceTerm> Price { get; }
         public bool CanTrain { get; }
 
         // Why no more can be trained, when the price does not say it already.

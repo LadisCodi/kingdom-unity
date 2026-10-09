@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Codigames.Game.UI.Data;
 using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
@@ -31,8 +30,7 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private GameObject _nextRow;
         [SerializeField] private TMP_Text _next;
         [SerializeField] private TMP_Text _reason;
-        [SerializeField] private RectTransform _price;
-        [SerializeField] private CostChip _chipPrefab;
+        [SerializeField] private PriceLabel _price;
         [SerializeField] private Button _upgrade;
         [Header("Training")]
         [SerializeField] private RectTransform _window;
@@ -41,7 +39,7 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private GameObject _trainingRow;
         [SerializeField] private TMP_Text _villagers;
         [SerializeField] private TMP_Text _onTheWay;
-        [SerializeField] private RectTransform _trainPrice;
+        [SerializeField] private PriceLabel _trainPrice;
         [SerializeField] private Button _train;
         [Header("Crew")]
         [SerializeField] private GameObject _crewRow;
@@ -51,8 +49,6 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private Button _crewPlus;
         [SerializeField] private Color _ordinalColor = new Color32(0xf4, 0xe4, 0xc1, 0xcc);
 
-        private readonly List<CostChip> _chips = new();
-        private readonly List<CostChip> _trainChips = new();
 
         public event Action CloseTapped;
         public event Action MoveTapped;
@@ -98,7 +94,7 @@ namespace Codigames.Game.UI.Menus
             _upgrade.gameObject.SetActive(card.Price.Count > 0);
             _upgrade.interactable = card.CanUpgrade;
 
-            ShowChips(_chips, _price, card.Price);
+            _price.Show(card.Price);
 
             var crew = card.Crew;
             _crewRow.SetActive(crew != null);
@@ -119,19 +115,7 @@ namespace Codigames.Game.UI.Menus
             _villagers.text = training.Villagers;
             _onTheWay.text = string.IsNullOrEmpty(training.OnTheWay) ? training.Reason : training.OnTheWay;
             _train.interactable = training.CanTrain;
-            ShowChips(_trainChips, _trainPrice, training.Price);
-        }
-
-        private void ShowChips(List<CostChip> chips, RectTransform parent, IReadOnlyList<CostChipData> price)
-        {
-            for (var i = 0; i < price.Count; i++)
-            {
-                if (i == chips.Count) chips.Add(Instantiate(_chipPrefab, parent));
-                chips[i].gameObject.SetActive(true);
-                chips[i].Show(price[i]);
-            }
-
-            for (var i = price.Count; i < chips.Count; i++) chips[i].gameObject.SetActive(false);
+            _trainPrice.Show(training.Price);
         }
 
         protected override void SubscribeToEventsInternal()

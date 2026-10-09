@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using Codigames.Game.Audio;
 using Codigames.Game.Data.City;
-using Codigames.Game.Data.Economy;
 using Codigames.Game.UI.Data;
 using Codigames.Game.UI.Menus;
 using Codigames.Game.UI.Research;
@@ -28,7 +27,6 @@ namespace Codigames.Game.UI.Presenters
         private readonly BuildingCollection _buildings;
         private readonly IConstructionSettings _settings;
         private readonly ITreasury _treasury;
-        private readonly ICurrencyIcons _icons;
         private readonly IClock _clock;
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
@@ -42,7 +40,7 @@ namespace Codigames.Game.UI.Presenters
         private double _shownSeconds = -1;
 
         public DistrictCardMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, CityState city,
-            BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, ICurrencyIcons icons, IClock clock,
+            BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, IClock clock,
             NumberFormat numbers, Localizer localizer, Stores stores, VillagerTraining training, Workforce crews,
             ISoundService sounds, TechProse prose) : base(views)
         {
@@ -57,7 +55,6 @@ namespace Codigames.Game.UI.Presenters
             _buildings = buildings;
             _settings = settings;
             _treasury = treasury;
-            _icons = icons;
             _clock = clock;
             _numbers = numbers;
             _localizer = localizer;
@@ -178,7 +175,7 @@ namespace Codigames.Game.UI.Presenters
                 : _localizer.Tr("{n} on the way · next in {time}", ("n", _numbers.Number(_city.Trainees.Count)),
                     ("time", _numbers.Duration(Math.Ceiling(Math.Max(0, arrivesAt.Value - now) / 1000))));
             var cost = _training.NextCost;
-            var price = new[] { new CostChipData(_icons.IconOf(VillagerTraining.FOOD), _numbers.Exact(cost), _treasury.Get(VillagerTraining.FOOD) < cost) };
+            var price = new[] { new PriceTerm(VillagerTraining.FOOD, _numbers.Exact(cost), _treasury.Get(VillagerTraining.FOOD) < cost) };
             var refusal = _training.Refusal;
             var reason = refusal == TrainRefusal.NoRoom ? _localizer.Tr("Build houses for more villagers") : string.Empty;
 
@@ -218,14 +215,14 @@ namespace Codigames.Game.UI.Presenters
 
                 View.Show(new DistrictCardData(name, ordinal, level, building.ArtFor(district.Level), promise, true,
                     doing + " · " + _numbers.Duration(Math.Ceiling(remaining)), progress, string.Empty,
-                    Array.Empty<CostChipData>(), false, string.Empty, store, storeFull, Training(district, now), Crew(district)) { Movable = building.Buildable });
+                    Array.Empty<PriceTerm>(), false, string.Empty, store, storeFull, Training(district, now), Crew(district)) { Movable = building.Buildable });
                 return;
             }
 
             var offer = _construction.UpgradeOffer(district.Id);
             var atTop = offer.Refusal == ConstructionRefusal.MaxLevel;
             var price = offer.Price
-                .Select(p => new CostChipData(_icons.IconOf(p.Key), _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
+                .Select(p => new PriceTerm(p.Key, _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
                 .ToList();
             var next = atTop
                 ? string.Empty
