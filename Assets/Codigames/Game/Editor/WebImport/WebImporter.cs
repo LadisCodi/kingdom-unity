@@ -274,6 +274,8 @@ namespace Codigames.Game.Editor.WebImport
             settings.FindProperty("_moveSpeedTilesPerSecond").doubleValue = economy.Worker.MoveSpeedTilesPerSecond;
             settings.FindProperty("_chestFloorPerHour").doubleValue = economy.Bag.ChestFloorPerHour;
             settings.FindProperty("_secondsPerGem").doubleValue = economy.Rush.SecondsPerGem;
+            settings.FindProperty("_noticesShown").intValue = (int)economy.Notices.Shown;
+            settings.FindProperty("_noticesKept").intValue = (int)economy.Notices.Kept;
             settings.ApplyModifiedPropertiesWithoutUndo();
 
             var training = new SerializedObject(LoadOrCreate<TrainingSettingsAsset>("Settings", "Training"));
