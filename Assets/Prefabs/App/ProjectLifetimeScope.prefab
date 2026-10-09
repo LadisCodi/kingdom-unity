@@ -314,6 +314,7 @@ MonoBehaviour:
   _mana: {fileID: 11400000, guid: 67b93fa68d579c88b850d807db62dbcd, type: 2}
   _economy: {fileID: 11400000, guid: bc17387de31e7f77fb12f4ca95333589, type: 2}
   _training: {fileID: 11400000, guid: 3e78062c450b49edf98970d3dfa959f3, type: 2}
+  _fog: {fileID: 11400000, guid: 29fc21e1f946f523fac729afc2d887af, type: 2}
   _localization: {fileID: 11400000, guid: 4cb132bacd1c8e6019e5b08554960ec9, type: 2}
   _soundCatalog: {fileID: 11400000, guid: 83451c6dc2a68dd0d98655410dd96f32, type: 2}
   _soundManager: {fileID: 6239535257238415513}

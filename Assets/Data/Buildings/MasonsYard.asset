@@ -145,6 +145,15 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 00000000000000000000000001000000010000000100000001000000020000000200000002000000
     _requiredTownhallLevelPerLevel: 00000000000000000000000000000000060000000700000008000000090000000a000000
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel: []
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
+  _fog:
+    _revealRadius: 0
+    _revealRadiusPerLevel: 
+    _discoverRadius: 2
   _displayName: Mason's Yard
   _promise: Villagers dress Stone into blocks
   _description: Masons shape raw stone into fine building blocks.

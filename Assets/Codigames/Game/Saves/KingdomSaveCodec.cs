@@ -14,7 +14,7 @@ namespace Codigames.Game.Saves
 
         private readonly JsonSerializer _serializer = JsonSerializer.Create(new JsonSerializerSettings
         {
-            Converters = { new CellDictionaryConverter<string>(), new CellDictionaryConverter<CellDepot>() },
+            Converters = { new CellDictionaryConverter<string>(), new CellDictionaryConverter<CellDepot>(), new CellDictionaryConverter<int>() },
             ObjectCreationHandling = ObjectCreationHandling.Replace,
         });
 

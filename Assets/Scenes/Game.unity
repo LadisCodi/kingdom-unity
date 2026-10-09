@@ -203,6 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ee0faca60ecf2fe3bf4bf3e941e2d53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Codigames.Game::Codigames.Game.City.GroundView
+  _exhausted: {r: 0.55, g: 0.5, b: 0.45, a: 1}
 --- !u!114 &172435651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -937,6 +938,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52af5529de4c638839ddcb94ce90fe44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Map.ProvinceMap
+--- !u!114 &1135050809 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5099895216776656777, guid: 6eef39f8e3c7ad4508988dda1fecb03a, type: 3}
+  m_PrefabInstance: {fileID: 1135050807}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11d3055142bdb5a099e514d1d388332c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Fog.FogView
 --- !u!1 &1237387550
 GameObject:
   m_ObjectHideFlags: 0
@@ -1355,6 +1367,7 @@ MonoBehaviour:
   _cityView: {fileID: 172435651}
   _groundView: {fileID: 172435650}
   _ghostView: {fileID: 132387083}
+  _fogView: {fileID: 1135050809}
   _menuCatalog: {fileID: 11400000, guid: a7921335657e5c05bb7f2d747ef13a1c, type: 2}
   _worldFeedbackCatalog: {fileID: 11400000, guid: 2b3cc82e2020b8ef7969ca7a100dfe77, type: 2}
   _quickInfoMessageSettings: {fileID: 11400000, guid: d2ea249f972202ee68155316b2c34292, type: 2}

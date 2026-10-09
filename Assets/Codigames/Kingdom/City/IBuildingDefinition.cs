@@ -19,5 +19,6 @@ namespace Codigames.Kingdom.City
         IBuildingDuration Duration { get; }
         IBuildingGates Gates { get; }
         IBuildingProduction Production { get; }
+        IBuildingFog Fog { get; }
     }
 }

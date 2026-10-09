@@ -40,7 +40,7 @@ namespace Codigames.Kingdom.Tests.Builders
 
             Mana = new ManaPool(ManaState, Treasury, new FakeMana());
             Harvesting = new Harvesting(HarvestState, Ground, City, Map, Buildings, Features, Sources, Yields,
-                new FakeTap(), Treasury, Mana, 42);
+                new FakeTap(), Treasury, Mana, 42, Revealed);
             Timeline.Register(Mana);
             Timeline.Register(Harvesting);
         }

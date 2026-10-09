@@ -77,6 +77,15 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 01000000
     _requiredTownhallLevelPerLevel: 03000000040000000600000008000000
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel: []
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
+  _fog:
+    _revealRadius: 0
+    _revealRadiusPerLevel: 
+    _discoverRadius: 1
   _displayName: War Camp
   _promise: Sends more armies out at once
   _description: Where armies muster for the world beyond. Each level sends one more

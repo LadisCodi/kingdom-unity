@@ -1,12 +1,13 @@
 using Codigames.Kingdom.City.State;
+using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Map;
 using Codigames.Modules.Core;
 using Codigames.Modules.Grid;
 
 namespace Codigames.Kingdom.City
 {
-    // Where a building may go: anywhere on the province's dry ground with nothing standing on it, while the
-    // Townhall's level allows one more. Layout is never policed beyond that.
+    // Where a building may go: anywhere on the kingdom's revealed dry ground with nothing standing on it, while
+    // the Townhall's level allows one more. Layout is never policed beyond that.
     public class Placement
     {
         private const string WATER = "Water";
@@ -16,10 +17,12 @@ namespace Codigames.Kingdom.City
         private readonly IConstructionSettings _settings;
         private readonly CityState _city;
         private readonly GroundState _ground;
+        private readonly IRevealedGround _revealed;
 
         public Placement(IProvinceMap map, ICatalog<IBuildingDefinition> buildings, IConstructionSettings settings,
-            CityState city, GroundState ground)
+            CityState city, GroundState ground, IRevealedGround revealed)
         {
+            _revealed = revealed;
             _map = map;
             _buildings = buildings;
             _settings = settings;
@@ -69,6 +72,7 @@ namespace Codigames.Kingdom.City
             foreach (var cell in GridMath.Rect(anchor, building.Width, building.Height))
             {
                 if (!_map.Contains(cell)) return PlacementProblem.OutsideProvince;
+                if (!_revealed.IsRevealed(cell)) return PlacementProblem.InFog;
                 if (_ground.Features.ContainsKey(cell)) return PlacementProblem.Occupied;
 
                 var standing = CityQueries.At(_city, _buildings, cell);

@@ -39,6 +39,15 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 01000000010000000100000001000000010000000100000001000000010000000100000001000000
     _requiredTownhallLevelPerLevel: 
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel: []
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
+  _fog:
+    _revealRadius: 0
+    _revealRadiusPerLevel: 
+    _discoverRadius: 8
   _displayName: Watchtower
   _promise: Sees past the province, to the world
   _description: "The old tower on the northern hills. Repaired, its lens looks past

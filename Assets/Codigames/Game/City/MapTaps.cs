@@ -1,17 +1,19 @@
 using System;
+using Codigames.Game.Fog;
 using Codigames.Game.Harvest;
 using Codigames.Game.Map;
 using Codigames.Game.UI.Menus;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
+using Codigames.Kingdom.Fog;
 using Codigames.Modules.Core;
 using Codigames.Modules.UI;
 using VContainer.Unity;
 
 namespace Codigames.Game.City
 {
-    // What a tap on the map means while no menu is open: on a building, a collect when its store is ready and
-    // its card otherwise; on the ground, a harvest.
+    // What a tap on the map means while no menu is open: on the fog, a share of its price; on a building, a
+    // collect when its store is ready and its card otherwise; on the ground, a harvest.
     public class MapTaps : IStartable, IDisposable
     {
         private readonly MapGestures _gestures;
@@ -20,10 +22,14 @@ namespace Codigames.Game.City
         private readonly ICatalog<IBuildingDefinition> _buildings;
         private readonly HarvestInput _harvest;
         private readonly CollectInput _collect;
+        private readonly FogOfWar _fog;
+        private readonly FogInput _fogInput;
 
         public MapTaps(MapGestures gestures, UIManager ui, CityState city, ICatalog<IBuildingDefinition> buildings, HarvestInput harvest,
-            CollectInput collect)
+            CollectInput collect, FogOfWar fog, FogInput fogInput)
         {
+            _fog = fog;
+            _fogInput = fogInput;
             _collect = collect;
             _gestures = gestures;
             _ui = ui;
@@ -39,6 +45,12 @@ namespace Codigames.Game.City
         private void OnTapped(Vector2Int cell)
         {
             if (_ui.HasOverlayOpen) return;
+
+            if (!_fog.IsRevealed(cell))
+            {
+                _fogInput.Tap(cell);
+                return;
+            }
 
             var district = CityQueries.At(_city, _buildings, cell);
             if (district == null) _harvest.Take(cell);

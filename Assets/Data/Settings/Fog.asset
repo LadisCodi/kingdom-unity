@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb577863f63a48c44b920f9981039949, type: 3}
+  m_Name: Fog
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Fog.FogSettingsAsset
+  _costPerRing:
+  - 4
+  - 8
+  - 20
+  - 85
+  - 220
+  - 990
+  - 2400
+  - 6600
+  - 18000
+  - 45000
+  - 130000
+  - 320000
+  - 990000
+  - 2800000
+  _fallbackGrowth: 1.37
+  _minCost: 1
+  _countStep: 10
+  _countGrowth: 1.05
+  _tapsToReveal: 5
+  _reachPerTownhallLevel: 030000000500000007000000080000000a0000000b0000000d0000000f0000001100000017000000

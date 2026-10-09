@@ -140,6 +140,10 @@ MonoBehaviour:
     - 360000
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+  _fog:
+    _revealRadius: 0
+    _revealRadiusPerLevel: 
+    _discoverRadius: 2
   _displayName: Farm
   _promise: Workers harvest crops nearby
   _description: Its farmhands reap the fields nearby and fill the granary.

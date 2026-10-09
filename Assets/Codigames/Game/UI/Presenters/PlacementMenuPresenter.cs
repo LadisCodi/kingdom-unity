@@ -184,6 +184,7 @@ namespace Codigames.Game.UI.Presenters
             switch (problem)
             {
                 case PlacementProblem.Occupied: return _localizer.Tr("Something stands there");
+                case PlacementProblem.InFog: return _localizer.Tr("Clear the fog off it first");
                 case PlacementProblem.NeedsLand: return _localizer.Tr("It needs dry land");
                 case PlacementProblem.OutsideProvince: return _localizer.Tr("Outside the province");
                 case PlacementProblem.CountLimit: return _localizer.Tr("No more of these at this Townhall");

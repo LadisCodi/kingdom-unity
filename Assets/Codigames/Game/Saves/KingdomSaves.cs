@@ -10,7 +10,7 @@ namespace Codigames.Game.Saves
     public static class KingdomSaves
     {
         public const string SLOT = "kingdom";
-        public const int VERSION = 4;
+        public const int VERSION = 5;
 
         private static readonly ISaveMigration<JObject>[] MIGRATIONS =
         {
@@ -20,6 +20,8 @@ namespace Codigames.Game.Saves
             new AdditiveMigration<JObject>(2),
             // 3 → 4: villagers in training.
             new AdditiveMigration<JObject>(3),
+            // 4 → 5: the fog (an older kingdom starts with its buildings' rings).
+            new AdditiveMigration<JObject>(4),
         };
 
         public static SaveSlot<KingdomState, JObject> Slot(ISaveStorage storage)
