@@ -3,6 +3,7 @@ using Codigames.Game.UI.Data;
 using Codigames.Game.UI.Widgets;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Codigames.Game.UI.Kit
 {
@@ -14,13 +15,17 @@ namespace Codigames.Game.UI.Kit
         [SerializeField] private KitButton _button;
         [SerializeField] private PriceLabel _price;
         [SerializeField] private TMP_Text _gate;
+        [SerializeField] private Image _fill;
+        [SerializeField] private Image _rim;
 
         public KitButton Button => _button;
 
+        // With nothing to pay (a move) the button stands bare, without its section.
         public void Show(IReadOnlyList<PriceTerm> price, bool interactable)
         {
             _gate.gameObject.SetActive(false);
             _price.Show(price);
+            Frame(price.Count > 0);
             _button.interactable = interactable;
         }
 
@@ -29,7 +34,14 @@ namespace Codigames.Game.UI.Kit
             _price.gameObject.SetActive(false);
             _gate.gameObject.SetActive(true);
             _gate.text = "<sprite name=\"padlock\">" + reason;
+            Frame(true);
             _button.interactable = false;
+        }
+
+        private void Frame(bool shown)
+        {
+            if (_fill != null) _fill.enabled = shown;
+            if (_rim != null) _rim.enabled = shown;
         }
     }
 }

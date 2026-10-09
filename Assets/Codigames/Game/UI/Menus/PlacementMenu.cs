@@ -1,5 +1,6 @@
 using System;
 using Codigames.Game.UI.Data;
+using Codigames.Game.UI.Kit;
 using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
 using TMPro;
@@ -15,13 +16,11 @@ namespace Codigames.Game.UI.Menus
     {
         [SerializeField] private TMP_Text _title;
         [SerializeField] private Button _close;
-        [SerializeField] private Image _art;
-        [SerializeField] private AspectRatioFitter _artFit;
+        [SerializeField] private BuildingPortrait _portrait;
         [SerializeField] private TMP_Text _promise;
         [SerializeField] private TMP_Text _wait;
         [SerializeField] private TMP_Text _reason;
-        [SerializeField] private PriceLabel _price;
-        [SerializeField] private Button _build;
+        [SerializeField] private CostButton _build;
         [SerializeField] private Color _ordinalColor = new Color32(0xf4, 0xe4, 0xc1, 0xcc);
 
 
@@ -32,7 +31,7 @@ namespace Codigames.Game.UI.Menus
         protected override void InitializeInternal()
         {
             CoachTarget.Tag(_close, "close");
-            CoachTarget.Tag(_build, "place-confirm");
+            CoachTarget.Tag(_build.Button, "place-confirm");
         }
 
         public void Show(PlacementPanelData panel)
@@ -40,30 +39,26 @@ namespace Codigames.Game.UI.Menus
             _title.text = string.IsNullOrEmpty(panel.Ordinal)
                 ? panel.Name
                 : $"{panel.Name}<size=75%><color=#{ColorUtility.ToHtmlStringRGBA(_ordinalColor)}> {panel.Ordinal}</color></size>";
-            _art.sprite = panel.Art;
-            _art.enabled = panel.Art != null;
-            if (panel.Art != null) _artFit.aspectRatio = panel.Art.rect.width / panel.Art.rect.height;
+            _portrait.Show(panel.Art);
             _promise.text = panel.Promise;
-            _wait.text = panel.Wait;
+            _wait.text = "<sprite name=\"hourglass\">" + panel.Wait;
             _wait.transform.parent.gameObject.SetActive(!string.IsNullOrEmpty(panel.Wait));
-            _build.GetComponentInChildren<TMP_Text>().text = panel.Verb;
-            _reason.text = panel.Reason;
+            _build.Button.Label = panel.Verb;
+            _reason.text = "<sprite name=\"padlock\">" + panel.Reason;
             _reason.gameObject.SetActive(!string.IsNullOrEmpty(panel.Reason));
-            _build.interactable = panel.CanBuild;
-
-            _price.Show(panel.Price);
+            _build.Show(panel.Price, panel.CanBuild);
         }
 
         protected override void SubscribeToEventsInternal()
         {
             _close.onClick.AddListener(OnClose);
-            _build.onClick.AddListener(OnBuild);
+            _build.Button.onClick.AddListener(OnBuild);
         }
 
         protected override void UnsubscribeFromEventsInternal()
         {
             _close.onClick.RemoveListener(OnClose);
-            _build.onClick.RemoveListener(OnBuild);
+            _build.Button.onClick.RemoveListener(OnBuild);
         }
 
         private void OnClose() => CloseTapped?.Invoke();

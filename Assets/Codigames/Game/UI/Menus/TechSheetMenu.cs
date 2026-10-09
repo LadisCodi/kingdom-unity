@@ -6,6 +6,7 @@ using Codigames.Game.UI.Research;
 using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
 using Codigames.Kingdom.Research;
+using Codigames.Game.UI.Kit;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,15 +38,12 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private GameObject _knowledge;
         [SerializeField] private ProgressBar _bar;
         [SerializeField] private GameObject _pours;
-        [SerializeField] private Button _buyWithGems;
-        [SerializeField] private TMP_Text _gemsPrice;
-        [SerializeField] private Button _pourOne;
-        [SerializeField] private Button _pourMost;
-        [SerializeField] private TMP_Text _pourMostLabel;
+        [SerializeField] private KitButton _buyWithGems;
+        [SerializeField] private KitButton _pourOne;
+        [SerializeField] private KitButton _pourMost;
         [SerializeField] private GameObject _filled;
         [SerializeField] private PriceLabel _price;
-        [SerializeField] private Button _research;
-        [SerializeField] private GameObject _researchPadlock;
+        [SerializeField] private KitButton _research;
         [SerializeField] private TMP_Text _note;
 
         private readonly List<RequirementRowView> _rows = new();
@@ -98,16 +96,17 @@ namespace Codigames.Game.UI.Menus
             _bar.Set(sheet.Fraction, sheet.Bar);
             _pours.SetActive(!sheet.Filled);
             _filled.SetActive(sheet.Filled);
-            _gemsPrice.text = sheet.GemsPrice;
+            _buyWithGems.Label = "<sprite name=\"Gems\">" + sheet.GemsPrice;
+            _pourOne.Label = "<sprite name=\"Knowledge\">+1";
             _buyWithGems.interactable = sheet.CanBuyWithGems;
             _pourOne.interactable = sheet.CanPour;
             _pourMost.interactable = sheet.CanPour;
-            _pourMostLabel.text = sheet.PourMost;
+            _pourMost.Label = "<sprite name=\"Knowledge\">" + sheet.PourMost;
 
             _price.Show(sheet.Price);
 
             _research.interactable = sheet.CanResearch;
-            _researchPadlock.SetActive(!sheet.Filled);
+            _research.Label = sheet.Filled ? sheet.ResearchLabel : "<size=60%><sprite name=\"padlock\"></size> " + sheet.ResearchLabel;
             _note.text = sheet.Note;
             _note.gameObject.SetActive(!string.IsNullOrEmpty(sheet.Note));
         }

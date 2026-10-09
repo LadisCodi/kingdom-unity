@@ -107,7 +107,7 @@ namespace Codigames.Game.UI.Presenters
                 ? string.Empty
                 : _localizer.Tr("Needs {item} — not found yet", ("item", _localizer.Tr("a missing piece")));
 
-            View.Show(_localizer.Tr(site.Name), building.RuinArt, _localizer.Tr(building.Promise), need, price);
+            View.Show(_localizer.Tr(site.Name), building.RuinArt, _localizer.Tr(building.Promise), need, price, price.All(p => !p.IsShort));
         }
     }
 }

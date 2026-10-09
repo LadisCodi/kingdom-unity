@@ -46,9 +46,11 @@ a label picks one and never sets a size of its own (`TextStyleTests`).
 | Upgrade | done: its own sheet in the card's place — levels with plaques, improvements, requirements ✓/✗, wide price with the wait, Upgrade locked with why | done |
 | Prices everywhere | ~~coin 50 rpx and figure 36 rpx Bold, where the web has 76 rpx and body size ExtraBold~~ — fixed: inline-icon `PriceLabel` over buttons and in buy boxes, `CostChip` in rows | done |
 | Build menu | no builders plaque (1/1) over the window; locked rows not greyed (art and lock), the reason not in clay; Crop plots' art missing; "Construidos" for "Hechos" | medium |
-| Ruin card | no ABANDONED tag over the art; price not framed with plain figures; Repair enabled though short of Wood | medium |
-| Knowledge sheet | no head row (big book, title, when full) | small |
-| Tech sheet | price as a chip; the button smaller; "pour all" reads "+0" | small |
+| Ruin card | done: docked like a card, ABANDONED tag on its art, priced Repair off when the purse is short | done |
+| Knowledge sheet | done: head row (big book, title, when full), offers priced on kit buttons | done |
+| Tech sheet | done: kit buttons with their icons in their words, the big Research | done |
+| Placement | done: portrait tile, priced Build (bare when moving), the wait with its hourglass | done |
+| Landmark card | done: docked, status tag, priced Claim | done |
 | Camera | the web frames the building above its card | small |
 
 Not built yet, so not differences: the Survey widget, settings and friends
@@ -64,7 +66,7 @@ ground, toasts.
 
 1. ~~Shared size tokens; prices at their size everywhere.~~ Done: text styles, inline icons (`PriceLine`).
 2. ~~The building card and the upgrade sheet.~~ Done, with the kit of prefabs.
-3. Every existing menu's buttons, prices and sections onto the kit.
+3. ~~Every existing menu's buttons, prices and sections onto the kit.~~ Done for placement, ruin, landmark, tech sheet and knowledge; the build menu's rows and tabs and the quest pill keep their own pieces.
 4. Build menu.
 5. Ruin card, knowledge sheet, tech sheet.
 6. What §4 turns up.

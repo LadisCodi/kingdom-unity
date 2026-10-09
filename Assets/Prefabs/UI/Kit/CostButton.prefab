@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 249957505069954187}
   - component: {fileID: 2621734849357612742}
   - component: {fileID: 5878788079395112286}
+  - component: {fileID: 4084363634573593977}
   m_Layer: 0
   m_Name: CostButton
   m_TagString: Untagged
@@ -218,6 +219,28 @@ MonoBehaviour:
   _button: {fileID: 5340807874438104422}
   _price: {fileID: 7987265964914880816}
   _gate: {fileID: 1295228781022827132}
+  _fill: {fileID: 249957505069954187}
+  _rim: {fileID: 4266953312989959524}
+--- !u!114 &4084363634573593977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3687907275361603735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: 0
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &8513649576887287411
 GameObject:
   m_ObjectHideFlags: 0

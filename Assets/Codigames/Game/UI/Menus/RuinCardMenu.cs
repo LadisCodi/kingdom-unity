@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Codigames.Game.UI.Data;
+using Codigames.Game.UI.Kit;
 using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
 using TMPro;
@@ -21,8 +22,7 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private TMP_Text _promise;
         [SerializeField] private GameObject _need;
         [SerializeField] private TMP_Text _needText;
-        [SerializeField] private PriceLabel _price;
-        [SerializeField] private Button _repair;
+        [SerializeField] private CostButton _repair;
 
 
         public event Action CloseTapped;
@@ -32,10 +32,10 @@ namespace Codigames.Game.UI.Menus
         protected override void InitializeInternal()
         {
             CoachTarget.Tag(_close, "close");
-            CoachTarget.Tag(_repair, "repair");
+            CoachTarget.Tag(_repair.Button, "repair");
         }
 
-        public void Show(string title, Sprite art, string promise, string need, IReadOnlyList<PriceTerm> price)
+        public void Show(string title, Sprite art, string promise, string need, IReadOnlyList<PriceTerm> price, bool affordable)
         {
             _title.text = title;
             _art.sprite = art;
@@ -44,21 +44,21 @@ namespace Codigames.Game.UI.Menus
             _need.SetActive(!string.IsNullOrEmpty(need));
             _needText.text = need;
 
-            _price.Show(price);
+            _repair.Show(price, affordable);
         }
 
         protected override void SubscribeToEventsInternal()
         {
             _close.onClick.AddListener(OnClose);
             _scrim.onClick.AddListener(OnClose);
-            _repair.onClick.AddListener(OnRepair);
+            _repair.Button.onClick.AddListener(OnRepair);
         }
 
         protected override void UnsubscribeFromEventsInternal()
         {
             _close.onClick.RemoveListener(OnClose);
             _scrim.onClick.RemoveListener(OnClose);
-            _repair.onClick.RemoveListener(OnRepair);
+            _repair.Button.onClick.RemoveListener(OnRepair);
         }
 
         private void OnClose() => CloseTapped?.Invoke();
