@@ -11,10 +11,13 @@ using Codigames.Kingdom.Harvest;
 using Codigames.Kingdom.Harvest.State;
 using Codigames.Kingdom.Magic;
 using Codigames.Kingdom.Map;
+using Codigames.Kingdom.Notices;
+using Codigames.Kingdom.Notices.State;
 using Codigames.Kingdom.Quests;
 using Codigames.Kingdom.Research;
 using Codigames.Kingdom.Sites;
 using Codigames.Kingdom.Sites.State;
+using Codigames.Kingdom.Tutorial;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Core;
 using Codigames.Modules.Saves;
@@ -65,6 +68,13 @@ namespace Codigames.Game.Session
             builder.Register<TechBonuses>(Lifetime.Singleton).As<IBonuses>();
             builder.Register<ResearchGates>(Lifetime.Singleton).As<IResearchGates>();
             builder.Register<BuildingsLiftFog>(Lifetime.Singleton);
+            builder.Register(resolver => resolver.Resolve<KingdomState>().Notices, Lifetime.Singleton);
+            builder.Register<Inbox>(Lifetime.Singleton);
+            builder.Register<SiteFinds>(Lifetime.Singleton);
+            builder.Register(resolver => new NewsDesk(resolver.Resolve<Inbox>(), resolver.Resolve<NoticesState>(),
+                resolver.Resolve<Construction>(), resolver.Resolve<FogOfWar>(), resolver.Resolve<SiteFinds>(), resolver.Resolve<QuestChain>(),
+                resolver.Resolve<ICatalog<ISceneDefinition>>().Items, resolver.Resolve<KingdomState>().Tutorial, resolver.Resolve<KingdomState>()),
+                Lifetime.Singleton);
             builder.Register<ITreasury>(resolver => new Treasury(
                 resolver.Resolve<ICatalog<ICurrencyDefinition>>(), resolver.Resolve<KingdomState>().Balances), Lifetime.Singleton);
 
@@ -117,6 +127,8 @@ namespace Codigames.Game.Session
                 var timeline = new Timeline(state.LastAdvance);
                 timeline.Register(resolver.Resolve<Construction>());
                 resolver.Resolve<BuildingsLiftFog>();
+                // The news desk before anything finishes: an absence leaves its bubbles.
+                resolver.Resolve<NewsDesk>();
                 timeline.Register(resolver.Resolve<VillagerTraining>());
 
                 // A pool left below its cap without a clock (an older save) starts gaining where the kingdom left off.

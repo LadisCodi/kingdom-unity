@@ -10,6 +10,7 @@ using Codigames.Game.Map;
 using Codigames.Game.Session;
 using Codigames.Game.UI;
 using Codigames.Game.UI.Hud;
+using Codigames.Game.UI.Notices;
 using Codigames.Game.UI.Presenters;
 using Codigames.Game.UI.Research;
 using Codigames.Game.UI.Stage;
@@ -123,6 +124,9 @@ namespace Codigames.Game.Startup
             builder.Register<Codigames.Game.UI.Quests.QuestProse>(Lifetime.Singleton);
             builder.Register<Codigames.Game.UI.Quests.QuestFocus>(Lifetime.Singleton);
             builder.Register<QuestPillPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
+            builder.Register<NoticeBoard>(Lifetime.Singleton);
+            builder.Register<NoticesColumnPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
+            builder.Register<NoticeCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<LandmarkCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<ResearchMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<TechSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();

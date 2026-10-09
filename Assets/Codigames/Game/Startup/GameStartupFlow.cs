@@ -22,7 +22,7 @@ namespace Codigames.Game.Startup
         public async UniTask StartAsync(CancellationToken cancellation)
         {
             await UniTask.WhenAll(_ui.ShowMenu<HeaderMenu>().AsUniTask(), _ui.ShowMenu<NavMenu>().AsUniTask(),
-                _ui.ShowMenu<QuestPill>().AsUniTask());
+                _ui.ShowMenu<QuestPill>().AsUniTask(), _ui.ShowMenu<NoticesColumn>().AsUniTask());
             await _loadingScreen.Hide(cancellation);
         }
     }
