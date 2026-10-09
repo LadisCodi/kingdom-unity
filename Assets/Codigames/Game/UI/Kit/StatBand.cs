@@ -6,13 +6,13 @@ using UnityEngine.UI;
 namespace Codigames.Game.UI.Kit
 {
     // A band of stat tiles (the web's dc-stats): fixed-size tiles three to a row, each row centred — a fourth wraps to
-    // a row of its own, still centred. Rows and tiles are kept and reused.
+    // a row of its own, still centred. A relic's band is two wider tiles a row. Rows and tiles are kept and reused.
     public class StatBand : MonoBehaviour
     {
-        private const int PER_ROW = 3;
-
         [SerializeField] private StatTile _tilePrefab;
         [SerializeField] private float _gap = 28;
+        [SerializeField, Min(1)] private int _perRow = 3;
+        [SerializeField, Tooltip("0: the tile prefab's own width.")] private float _tileWidth;
 
         private readonly List<RectTransform> _rows = new();
         private readonly List<StatTile> _tiles = new();
@@ -20,20 +20,27 @@ namespace Codigames.Game.UI.Kit
         public void Show(IReadOnlyList<StatTileData> stats)
         {
             gameObject.SetActive(stats.Count > 0);
-            var rows = (stats.Count + PER_ROW - 1) / PER_ROW;
+            var rows = (stats.Count + _perRow - 1) / _perRow;
             while (_rows.Count < rows) _rows.Add(NewRow());
 
             for (var i = 0; i < stats.Count; i++)
             {
-                if (i == _tiles.Count) _tiles.Add(Instantiate(_tilePrefab));
+                if (i == _tiles.Count) _tiles.Add(NewTile());
                 var tile = _tiles[i];
-                tile.transform.SetParent(_rows[i / PER_ROW], false);
+                tile.transform.SetParent(_rows[i / _perRow], false);
                 tile.gameObject.SetActive(true);
                 tile.Show(stats[i].Icon, stats[i].Label, stats[i].Value, stats[i].Bad);
             }
 
             for (var i = stats.Count; i < _tiles.Count; i++) _tiles[i].gameObject.SetActive(false);
             for (var i = 0; i < _rows.Count; i++) _rows[i].gameObject.SetActive(i < rows);
+        }
+
+        private StatTile NewTile()
+        {
+            var tile = Instantiate(_tilePrefab);
+            if (_tileWidth > 0 && tile.TryGetComponent<LayoutElement>(out var element)) element.minWidth = element.preferredWidth = _tileWidth;
+            return tile;
         }
 
         private RectTransform NewRow()

@@ -23,6 +23,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 851d7ea36d7040040b42e960dc457498, type: 3}
   - {fileID: 21300000, guid: ca93e2d8865a47de295aa3a142b7869a, type: 3}
   _text: Forests, fields, rocks and shoals hold more and grow back faster
+  _story: 'Renews the land round its Shrine: forests, fields, rocks and shoals there
+    hold {p} more and grow back {p} faster'
   _pending: 
   _kind: 0
   _door: Orcs

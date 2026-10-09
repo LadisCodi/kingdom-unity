@@ -79,6 +79,7 @@ namespace Codigames.Game.Audio
         public const string HERO_FANFARE_LEGEND = "heroFanfareLegend";
         public const string HERO_LEGEND = "heroLegend";
         public const string HERO_NEW = "heroNew";
+        public const string RELIC_WAKE = "relicWake";
         public const string HERO_POP = "heroPop";
         public const string HERO_RISER = "heroRiser";
         public const string HERO_RISER_SHORT = "heroRiserShort";

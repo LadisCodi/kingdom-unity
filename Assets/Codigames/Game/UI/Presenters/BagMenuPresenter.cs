@@ -7,6 +7,8 @@ using Codigames.Game.UI.Bag;
 using Codigames.Game.UI.Hud;
 using Codigames.Game.UI.Kit;
 using Codigames.Game.UI.Menus;
+using Codigames.Game.UI.Relics;
+using Codigames.Game.Relics;
 using Codigames.Kingdom.Bag;
 using Codigames.Kingdom.Economy;
 using Codigames.Modules.Audio;
@@ -39,6 +41,10 @@ namespace Codigames.Game.UI.Presenters
         private readonly ISoundService _sounds;
         private readonly RewardFlight _flight;
         private readonly RewardFragments _fragments;
+        private readonly RelicCards _relicCards;
+        private readonly RelicActions _relicActions;
+        private readonly Kingdom.Relics.Relics _relics;
+        private readonly Kingdom.Relics.Shrines _shrines;
 
         private BagTab _tab = BagTab.Resources;
         private string _picked;
@@ -51,8 +57,13 @@ namespace Codigames.Game.UI.Presenters
 
         public BagMenuPresenter(IMenuViewFactory views, UIManager ui, Kingdom.Bag.Bag bag, ItemCollection items, Speedups speedups,
             Boosts boosts, ItemProse prose, ItemTiles tiles, UiIcons icons, NumberFormat numbers, Localizer localizer, IClock clock,
-            ISoundService sounds, RewardFlight flight, RewardFragments fragments) : base(views)
+            ISoundService sounds, RewardFlight flight, RewardFragments fragments, RelicCards relicCards, RelicActions relicActions,
+            Kingdom.Relics.Relics relics, Kingdom.Relics.Shrines shrines) : base(views)
         {
+            _relicCards = relicCards;
+            _relicActions = relicActions;
+            _relics = relics;
+            _shrines = shrines;
             _ui = ui;
             _bag = bag;
             _items = items;
@@ -71,10 +82,17 @@ namespace Codigames.Game.UI.Presenters
 
         public void RequestClose() => _ = _ui.HideMenu<BagMenu>();
 
-        // The ribbons count down: redrawn once a second while the Boosts tab shows any.
+        // Open on a tab, for a way in that means one (the relics asleep open it on Relics).
+        public void OpenOn(BagTab tab)
+        {
+            _tab = tab;
+            _picked = null;
+        }
+
+        // The ribbons and an awake relic's plank count down: redrawn once a second on those tabs.
         public void Tick()
         {
-            if (!IsShown || _tab != BagTab.Boosts) return;
+            if (!IsShown || (_tab != BagTab.Boosts && _tab != BagTab.Relics)) return;
             var second = Math.Floor(_clock.NowMs / 1000.0);
             if (second == _shownSecond) return;
             _shownSecond = second;
@@ -87,12 +105,16 @@ namespace Codigames.Game.UI.Presenters
             Refresh();
             _bag.Granted += OnGranted;
             _bag.Used += OnUsed;
+            _relics.Changed += Refresh;
+            _shrines.Changed += Refresh;
         }
 
         protected override void UnbindInternal(BagMenu view)
         {
             _bag.Granted -= OnGranted;
             _bag.Used -= OnUsed;
+            _relics.Changed -= Refresh;
+            _shrines.Changed -= Refresh;
         }
 
         private void OnUsed(string id, int count, IReadOnlyDictionary<string, double> paid) => _lastPaid = paid;
@@ -102,6 +124,8 @@ namespace Codigames.Game.UI.Presenters
             view.CloseTapped += RequestClose;
             view.TabTapped += OnTab;
             view.TileTapped += OnTile;
+            view.RelicTapped += OnRelic;
+            view.RelicActivateTapped += OnActivate;
             view.Popover.QuantityChanged += OnQuantity;
             view.Popover.CoinPicked += OnCoin;
             view.Popover.ActionTapped += OnAction;
@@ -112,6 +136,8 @@ namespace Codigames.Game.UI.Presenters
             view.CloseTapped -= RequestClose;
             view.TabTapped -= OnTab;
             view.TileTapped -= OnTile;
+            view.RelicTapped -= OnRelic;
+            view.RelicActivateTapped -= OnActivate;
             view.Popover.QuantityChanged -= OnQuantity;
             view.Popover.CoinPicked -= OnCoin;
             view.Popover.ActionTapped -= OnAction;
@@ -135,6 +161,19 @@ namespace Codigames.Game.UI.Presenters
             _quantity = 1;
             _bag.MarkSeen(id);
             _sounds.Play(SoundIds.BUTTON_PRESS);
+            Refresh();
+        }
+
+        // A relic's card opens its sheet over the Bag.
+        private void OnRelic(string id)
+        {
+            _sounds.Play(SoundIds.BUTTON_PRESS);
+            _ = _ui.ShowMenu<RelicSheetMenu, string>(id);
+        }
+
+        private void OnActivate(string id)
+        {
+            _relicActions.Activate(id);
             Refresh();
         }
 
@@ -179,6 +218,7 @@ namespace Codigames.Game.UI.Presenters
 
         private void Refresh()
         {
+            if (View == null) return;
             var held = _bag.In(_tab).OfType<ItemAsset>().ToList();
             if (_picked != null && held.All(i => i.Id != _picked)) _picked = null;
             var picked = held.FindIndex(i => i.Id == _picked);
@@ -189,7 +229,7 @@ namespace Codigames.Game.UI.Presenters
                 {
                     Label = TabLabel(t),
                     Open = t == _tab,
-                    Empty = !_bag.In(t).Any(),
+                    Empty = t == BagTab.Relics ? _relicCards.Met().Count == 0 : !_bag.In(t).Any(),
                     Fresh = _bag.IsFresh(t),
                 }).ToList(),
                 Items = held.Select(i => _tiles.Tile(i, _bag.Count(i.Id), _bag.IsFresh(i.Id), i.Id == _picked)).ToList(),
@@ -197,6 +237,7 @@ namespace Codigames.Game.UI.Presenters
                 Ribbons = _tab == BagTab.Boosts ? Ribbons() : Array.Empty<BoostRibbonData>(),
                 Picked = picked,
                 Popover = picked < 0 ? null : Popover(held[picked], picked % 4),
+                Relics = _tab == BagTab.Relics ? _relicCards.Tab(_clock.NowMs) : null,
             });
         }
 

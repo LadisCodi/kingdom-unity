@@ -23,6 +23,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: cf4fc6cc3bb6e7324a987c42bc4c99fe, type: 3}
   - {fileID: 21300000, guid: 0d609f44f0eda04938dea9c870fd40da, type: 3}
   _text: Your villagers pay more tax
+  _story: 'Reminds every household round its Shrine what it owes the crown: villagers
+    there pay {p} more tax'
   _pending: 
   _kind: 0
   _door: WolfRiders

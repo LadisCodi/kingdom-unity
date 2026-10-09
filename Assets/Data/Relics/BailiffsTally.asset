@@ -23,6 +23,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 8efc247dfa7c4d44193659de7e3b2286, type: 3}
   - {fileID: 21300000, guid: 48c0ed9afaf45db4fa22c1d00a51cd07, type: 3}
   _text: Every improvement you hold pays more an hour
+  _story: 'Your stewards collect what is owed: every district you hold on the world
+    map pays {p} more an hour'
   _pending: when the world map opens
   _kind: 1
   _door: scouting

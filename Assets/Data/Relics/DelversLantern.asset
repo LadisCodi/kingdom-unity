@@ -23,6 +23,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2f577ffabcf41a27e8076dc2e61b78a7, type: 3}
   - {fileID: 21300000, guid: 9230bce6c26cc661fa493a984b848eec, type: 3}
   _text: Every room pays more gold and stone
+  _story: 'Its wisps find what the dark hides: every room in the depths pays {p}
+    more gold and stone'
   _pending: when the world map opens
   _kind: 1
   _door: room

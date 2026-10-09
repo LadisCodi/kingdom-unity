@@ -13,6 +13,8 @@ namespace Codigames.Game.UI.Bag
         public IReadOnlyList<BoostRibbonData> Ribbons { get; set; }
         public int Picked { get; set; } = -1;
         public BagPopoverData Popover { get; set; }
+        // The Relics tab's cards, in place of items; null on every other tab.
+        public Relics.RelicTabData Relics { get; set; }
     }
 
     public sealed class BagTabData
