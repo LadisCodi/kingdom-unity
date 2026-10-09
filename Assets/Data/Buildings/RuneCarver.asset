@@ -131,6 +131,19 @@ MonoBehaviour:
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
     _harvestSources: []
+    _harmonySupply: 0
+    _harmonyCostPerLevel:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 2
+    - 4
+    - 6
+    _plants: 
     _maxWorkersPerLevel: 01000000020000000300000003000000040000000400000005000000050000000600000006000000
     _influenceRadiusPerLevel: 
     _strikeSpeedPerLevel: []
@@ -139,6 +152,10 @@ MonoBehaviour:
     _revealRadius: 0
     _revealRadiusPerLevel: 
     _discoverRadius: 2
+  _repair:
+    _seconds: 0
+    _item: 
+    _ruinArt: {fileID: 0}
   _displayName: Rune Carver
   _promise: Villagers pour Mana into cut stone
   _description: Carvers bind magic into stone, rune by rune.

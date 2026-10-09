@@ -21,6 +21,7 @@ namespace Codigames.Game.UI.Presenters
     public class BuildMenuPresenter : AbstractMenuPresenter<BuildMenu>, IClosableMenuPresenter
     {
         private const string FIRST_TAB = "Economy";
+        private const string DECORATION = "Decoration";
 
         private readonly UIManager _ui;
         private readonly Construction _construction;
@@ -33,14 +34,21 @@ namespace Codigames.Game.UI.Presenters
         private readonly ICatalog<IBuildingDefinition> _buildings;
         private readonly CityState _city;
         private readonly IConstructionSettings _settings;
+        private readonly Harmony _harmony;
+        private readonly IHarmonySettings _harmonySettings;
+        private readonly Kit.UiIcons _icons;
 
         // Remembered between openings, so placement's way back lands on the same tab.
         private string _tab = FIRST_TAB;
 
         public BuildMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, ITreasury treasury,
             IBuildingCards cards, NumberFormat numbers, Localizer localizer, ISoundService sounds,
-            TechProse prose, ICatalog<IBuildingDefinition> buildings, CityState city, IConstructionSettings settings) : base(views)
+            TechProse prose, ICatalog<IBuildingDefinition> buildings, CityState city, IConstructionSettings settings, Harmony harmony,
+            IHarmonySettings harmonySettings, Kit.UiIcons icons) : base(views)
         {
+            _harmony = harmony;
+            _harmonySettings = harmonySettings;
+            _icons = icons;
             _buildings = buildings;
             _city = city;
             _settings = settings;
@@ -124,8 +132,9 @@ namespace Codigames.Game.UI.Presenters
                 .ToList();
 
             View.SetRows(rows);
+            View.SetNote(_tab == DECORATION ? DecorationNote() : null);
 
-            foreach (var tab in new[] { "Economy", "Military", "Decoration" })
+            foreach (var tab in new[] { "Economy", "Military", DECORATION })
                 View.SetTabBadge(tab, _cards.Cards.Count(c => c.Buildable && c.BuildTab == tab
                                                             && _construction.BuildRefusal(c.Id) == ConstructionRefusal.None));
         }
@@ -136,9 +145,38 @@ namespace Codigames.Game.UI.Presenters
         {
             ConstructionRefusal.None => 0,
             ConstructionRefusal.AtCap => 2,
+            ConstructionRefusal.NeedsHarmony => 2,
             ConstructionRefusal.NeedsResearch => 3,
             _ => 1,
         };
+
+        // Over the decorations: Harmony supplied of demanded and what a surplus pays, once anything demands it; before
+        // that, what a decoration is for — once one is known.
+        private BuildNoteData DecorationNote()
+        {
+            var demand = _harmony.Demand();
+            if (demand > 0)
+            {
+                var supply = _harmony.Supply;
+                var tier = _harmony.Tier;
+                var first = _harmonySettings.SurplusTiers.FirstOrDefault();
+                var note = tier is { } paying
+                    ? _localizer.Tr("+{pct}% taxes", ("pct", _numbers.Exact(Math.Round(paying.Bonus * 100))))
+                    : _localizer.Tr("{at}% pays +{pct}%", ("at", _numbers.Exact(Math.Round(first.At * 100))), ("pct", _numbers.Exact(Math.Round(first.Bonus * 100))));
+                return new BuildNoteData
+                {
+                    Icon = _icons.Get("harmony"),
+                    Text = "<b><size=123%>" + _numbers.Exact(supply) + "</size></b> " + _localizer.Tr("supplied of {n} demanded", ("n", _numbers.Exact(demand))),
+                    Note = note,
+                    Tone = supply < demand ? BuildNoteTone.Short : tier != null ? BuildNoteTone.Paying : BuildNoteTone.Plain,
+                };
+            }
+
+            var known = _cards.Cards.Any(c => c.Buildable && c.BuildTab == DECORATION && _construction.BuildRefusal(c.Id) != ConstructionRefusal.NeedsResearch);
+            return known
+                ? new BuildNoteData { Icon = _icons.Get("Housing"), Text = _localizer.Tr("A house beside a decoration earns more Gold"), Strong = true }
+                : null;
+        }
 
         // The cap's words: the Townhall level that lets one more stand, or that the realm allows no more.
         private string CapReason(string id, int count)
@@ -170,12 +208,15 @@ namespace Codigames.Game.UI.Presenters
                 : _localizer.Tr("Built {n}", ("n", _numbers.Number(offer.Count)));
 
             var atCap = offer.Refusal == ConstructionRefusal.AtCap;
+            var why = atCap ? CapReason(card.Id, offer.Count)
+                : offer.Refusal == ConstructionRefusal.NeedsHarmony
+                    ? _localizer.Tr("Needs {n} more Harmony", ("n", _numbers.Exact(_construction.HarmonyShort(_buildings.Get(card.Id), 1))))
+                    : null;
 
             return new BuildRowData(card.Id, _localizer.Capitalized(_localizer.Tr(card.DisplayName)),
                 offer.Numbered && !atCap ? "#" + _numbers.Number(offer.Ordinal) : string.Empty,
                 _localizer.Tr(card.Promise), card.ArtFor(1), atCap ? Array.Empty<PriceTerm>() : price,
-                _numbers.Duration(offer.Seconds), built, offer.Refusal == ConstructionRefusal.None,
-                atCap ? CapReason(card.Id, offer.Count) : null);
+                _numbers.Duration(offer.Seconds), built, offer.Refusal == ConstructionRefusal.None, why);
         }
     }
 }

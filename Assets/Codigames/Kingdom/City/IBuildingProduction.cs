@@ -23,6 +23,9 @@ namespace Codigames.Kingdom.City
         // The Harmony it supplies standing: a decoration's.
         double HarmonySupply { get; }
 
+        // The Harmony it demands at each level, a total (entry 0 is what building it asks); empty for none.
+        IReadOnlyList<double> HarmonyCostPerLevel { get; }
+
         // The feature it puts on the ground instead of standing (a crop plot plants Crops); null for a building.
         string Plants { get; }
 

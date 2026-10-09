@@ -26,10 +26,13 @@ namespace Codigames.Kingdom.City
         private readonly IResearchGates _gates;
         private readonly IBonuses _bonuses;
         private readonly IPlanting _planting;
+        private readonly Harmony _harmony;
 
         public Construction(CityState city, ITreasury treasury, Placement placement, ICatalog<IBuildingDefinition> buildings,
-            IConstructionSettings settings, IResearchGates gates = null, IBonuses bonuses = null, IPlanting planting = null)
+            IConstructionSettings settings, IResearchGates gates = null, IBonuses bonuses = null, IPlanting planting = null,
+            Harmony harmony = null)
         {
+            _harmony = harmony;
             _planting = planting;
             _gates = gates;
             _bonuses = bonuses;
@@ -48,6 +51,10 @@ namespace Codigames.Kingdom.City
         public event Action<ConstructionJob, DistrictState> JobCompleted;
         // A plantable put on the ground: its definition and its cell.
         public event Action<string, Vector2Int> Planted;
+        // The city is about to change in a way that may move every building's rates (a building placed, raised or
+        // moved: Harmony and neighbours), at that moment; then it has.
+        public event Action<double> CityChanging;
+        public event Action<double> CityChanged;
 
         public static bool IsPlantable(IBuildingDefinition building) => building.Production.Plants != null;
 
@@ -66,10 +73,12 @@ namespace Codigames.Kingdom.City
             if (!_treasury.TryPay(BuildingPricing.Currencies(building, ordinal, 1))) return ConstructionRefusal.CannotAfford;
             if (IsPlantable(building)) return Plant(building, anchor, now);
 
+            CityChanging?.Invoke(now);
             var district = Place(definitionId, ordinal, anchor);
 
             var rings = CityQueries.DistanceFromTownhall(_city, _buildings, _settings, anchor);
             Start(district, 1, BuildSeconds(building, ordinal - 1, rings), now);
+            CityChanged?.Invoke(now);
             return ConstructionRefusal.None;
         }
 
@@ -86,9 +95,11 @@ namespace Codigames.Kingdom.City
             // A plot's repair is its planting: it grows for its source's growth, not a repair's wait.
             if (IsPlantable(building)) return Plant(building, anchor, now);
 
+            CityChanging?.Invoke(now);
             var district = Place(definitionId, ordinal, anchor);
             var rings = CityQueries.DistanceFromTownhall(_city, _buildings, _settings, anchor);
             Start(district, 1, seconds > 0 ? seconds / BuildSpeed : BuildSeconds(building, ordinal - 1, rings), now);
+            CityChanged?.Invoke(now);
             return ConstructionRefusal.None;
         }
 
@@ -102,9 +113,8 @@ namespace Codigames.Kingdom.City
             if (cap.HasValue && count >= cap.Value) return ConstructionRefusal.AtCap;
             if (!IsPlantable(building) && !CityQueries.HasFreeBuilder(_city)) return ConstructionRefusal.NoFreeBuilder;
 
-            return _treasury.CanAfford(BuildingPricing.Currencies(building, count + 1, 1))
-                ? ConstructionRefusal.None
-                : ConstructionRefusal.CannotAfford;
+            if (!_treasury.CanAfford(BuildingPricing.Currencies(building, count + 1, 1))) return ConstructionRefusal.CannotAfford;
+            return HarmonyShort(building, 1) > 0 ? ConstructionRefusal.NeedsHarmony : ConstructionRefusal.None;
         }
 
         // What stands between the city and one more of a kind, wherever it goes.
@@ -119,10 +129,13 @@ namespace Codigames.Kingdom.City
             if (cap.HasValue && count >= cap.Value) return ConstructionRefusal.AtCap;
             if (!IsPlantable(building) && !CityQueries.HasFreeBuilder(_city)) return ConstructionRefusal.NoFreeBuilder;
 
-            return _treasury.CanAfford(BuildingPricing.Currencies(building, count + 1, 1))
-                ? ConstructionRefusal.None
-                : ConstructionRefusal.CannotAfford;
+            if (!_treasury.CanAfford(BuildingPricing.Currencies(building, count + 1, 1))) return ConstructionRefusal.CannotAfford;
+            return HarmonyShort(building, 1) > 0 ? ConstructionRefusal.NeedsHarmony : ConstructionRefusal.None;
         }
+
+        // How much more Harmony a build (level 1) or a level asks than the city has: 0 when it may go ahead.
+        public double HarmonyShort(IBuildingDefinition building, int level, string district = null)
+            => _harmony?.ShortBy(building, level, district) ?? 0;
 
         // One more of a kind, its wait on a plot: the one given, else the one nearest the Townhall.
         public BuildOffer Offer(string definitionId, Vector2Int? at = null)
@@ -149,7 +162,9 @@ namespace Codigames.Kingdom.City
             var target = district.Level + 1;
             if (!_treasury.TryPay(BuildingPricing.Currencies(building, district.Ordinal, target))) return ConstructionRefusal.CannotAfford;
 
+            CityChanging?.Invoke(now);
             Start(district, target, UpgradeSeconds(building, target), now);
+            CityChanged?.Invoke(now);
             return ConstructionRefusal.None;
         }
 
@@ -198,6 +213,11 @@ namespace Codigames.Kingdom.City
             if (population > 0)
                 requirements.Add(new UpgradeRequirement(RequirementKind.Population, _city.Population >= population, population));
 
+            // Only when the level asks more than this one does.
+            var harmony = Harmony.Cost(building, district.Level + 1);
+            if (harmony > Harmony.Cost(building, district.Level))
+                requirements.Add(new UpgradeRequirement(RequirementKind.Harmony, HarmonyShort(building, district.Level + 1, district.Id) <= 0, (int)harmony));
+
             return requirements;
         }
 
@@ -218,7 +238,8 @@ namespace Codigames.Kingdom.City
             if (gateIndex < population.Count && _city.Population < population[gateIndex])
                 return ConstructionRefusal.NeedsPopulation;
 
-            return CityQueries.HasFreeBuilder(_city) ? ConstructionRefusal.None : ConstructionRefusal.NoFreeBuilder;
+            if (!CityQueries.HasFreeBuilder(_city)) return ConstructionRefusal.NoFreeBuilder;
+            return HarmonyShort(building, district.Level + 1, district.Id) > 0 ? ConstructionRefusal.NeedsHarmony : ConstructionRefusal.None;
         }
 
         // How many may stand at the Townhall's level, and one more once the technology that allows it is researched.
@@ -262,7 +283,7 @@ namespace Codigames.Kingdom.City
         }
 
         // Free and instant; an unfinished building moves too, keeping its place in the work and its wait.
-        public ConstructionRefusal Move(string districtId, Vector2Int anchor)
+        public ConstructionRefusal Move(string districtId, Vector2Int anchor, double now)
         {
             var district = _city.Districts.FirstOrDefault(d => d.Id == districtId);
             if (district == null) return ConstructionRefusal.NotFound;
@@ -270,7 +291,9 @@ namespace Codigames.Kingdom.City
             if (anchor == district.Anchor) return ConstructionRefusal.None;
             if (_placement.Check(district.DefinitionId, anchor, district.Id) != PlacementProblem.None) return ConstructionRefusal.Placement;
 
+            CityChanging?.Invoke(now);
             district.Anchor = anchor;
+            CityChanged?.Invoke(now);
             DistrictMoved?.Invoke(district);
             return ConstructionRefusal.None;
         }
@@ -290,10 +313,10 @@ namespace Codigames.Kingdom.City
         {
             foreach (var job in _city.Jobs.Where(j => j.CompletesAt <= time).OrderBy(j => j.CompletesAt).ToList())
             {
-                _city.Jobs.Remove(job);
-
+                // Completing while the job still stands: the city is still what it was.
                 var district = _city.Districts.First(d => d.Id == job.DistrictId);
                 JobCompleting?.Invoke(job, district);
+                _city.Jobs.Remove(job);
                 district.Level = job.TargetLevel;
                 district.Built = true;
                 JobCompleted?.Invoke(job, district);

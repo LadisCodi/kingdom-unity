@@ -1,4 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Codigames.Kingdom.Bag;
+using Codigames.Kingdom.City;
 using Codigames.Kingdom.Crews;
 using Codigames.Kingdom.Economy;
 using Codigames.Kingdom.Notices;
@@ -8,7 +12,7 @@ using UnityEngine;
 namespace Codigames.Game.Data.Economy
 {
     [CreateAssetMenu(fileName = "Economy", menuName = "Kingdom/Data/Economy Settings")]
-    public class EconomySettingsAsset : DataSettings, IEconomySettings, IWorkerSettings, IBagSettings, IRushSettings, INoticeSettings
+    public class EconomySettingsAsset : DataSettings, IEconomySettings, IWorkerSettings, IBagSettings, IRushSettings, INoticeSettings, IHarmonySettings, IAdjacencyRules
     {
         [SerializeField, MinValue(0), SuffixLabel("Gold / villager / min"), Tooltip("The rent every housed villager pays.")]
         private double _goldPerPopulationPerMinute = 30;
@@ -29,6 +33,31 @@ namespace Codigames.Game.Data.Economy
 
         [SerializeField, MinValue(1), SuffixLabel("news"), Tooltip("News kept in the inbox; past it the oldest goes.")]
         private int _noticesKept = 30;
+
+        [SerializeField, Tooltip("Harmony's surplus tiers, ascending: the city's supply over its demand reaching `At` raises the rent by `Bonus` (0.05 = +5%).")]
+        private List<Tier> _harmonyTiers = new();
+
+        [SerializeField, Tooltip("What buildings standing side by side do to each other: `District` receives, from `Neighbor` (a building or AnyDecoration, AnyProducer…).")]
+        private List<Rule> _adjacency = new();
+
+        [Serializable]
+        private class Tier
+        {
+            [MinValue(1)] public double At = 1.1;
+            [MinValue(0)] public double Bonus = 0.05;
+        }
+
+        [Serializable]
+        private class Rule
+        {
+            public string District;
+            public string Neighbor;
+            public AdjacencyStat Stat;
+            public double Magnitude;
+        }
+
+        public IReadOnlyList<HarmonyTier> SurplusTiers => _harmonyTiers.Select(t => new HarmonyTier(t.At, t.Bonus)).ToList();
+        public IReadOnlyList<AdjacencyRule> Rules => _adjacency.Select(r => new AdjacencyRule(r.District, r.Neighbor, r.Stat, r.Magnitude)).ToList();
 
         public int Shown => _noticesShown;
         public int Kept => _noticesKept;

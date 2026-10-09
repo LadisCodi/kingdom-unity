@@ -14,11 +14,10 @@ namespace Codigames.Kingdom.Quests
     // repaired ruin counts as its building. What is not in the game yet (an army, lairs, relics, heroes) reads 0.
     public class QuestGoals : IQuestGoals, IBuildingGroups
     {
-        private const string ANY_DECORATION = "AnyDecoration";
-        private const string ANY_PRODUCER = "AnyProducer";
 
         private readonly CityState _city;
         private readonly ICatalog<IBuildingDefinition> _buildings;
+        private readonly City.BuildingGroups _groups;
         private readonly ITreasury _treasury;
         private readonly Researching _research;
         private readonly Workforce _crews;
@@ -32,6 +31,7 @@ namespace Codigames.Kingdom.Quests
             _planting = planting;
             _city = city;
             _buildings = buildings;
+            _groups = new City.BuildingGroups(buildings);
             _treasury = treasury;
             _research = research;
             _crews = crews;
@@ -79,16 +79,6 @@ namespace Codigames.Kingdom.Quests
         }
 
         // A goal names one kind of building, or a group of them by its token.
-        public bool Names(string target, string definitionId)
-        {
-            if (target == null || !_buildings.TryGet(definitionId, out var building)) return false;
-
-            return target switch
-            {
-                ANY_DECORATION => building.Production.HarmonySupply > 0,
-                ANY_PRODUCER => building.Production.HarvestSources.Count > 0,
-                _ => definitionId == target,
-            };
-        }
+        public bool Names(string target, string definitionId) => _groups.Names(target, definitionId);
     }
 }

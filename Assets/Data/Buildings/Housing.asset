@@ -147,6 +147,19 @@ MonoBehaviour:
     - 2
     - 2.25
     _harvestSources: []
+    _harmonySupply: 0
+    _harmonyCostPerLevel:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 2
+    - 4
+    - 6
+    _plants: 
     _maxWorkersPerLevel: 
     _influenceRadiusPerLevel: 
     _strikeSpeedPerLevel: []

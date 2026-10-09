@@ -103,6 +103,11 @@ MonoBehaviour:
     m_GlyphIndex: 12
     m_Scale: 1
     m_Name: compass
+  - m_ElementType: 2
+    m_Unicode: 65534
+    m_GlyphIndex: 13
+    m_Scale: 1
+    m_Name: harmony
   m_GlyphTable:
   - m_Index: 0
     m_Metrics:
@@ -305,6 +310,22 @@ MonoBehaviour:
       m_HorizontalAdvance: 79
     m_GlyphRect:
       m_X: 2
+      m_Y: 242
+      m_Width: 64
+      m_Height: 64
+    m_Scale: 1
+    m_AtlasIndex: 0
+    m_ClassDefinitionType: 0
+    sprite: {fileID: 0}
+  - m_Index: 13
+    m_Metrics:
+      m_Width: 76
+      m_Height: 76
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 55.04
+      m_HorizontalAdvance: 79
+    m_GlyphRect:
+      m_X: 70
       m_Y: 242
       m_Width: 64
       m_Height: 64

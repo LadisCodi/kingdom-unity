@@ -65,6 +65,7 @@ namespace Codigames.Kingdom.Tests.Builders
         }
 
         public BuildingBuilder WithHarmony(double supply) { _production.HarmonySupply = supply; return this; }
+        public BuildingBuilder WithHarmonyCost(params double[] perLevel) { _production.HarmonyCostPerLevel = perLevel; return this; }
         public BuildingBuilder Planting(string feature) { _production.Plants = feature; return this; }
 
         public BuildingBuilder WithFog(int reveal, int discover, params int[] revealPerLevel)
@@ -137,6 +138,7 @@ namespace Codigames.Kingdom.Tests.Builders
         {
             public IReadOnlyList<double> GoldPerMinutePerLevel { get; set; } = new double[0];
             public double HarmonySupply { get; set; }
+            public IReadOnlyList<double> HarmonyCostPerLevel { get; set; } = new double[0];
             public string Plants { get; set; }
             public IReadOnlyList<double> StorageCapacityPerLevel { get; set; } = new double[0];
             public IReadOnlyList<int> PopulationCapacityPerLevel { get; set; } = new int[0];

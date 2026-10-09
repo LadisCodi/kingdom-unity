@@ -60,6 +60,18 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private TMP_Text _crewLimit;
         [SerializeField] private KitButton _crewPlus;
 
+        [Header("Harmony and neighbours")]
+        [SerializeField] private GameObject _harmonyBlock;
+        [SerializeField] private SectionHead _harmonyHead;
+        [SerializeField] private TMP_Text _harmonyLine;
+        [SerializeField] private TMP_Text _harmonyNote;
+        [SerializeField] private GameObject _neighboursBlock;
+        [SerializeField] private SectionHead _neighboursHead;
+        [SerializeField] private RectTransform _badges;
+        [SerializeField] private ToneBadge _badgePrefab;
+
+        private readonly System.Collections.Generic.List<ToneBadge> _badgeViews = new();
+
         [SerializeField] private RectTransform _window;
 
         [SerializeField, Tooltip("Its window: where its top edge stands, for the camera.")] private MapCard _card;
@@ -118,6 +130,8 @@ namespace Codigames.Game.UI.Menus
             _stats.Show(card.Stats);
             ShowTraining(card);
             ShowCrew(card);
+            ShowHarmony(card);
+            ShowNeighbours(card);
             LayoutRebuilder.MarkLayoutForRebuild(_window);
         }
 
@@ -150,6 +164,30 @@ namespace Codigames.Game.UI.Menus
             _finishTraining.gameObject.SetActive(!batch.SpeedUp);
             _speedUpTraining.gameObject.SetActive(batch.SpeedUp);
             _finishTraining.Show(batch.Finish, batch.CanFinish);
+        }
+
+        private void ShowHarmony(DistrictCardData card)
+        {
+            _harmonyBlock.SetActive(card.HarmonyLine != null);
+            if (card.HarmonyLine == null) return;
+            _harmonyHead.Title = card.HarmonyHead;
+            _harmonyLine.text = card.HarmonyLine;
+            _harmonyNote.text = card.HarmonyNote;
+        }
+
+        private void ShowNeighbours(DistrictCardData card)
+        {
+            _neighboursBlock.SetActive(card.Neighbours.Count > 0);
+            _neighboursHead.gameObject.SetActive(!string.IsNullOrEmpty(card.NeighboursHead));
+            _neighboursHead.Title = card.NeighboursHead;
+            for (var i = 0; i < card.Neighbours.Count; i++)
+            {
+                if (i == _badgeViews.Count) _badgeViews.Add(Instantiate(_badgePrefab, _badges));
+                _badgeViews[i].gameObject.SetActive(true);
+                _badgeViews[i].Show(card.Neighbours[i].Text, card.Neighbours[i].Good);
+            }
+
+            for (var i = card.Neighbours.Count; i < _badgeViews.Count; i++) _badgeViews[i].gameObject.SetActive(false);
         }
 
         private void ShowCrew(DistrictCardData card)
