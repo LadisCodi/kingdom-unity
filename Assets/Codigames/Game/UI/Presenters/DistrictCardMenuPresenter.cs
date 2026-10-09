@@ -1,0 +1,155 @@
+using System;
+using System.Linq;
+using Codigames.Game.Data.City;
+using Codigames.Game.Data.Economy;
+using Codigames.Game.UI.Data;
+using Codigames.Game.UI.Menus;
+using Codigames.Kingdom.City;
+using Codigames.Kingdom.City.State;
+using Codigames.Kingdom.Economy;
+using Codigames.Modules.Clock;
+using Codigames.Modules.Localization;
+using Codigames.Modules.UI;
+using VContainer.Unity;
+
+namespace Codigames.Game.UI.Presenters
+{
+    // One district's card: its name, number and level, what it does, and either the builder's work with its
+    // countdown or the next level's price and wait; Upgrade pays and starts the work.
+    public class DistrictCardMenuPresenter : AbstractDataMenuPresenter<DistrictCardMenu, string>, IClosableMenuPresenter, ITickable
+    {
+        private readonly UIManager _ui;
+        private readonly Construction _construction;
+        private readonly CityState _city;
+        private readonly BuildingCollection _buildings;
+        private readonly IConstructionSettings _settings;
+        private readonly ITreasury _treasury;
+        private readonly ICurrencyIcons _icons;
+        private readonly IClock _clock;
+        private readonly NumberFormat _numbers;
+        private readonly Localizer _localizer;
+
+        // The countdown shown, in whole seconds, so the card is rebuilt once a second while a builder works.
+        private double _shownSeconds = -1;
+
+        public DistrictCardMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, CityState city,
+            BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, ICurrencyIcons icons, IClock clock,
+            NumberFormat numbers, Localizer localizer) : base(views)
+        {
+            _ui = ui;
+            _construction = construction;
+            _city = city;
+            _buildings = buildings;
+            _settings = settings;
+            _treasury = treasury;
+            _icons = icons;
+            _clock = clock;
+            _numbers = numbers;
+            _localizer = localizer;
+        }
+
+        private DistrictState District => _city.Districts.FirstOrDefault(d => d.Id == Data);
+
+        public void RequestClose() => _ = _ui.HideMenu<DistrictCardMenu>();
+
+        public void Tick()
+        {
+            if (!IsShown) return;
+
+            var job = JobOf(Data);
+            if (job == null) return;
+
+            var seconds = Math.Ceiling(Math.Max(0, job.CompletesAt - _clock.NowMs) / 1000);
+            if (seconds != _shownSeconds) Refresh();
+        }
+
+        protected override void BindInternal(DistrictCardMenu view)
+        {
+            Refresh();
+            _treasury.Changed += OnTreasuryChanged;
+            _construction.JobStarted += OnJob;
+            _construction.JobCompleted += OnJobCompleted;
+        }
+
+        protected override void UnbindInternal(DistrictCardMenu view)
+        {
+            _treasury.Changed -= OnTreasuryChanged;
+            _construction.JobStarted -= OnJob;
+            _construction.JobCompleted -= OnJobCompleted;
+        }
+
+        protected override void SubscribeToViewEventsInternal(DistrictCardMenu view)
+        {
+            view.CloseTapped += RequestClose;
+            view.UpgradeTapped += OnUpgrade;
+        }
+
+        protected override void UnsubscribeFromViewEventsInternal(DistrictCardMenu view)
+        {
+            view.CloseTapped -= RequestClose;
+            view.UpgradeTapped -= OnUpgrade;
+        }
+
+        private void OnTreasuryChanged(string currency, double amount) => Refresh();
+        private void OnJob(ConstructionJob job) => Refresh();
+        private void OnJobCompleted(ConstructionJob job, DistrictState district) => Refresh();
+
+        private void OnUpgrade()
+        {
+            _construction.Upgrade(Data, _clock.NowMs);
+            Refresh();
+        }
+
+        private ConstructionJob JobOf(string districtId) => _city.Jobs.FirstOrDefault(j => j.DistrictId == districtId);
+
+        private void Refresh()
+        {
+            var district = District;
+            if (district == null) return;
+
+            var building = _buildings.Get<BuildingAsset>(district.DefinitionId);
+            var cap = CityQueries.MaxCount(building, CityQueries.TownhallLevel(_city, _settings));
+            var numbered = building.Buildable && (!cap.HasValue || cap.Value > 1);
+            var job = JobOf(district.Id);
+            var name = _localizer.Capitalized(_localizer.Tr(building.DisplayName));
+            var ordinal = numbered ? "#" + _numbers.Number(district.Ordinal) : string.Empty;
+            var level = _localizer.Tr("Lv {n}", ("n", _numbers.Number(district.Level)));
+            var promise = _localizer.Tr(building.Promise);
+
+            if (job != null)
+            {
+                var remaining = Math.Max(0, job.CompletesAt - _clock.NowMs) / 1000;
+                _shownSeconds = Math.Ceiling(remaining);
+                var doing = job.TargetLevel == 1
+                    ? _localizer.Tr("Building")
+                    : _localizer.Tr("Upgrading to Lv {n}", ("n", _numbers.Number(job.TargetLevel)));
+                var progress = (float)Math.Min(1, (_clock.NowMs - job.StartedAt) / (job.Seconds * 1000));
+
+                View.Show(new DistrictCardData(name, ordinal, level, building.ArtFor(district.Level), promise, true,
+                    doing + " · " + _numbers.Duration(_shownSeconds), progress, string.Empty,
+                    Array.Empty<CostChipData>(), false, string.Empty));
+                return;
+            }
+
+            var offer = _construction.UpgradeOffer(district.Id);
+            var atTop = offer.Refusal == ConstructionRefusal.MaxLevel;
+            var price = offer.Price
+                .Select(p => new CostChipData(_icons.IconOf(p.Key), _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
+                .ToList();
+            var next = atTop
+                ? string.Empty
+                : _localizer.Tr("Lv {n}", ("n", _numbers.Number(offer.TargetLevel))) + " · " + _numbers.Duration(offer.Seconds);
+
+            View.Show(new DistrictCardData(name, ordinal, level, building.ArtFor(district.Level), promise, false,
+                string.Empty, 0, next, price, offer.Refusal == ConstructionRefusal.None, Reason(offer)));
+        }
+
+        private string Reason(UpgradeOffer offer) => offer.Refusal switch
+        {
+            ConstructionRefusal.MaxLevel => _localizer.Tr("Highest level"),
+            ConstructionRefusal.NeedsTownhallLevel => _localizer.Tr("Needs Townhall {n}", ("n", _numbers.Number(offer.RequiredTownhallLevel))),
+            ConstructionRefusal.NoFreeBuilder => _localizer.Tr("Every builder is busy"),
+            _ => string.Empty,
+        };
+    }
+}

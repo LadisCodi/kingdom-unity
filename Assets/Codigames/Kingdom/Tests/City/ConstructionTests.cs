@@ -178,5 +178,52 @@ namespace Codigames.Kingdom.Tests.City
             Assert.That(fixture.Construction.Offer("Housing").Seconds, Is.EqualTo(200));
             Assert.That(fixture.Construction.Offer("Housing", new Vector2Int(4, 0)).Seconds, Is.EqualTo(100 * 8));
         }
+    
+
+        [Test]
+        public void UpgradeOffer_ShouldPriceAndTimeTheNextLevel()
+        {
+            var fixture = new CityFixture(House());
+            fixture.Construction.Build("Housing", SPOT, 0);
+            fixture.Timeline.Advance(60_000);
+            var house = fixture.District("Housing");
+
+            var offer = fixture.Construction.UpgradeOffer(house.Id);
+
+            Assert.That(offer.TargetLevel, Is.EqualTo(2));
+            Assert.That(offer.Price["Gold"], Is.EqualTo(100));
+            Assert.That(offer.Seconds, Is.EqualTo(120));
+            Assert.That(offer.Refusal, Is.EqualTo(ConstructionRefusal.None));
+        }
+
+        [Test]
+        public void UpgradeOffer_ShouldNameTheTownhallItWaitsFor()
+        {
+            var fixture = new CityFixture(House());
+            var house = BuiltHouseAtLevel(fixture, 2);
+
+            var offer = fixture.Construction.UpgradeOffer(house.Id);
+
+            Assert.That(offer.Refusal, Is.EqualTo(ConstructionRefusal.NeedsTownhallLevel));
+            Assert.That(offer.RequiredTownhallLevel, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void UpgradeOffer_ShouldStopAtTheHighestLevel()
+        {
+            var fixture = new CityFixture(House());
+            var house = BuiltHouseAtLevel(fixture, 3);
+
+            Assert.That(fixture.Construction.UpgradeOffer(house.Id).Refusal, Is.EqualTo(ConstructionRefusal.MaxLevel));
+        }
+
+        private static Codigames.Kingdom.City.State.DistrictState BuiltHouseAtLevel(CityFixture fixture, int level)
+        {
+            fixture.Construction.Build("Housing", SPOT, 0);
+            fixture.Timeline.Advance(60_000);
+            var house = fixture.District("Housing");
+            house.Level = level;
+            return house;
+        }
     }
 }

@@ -257,6 +257,8 @@ Tools/                     outside Unity: PureTests, Codegen, WebData (the web's
 - Fingers on the map go through `MapGestures`: a tap names a province cell,
   and an `IMapDragHandler` (placement's ghost) may claim a finger before the
   camera pans with it. A finger that starts over the UI is never the map's.
+  `MapTaps` says what a tap means while no menu is open: on a building, its
+  card (`DistrictCardMenu`); on the ground, a harvest (`HarvestInput`).
 - Play in the editor always starts from `Boot` (`Game/Editor/PlayFromBoot.cs`).
 
 ## Five invariants. Breaking one is a bug even if the tests pass.

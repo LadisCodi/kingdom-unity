@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Economy;
@@ -106,6 +107,28 @@ namespace Codigames.Kingdom.City
 
             Start(district, target, BuildingDurations.UpgradeSeconds(building.Duration, target, _settings.LateUpgradeFromLevel), now);
             return ConstructionRefusal.None;
+        }
+
+        // A district's next level, as its card shows it.
+        public UpgradeOffer UpgradeOffer(string districtId)
+        {
+            var district = _city.Districts.First(d => d.Id == districtId);
+            var building = _buildings.Get(district.DefinitionId);
+            var target = district.Level + 1;
+
+            if (district.Level >= building.MaxLevel)
+                return new UpgradeOffer(district.Level, new Dictionary<string, double>(), 0, ConstructionRefusal.MaxLevel, 0);
+
+            var price = BuildingPricing.Currencies(building, district.Ordinal, target);
+            var refusal = UpgradeRefusal(district);
+            if (refusal == ConstructionRefusal.None && !_treasury.CanAfford(price)) refusal = ConstructionRefusal.CannotAfford;
+
+            var gates = building.Gates.RequiredTownhallLevelPerLevel;
+            var gateIndex = district.Level - 1;
+            var townhall = gateIndex < gates.Count ? gates[gateIndex] : 0;
+
+            return new UpgradeOffer(target, price,
+                BuildingDurations.UpgradeSeconds(building.Duration, target, _settings.LateUpgradeFromLevel), refusal, townhall);
         }
 
         // What stands between a district and its next level, before the price.
