@@ -9,8 +9,11 @@ namespace Codigames.Game.Data.Magic
     {
         [SerializeField, MinValue(1), SuffixLabel("Mana")] private double _baseCap = 100;
         [SerializeField, MinValue(0.1), SuffixLabel("Mana / h")] private double _basePerHour = 12;
+        [SerializeField, MinValue(0), SuffixLabel("Mana"), Tooltip("A landmark claimed, or the Watchtower repaired, adds this for good.")]
+        private double _landmarkCap = 10;
 
         public double BaseCap => _baseCap;
         public double BasePerHour => _basePerHour;
+        public double LandmarkCap => _landmarkCap;
     }
 }

@@ -36,6 +36,7 @@ namespace Codigames.Kingdom.Tests.Builders
             public double GoldPriceBase => 400;
             public double GoldPriceExponent => 2;
             public double GemsPerPoint => 200;
+            public double LandmarkClaimLump => 3;
         }
 
         public sealed class FakeTree : ITechTree

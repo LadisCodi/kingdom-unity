@@ -24,6 +24,7 @@ namespace Codigames.Kingdom.Tests.Sites
         private sealed class Sites : IProvinceSites
         {
             public IReadOnlyList<IAbandonedSite> Abandoned { get; set; }
+            public IReadOnlyList<ILandmarkSite> Landmarks { get; set; } = new ILandmarkSite[0];
         }
 
         private sealed class Bag : IRepairItems

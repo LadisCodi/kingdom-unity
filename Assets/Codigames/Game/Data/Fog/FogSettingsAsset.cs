@@ -23,6 +23,8 @@ namespace Codigames.Game.Data.Fog
         [SerializeField, MinValue(1)] private int _tapsToReveal = 5;
         [BoxGroup("Clearing"), Tooltip("Rings from the Townhall a cell may be paid for, by its level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
         [SerializeField] private List<int> _reachPerTownhallLevel = new();
+        [SerializeField, MinValue(0), SuffixLabel("cells"), Tooltip("What claiming a landmark discovers round it.")]
+        private int _claimDiscoverRadius = 5;
 
         public IReadOnlyList<double> CostPerRing => _costPerRing;
         public double FallbackGrowth => _fallbackGrowth;
@@ -31,5 +33,6 @@ namespace Codigames.Game.Data.Fog
         public int CountStep => _countStep;
         public double CountGrowth => _countGrowth;
         public IReadOnlyList<int> ReachPerTownhallLevel => _reachPerTownhallLevel;
+        public int ClaimDiscoverRadius => _claimDiscoverRadius;
     }
 }

@@ -250,6 +250,7 @@ namespace Codigames.Game.Editor.WebImport
             settings.FindProperty("_countGrowth").doubleValue = fog.CountGrowth;
             settings.FindProperty("_tapsToReveal").intValue = (int)fog.TapsToReveal;
             SetInts(settings.FindProperty("_reachPerTownhallLevel"), fog.ReachPerTownhallLevel);
+            settings.FindProperty("_claimDiscoverRadius").intValue = (int)fog.ClaimDiscoverRadius;
             settings.ApplyModifiedPropertiesWithoutUndo();
         }
 
@@ -277,6 +278,7 @@ namespace Codigames.Game.Editor.WebImport
             var settings = new SerializedObject(LoadOrCreate<ManaSettingsAsset>("Settings", "Mana"));
             settings.FindProperty("_baseCap").doubleValue = mana.BaseCap;
             settings.FindProperty("_basePerHour").doubleValue = mana.BasePerHour;
+            settings.FindProperty("_landmarkCap").doubleValue = mana.LandmarkCap;
             settings.ApplyModifiedPropertiesWithoutUndo();
 
             var currency = new SerializedObject(LoadOrCreate<CurrencyAsset>("Currencies", "Mana"));
@@ -391,6 +393,7 @@ namespace Codigames.Game.Editor.WebImport
             settings.FindProperty("_goldPriceBase").doubleValue = knowledge.GoldPriceBase;
             settings.FindProperty("_goldPriceExponent").doubleValue = knowledge.GoldPriceExponent;
             settings.FindProperty("_gemsPerPoint").doubleValue = knowledge.GemsPerPoint;
+            settings.FindProperty("_landmarkClaimLump").doubleValue = knowledge.LandmarkClaimLump;
             settings.ApplyModifiedPropertiesWithoutUndo();
 
             return assets.Count;
@@ -426,6 +429,31 @@ namespace Codigames.Game.Editor.WebImport
                 site.FindPropertyRelative("_anchor").vector2IntValue = new Vector2Int(abandoned[i].X, abandoned[i].Y);
                 site.FindPropertyRelative("_sight").intValue = (int)abandoned[i].Sight;
                 site.FindPropertyRelative("_name").stringValue = abandoned[i].Name;
+            }
+
+            var landmarks = map.Landmarks ?? new List<LandmarkDoc>();
+            list = asset.FindProperty("_landmarks");
+            list.arraySize = landmarks.Count;
+            for (var i = 0; i < landmarks.Count; i++)
+            {
+                var site = list.GetArrayElementAtIndex(i);
+                site.FindPropertyRelative("_id").stringValue = landmarks[i].Id;
+                site.FindPropertyRelative("_kind").stringValue = landmarks[i].Kind;
+                site.FindPropertyRelative("_anchor").vector2IntValue = new Vector2Int(landmarks[i].X, landmarks[i].Y);
+                site.FindPropertyRelative("_size").intValue = landmarks[i].Size ?? 1;
+                site.FindPropertyRelative("_claimCost").doubleValue = landmarks[i].ClaimCost;
+            }
+
+            // The web's LANDMARK_ART: each kind's name and drawing.
+            var kinds = new[] { ("StandingStones", "Standing stones", "landmark_stones"), ("Leyspring", "Leyspring", "landmark_leyspring") };
+            list = asset.FindProperty("_landmarkKinds");
+            list.arraySize = kinds.Length;
+            for (var i = 0; i < kinds.Length; i++)
+            {
+                var kind = list.GetArrayElementAtIndex(i);
+                kind.FindPropertyRelative("_kind").stringValue = kinds[i].Item1;
+                kind.FindPropertyRelative("_name").stringValue = kinds[i].Item2;
+                kind.FindPropertyRelative("_art").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/Features/{kinds[i].Item3}.png");
             }
 
             asset.ApplyModifiedPropertiesWithoutUndo();

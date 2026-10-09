@@ -12,16 +12,21 @@ namespace Codigames.Kingdom.Magic
 
         private readonly IManaSettings _settings;
         private readonly IBonuses _bonuses;
+        private readonly IManaSources _sources;
 
-        public ManaPool(ManaState state, ITreasury treasury, IManaSettings settings, IBonuses bonuses = null)
+        public ManaPool(ManaState state, ITreasury treasury, IManaSettings settings, IBonuses bonuses = null, IManaSources sources = null)
             : base(state, treasury, MANA)
         {
             _settings = settings;
             _bonuses = bonuses;
+            _sources = sources;
         }
 
-        public override double Cap => System.Math.Round(_settings.BaseCap * _bonuses.Multiplier(TechStats.MANA_CAP), System.MidpointRounding.AwayFromZero);
+        // The base and everything that raises it, then the tree's share of the whole.
+        public override double Cap
+            => System.Math.Round((_settings.BaseCap + (_sources?.ExtraCap ?? 0)) * _bonuses.Multiplier(TechStats.MANA_CAP),
+                System.MidpointRounding.AwayFromZero);
 
-        public override double PerHour => _settings.BasePerHour * _bonuses.Multiplier(TechStats.MANA_REGEN);
+        public override double PerHour => (_settings.BasePerHour + (_sources?.ExtraPerHour ?? 0)) * _bonuses.Multiplier(TechStats.MANA_REGEN);
     }
 }

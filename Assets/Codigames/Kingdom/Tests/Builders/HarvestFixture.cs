@@ -87,6 +87,7 @@ namespace Codigames.Kingdom.Tests.Builders
         {
             public double BaseCap => 100;
             public double BasePerHour => 12;
+            public double LandmarkCap => 10;
         }
     }
 }

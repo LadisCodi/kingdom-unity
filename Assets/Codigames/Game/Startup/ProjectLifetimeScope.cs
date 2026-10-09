@@ -99,7 +99,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_technologies).As<ICatalog<ITechnology>>().As<ITechnologyCards>();
             builder.RegisterInstance(_techTree).AsSelf().As<ITechTree>();
             builder.RegisterInstance(_knowledge).As<IKnowledgeSettings>();
-            builder.RegisterInstance(_sites).As<IProvinceSites>();
+            builder.RegisterInstance(_sites).AsSelf().As<IProvinceSites>();
             builder.RegisterInstance(_treasure).As<ITreasureSettings>();
         }
     }
