@@ -10,23 +10,38 @@ namespace Codigames.Game.UI.Stage
         public const string BACK = "back";
         private const string CLOSE = "close";
 
+        private CoachTarget[] _enabled = new CoachTarget[0];
+        private int _foundAt = -1;
+
+        // The tagged controls enabled now, looked up once a frame however often they are asked for.
+        private CoachTarget[] Enabled
+        {
+            get
+            {
+                if (_foundAt == Time.frameCount) return _enabled;
+                _foundAt = Time.frameCount;
+                _enabled = Object.FindObjectsByType<CoachTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+                return _enabled;
+            }
+        }
+
         // The control with this key that the player can see now, or null.
         public RectTransform Find(string key)
         {
             if (string.IsNullOrEmpty(key)) return null;
             if (key == BACK) return Topmost(CLOSE);
 
-            foreach (var target in CoachTarget.Active)
+            foreach (var target in Enabled)
                 if (target.Answers(key) && IsSeen(target.Rect)) return target.Rect;
             return null;
         }
 
         // Of the controls with this key on screen, the one drawn last: a sheet opened over a book comes after it.
-        private static RectTransform Topmost(string key)
+        private RectTransform Topmost(string key)
         {
             RectTransform best = null;
             List<int> bestPath = null;
-            foreach (var target in CoachTarget.Active)
+            foreach (var target in Enabled)
             {
                 if (!target.Answers(key) || !IsSeen(target.Rect)) continue;
                 var path = DrawOrder(target.transform);

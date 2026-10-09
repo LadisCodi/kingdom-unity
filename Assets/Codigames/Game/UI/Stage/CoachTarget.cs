@@ -4,18 +4,14 @@ using UnityEngine;
 namespace Codigames.Game.UI.Stage
 {
     // A control a scene can name ("nav:build", "card:upgrade", "build:Housing"): what a line waits to see on screen,
-    // and what its pointer shows. Views tag their controls with `Tag`, rows and cards when they are filled.
+    // and what its pointer shows. Views tag their controls with `Tag`, rows and cards when they are filled; UiTargets
+    // finds the ones enabled.
     [RequireComponent(typeof(RectTransform))]
     public class CoachTarget : MonoBehaviour
     {
-        private static readonly List<CoachTarget> ACTIVE = new();
-
         [SerializeField] private List<string> _keys = new();
 
         public RectTransform Rect => (RectTransform)transform;
-
-        // Every control enabled now, in no particular order.
-        public static IReadOnlyList<CoachTarget> Active => ACTIVE;
 
         // Names `control` by these keys, replacing any it had.
         public static void Tag(Component control, params string[] keys)
@@ -34,9 +30,5 @@ namespace Codigames.Game.UI.Stage
                 if (anyOfKind ? own.StartsWith(key) : own == key) return true;
             return false;
         }
-
-        private void OnEnable() => ACTIVE.Add(this);
-
-        private void OnDisable() => ACTIVE.Remove(this);
     }
 }

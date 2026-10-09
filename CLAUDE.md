@@ -183,7 +183,12 @@ Two corollaries:
   service with (or that will have) more than one implementation. Not for a
   class that is just an internal detail.
 - **No static mutable state, no singletons.** Static is only for pure
-  functions and constants.
+  functions and constants. Play mode enters with **domain reload off**
+  (Project Settings › Editor › Enter Play Mode Options), so a static that
+  changes would carry over from one play session to the next. A plugin's
+  statics that do not reset themselves are emptied in a
+  `[RuntimeInitializeOnLoadMethod(SubsystemRegistration)]` hook
+  (`Game/Map/LeanTouchReset.cs`).
 
 ### Project layout
 
