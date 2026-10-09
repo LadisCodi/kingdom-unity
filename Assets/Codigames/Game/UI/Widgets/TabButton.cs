@@ -14,10 +14,16 @@ namespace Codigames.Game.UI.Widgets
         [SerializeField] private Sprite _down;
         [SerializeField] private RectTransform _content;
         [SerializeField, Tooltip("How far the face sinks while open, in reference pixels.")] private float _press = 8;
+        [SerializeField, Tooltip("How many of the tab's buildings can be built now.")] private Kit.CtaBadge _badge;
 
         public event Action Tapped;
 
         public string Id => _id;
+
+        public void SetBadge(int count)
+        {
+            if (_badge != null) _badge.Show(count);
+        }
 
         public void SetOpen(bool open)
         {

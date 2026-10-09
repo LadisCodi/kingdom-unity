@@ -28,6 +28,7 @@ namespace Codigames.Game.Editor.Art
             ["window-frame"] = new Vector4(64, 64, 64, 64), ["window-header"] = Ends(60),
             ["plate-fill"] = new Vector4(26, 26, 26, 26), ["plate-rim"] = new Vector4(26, 26, 26, 26),
             ["disc-fill"] = new Vector4(63, 63, 63, 63), ["disc-rim"] = new Vector4(63, 63, 63, 63),
+            ["plate-parchment"] = new Vector4(64, 64, 64, 64),
             ["rb-page"] = new Vector4(56, 56, 56, 56), ["hud-know-tab"] = new Vector4(64, 70, 64, 20), ["know-frame"] = Ends(60),
             ["dialogue-frame"] = new Vector4(100, 100, 100, 100),
             ["ribbon-blue"] = Ends(100), ["ribbon-brown"] = Ends(100), ["ribbon-crimson"] = Ends(100), ["ribbon-green"] = Ends(100),

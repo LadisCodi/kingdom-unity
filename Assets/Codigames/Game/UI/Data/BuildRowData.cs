@@ -3,13 +3,12 @@ using UnityEngine;
 
 namespace Codigames.Game.UI.Data
 {
-    // One row of the build menu, ready to show.
+    // One row of the build menu, ready to show (the web's bld-card).
     public sealed class BuildRowData
     {
         public BuildRowData(string id, string name, string ordinal, string promise, Sprite art,
-            IReadOnlyList<PriceTerm> price, string wait, string built, bool available, bool locked = false)
+            IReadOnlyList<PriceTerm> price, string wait, string built, bool available, string why = null, bool known = true)
         {
-            Locked = locked;
             Id = id;
             Name = name;
             Ordinal = ordinal;
@@ -19,6 +18,8 @@ namespace Codigames.Game.UI.Data
             Wait = wait;
             Built = built;
             Available = available;
+            Why = why;
+            Known = known;
         }
 
         public string Id { get; }
@@ -33,10 +34,16 @@ namespace Codigames.Game.UI.Data
         public string Wait { get; }
         public string Built { get; }
 
-        // False when it cannot be built now: the row is drawn as such and refuses a tap.
+        // False when it cannot be built now: a tap shakes it.
         public bool Available { get; }
 
-        // Behind a technology: a padlock on its art, and what opens it in place of its promise and its price.
-        public bool Locked { get; }
+        // What keeps it shut — a technology, or the cap — in place of its promise and price; null when it is open.
+        // A shut row wears the locked paper, its art drained and padlocked.
+        public string Why { get; }
+
+        // False while a technology has still to open it: no wait and no count yet.
+        public bool Known { get; }
+
+        public bool Blocked => !string.IsNullOrEmpty(Why);
     }
 }

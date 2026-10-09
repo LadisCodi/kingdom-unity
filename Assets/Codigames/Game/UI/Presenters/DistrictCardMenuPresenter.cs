@@ -23,7 +23,8 @@ namespace Codigames.Game.UI.Presenters
     // One building's card (the web's districtCard): its name, number and level; what it is; Upgrade — which opens the
     // upgrade sheet — or, while it is being built, the gem Finish; the band of what it is worth now; the Townhall's
     // training panel and a producer's crew. Redrawn once a second and whenever the purse, a job or the line moves.
-    public class DistrictCardMenuPresenter : AbstractDataMenuPresenter<DistrictCardMenu, string>, IClosableMenuPresenter, ITickable
+    public class DistrictCardMenuPresenter : AbstractDataMenuPresenter<DistrictCardMenu, string>, IClosableMenuPresenter, ITickable,
+        IInspectedDistrict
     {
         private const string VILLAGER = "Villager";
 
@@ -78,6 +79,8 @@ namespace Codigames.Game.UI.Presenters
         }
 
         private DistrictState District => _city.Districts.FirstOrDefault(d => d.Id == Data);
+
+        public string Inspected => IsShown ? Data : null;
 
         public void RequestClose() => _ = _ui.HideMenu<DistrictCardMenu>();
 

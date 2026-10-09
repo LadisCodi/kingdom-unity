@@ -41,6 +41,13 @@ namespace Codigames.Game.UI.Menus
             foreach (var tab in _tabs) tab.SetOpen(tab.Id == id);
         }
 
+        // Each tab's call to action: how many of its buildings can be built now.
+        public void SetTabBadge(string id, int count)
+        {
+            foreach (var tab in _tabs)
+                if (tab.Id == id) tab.SetBadge(count);
+        }
+
         public void SetRows(IReadOnlyList<BuildRowData> rows)
         {
             for (var i = 0; i < rows.Count; i++)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Codigames.Modules.Core;
 using Codigames.Game.Audio;
 using Codigames.Game.Data.City;
 using Codigames.Game.UI.Data;
@@ -29,14 +30,20 @@ namespace Codigames.Game.UI.Presenters
         private readonly Localizer _localizer;
         private readonly ISoundService _sounds;
         private readonly TechProse _prose;
+        private readonly ICatalog<IBuildingDefinition> _buildings;
+        private readonly CityState _city;
+        private readonly IConstructionSettings _settings;
 
         // Remembered between openings, so placement's way back lands on the same tab.
         private string _tab = FIRST_TAB;
 
         public BuildMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, ITreasury treasury,
             IBuildingCards cards, NumberFormat numbers, Localizer localizer, ISoundService sounds,
-            TechProse prose) : base(views)
+            TechProse prose, ICatalog<IBuildingDefinition> buildings, CityState city, IConstructionSettings settings) : base(views)
         {
+            _buildings = buildings;
+            _city = city;
+            _settings = settings;
             _prose = prose;
             _sounds = sounds;
             _ui = ui;
@@ -117,6 +124,10 @@ namespace Codigames.Game.UI.Presenters
                 .ToList();
 
             View.SetRows(rows);
+
+            foreach (var tab in new[] { "Economy", "Military", "Decoration" })
+                View.SetTabBadge(tab, _cards.Cards.Count(c => c.Buildable && c.BuildTab == tab
+                                                            && _construction.BuildRefusal(c.Id) == ConstructionRefusal.None));
         }
 
         // What can be built first, then what is waiting on money or a builder, then what is capped, then what a
@@ -129,14 +140,25 @@ namespace Codigames.Game.UI.Presenters
             _ => 1,
         };
 
+        // The cap's words: the Townhall level that lets one more stand, or that the realm allows no more.
+        private string CapReason(string id, int count)
+        {
+            var building = _buildings.Get(id);
+            var level = CityQueries.TownhallLevel(_city, _settings);
+            for (var next = level + 1; next <= building.Gates.MaxCountPerTownhallLevel.Count; next++)
+                if (CityQueries.MaxCount(building, next) > count)
+                    return _localizer.Tr("Needs Townhall level {n}", ("n", _numbers.Exact(next)));
+            return _localizer.Tr("You have as many as the realm allows");
+        }
+
         private BuildRowData Row(IBuildingCard card, BuildOffer offer)
         {
             // Not yet opened: what opens it, by name, in place of a promise and a price — there is nothing to pay yet.
             if (offer.Refusal == ConstructionRefusal.NeedsResearch)
             {
                 return new BuildRowData(card.Id, _localizer.Capitalized(_localizer.Tr(card.DisplayName)), string.Empty,
-                    _localizer.Tr("Research {tech}", ("tech", _prose.Name(offer.RequiredTech))), card.ArtFor(1),
-                    Array.Empty<PriceTerm>(), string.Empty, string.Empty, false, true);
+                    string.Empty, card.ArtFor(1), Array.Empty<PriceTerm>(), string.Empty, string.Empty, false,
+                    _localizer.Tr("Research {tech}", ("tech", _prose.Name(offer.RequiredTech))), known: false);
             }
 
             var price = offer.Price
@@ -144,7 +166,7 @@ namespace Codigames.Game.UI.Presenters
                 .ToList();
 
             var built = offer.Cap.HasValue
-                ? _localizer.Tr("Built {n}/{max}", ("n", _numbers.Number(offer.Count)), ("max", _numbers.Number(offer.Cap.Value)))
+                ? _localizer.Tr("Built {count}/{max}", ("count", _numbers.Number(offer.Count)), ("max", _numbers.Number(offer.Cap.Value)))
                 : _localizer.Tr("Built {n}", ("n", _numbers.Number(offer.Count)));
 
             var atCap = offer.Refusal == ConstructionRefusal.AtCap;
@@ -152,7 +174,8 @@ namespace Codigames.Game.UI.Presenters
             return new BuildRowData(card.Id, _localizer.Capitalized(_localizer.Tr(card.DisplayName)),
                 offer.Numbered && !atCap ? "#" + _numbers.Number(offer.Ordinal) : string.Empty,
                 _localizer.Tr(card.Promise), card.ArtFor(1), atCap ? Array.Empty<PriceTerm>() : price,
-                atCap ? "--" : _numbers.Duration(offer.Seconds), built, offer.Refusal == ConstructionRefusal.None);
+                _numbers.Duration(offer.Seconds), built, offer.Refusal == ConstructionRefusal.None,
+                atCap ? CapReason(card.Id, offer.Count) : null);
         }
     }
 }
