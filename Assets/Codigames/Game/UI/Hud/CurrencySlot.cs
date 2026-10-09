@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 namespace Codigames.Game.UI.Hud
 {
-    // One currency on the header's plank: its icon over the slot's left end, its amount, and a + when the
-    // store sells it. View only: the header's presenter fills it.
+    // One currency on the header's plank: its icon over the slot's left end, its amount, a + when the store
+    // sells it, and a fill under both when it is a pool (Mana). View only: the header's presenter fills it.
     public class CurrencySlot : MonoBehaviour
     {
         [SerializeField] private Button _button;
@@ -16,6 +16,11 @@ namespace Codigames.Game.UI.Hud
         [SerializeField] private LayoutElement _layout;
         [SerializeField, Tooltip("The amount's right margin without and with the +.")]
         private Vector2 _amountRight = new(21, 53);
+        [SerializeField, Tooltip("A pool's fill under the icon and the amount: its mask, cut to the fraction.")]
+        private RectTransform _gauge;
+        [SerializeField] private RectTransform _gaugeFill;
+        [SerializeField, Tooltip("The amount's size, and a smaller one for a line that takes its turn (a countdown).")]
+        private Vector2 _amountSizes = new(30, 22);
 
         public event Action Tapped;
 
@@ -32,7 +37,23 @@ namespace Codigames.Game.UI.Hud
             amount.offsetMax = new Vector2(-(sold ? _amountRight.y : _amountRight.x), amount.offsetMax.y);
         }
 
-        public void SetAmount(string amount) => _amount.text = amount;
+        public void SetAmount(string amount, bool small = false)
+        {
+            _amount.text = amount;
+            _amount.fontSize = small ? _amountSizes.y : _amountSizes.x;
+        }
+
+        // A pool's fill, 0 to 1; null for a currency that is not a pool.
+        public void SetGauge(float? fraction)
+        {
+            _gauge.gameObject.SetActive(fraction.HasValue);
+            if (!fraction.HasValue) return;
+
+            _gauge.anchorMax = new Vector2(Mathf.Clamp01(fraction.Value), 1f);
+            // The fill keeps the whole slot's length inside its inset; the mask shows the fraction of it.
+            var full = ((RectTransform)_gauge.parent).rect.width - _gauge.offsetMin.x * 2f;
+            _gaugeFill.sizeDelta = new Vector2(full, _gaugeFill.sizeDelta.y);
+        }
 
         private void OnEnable() => _button.onClick.AddListener(OnTapped);
 

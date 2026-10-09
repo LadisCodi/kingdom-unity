@@ -60,7 +60,7 @@ namespace Codigames.Game.Startup
                 () => resolver.Resolve<IEnumerable<IMenuPresenter>>(), resolver.Resolve<IMenuGroups>()), Lifetime.Singleton);
             builder.RegisterEntryPoint<MenuBackInputHandler>();
 
-            builder.Register<HeaderMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<HeaderMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<NavMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<BuildMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
             builder.Register<PlacementMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
