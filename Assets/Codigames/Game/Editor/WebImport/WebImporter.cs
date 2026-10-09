@@ -47,11 +47,11 @@ namespace Codigames.Game.Editor.WebImport
             ["Fish"] = "Food", ["MountainIron"] = "Stone", ["MountainGold"] = "Gold",
         };
 
-        private static readonly (string Id, string Source, string RespawnTerrain)[] FEATURES =
+        private static readonly (string Id, string Source, string RespawnTerrain, int MaxFootprint)[] FEATURES =
         {
-            ("Trees", "Forest", "Grassland"), ("Mountain", "Stone", "Grassland"), ("MountainIron", "MountainIron", "Grassland"),
-            ("MountainGold", "MountainGold", "Grassland"), ("BerryBush", "Berries", "Grassland"), ("WildAnimals", "Meat", "Grassland"),
-            ("FishShoal", "Fish", "Water"), ("Crops", "Crops", "Grassland"),
+            ("Trees", "Forest", "Grassland", 1), ("Mountain", "Stone", "Grassland", 3), ("MountainIron", "MountainIron", "Grassland", 1),
+            ("MountainGold", "MountainGold", "Grassland", 1), ("BerryBush", "Berries", "Grassland", 1), ("WildAnimals", "Meat", "Grassland", 1),
+            ("FishShoal", "Fish", "Water", 1), ("Crops", "Crops", "Grassland", 1),
         };
 
         [MenuItem("Kingdom/Import web prototype data")]
@@ -196,7 +196,7 @@ namespace Codigames.Game.Editor.WebImport
             SetEntries(LoadOrCreate<HarvestSourceCollection>(null, "HarvestSources"), sources.Values.ToList<DefinitionAsset>());
 
             var features = new List<DefinitionAsset>();
-            foreach (var (id, source, respawnTerrain) in FEATURES)
+            foreach (var (id, source, respawnTerrain, maxFootprint) in FEATURES)
             {
                 var asset = LoadOrCreate<FeatureAsset>("Features", id);
                 var so = new SerializedObject(asset);
@@ -204,6 +204,11 @@ namespace Codigames.Game.Editor.WebImport
                 so.FindProperty("_source").objectReferenceValue = sources[source];
                 so.FindProperty("_respawnTerrain").stringValue = respawnTerrain;
                 so.FindProperty("_tile").objectReferenceValue = AssetDatabase.LoadAssetAtPath<TileBase>($"Assets/Art/Features/Tiles/{id}.asset");
+                so.FindProperty("_maxFootprint").intValue = maxFootprint;
+                var blocks = so.FindProperty("_blockTiles");
+                blocks.arraySize = Mathf.Max(0, maxFootprint - 1);
+                for (var size = 2; size <= maxFootprint; size++)
+                    blocks.GetArrayElementAtIndex(size - 2).objectReferenceValue = MapImporter.BlockTile(id, size);
                 so.ApplyModifiedPropertiesWithoutUndo();
                 features.Add(asset);
             }

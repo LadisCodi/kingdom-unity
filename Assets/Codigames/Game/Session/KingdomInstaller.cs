@@ -37,6 +37,8 @@ namespace Codigames.Game.Session
             builder.Register(resolver => resolver.Resolve<KingdomState>().Harvest, Lifetime.Singleton);
             builder.Register(resolver => resolver.Resolve<KingdomState>().Mana, Lifetime.Singleton);
             builder.Register(resolver => resolver.Resolve<KingdomState>().Fog, Lifetime.Singleton);
+            builder.Register(resolver => new Footprints(resolver.Resolve<IProvinceMap>(), resolver.Resolve<ICatalog<IFeatureDefinition>>()),
+                Lifetime.Singleton);
             builder.Register<FogOfWar>(Lifetime.Singleton).AsSelf().As<IRevealedGround>().As<IExploredGround>();
             builder.Register(resolver => resolver.Resolve<KingdomState>().Research, Lifetime.Singleton);
             builder.Register(resolver => resolver.Resolve<KingdomState>().Knowledge, Lifetime.Singleton);

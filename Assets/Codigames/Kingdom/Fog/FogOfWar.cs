@@ -30,11 +30,13 @@ namespace Codigames.Kingdom.Fog
         private readonly ITreasury _treasury;
         private readonly IResearchGates _gates;
         private readonly IBonuses _bonuses;
+        private readonly Footprints _footprints;
 
         public FogOfWar(FogState state, CityState city, IProvinceMap map, ICatalog<IBuildingDefinition> buildings,
             IConstructionSettings construction, IFogSettings settings, ITreasury treasury, IResearchGates gates = null,
-            IBonuses bonuses = null)
+            IBonuses bonuses = null, Footprints footprints = null)
         {
+            _footprints = footprints;
             _gates = gates;
             _bonuses = bonuses;
             _state = state;
@@ -64,31 +66,37 @@ namespace Codigames.Kingdom.Fog
 
         public bool IsRevealed(Vector2Int cell) => _state.Revealed.Contains(cell);
 
+        // A block is seen when any of its cells is.
         public Visibility VisibilityAt(Vector2Int cell)
         {
             if (_state.Revealed.Contains(cell)) return Visibility.Revealed;
-            if (_state.Discovered.Contains(cell) || NextToRevealed(cell)) return Visibility.Discovered;
+            if (Block(cell).Any(c => _state.Discovered.Contains(c) || NextToRevealed(c))) return Visibility.Discovered;
             return Visibility.Undiscovered;
         }
 
-        public int TapsDone(Vector2Int cell) => _state.Progress.TryGetValue(cell, out var done) ? done : 0;
+        // The taps paid on a cell's block (a cell is a block of one).
+        public int TapsDone(Vector2Int cell) => _state.Progress.TryGetValue(AnchorOf(cell), out var done) ? done : 0;
 
-        // The frontier stays connected: a cell may be paid for only when it touches revealed ground.
-        public bool IsReachable(Vector2Int cell) => !IsRevealed(cell) && NextToRevealed(cell);
+        // The frontier stays connected: a block may be paid for only when one of its cells touches revealed ground.
+        public bool IsReachable(Vector2Int cell) => !IsRevealed(cell) && Block(cell).Any(NextToRevealed);
 
         public int Reach => At(_settings.ReachPerTownhallLevel, CityQueries.TownhallLevel(_city, _construction));
 
-        public bool IsWithinReach(Vector2Int cell) => Rings(cell) <= Reach;
+        // One cell of a block inside the reach opens the whole of it.
+        public bool IsWithinReach(Vector2Int cell) => Block(cell).Any(c => Rings(c) <= Reach);
+
+        // The cells that clear together: a block's, or the cell alone.
+        public IEnumerable<Vector2Int> Block(Vector2Int cell) => _footprints?.CellsOf(cell) ?? new[] { cell };
 
         // A Discovered cell the player can clear now: reachable and within reach.
         public bool IsPayable(Vector2Int cell) => _map.Contains(cell) && IsReachable(cell) && IsWithinReach(cell);
 
-        // The whole cell's Gold: its ring's price, grown with the revealed count, three significant figures.
+        // The whole block's Gold, the sum of its cells': each its ring's price, grown with the revealed count, three
+        // significant figures.
         public double Cost(Vector2Int cell)
         {
             var growth = _settings.CountStep <= 0 ? 1 : Math.Pow(_settings.CountGrowth, Math.Floor((double)RevealedCount / _settings.CountStep));
-            var cost = Math.Max(_settings.MinCost, Math.Round(RingCost(Rings(cell)) * growth, MidpointRounding.AwayFromZero));
-            return Prices.RoundPrice(cost);
+            return Block(cell).Sum(c => Prices.RoundPrice(Math.Max(_settings.MinCost, Math.Round(RingCost(Rings(c)) * growth, MidpointRounding.AwayFromZero))));
         }
 
         // What one tap charges: the price split in shares that sum to it exactly, the first ones a unit dearer when
@@ -113,15 +121,16 @@ namespace Codigames.Kingdom.Fog
             if (!_treasury.TryPay(new Dictionary<string, double> { [GOLD] = payment })) return RevealResult.NotEnoughGold;
 
             var done = TapsDone(cell) + 1;
+            var block = Block(cell).ToList();
             if (done < _settings.TapsToReveal)
             {
-                _state.Progress[cell] = done;
-                Tapped?.Invoke(cell, done);
+                _state.Progress[AnchorOf(cell)] = done;
+                foreach (var part in block) Tapped?.Invoke(part, done);
                 return RevealResult.Paid;
             }
 
-            _state.Progress.Remove(cell);
-            Reveal(new[] { cell });
+            _state.Progress.Remove(AnchorOf(cell));
+            Reveal(block);
             return RevealResult.Revealed;
         }
 
@@ -160,7 +169,8 @@ namespace Codigames.Kingdom.Fog
         {
             var changed = new HashSet<Vector2Int>(alsoSeen ?? Array.Empty<Vector2Int>());
 
-            foreach (var cell in cells)
+            // A block clears whole, whatever revealed one of its cells.
+            foreach (var cell in cells.SelectMany(Block).Where(_map.Contains).Distinct().ToList())
             {
                 if (!_state.Revealed.Add(cell)) continue;
                 _state.Discovered.Remove(cell);
@@ -175,6 +185,8 @@ namespace Codigames.Kingdom.Fog
 
         private IEnumerable<Vector2Int> Around(DistrictState district, IBuildingDefinition building, int radius)
             => GridMath.AroundRect(district.Anchor, building.Width, building.Height, radius).Where(_map.Contains);
+
+        private Vector2Int AnchorOf(Vector2Int cell) => _footprints?.AnchorOf(cell) ?? cell;
 
         private bool NextToRevealed(Vector2Int cell) => GridMath.Neighbours(cell).Any(_state.Revealed.Contains);
 

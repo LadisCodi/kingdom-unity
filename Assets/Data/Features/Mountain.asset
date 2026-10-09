@@ -15,4 +15,8 @@ MonoBehaviour:
   _id: Mountain
   _source: {fileID: 11400000, guid: 95c5ae8600d2663e0a6c8427b4e25d37, type: 2}
   _respawnTerrain: Grassland
+  _maxFootprint: 3
   _tile: {fileID: 11400000, guid: 3e133f02c44fde7a694b5da76240859c, type: 2}
+  _blockTiles:
+  - {fileID: 11400000, guid: 9304c63b1bc9be7b5bf795065f0cf694, type: 2}
+  - {fileID: 11400000, guid: a75a9f7f5894598b1a8099e9b86a1e7e, type: 2}

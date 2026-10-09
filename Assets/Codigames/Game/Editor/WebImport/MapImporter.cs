@@ -73,10 +73,22 @@ namespace Codigames.Game.Editor.WebImport
             Debug.Log($"#Map# Imported {map.terrain.cells.Count} terrain cells and {map.features.cells.Count} features.");
         }
 
-        private static VariantTile Tile(string folder, string id, string artFolder, string stem)
+        // A feature's block drawing (<stem>_2x2.png), as a tile with the feature's id; null when it has none.
+        internal static VariantTile BlockTile(string featureId, int size)
+        {
+            if (!FEATURE_ART.TryGetValue(featureId, out var stem)) return null;
+            var art = $"{stem}_{size}x{size}";
+            return AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/Features/{art}.png") == null
+                ? null
+                : Tile(FEATURE_TILES, $"{featureId}_{size}x{size}", featureId, "Assets/Art/Features", art);
+        }
+
+        private static VariantTile Tile(string folder, string id, string artFolder, string stem) => Tile(folder, id, id, artFolder, stem);
+
+        private static VariantTile Tile(string folder, string file, string id, string artFolder, string stem)
         {
             Directory.CreateDirectory(folder);
-            var path = $"{folder}/{id}.asset";
+            var path = $"{folder}/{file}.asset";
             var tile = AssetDatabase.LoadAssetAtPath<VariantTile>(path);
             if (tile == null)
             {

@@ -10,5 +10,8 @@ namespace Codigames.Kingdom.Harvest
 
         // The terrain it comes back on when it respawns.
         string RespawnTerrain { get; }
+
+        // The largest square block its painted cells group into (a mountain: 3); 1 for what is always one cell.
+        int MaxFootprint { get; }
     }
 }
