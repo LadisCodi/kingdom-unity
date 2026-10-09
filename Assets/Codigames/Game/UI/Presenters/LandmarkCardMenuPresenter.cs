@@ -29,11 +29,13 @@ namespace Codigames.Game.UI.Presenters
         private readonly IClock _clock;
         private readonly ISoundService _sounds;
         private readonly IQuickInfoMessageService _messages;
+        private readonly CardFraming _framing;
 
         public LandmarkCardMenuPresenter(IMenuViewFactory views, UIManager ui, Landmarks landmarks, ProvinceSitesAsset sites,
             IManaSettings manaSettings, ManaPool mana, ITreasury treasury, NumberFormat numbers, Localizer localizer, IClock clock,
-            ISoundService sounds, IQuickInfoMessageService messages) : base(views)
+            ISoundService sounds, IQuickInfoMessageService messages, CardFraming framing) : base(views)
         {
+            _framing = framing;
             _ui = ui;
             _landmarks = landmarks;
             _sites = sites;
@@ -52,6 +54,9 @@ namespace Codigames.Game.UI.Presenters
         protected override void BindInternal(LandmarkCardMenu view)
         {
             Refresh();
+            if (_landmarks.All.FirstOrDefault(l => l.Id == Data) is { } site)
+                _framing.Frame(site.Anchor, site.Size, site.Size, View.CardTop);
+
             _treasury.Changed += OnTreasuryChanged;
         }
 

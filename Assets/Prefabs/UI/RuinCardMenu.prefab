@@ -1661,6 +1661,7 @@ MonoBehaviour:
   _need: {fileID: 61488231988945729}
   _needText: {fileID: 8961734636161540762}
   _repair: {fileID: 5626936265332758809}
+  _card: {fileID: 234843484177157311}
 --- !u!1 &8445546900416232521
 GameObject:
   m_ObjectHideFlags: 0
@@ -2013,6 +2014,7 @@ GameObject:
   - component: {fileID: 3743667219166126497}
   - component: {fileID: 176458658448314085}
   - component: {fileID: 5142075767583769337}
+  - component: {fileID: 234843484177157311}
   m_Layer: 5
   m_Name: Window
   m_TagString: Untagged
@@ -2084,6 +2086,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &234843484177157311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9120505260215037016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4b97d54aba32b3d99c14d480ee8dd8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.UI.Kit.MapCard
 --- !u!1001 &2270731359960538183
 PrefabInstance:
   m_ObjectHideFlags: 0

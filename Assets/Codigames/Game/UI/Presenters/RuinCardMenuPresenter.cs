@@ -25,11 +25,13 @@ namespace Codigames.Game.UI.Presenters
         private readonly IClock _clock;
         private readonly ISoundService _sounds;
         private readonly IQuickInfoMessageService _messages;
+        private readonly CardFraming _framing;
 
         public RuinCardMenuPresenter(IMenuViewFactory views, UIManager ui, Ruins ruins, BuildingCollection buildings, ITreasury treasury,
             NumberFormat numbers, Localizer localizer, IClock clock, ISoundService sounds,
-            IQuickInfoMessageService messages) : base(views)
+            IQuickInfoMessageService messages, CardFraming framing) : base(views)
         {
+            _framing = framing;
             _ui = ui;
             _ruins = ruins;
             _buildings = buildings;
@@ -46,6 +48,12 @@ namespace Codigames.Game.UI.Presenters
         protected override void BindInternal(RuinCardMenu view)
         {
             Refresh();
+            if (_ruins.Get(Data) is { } site)
+            {
+                var building = _buildings.Get<BuildingAsset>(site.District);
+                _framing.Frame(site.Anchor, building.Width, building.Height, View.CardTop);
+            }
+
             _treasury.Changed += OnTreasuryChanged;
         }
 

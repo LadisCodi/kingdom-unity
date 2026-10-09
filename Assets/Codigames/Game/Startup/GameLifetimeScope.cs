@@ -112,6 +112,7 @@ namespace Codigames.Game.Startup
             builder.Register<PlacementMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
             builder.Register<DistrictCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>().As<IInspectedDistrict>();
             builder.Register<UpgradeSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<CardFraming>(Lifetime.Singleton);
             builder.Register<Codigames.Game.UI.Buildings.BuildingStatProse>(Lifetime.Singleton);
             builder.Register<TechProse>(Lifetime.Singleton);
             builder.Register<RuinCardMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
