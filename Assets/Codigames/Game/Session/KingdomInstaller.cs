@@ -39,6 +39,7 @@ namespace Codigames.Game.Session
             builder.Register<Placement>(Lifetime.Singleton);
             builder.Register<Construction>(Lifetime.Singleton);
             builder.Register<ManaPool>(Lifetime.Singleton);
+            builder.Register<Stores>(Lifetime.Singleton);
             builder.Register(resolver => new Harvesting(resolver.Resolve<HarvestState>(), resolver.Resolve<GroundState>(),
                 resolver.Resolve<CityState>(), resolver.Resolve<IProvinceMap>(), resolver.Resolve<ICatalog<IBuildingDefinition>>(),
                 resolver.Resolve<ICatalog<IFeatureDefinition>>(), resolver.Resolve<ICatalog<IHarvestSource>>(),
@@ -56,6 +57,11 @@ namespace Codigames.Game.Session
                 mana.Wake(state.LastAdvance);
                 timeline.Register(mana);
                 timeline.Register(resolver.Resolve<Harvesting>());
+
+                // Stores registered after construction, so a level finishing is counted before a store fills.
+                var stores = resolver.Resolve<Stores>();
+                stores.WakeAll(state.LastAdvance);
+                timeline.Register(stores);
                 return timeline;
             }, Lifetime.Singleton);
 

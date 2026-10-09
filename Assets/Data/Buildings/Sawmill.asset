@@ -125,6 +125,21 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 01000000020000000300000004000000040000000500000005000000060000000600000006000000
     _requiredTownhallLevelPerLevel: 01000000020000000300000004000000060000000700000008000000090000000a000000
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel:
+    - 1100
+    - 2400
+    - 4400
+    - 7400
+    - 12000
+    - 31000
+    - 62000
+    - 110000
+    - 180000
+    - 290000
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
   _displayName: Sawmill
   _promise: Workers fell the forest around it
   _description: Woodcutters fell the forest nearby and stack the timber.

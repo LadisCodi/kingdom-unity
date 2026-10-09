@@ -125,6 +125,21 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 01000000020000000300000004000000040000000500000005000000060000000600000006000000
     _requiredTownhallLevelPerLevel: 02000000030000000300000004000000060000000700000008000000090000000a000000
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel:
+    - 420
+    - 910
+    - 1700
+    - 2900
+    - 4600
+    - 12000
+    - 24000
+    - 42000
+    - 69000
+    - 110000
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
   _displayName: Quarry
   _promise: Workers cut stone from nearby rock
   _description: Its workers cut stone and iron from the hills nearby.

@@ -9,6 +9,9 @@ namespace Codigames.Kingdom.City.State
         public List<ConstructionJob> Jobs { get; set; } = new();
         public int Builders { get; set; }
 
+        // Villagers living in the city, housed in build order.
+        public int Population { get; set; }
+
         // Ids are handed out in order and never reused.
         public int NextId { get; set; } = 1;
 

@@ -10,7 +10,8 @@ using VContainer.Unity;
 
 namespace Codigames.Game.City
 {
-    // What a tap on the map means while no menu is open: on a building, its card; on the ground, a harvest.
+    // What a tap on the map means while no menu is open: on a building, a collect when its store is ready and
+    // its card otherwise; on the ground, a harvest.
     public class MapTaps : IStartable, IDisposable
     {
         private readonly MapGestures _gestures;
@@ -18,9 +19,12 @@ namespace Codigames.Game.City
         private readonly CityState _city;
         private readonly ICatalog<IBuildingDefinition> _buildings;
         private readonly HarvestInput _harvest;
+        private readonly CollectInput _collect;
 
-        public MapTaps(MapGestures gestures, UIManager ui, CityState city, ICatalog<IBuildingDefinition> buildings, HarvestInput harvest)
+        public MapTaps(MapGestures gestures, UIManager ui, CityState city, ICatalog<IBuildingDefinition> buildings, HarvestInput harvest,
+            CollectInput collect)
         {
+            _collect = collect;
             _gestures = gestures;
             _ui = ui;
             _city = city;
@@ -37,8 +41,8 @@ namespace Codigames.Game.City
             if (_ui.HasOverlayOpen) return;
 
             var district = CityQueries.At(_city, _buildings, cell);
-            if (district != null) _ = _ui.ShowMenu<DistrictCardMenu, string>(district.Id);
-            else _harvest.Take(cell);
+            if (district == null) _harvest.Take(cell);
+            else if (!_collect.TryCollect(district)) _ = _ui.ShowMenu<DistrictCardMenu, string>(district.Id);
         }
     }
 }

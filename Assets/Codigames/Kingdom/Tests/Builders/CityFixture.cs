@@ -18,7 +18,7 @@ namespace Codigames.Kingdom.Tests.Builders
         public CityFixture(params IBuildingDefinition[] extraBuildings)
         {
             Map = new FakeMap(-5, 5);
-            Townhall = new BuildingBuilder().WithId("Townhall").WithMaxLevel(5).WithSize(2, 2).NotBuildable().Build();
+            Townhall = MakeTownhall();
             Buildings = new Catalog<IBuildingDefinition>(new[] { Townhall }.Concat(extraBuildings));
             Settings = new FakeSettings { Townhall = Townhall };
             Currencies = new Catalog<ICurrencyDefinition>(new ICurrencyDefinition[]
@@ -38,6 +38,9 @@ namespace Codigames.Kingdom.Tests.Builders
             Timeline = new Timeline(0);
             Timeline.Register(Construction);
         }
+
+        protected virtual IBuildingDefinition MakeTownhall()
+            => new BuildingBuilder().WithId("Townhall").WithMaxLevel(5).WithSize(2, 2).NotBuildable().Build();
 
         public FakeMap Map { get; }
         public IBuildingDefinition Townhall { get; }

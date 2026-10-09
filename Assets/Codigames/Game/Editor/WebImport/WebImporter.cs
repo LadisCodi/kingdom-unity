@@ -58,6 +58,7 @@ namespace Codigames.Game.Editor.WebImport
             var buildings = ImportBuildings();
             ImportConstruction(buildings);
             ImportHarvest();
+            ImportEconomy();
             ImportMagic();
 
             AssetDatabase.SaveAssets();
@@ -134,6 +135,10 @@ namespace Codigames.Game.Editor.WebImport
                 SetInts(so.FindProperty("_gates._maxCountPerTownhallLevel"), row.MaxCountPerTownhallLevel);
                 SetInts(so.FindProperty("_gates._requiredTownhallLevelPerLevel"), row.RequiredTownhallLevelPerLevel);
                 SetInts(so.FindProperty("_gates._requiredPopulationPerLevel"), row.RequiredPopulationPerLevel);
+                SetDoubles(so.FindProperty("_production._goldPerMinutePerLevel"), row.GoldPerMinutePerLevel);
+                SetDoubles(so.FindProperty("_production._storageCapacityPerLevel"), row.StorageCapacityPerLevel);
+                SetInts(so.FindProperty("_production._populationCapacityPerLevel"), row.PopulationCapacityPerLevel);
+                SetDoubles(so.FindProperty("_production._taxBonusPerLevel"), row.TaxBonusPerLevel);
 
                 so.ApplyModifiedPropertiesWithoutUndo();
                 assets[id] = asset;
@@ -206,6 +211,15 @@ namespace Codigames.Game.Editor.WebImport
             var settings = new SerializedObject(LoadOrCreate<TapSettingsAsset>("Settings", "Tap"));
             settings.FindProperty("_workSeconds").doubleValue = tap.WorkSeconds;
             settings.FindProperty("_manaCost").doubleValue = tap.ManaCost;
+            settings.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void ImportEconomy()
+        {
+            var economy = Read<EconomyData>("Game/economy.json");
+            var settings = new SerializedObject(LoadOrCreate<EconomySettingsAsset>("Settings", "Economy"));
+            settings.FindProperty("_goldPerPopulationPerMinute").doubleValue = economy.Taxes.GoldPerPopulationPerMinute;
+            settings.FindProperty("_collectSeconds").doubleValue = economy.Storage.CollectSeconds;
             settings.ApplyModifiedPropertiesWithoutUndo();
         }
 
@@ -287,6 +301,13 @@ namespace Codigames.Game.Editor.WebImport
                 tier.FindPropertyRelative("_fromLevel").intValue = tiers[i].Level;
                 tier.FindPropertyRelative("_sprite").objectReferenceValue = tiers[i].Sprite;
             }
+        }
+
+        private static void SetDoubles(SerializedProperty list, List<double> values)
+        {
+            values ??= new List<double>();
+            list.arraySize = values.Count;
+            for (var i = 0; i < values.Count; i++) list.GetArrayElementAtIndex(i).doubleValue = values[i];
         }
 
         private static void SetInts(SerializedProperty list, List<double> values)

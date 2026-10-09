@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Codigames.Game.Data.City;
+using Codigames.Game.Data.Economy;
 using Codigames.Game.Map;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
+using Codigames.Kingdom.Economy;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Localization;
 using UnityEngine;
@@ -11,12 +13,14 @@ using VContainer;
 
 namespace Codigames.Game.City
 {
-    // The city on the map: one view per district, kept in step with what construction does, and the bars of
-    // the jobs under way.
+    // The city on the map: one view per district, kept in step with what construction does, the bars of the
+    // jobs under way, and the collect bubbles over the stores that are ready.
     public class CityView : MonoBehaviour
     {
         [SerializeField] private DistrictView _districtPrefab;
         [SerializeField] private Transform _districtsParent;
+
+        private const float STORE_CHECK_SECONDS = 0.25f;
 
         private readonly Dictionary<string, DistrictView> _views = new();
 
@@ -26,12 +30,17 @@ namespace Codigames.Game.City
         private ProvinceMap _map;
         private IClock _clock;
         private NumberFormat _numbers;
+        private Stores _stores;
+        private ICurrencyIcons _icons;
+        private float _nextStoreCheck;
 
         [Inject]
         public void Construct(CityState city, Construction construction, BuildingCollection buildings, ProvinceMap map, IClock clock,
-            NumberFormat numbers)
+            NumberFormat numbers, Stores stores, ICurrencyIcons icons)
         {
             _numbers = numbers;
+            _stores = stores;
+            _icons = icons;
             _city = city;
             _construction = construction;
             _buildings = buildings;
@@ -68,6 +77,22 @@ namespace Codigames.Game.City
 
                 var remaining = System.Math.Max(0, job.StartedAt + job.Seconds * 1000 - now) / 1000;
                 view.SetProgress((float)((now - job.StartedAt) / (job.Seconds * 1000)), _numbers.Duration(System.Math.Ceiling(remaining)));
+            }
+        }
+
+        // The collect bubbles, a few times a second: a store's readiness changes with time alone.
+        private void LateUpdate()
+        {
+            if (_city == null || Time.unscaledTime < _nextStoreCheck) return;
+            _nextStoreCheck = Time.unscaledTime + STORE_CHECK_SECONDS;
+
+            var now = _clock.NowMs;
+            foreach (var district in _city.Districts)
+            {
+                if (!_views.TryGetValue(district.Id, out var view)) continue;
+
+                var ready = _stores.IsReady(district, now);
+                view.SetStore(ready, ready ? _icons.IconOf(Stores.GOLD) : null, ready && _stores.IsFull(district, now));
             }
         }
 

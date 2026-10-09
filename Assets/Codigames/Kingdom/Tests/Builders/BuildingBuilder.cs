@@ -24,6 +24,7 @@ namespace Codigames.Kingdom.Tests.Builders
         private double _lateGrowth = 1;
         private double _countGrowth = 1;
         private double _distanceGrowth = 1;
+        private readonly Production _production = new();
 
         public BuildingBuilder WithId(string id) { _id = id; return this; }
         public BuildingBuilder WithMaxLevel(int maxLevel) { _maxLevel = maxLevel; return this; }
@@ -44,6 +45,11 @@ namespace Codigames.Kingdom.Tests.Builders
             return this;
         }
 
+        public BuildingBuilder WithOwnGold(params double[] perLevel) { _production.GoldPerMinutePerLevel = perLevel; return this; }
+        public BuildingBuilder WithStorage(params double[] perLevel) { _production.StorageCapacityPerLevel = perLevel; return this; }
+        public BuildingBuilder WithHousing(params int[] perLevel) { _production.PopulationCapacityPerLevel = perLevel; return this; }
+        public BuildingBuilder WithTaxBonus(params double[] perLevel) { _production.TaxBonusPerLevel = perLevel; return this; }
+
         public static ILevelCost Price(string currency, double amount)
             => new LevelCost(new Dictionary<string, double> { [currency] = amount }, new Dictionary<string, double>());
 
@@ -62,6 +68,7 @@ namespace Codigames.Kingdom.Tests.Builders
                 LateUpgradeSeconds = _lateSeconds, LateUpgradeLevelGrowth = _lateGrowth,
             },
             Gates = new Gates(_maxCount, _townhallGates, new List<int>()),
+            Production = _production,
         };
 
         private sealed class Building : IBuildingDefinition
@@ -74,6 +81,15 @@ namespace Codigames.Kingdom.Tests.Builders
             public IBuildingCost Cost { get; set; }
             public IBuildingDuration Duration { get; set; }
             public IBuildingGates Gates { get; set; }
+            public IBuildingProduction Production { get; set; }
+        }
+
+        private sealed class Production : IBuildingProduction
+        {
+            public IReadOnlyList<double> GoldPerMinutePerLevel { get; set; } = new double[0];
+            public IReadOnlyList<double> StorageCapacityPerLevel { get; set; } = new double[0];
+            public IReadOnlyList<int> PopulationCapacityPerLevel { get; set; } = new int[0];
+            public IReadOnlyList<double> TaxBonusPerLevel { get; set; } = new double[0];
         }
 
         private sealed class LevelCost : ILevelCost

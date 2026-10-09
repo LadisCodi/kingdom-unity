@@ -35,6 +35,8 @@ namespace Codigames.Kingdom.City
         public event Action<DistrictState> DistrictPlaced;
         public event Action<DistrictState> DistrictMoved;
         public event Action<ConstructionJob> JobStarted;
+        // A job is about to finish, at its own moment: the district is still what it was.
+        public event Action<ConstructionJob, DistrictState> JobCompleting;
         public event Action<ConstructionJob, DistrictState> JobCompleted;
 
         public ConstructionRefusal Build(string definitionId, Vector2Int anchor, double now)
@@ -178,6 +180,7 @@ namespace Codigames.Kingdom.City
                 _city.Jobs.Remove(job);
 
                 var district = _city.Districts.First(d => d.Id == job.DistrictId);
+                JobCompleting?.Invoke(job, district);
                 district.Level = job.TargetLevel;
                 district.Built = true;
                 JobCompleted?.Invoke(job, district);

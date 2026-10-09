@@ -28,14 +28,16 @@ namespace Codigames.Game.UI.Presenters
         private readonly IClock _clock;
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
+        private readonly Stores _stores;
 
-        // The countdown shown, in whole seconds, so the card is rebuilt once a second while a builder works.
+        // The second the card was last drawn at: it is redrawn once a second.
         private double _shownSeconds = -1;
 
         public DistrictCardMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, CityState city,
             BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, ICurrencyIcons icons, IClock clock,
-            NumberFormat numbers, Localizer localizer) : base(views)
+            NumberFormat numbers, Localizer localizer, Stores stores) : base(views)
         {
+            _stores = stores;
             _ui = ui;
             _construction = construction;
             _city = city;
@@ -56,11 +58,9 @@ namespace Codigames.Game.UI.Presenters
         {
             if (!IsShown) return;
 
-            var job = JobOf(Data);
-            if (job == null) return;
-
-            var seconds = Math.Ceiling(Math.Max(0, job.CompletesAt - _clock.NowMs) / 1000);
-            if (seconds != _shownSeconds) Refresh();
+            // Once a second: the countdown, and the store filling.
+            var second = Math.Floor(_clock.NowMs / 1000.0);
+            if (second != _shownSeconds) Refresh();
         }
 
         protected override void BindInternal(DistrictCardMenu view)
@@ -106,6 +106,7 @@ namespace Codigames.Game.UI.Presenters
         {
             var district = District;
             if (district == null) return;
+            _shownSeconds = Math.Floor(_clock.NowMs / 1000.0);
 
             var building = _buildings.Get<BuildingAsset>(district.DefinitionId);
             var cap = CityQueries.MaxCount(building, CityQueries.TownhallLevel(_city, _settings));
@@ -115,19 +116,24 @@ namespace Codigames.Game.UI.Presenters
             var ordinal = numbered ? "#" + _numbers.Number(district.Ordinal) : string.Empty;
             var level = _localizer.Tr("Lv {n}", ("n", _numbers.Number(district.Level)));
             var promise = _localizer.Tr(building.Promise);
+            var now = _clock.NowMs;
+            var capacity = _stores.Capacity(district);
+            var store = capacity > 0
+                ? _localizer.Tr("Storage {held}/{cap}", ("held", _numbers.Short(_stores.Held(district, now))), ("cap", _numbers.Short(capacity)))
+                : string.Empty;
+            var storeFull = _stores.IsFull(district, now);
 
             if (job != null)
             {
-                var remaining = Math.Max(0, job.CompletesAt - _clock.NowMs) / 1000;
-                _shownSeconds = Math.Ceiling(remaining);
+                var remaining = Math.Max(0, job.CompletesAt - now) / 1000;
                 var doing = job.TargetLevel == 1
                     ? _localizer.Tr("Building")
                     : _localizer.Tr("Upgrading to Lv {n}", ("n", _numbers.Number(job.TargetLevel)));
                 var progress = (float)Math.Min(1, (_clock.NowMs - job.StartedAt) / (job.Seconds * 1000));
 
                 View.Show(new DistrictCardData(name, ordinal, level, building.ArtFor(district.Level), promise, true,
-                    doing + " · " + _numbers.Duration(_shownSeconds), progress, string.Empty,
-                    Array.Empty<CostChipData>(), false, string.Empty));
+                    doing + " · " + _numbers.Duration(Math.Ceiling(remaining)), progress, string.Empty,
+                    Array.Empty<CostChipData>(), false, string.Empty, store, storeFull));
                 return;
             }
 
@@ -141,7 +147,7 @@ namespace Codigames.Game.UI.Presenters
                 : _localizer.Tr("Lv {n}", ("n", _numbers.Number(offer.TargetLevel))) + " · " + _numbers.Duration(offer.Seconds);
 
             View.Show(new DistrictCardData(name, ordinal, level, building.ArtFor(district.Level), promise, false,
-                string.Empty, 0, next, price, offer.Refusal == ConstructionRefusal.None, Reason(offer)));
+                string.Empty, 0, next, price, offer.Refusal == ConstructionRefusal.None, Reason(offer), store, storeFull));
         }
 
         private string Reason(UpgradeOffer offer) => offer.Refusal switch
