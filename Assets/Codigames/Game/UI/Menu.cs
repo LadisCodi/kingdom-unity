@@ -1,5 +1,6 @@
 using Codigames.Game.UI.Widgets;
 using System.Threading.Tasks;
+using Codigames.Modules.Audio;
 using Codigames.Modules.UI;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -27,6 +28,10 @@ namespace Codigames.Game.UI
 
         protected CanvasGroup CanvasGroup { get; private set; }
         private Animator _animator;
+        private ISoundService _sounds;
+
+        [VContainer.Inject]
+        public void Construct(ISoundService sounds) => _sounds = sounds;
 
         public void Initialize()
         {
@@ -46,8 +51,18 @@ namespace Codigames.Game.UI
                 _hasAnimator = true;
             }
 
+            WireClicks(gameObject);
             InitializeInternal();
         }
+
+        // Every button under it clicks when pressed; a menu that adds buttons later wires them too.
+        protected void WireClicks(GameObject under)
+        {
+            foreach (var button in under.GetComponentsInChildren<UnityEngine.UI.Button>(true))
+                button.onClick.AddListener(PlayClick);
+        }
+
+        private void PlayClick() => _sounds?.Play(Codigames.Game.Audio.SoundIds.BUTTON_PRESS);
 
         protected virtual void InitializeInternal()
         {

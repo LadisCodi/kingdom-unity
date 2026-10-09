@@ -1,0 +1,845 @@
+{
+ "ambush": {
+  "files": [
+   "battle_ambush_01.ogg",
+   "battle_ambush_02.ogg"
+  ],
+  "volume": 0.4,
+  "jitter": 0.05,
+  "rate": 1.0
+ },
+ "armyHome": {
+  "files": [
+   "army_home.ogg"
+  ],
+  "volume": 0.4,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "armyMarch": {
+  "files": [
+   "army_march.ogg"
+  ],
+  "volume": 0.45,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "armyRecall": {
+  "files": [
+   "army_recall.ogg"
+  ],
+  "volume": 0.35,
+  "jitter": 0.03,
+  "rate": 1.0
+ },
+ "arrowHit": {
+  "files": [
+   "battle_arrowHit_01.ogg",
+   "battle_arrowHit_02.ogg",
+   "battle_arrowHit_03.ogg"
+  ],
+  "volume": 0.2,
+  "jitter": 0.08,
+  "rate": 1.0
+ },
+ "arrowLoose": {
+  "files": [
+   "battle_arrowLoose_01.ogg",
+   "battle_arrowLoose_02.ogg",
+   "battle_arrowLoose_03.ogg"
+  ],
+  "volume": 0.16,
+  "jitter": 0.08,
+  "rate": 1.0
+ },
+ "barFill": {
+  "files": [
+   "bar_fill.ogg"
+  ],
+  "volume": 0.3,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "battleStart": {
+  "files": [
+   "battle_battleStart.ogg"
+  ],
+  "volume": 0.5,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "boatSplash": {
+  "files": [
+   "boat_splash.ogg"
+  ],
+  "volume": 0.3,
+  "jitter": 0.1,
+  "rate": 1.0
+ },
+ "boltCast": {
+  "files": [
+   "battle_boltCast_01.ogg",
+   "battle_boltCast_02.ogg"
+  ],
+  "volume": 0.28,
+  "jitter": 0.06,
+  "rate": 1.0
+ },
+ "buildPlaced": {
+  "files": [
+   "build_placed.mp3"
+  ],
+  "volume": 0.5,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "bulwark": {
+  "files": [
+   "battle_bulwark.ogg"
+  ],
+  "volume": 0.42,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "cardDraw": {
+  "files": [
+   "chest_draw.ogg"
+  ],
+  "volume": 0.4,
+  "jitter": 0.06,
+  "rate": 1.0
+ },
+ "cardFlip": {
+  "files": [
+   "chest_flip_01.ogg",
+   "chest_flip_02.ogg"
+  ],
+  "volume": 0.55,
+  "jitter": 0.05,
+  "rate": 1.0
+ },
+ "cardImpact": {
+  "files": [
+   "card_impact.ogg"
+  ],
+  "volume": 0.4,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "cardRevealCommon": {
+  "files": [
+   "card_reveal_common_01.ogg",
+   "card_reveal_common_02.ogg",
+   "card_reveal_common_03.ogg",
+   "card_reveal_common_04.ogg"
+  ],
+  "volume": 0.4,
+  "jitter": 0.02,
+  "rate": 1.0
+ },
+ "cardRevealLegend": {
+  "files": [
+   "card_reveal_legend.ogg"
+  ],
+  "volume": 0.6,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "cardRevealRare": {
+  "files": [
+   "card_reveal_rare.ogg"
+  ],
+  "volume": 0.5,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "cardSettle": {
+  "files": [
+   "chest_settle.ogg"
+  ],
+  "volume": 0.45,
+  "jitter": 0.06,
+  "rate": 1.0
+ },
+ "cardSparkle": {
+  "files": [
+   "chest_sparkle.ogg"
+  ],
+  "volume": 0.35,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "cardWhoosh": {
+  "files": [
+   "chest_whoosh.ogg"
+  ],
+  "volume": 0.22,
+  "jitter": 0.08,
+  "rate": 1.0
+ },
+ "cavalryCharge": {
+  "files": [
+   "battle_cavalryCharge_01.ogg",
+   "battle_cavalryCharge_02.ogg"
+  ],
+  "volume": 0.25,
+  "jitter": 0.06,
+  "rate": 1.0
+ },
+ "cavalryHit": {
+  "files": [
+   "battle_cavalryHit_01.ogg",
+   "battle_cavalryHit_02.ogg",
+   "battle_cavalryHit_03.ogg"
+  ],
+  "volume": 0.3,
+  "jitter": 0.08,
+  "rate": 1.0
+ },
+ "chainFinished": {
+  "files": [
+   "chain_finished.wav"
+  ],
+  "volume": 0.6,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "chestLand": {
+  "files": [
+   "chest_land.ogg"
+  ],
+  "volume": 0.55,
+  "jitter": 0.03,
+  "rate": 1.0
+ },
+ "chestOpen": {
+  "files": [
+   "chest_open.ogg"
+  ],
+  "volume": 0.6,
+  "jitter": 0.02,
+  "rate": 1.0
+ },
+ "chestSummary": {
+  "files": [
+   "chest_summary.ogg"
+  ],
+  "volume": 0.5,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "chestUnlock": {
+  "files": [
+   "chest_unlock.ogg"
+  ],
+  "volume": 0.5,
+  "jitter": 0.02,
+  "rate": 1.0
+ },
+ "cleave": {
+  "files": [
+   "battle_cleave.ogg"
+  ],
+  "volume": 0.45,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "click": {
+  "files": [
+   "button_click.mp3"
+  ],
+  "volume": 0.35,
+  "jitter": 0.03,
+  "rate": 1.0
+ },
+ "coinSale": {
+  "files": [
+   "coin_sale.ogg"
+  ],
+  "volume": 0.5,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "constructionComplete": {
+  "files": [
+   "construction_complete.mp3"
+  ],
+  "volume": 0.5,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "crush": {
+  "files": [
+   "battle_crush.ogg"
+  ],
+  "volume": 0.55,
+  "jitter": 0.03,
+  "rate": 1.0
+ },
+ "daze": {
+  "files": [
+   "battle_daze.ogg"
+  ],
+  "volume": 0.4,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "defeat": {
+  "files": [
+   "battle_defeat.ogg"
+  ],
+  "volume": 0.55,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "discovery": {
+  "files": [
+   "discovery.wav"
+  ],
+  "volume": 0.55,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "error": {
+  "files": [
+   "error_denied.ogg"
+  ],
+  "volume": 0.45,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "explorerDepart": {
+  "files": [
+   "explorer_depart.ogg"
+  ],
+  "volume": 0.4,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "explorerHome": {
+  "files": [
+   "explorer_home.ogg"
+  ],
+  "volume": 0.4,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "finalBlow": {
+  "files": [
+   "battle_finalBlow.ogg"
+  ],
+  "volume": 0.5,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "gemSpend": {
+  "files": [
+   "gem_spend.wav"
+  ],
+  "volume": 0.5,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "ghostLift": {
+  "files": [
+   "ghost_lift.ogg"
+  ],
+  "volume": 0.45,
+  "jitter": 0.05,
+  "rate": 1.0
+ },
+ "ghostPlant": {
+  "files": [
+   "ghost_plant.ogg"
+  ],
+  "volume": 0.6,
+  "jitter": 0.03,
+  "rate": 1.0
+ },
+ "ghostStep": {
+  "files": [
+   "ghost_step.ogg"
+  ],
+  "volume": 0.18,
+  "jitter": 0.08,
+  "rate": 1.0
+ },
+ "heal": {
+  "files": [
+   "battle_heal_01.ogg",
+   "battle_heal_02.ogg"
+  ],
+  "volume": 0.36,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "heroApplause": {
+  "files": [
+   "chest_applause.ogg"
+  ],
+  "volume": 0.3,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "heroDown": {
+  "files": [
+   "battle_heroDown_01.ogg",
+   "battle_heroDown_02.ogg"
+  ],
+  "volume": 0.45,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "heroFanfare": {
+  "files": [
+   "chest_fanfare.ogg"
+  ],
+  "volume": 0.6,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "heroFanfareLegend": {
+  "files": [
+   "chest_fanfare_legend.ogg"
+  ],
+  "volume": 0.65,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "heroLegend": {
+  "files": [
+   "chest_legend.ogg"
+  ],
+  "volume": 0.65,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "heroNew": {
+  "files": [
+   "chest_hero.ogg"
+  ],
+  "volume": 0.6,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "heroPop": {
+  "files": [
+   "chest_pop.ogg"
+  ],
+  "volume": 0.45,
+  "jitter": 0.03,
+  "rate": 1.0
+ },
+ "heroRiser": {
+  "files": [
+   "chest_riser.ogg"
+  ],
+  "volume": 0.45,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "heroRiserShort": {
+  "files": [
+   "chest_riser_short.ogg"
+  ],
+  "volume": 0.45,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "lanceHit": {
+  "files": [
+   "battle_lanceHit_01.ogg",
+   "battle_lanceHit_02.ogg",
+   "battle_lanceHit_03.ogg"
+  ],
+  "volume": 0.26,
+  "jitter": 0.08,
+  "rate": 1.0
+ },
+ "offerSplash": {
+  "files": [
+   "chest_sparkle.ogg"
+  ],
+  "volume": 0.25,
+  "jitter": 0.0,
+  "rate": 0.85
+ },
+ "pop": {
+  "files": [
+   "pop-06.wav"
+  ],
+  "volume": 0.5,
+  "jitter": 0.08,
+  "rate": 1.0
+ },
+ "quest": {
+  "files": [
+   "quest_claimed.mp3"
+  ],
+  "volume": 0.9,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "questComplete": {
+  "files": [
+   "quest_complete.mp3"
+  ],
+  "volume": 0.55,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "raidAlarm": {
+  "files": [
+   "raid_alarm.ogg"
+  ],
+  "volume": 0.4,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "relicWake": {
+  "files": [
+   "relic_wake.ogg"
+  ],
+  "volume": 0.45,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "research": {
+  "files": [
+   "research_started.mp3"
+  ],
+  "volume": 0.5,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "researchComplete": {
+  "files": [
+   "research_complete.mp3"
+  ],
+  "volume": 0.55,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "revealDone": {
+  "files": [
+   "reveal_done.ogg"
+  ],
+  "volume": 0.5,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "revealPaid": {
+  "files": [
+   "reveal_paid.ogg"
+  ],
+  "volume": 0.4,
+  "jitter": 0.06,
+  "rate": 1.0
+ },
+ "rewardBurst": {
+  "files": [
+   "reward_burst.wav"
+  ],
+  "volume": 0.4,
+  "jitter": 0.03,
+  "rate": 1.0
+ },
+ "rewardCoin": {
+  "files": [
+   "reward_coin_01.mp3",
+   "reward_coin_02.mp3",
+   "reward_coin_03.mp3",
+   "reward_coin_04.mp3"
+  ],
+  "volume": 0.3,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "rewardPop": {
+  "files": [
+   "reward_pop_01.wav",
+   "reward_pop_02.wav",
+   "reward_pop_03.wav"
+  ],
+  "volume": 0.35,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "ribbon": {
+  "files": [
+   "battle_ribbon_01.ogg",
+   "battle_ribbon_02.ogg"
+  ],
+  "volume": 0.3,
+  "jitter": 0.06,
+  "rate": 1.0
+ },
+ "scrollClose": {
+  "files": [
+   "scroll_close.ogg"
+  ],
+  "volume": 0.4,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "scrollOpen": {
+  "files": [
+   "scroll_open.ogg"
+  ],
+  "volume": 0.4,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "sharpshot": {
+  "files": [
+   "battle_sharpshot.ogg"
+  ],
+  "volume": 0.42,
+  "jitter": 0.03,
+  "rate": 1.0
+ },
+ "shieldBreak": {
+  "files": [
+   "battle_shieldBreak.ogg"
+  ],
+  "volume": 0.42,
+  "jitter": 0.05,
+  "rate": 1.0
+ },
+ "shieldSoak": {
+  "files": [
+   "battle_shieldSoak_01.ogg",
+   "battle_shieldSoak_02.ogg"
+  ],
+  "volume": 0.26,
+  "jitter": 0.08,
+  "rate": 1.0
+ },
+ "shieldUp": {
+  "files": [
+   "battle_shieldUp.ogg"
+  ],
+  "volume": 0.38,
+  "jitter": 0.03,
+  "rate": 1.0
+ },
+ "skillCharge": {
+  "files": [
+   "battle_skillCharge_01.ogg",
+   "battle_skillCharge_02.ogg"
+  ],
+  "volume": 0.35,
+  "jitter": 0.05,
+  "rate": 1.0
+ },
+ "skullStamp": {
+  "files": [
+   "battle_skullStamp.ogg"
+  ],
+  "volume": 0.38,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "speedup": {
+  "files": [
+   "speedup_01.ogg",
+   "speedup_02.ogg",
+   "speedup_03.ogg",
+   "speedup_04.ogg"
+  ],
+  "volume": 0.45,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "spellCast": {
+  "files": [
+   "spell_cast.ogg"
+  ],
+  "volume": 0.45,
+  "jitter": 0.02,
+  "rate": 1.0
+ },
+ "squadDown": {
+  "files": [
+   "battle_squadDown.ogg"
+  ],
+  "volume": 0.42,
+  "jitter": 0.06,
+  "rate": 1.0
+ },
+ "swordHit": {
+  "files": [
+   "battle_swordHit_01.ogg",
+   "battle_swordHit_02.ogg",
+   "battle_swordHit_03.ogg",
+   "battle_swordHit_04.ogg"
+  ],
+  "volume": 0.26,
+  "jitter": 0.08,
+  "rate": 1.0
+ },
+ "tapAnimals": {
+  "files": [
+   "tap_animals.ogg",
+   "tap_animals.ogg",
+   "tap_animals_squeal.ogg"
+  ],
+  "volume": 0.5,
+  "jitter": 0.06,
+  "rate": 1.0
+ },
+ "tapBerries": {
+  "files": [
+   "tap_berries.ogg"
+  ],
+  "volume": 0.45,
+  "jitter": 0.08,
+  "rate": 1.0
+ },
+ "tapEmpty": {
+  "files": [
+   "tap_empty.mp3"
+  ],
+  "volume": 0.4,
+  "jitter": 0.05,
+  "rate": 1.0
+ },
+ "tapFish": {
+  "files": [
+   "boat_splash.ogg"
+  ],
+  "volume": 0.4,
+  "jitter": 0.08,
+  "rate": 1.2
+ },
+ "tapHouse": {
+  "files": [
+   "tap_house_01.mp3",
+   "tap_house_02.mp3",
+   "tap_house_03.mp3",
+   "tap_house_04.mp3"
+  ],
+  "volume": 0.45,
+  "jitter": 0.05,
+  "rate": 1.0
+ },
+ "tapIron": {
+  "files": [
+   "tap_stone_01.ogg",
+   "tap_stone_02.ogg",
+   "tap_stone_03.ogg"
+  ],
+  "volume": 0.5,
+  "jitter": 0.05,
+  "rate": 0.85
+ },
+ "tapStone": {
+  "files": [
+   "tap_stone_01.ogg",
+   "tap_stone_02.ogg",
+   "tap_stone_03.ogg"
+  ],
+  "volume": 0.5,
+  "jitter": 0.05,
+  "rate": 1.0
+ },
+ "tapTree": {
+  "files": [
+   "tap_tree_01.ogg",
+   "tap_tree_02.ogg",
+   "tap_tree_03.ogg"
+  ],
+  "volume": 0.5,
+  "jitter": 0.06,
+  "rate": 1.0
+ },
+ "textTick": {
+  "files": [
+   "text_tick_01.ogg",
+   "text_tick_02.ogg"
+  ],
+  "volume": 0.3,
+  "jitter": 0.1,
+  "rate": 1.0
+ },
+ "tooltip": {
+  "files": [
+   "tooltip_pop.wav"
+  ],
+  "volume": 0.45,
+  "jitter": 0.06,
+  "rate": 1.0
+ },
+ "tribute": {
+  "files": [
+   "tribute.ogg"
+  ],
+  "volume": 0.5,
+  "jitter": 0.05,
+  "rate": 1.0
+ },
+ "unitTrained": {
+  "files": [
+   "unit_trained.mp3"
+  ],
+  "volume": 0.5,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "unlock": {
+  "files": [
+   "unlock_splash.ogg"
+  ],
+  "volume": 0.3,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "upgradeBought": {
+  "files": [
+   "upgrade_bought.wav"
+  ],
+  "volume": 0.45,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "victory": {
+  "files": [
+   "battle_victory.ogg"
+  ],
+  "volume": 0.55,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "vigour": {
+  "files": [
+   "battle_vigour.ogg"
+  ],
+  "volume": 0.42,
+  "jitter": 0.0,
+  "rate": 1.0
+ },
+ "villagerTrained": {
+  "files": [
+   "villager_trained.mp3"
+  ],
+  "volume": 0.5,
+  "jitter": 0.04,
+  "rate": 1.0
+ },
+ "volley": {
+  "files": [
+   "battle_volley.ogg"
+  ],
+  "volume": 0.42,
+  "jitter": 0.03,
+  "rate": 1.0
+ },
+ "warCry": {
+  "files": [
+   "battle_warCry.ogg"
+  ],
+  "volume": 0.42,
+  "jitter": 0.0,
+  "rate": 1.0
+ }
+}

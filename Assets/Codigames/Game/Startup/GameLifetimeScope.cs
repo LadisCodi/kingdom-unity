@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Codigames.Game.Audio;
 using Codigames.Game.Cameras;
 using Codigames.Game.City;
 using Codigames.Game.Crews;
@@ -50,6 +51,9 @@ namespace Codigames.Game.Startup
             builder.RegisterComponent(_fogView);
             builder.RegisterComponent(_crewsView);
             builder.RegisterEntryPoint<MapTaps>();
+            builder.RegisterEntryPoint<SoundCues>();
+            builder.RegisterEntryPoint<MusicDirector>();
+            builder.RegisterEntryPoint<AmbienceDirector>();
             RegisterUI(builder);
             RegisterFeedback(builder);
             RegisterCamera(builder);

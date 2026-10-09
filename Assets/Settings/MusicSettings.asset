@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b0b6109f649034789ca540536598670, type: 3}
+  m_Name: MusicSettings
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Audio.MusicSettings
+  _town:
+  - _soundId: musicHarp
+    _turnSeconds: 85.2
+  - _soundId: musicAnthem
+    _turnSeconds: 54.73619
+  - _soundId: musicLegendary
+    _turnSeconds: 133.84068
+  - _soundId: musicFolks
+    _turnSeconds: 85.54229
+  _townVolume: 0.35
+  _townFadeIn: 1.5
+  _crossfade: 5
+  _meadow: ambienceMeadow
+  _coast: ambienceCoast
+  _snow: ambienceSnow
+  _ambienceVolume: 0.22
+  _ambienceFade: 0.5
+  _coastReach: 3

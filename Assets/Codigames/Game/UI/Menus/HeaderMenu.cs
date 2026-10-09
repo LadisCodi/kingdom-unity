@@ -32,6 +32,7 @@ namespace Codigames.Game.UI.Menus
             foreach (var (id, icon, sold, onRight) in slots)
             {
                 var slot = Instantiate(_slotPrefab, onRight ? _right : _coins);
+                WireClicks(slot.gameObject);
                 slot.Show(id, icon, sold, !onRight ? _coinWidth : sold ? _soldWidth : _rightWidth);
                 slot.Tapped += () => CurrencyTapped?.Invoke(id);
                 _slots.Add(slot);

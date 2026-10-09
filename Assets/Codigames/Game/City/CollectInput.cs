@@ -1,9 +1,11 @@
+using Codigames.Game.Audio;
 using Codigames.Game.Data.Economy;
 using Codigames.Game.Harvest;
 using Codigames.Game.Map;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Economy;
+using Codigames.Modules.Audio;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Core;
 using Codigames.Modules.Feedback;
@@ -24,10 +26,12 @@ namespace Codigames.Game.City
         private readonly IWorldFeedbackService _feedback;
         private readonly ICurrencyIcons _icons;
         private readonly NumberFormat _numbers;
+        private readonly ISoundService _sounds;
 
         public CollectInput(Stores stores, ICatalog<IBuildingDefinition> buildings, ProvinceMap map, IClock clock,
-            IWorldFeedbackService feedback, ICurrencyIcons icons, NumberFormat numbers)
+            IWorldFeedbackService feedback, ICurrencyIcons icons, NumberFormat numbers, ISoundService sounds)
         {
+            _sounds = sounds;
             _stores = stores;
             _buildings = buildings;
             _map = map;
@@ -43,7 +47,9 @@ namespace Codigames.Game.City
             var now = _clock.NowMs;
             if (!_stores.IsReady(district, now)) return false;
 
+            var houses = _stores.Residents(district) > 0;
             var moved = _stores.Collect(district, now);
+            _sounds.Play(houses ? SoundIds.TAP_HOUSE : SoundIds.POP);
             var building = _buildings.Get(district.DefinitionId);
             var (basePosition, width) = ProvinceGeometry.Footprint(_map, district.Anchor, building.Width, building.Height);
 

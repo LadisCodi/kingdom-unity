@@ -7,7 +7,8 @@
         "Codigames.Modules.Core",
         "VContainer",
         "Unity.TextMeshPro",
-        "MoreMountains.Tools"
+        "MoreMountains.Tools",
+        "Codigames.Modules.Audio"
     ],
     "includePlatforms": [
         "Editor"

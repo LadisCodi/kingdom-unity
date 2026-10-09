@@ -21,5 +21,8 @@ namespace Codigames.Modules.Audio
         }
 
         public void SetVolume(SoundTrack track, float volume) => _player.SetVolume(track, volume);
+
+        public ISoundLoop StartLoop(string soundId, float volume, float fadeSeconds)
+            => !string.IsNullOrEmpty(soundId) && _catalog.TryGet(soundId, out var sound) ? _player.StartLoop(sound, volume, fadeSeconds) : null;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Codigames.Game.Audio;
 using Codigames.Game.Data.City;
 using Codigames.Game.Data.Economy;
 using Codigames.Game.UI.Data;
@@ -8,6 +9,7 @@ using Codigames.Game.UI.Menus;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Economy;
+using Codigames.Modules.Audio;
 using Codigames.Modules.Localization;
 using Codigames.Modules.UI;
 
@@ -26,13 +28,15 @@ namespace Codigames.Game.UI.Presenters
         private readonly ICurrencyIcons _icons;
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
+        private readonly ISoundService _sounds;
 
         // Remembered between openings, so placement's way back lands on the same tab.
         private string _tab = FIRST_TAB;
 
         public BuildMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, ITreasury treasury,
-            IBuildingCards cards, ICurrencyIcons icons, NumberFormat numbers, Localizer localizer) : base(views)
+            IBuildingCards cards, ICurrencyIcons icons, NumberFormat numbers, Localizer localizer, ISoundService sounds) : base(views)
         {
+            _sounds = sounds;
             _ui = ui;
             _construction = construction;
             _treasury = treasury;
@@ -92,6 +96,7 @@ namespace Codigames.Game.UI.Presenters
         {
             if (_construction.BuildRefusal(id) != ConstructionRefusal.None)
             {
+                _sounds.Play(SoundIds.ERROR);
                 View.Shake(id);
                 return;
             }

@@ -1,6 +1,8 @@
+using Codigames.Game.Audio;
 using Codigames.Game.Data.Economy;
 using Codigames.Game.Map;
 using Codigames.Kingdom.Harvest;
+using Codigames.Modules.Audio;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Feedback;
 using Codigames.Modules.Localization;
@@ -23,11 +25,13 @@ namespace Codigames.Game.Harvest
         private readonly ICurrencyIcons _icons;
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
+        private readonly ISoundService _sounds;
 
         public HarvestInput(Harvesting harvesting, ProvinceMap map, IClock clock,
             IWorldFeedbackService feedback, IQuickInfoMessageService messages, ICurrencyIcons icons, NumberFormat numbers,
-            Localizer localizer)
+            Localizer localizer, ISoundService sounds)
         {
+            _sounds = sounds;
             _harvesting = harvesting;
             _map = map;
             _clock = clock;
@@ -40,19 +44,23 @@ namespace Codigames.Game.Harvest
 
         public void Take(ModuleVector2Int cell)
         {
+            var source = _harvesting.SourceAt(cell);
             var result = _harvesting.Tap(cell, _clock.NowMs);
             switch (result.Refusal)
             {
                 case TapRefusal.None:
+                    _sounds.Play(SoundIds.TapOn(source?.Id));
                     var centre = _map.CellCentre(cell);
                     var view = _feedback.Spawn<YieldFeedbackView>(new ModuleVector3(centre.x, centre.y + RISE_FROM, 0f));
                     view.Show(_icons.IconOf(result.Currency), "+" + _numbers.Number(result.Paid));
                     _ = view.Play();
                     break;
                 case TapRefusal.NoMana:
+                    _sounds.Play(SoundIds.ERROR);
                     _messages.Show(new QuickInfoMessageData(_localizer.Tr("Out of Mana")));
                     break;
                 case TapRefusal.Exhausted:
+                    _sounds.Play(SoundIds.TAP_EMPTY);
                     _messages.Show(new QuickInfoMessageData(_localizer.Tr("Growing back")));
                     break;
             }
