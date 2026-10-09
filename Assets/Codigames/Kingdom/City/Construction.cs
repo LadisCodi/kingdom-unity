@@ -30,10 +30,14 @@ namespace Codigames.Kingdom.City
         private readonly Harmony _harmony;
         private readonly Goods.Stockpile _stockpile;
 
+        // A kind priced off a ladder of its own (the Shrines); null where none is.
+        private readonly IBuildLadder _ladder;
+
         public Construction(CityState city, ITreasury treasury, Placement placement, ICatalog<IBuildingDefinition> buildings,
             IConstructionSettings settings, IResearchGates gates = null, IBonuses bonuses = null, IPlanting planting = null,
-            Harmony harmony = null, Goods.Stockpile stockpile = null, Modifiers.IModifiers modifiers = null)
+            Harmony harmony = null, Goods.Stockpile stockpile = null, Modifiers.IModifiers modifiers = null, IBuildLadder ladder = null)
         {
+            _ladder = ladder;
             _modifiers = modifiers;
             _stockpile = stockpile;
             _harmony = harmony;
@@ -74,10 +78,13 @@ namespace Codigames.Kingdom.City
 
             var building = _buildings.Get(definitionId);
             var ordinal = CountOf(building) + 1;
-            if (!_treasury.CanAfford(BuildingPricing.Currencies(building, ordinal, 1))) return ConstructionRefusal.CannotAfford;
-            if (!CanAffordGoods(building, 1)) return ConstructionRefusal.NotEnoughGoods;
-            _treasury.TryPay(BuildingPricing.Currencies(building, ordinal, 1));
-            _stockpile?.TryPay(BuildingPricing.Goods(building, 1));
+            var price = BuildPrice(building, ordinal);
+            if (!_treasury.CanAfford(price)) return ConstructionRefusal.CannotAfford;
+            var laddered = Laddered(building);
+            if (!laddered && !CanAffordGoods(building, 1)) return ConstructionRefusal.NotEnoughGoods;
+            _ladder?.Built(building);
+            _treasury.TryPay(price);
+            if (!laddered) _stockpile?.TryPay(BuildingPricing.Goods(building, 1));
             if (IsPlantable(building)) return Plant(building, anchor, now);
 
             CityChanging?.Invoke(now);
@@ -130,16 +137,24 @@ namespace Codigames.Kingdom.City
             if (!_buildings.TryGet(definitionId, out var building)) return ConstructionRefusal.NotFound;
             if (!building.Buildable) return ConstructionRefusal.NotBuildable;
             if (MissingTech(_gates?.DistrictTech(definitionId)) != null) return ConstructionRefusal.NeedsResearch;
+            if (_ladder?.Refusal(building) is { } ladder && ladder != ConstructionRefusal.None) return ladder;
 
             var count = CountOf(building);
             var cap = MaxCount(building);
             if (cap.HasValue && count >= cap.Value) return ConstructionRefusal.AtCap;
             if (!IsPlantable(building) && !CityQueries.HasFreeBuilder(_city)) return ConstructionRefusal.NoFreeBuilder;
 
-            if (!_treasury.CanAfford(BuildingPricing.Currencies(building, count + 1, 1))) return ConstructionRefusal.CannotAfford;
-            if (!CanAffordGoods(building, 1)) return ConstructionRefusal.NotEnoughGoods;
+            if (!_treasury.CanAfford(BuildPrice(building, count + 1))) return ConstructionRefusal.CannotAfford;
+            if (!Laddered(building) && !CanAffordGoods(building, 1)) return ConstructionRefusal.NotEnoughGoods;
             return HarmonyShort(building, 1) > 0 ? ConstructionRefusal.NeedsHarmony : ConstructionRefusal.None;
         }
+
+        // What one more of a kind costs: its ladder's price, or its curve's at the ordinal.
+        private IReadOnlyDictionary<string, double> BuildPrice(IBuildingDefinition building, int ordinal)
+            => _ladder?.Price(building) ?? BuildingPricing.Currencies(building, ordinal, 1);
+
+        // Priced off its ladder: that price alone, no goods.
+        private bool Laddered(IBuildingDefinition building) => _ladder?.Price(building) != null;
 
         // The refined goods a build (level 1) or a level costs, as charged: never multiplied by the instance.
         public IReadOnlyDictionary<string, double> GoodsFor(IBuildingDefinition building, int level)
@@ -160,9 +175,10 @@ namespace Codigames.Kingdom.City
             var plot = at ?? _placement.Nearest(definitionId);
             var rings = plot.HasValue ? CityQueries.DistanceFromTownhall(_city, _buildings, _settings, plot.Value) : 0;
 
-            return new BuildOffer(definitionId, count + 1, BuildingPricing.Currencies(building, count + 1, 1),
+            return new BuildOffer(definitionId, count + 1, BuildPrice(building, count + 1),
                 BuildSeconds(building, count, rings), count, MaxCount(building), BuildRefusal(definitionId),
-                MissingTech(_gates?.DistrictTech(definitionId)), GoodsFor(building, 1));
+                MissingTech(_gates?.DistrictTech(definitionId)),
+                Laddered(building) ? new Dictionary<string, double>() : GoodsFor(building, 1));
         }
 
         public ConstructionRefusal Upgrade(string districtId, double now)

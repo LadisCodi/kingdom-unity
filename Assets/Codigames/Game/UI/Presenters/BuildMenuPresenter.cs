@@ -147,6 +147,7 @@ namespace Codigames.Game.UI.Presenters
         {
             ConstructionRefusal.None => 0,
             ConstructionRefusal.AtCap => 2,
+            ConstructionRefusal.RuinFirst => 2,
             ConstructionRefusal.NeedsHarmony => 2,
             ConstructionRefusal.NeedsResearch => 3,
             _ => 1,
@@ -207,8 +208,9 @@ namespace Codigames.Game.UI.Presenters
                 ? _localizer.Tr("Built {count}/{max}", ("count", _numbers.Number(offer.Count)), ("max", _numbers.Number(offer.Cap.Value)))
                 : _localizer.Tr("Built {n}", ("n", _numbers.Number(offer.Count)));
 
-            var atCap = offer.Refusal == ConstructionRefusal.AtCap;
-            var why = atCap ? CapReason(card.Id, offer.Count)
+            var atCap = offer.Refusal == ConstructionRefusal.AtCap || offer.Refusal == ConstructionRefusal.RuinFirst;
+            var why = offer.Refusal == ConstructionRefusal.RuinFirst ? _localizer.Tr("Repair the old shrine first")
+                : atCap ? CapReason(card.Id, offer.Count)
                 : offer.Refusal == ConstructionRefusal.NeedsHarmony
                     ? _localizer.Tr("Needs {n} more Harmony", ("n", _numbers.Exact(_construction.HarmonyShort(_buildings.Get(card.Id), 1))))
                     : null;

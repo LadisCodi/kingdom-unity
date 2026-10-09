@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40b554f0043318e8cb5e6052cc621180, type: 3}
+  m_Name: DelversLantern
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Relics.RelicAsset
+  _id: DelversLantern
+  _name: The Wisp Lantern
+  _icon: {fileID: 21300000, guid: a2b18af0bd4c62a3ca30a8a6cbf29084, type: 3}
+  _fragments:
+  - {fileID: 21300000, guid: cdc17370df00b3b0591f291349c47e03, type: 3}
+  - {fileID: 21300000, guid: 8a7698f8c42a66c5c8cecdaff6c9550f, type: 3}
+  - {fileID: 21300000, guid: ae1152430e1a83d57889b904f12c17c1, type: 3}
+  - {fileID: 21300000, guid: a3a27c0036cb86899805ba409fb08569, type: 3}
+  - {fileID: 21300000, guid: 2f577ffabcf41a27e8076dc2e61b78a7, type: 3}
+  - {fileID: 21300000, guid: 9230bce6c26cc661fa493a984b848eec, type: 3}
+  _text: Every room pays more gold and stone
+  _pending: when the world map opens
+  _kind: 1
+  _door: room
+  _stats:
+  - Stat: roomHaul
+    Add: 0
+  _passiveBase: 1.15
+  _passivePerLevel: 0.15
+  _activationMana: 0
+  _activationRadius: 0
+  _spellName: Lamplight
+  _spellText: "The next rooms you clear pay double \u2014 cast it before you go down"

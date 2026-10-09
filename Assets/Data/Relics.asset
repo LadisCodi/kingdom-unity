@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b1c9ad277ce53aa883d808b385aea93, type: 3}
+  m_Name: Relics
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Relics.RelicCollection
+  _entries:
+  - {fileID: 11400000, guid: 1b77d45eb93e5c9928918fedff84c310, type: 2}
+  - {fileID: 11400000, guid: be423b9fd2b6b98b9b4f0ebfd7ddf288, type: 2}
+  - {fileID: 11400000, guid: 6a5114f57c466dc4a821638f5005756a, type: 2}
+  - {fileID: 11400000, guid: 1e6b23470937ccd179daba8200f66854, type: 2}
+  - {fileID: 11400000, guid: 1ccac7d0c38ffa91c8612399b1de3c1d, type: 2}
+  - {fileID: 11400000, guid: f6496f0ed63f32ac1bdbf523e56a3dca, type: 2}
+  - {fileID: 11400000, guid: 338a6ced040fd873da1199664e8ac6fa, type: 2}
+  - {fileID: 11400000, guid: 79fc698dd65ae9abfb340eab98570f8a, type: 2}

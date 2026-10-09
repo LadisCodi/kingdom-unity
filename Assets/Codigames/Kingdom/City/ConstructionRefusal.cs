@@ -22,5 +22,7 @@ namespace Codigames.Kingdom.City
         // The level or the build asks refined goods the stockpile does not hold.
         NotEnoughGoods,
         NotFound,
+        // Its ruin stands in the province: repair that one first.
+        RuinFirst,
     }
 }

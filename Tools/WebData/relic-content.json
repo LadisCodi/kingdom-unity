@@ -1,0 +1,48 @@
+{
+  "DowsingRod": {
+    "name": "Staff of Renewal", "sprite": "artifact_staff_of_renewal",
+    "text": "Forests, fields, rocks and shoals hold more and grow back faster",
+    "stats": [{ "stat": "harvestStock", "op": "mul" }, { "stat": "recoverySpeed", "op": "mul" }]
+  },
+  "VerdantSeal": {
+    "name": "Sickle of Plenty", "sprite": "artifact_sickle_of_plenty",
+    "text": "More out of every swing and every tap",
+    "stats": [{ "stat": "harvestUnitsPerStrike", "op": "mul" }]
+  },
+  "ForemansSigil": {
+    "name": "The Winged Hammer", "sprite": "artifact_winged_hammer",
+    "text": "Your crews work and your buildings train faster",
+    "stats": [{ "stat": "workerStrikeSpeed", "op": "mul" }, { "stat": "workerSpeed", "op": "mul" }, { "stat": "trainingSpeed", "op": "mul" }]
+  },
+  "GildedLedger": {
+    "name": "The Tribute Crown", "sprite": "artifact_tribute_crown",
+    "text": "Your villagers pay more tax",
+    "stats": [{ "stat": "taxRate", "op": "mul" }]
+  },
+  "WanderersCompass": {
+    "name": "The Stargazer’s Orb", "sprite": "artifact_stargazers_orb",
+    "text": "Rooms pay more Stardust",
+    "stats": [{ "stat": "stardustYield", "op": "mul" }],
+    "spell": { "name": "Survey", "text": "Clears the fog around a cell you hold, free of gold" },
+    "pending": "when the world map opens"
+  },
+  "DelversLantern": {
+    "name": "The Wisp Lantern", "sprite": "artifact_wisp_lantern",
+    "text": "Every room pays more gold and stone",
+    "stats": [{ "stat": "roomHaul", "op": "mul" }],
+    "spell": { "name": "Lamplight", "text": "The next rooms you clear pay double — cast it before you go down" },
+    "pending": "when the world map opens"
+  },
+  "MusterHorn": {
+    "name": "Warhorn of the Host", "sprite": "artifact_warhorn",
+    "text": "Your halls field a bigger army",
+    "stats": [{ "stat": "armyCap", "op": "mul" }],
+    "pending": "when the world map opens"
+  },
+  "BailiffsTally": {
+    "name": "The Steward’s Signet", "sprite": "artifact_stewards_signet",
+    "text": "Every improvement you hold pays more an hour",
+    "stats": [{ "stat": "worldImprovementYield", "op": "mul" }],
+    "pending": "when the world map opens"
+  }
+}

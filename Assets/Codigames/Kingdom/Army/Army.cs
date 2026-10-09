@@ -29,10 +29,13 @@ namespace Codigames.Kingdom.Army
         private readonly IBonuses _bonuses;
         private readonly Adjacency _adjacency;
 
+        private readonly Relics.IRelicAura _aura;
+
         public Army(ArmyState state, CityState city, ICatalog<IBuildingDefinition> buildings, ICatalog<IUnitDefinition> units,
             ITreasury treasury, IArmySettings settings, IRushSettings rush, IResearchGates gates = null, IBonuses bonuses = null,
-            Adjacency adjacency = null)
+            Adjacency adjacency = null, Relics.IRelicAura aura = null)
         {
+            _aura = aura;
             _state = state;
             _city = city;
             _buildings = buildings;
@@ -127,7 +130,9 @@ namespace Codigames.Kingdom.Army
         // Seconds one takes at a hall, priced now: its neighbours, and the tree.
         public double TrainSeconds(string troop, DistrictState hall)
         {
-            var speed = Math.Max(1, _bonuses?.Multiplier(TechStats.RECRUIT_SPEED, TargetKind.Unit, Troops.UnitOf(troop)) ?? 1);
+            // The Winged Hammer's aura over the hall, priced when a trainee's clock starts.
+            var speed = Math.Max(1, _bonuses?.Multiplier(TechStats.RECRUIT_SPEED, TargetKind.Unit, Troops.UnitOf(troop)) ?? 1)
+                        * (hall == null ? 1 : Relics.RelicAuraExtensions.Over(_aura, Relics.RelicStats.TRAINING_SPEED, hall));
             var neighbours = hall == null ? 1 : _adjacency?.Multiplier(hall, AdjacencyStat.TrainTime) ?? 1;
             return Math.Max(1, Math.Round(RankOf(troop).TrainSeconds * neighbours / speed));
         }

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40b554f0043318e8cb5e6052cc621180, type: 3}
+  m_Name: WanderersCompass
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Relics.RelicAsset
+  _id: WanderersCompass
+  _name: "The Stargazer\u2019s Orb"
+  _icon: {fileID: 21300000, guid: cf4d7755fd4606d149449b2dcf4b2e83, type: 3}
+  _fragments:
+  - {fileID: 21300000, guid: 82759d3d017918dc095f605d89efe68f, type: 3}
+  - {fileID: 21300000, guid: aa69711ef84afe027bf77a2c583c2bd4, type: 3}
+  - {fileID: 21300000, guid: f5ead40150bbbdd4e892e74bfea7b0f6, type: 3}
+  - {fileID: 21300000, guid: 70e194218dc8ad28493f9a7ccc53143f, type: 3}
+  - {fileID: 21300000, guid: 584b2a9a521584ffb8a27f77c2e92ed8, type: 3}
+  - {fileID: 21300000, guid: 98518513efba42c838d6f4248d885cbd, type: 3}
+  _text: Rooms pay more Stardust
+  _pending: when the world map opens
+  _kind: 1
+  _door: portal
+  _stats:
+  - Stat: stardustYield
+    Add: 0
+  _passiveBase: 1.25
+  _passivePerLevel: 0.25
+  _activationMana: 0
+  _activationRadius: 0
+  _spellName: Survey
+  _spellText: Clears the fog around a cell you hold, free of gold

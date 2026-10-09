@@ -42,12 +42,15 @@ namespace Codigames.Kingdom.Harvest
         private readonly IBonuses _bonuses;
         private readonly IBoosts _boosts;
         private readonly Lairs.ILairGround _lairs;
+        private readonly Relics.IRelicAura _aura;
 
         public Harvesting(HarvestState state, GroundState ground, CityState city, IProvinceMap map,
             ICatalog<IBuildingDefinition> buildings, ICatalog<IFeatureDefinition> features, ICatalog<IHarvestSource> sources,
             ITerrainYields yields, ITapSettings tap, ITreasury treasury, ManaPool mana, uint seed, IRevealedGround revealed,
-            IResearchGates gates = null, IBonuses bonuses = null, IBoosts boosts = null, Lairs.ILairGround lairs = null)
+            IResearchGates gates = null, IBonuses bonuses = null, IBoosts boosts = null, Lairs.ILairGround lairs = null,
+            Relics.IRelicAura aura = null)
         {
+            _aura = aura;
             _lairs = lairs;
             _boosts = boosts;
             _gates = gates;
@@ -96,7 +99,9 @@ namespace Codigames.Kingdom.Harvest
             if (source.Stock <= 0) return 0;
 
             var yield = _yields.YieldOf(_map.TerrainAt(cell), source.Currency);
-            var held = source.Stock * yield * _bonuses.Multiplier(TechStats.CELL_STOCK, TargetKind.Harvest, source.Id);
+            // The Staff of Renewal's aura holds more on the cell.
+            var held = source.Stock * yield * _bonuses.Multiplier(TechStats.CELL_STOCK, TargetKind.Harvest, source.Id)
+                       * Relics.RelicAuraExtensions.At(_aura, Relics.RelicStats.HARVEST_STOCK, cell);
             return Math.Max(1, (int)Math.Round(held, MidpointRounding.AwayFromZero));
         }
 
@@ -110,6 +115,10 @@ namespace Codigames.Kingdom.Harvest
         // Units one extraction takes out of a kind of cell, tap or crew: a fraction, carried.
         public double UnitsPerStrike(IHarvestSource source)
             => source.UnitsPerStrike * _bonuses.Multiplier(TechStats.HARVEST_YIELD, TargetKind.Harvest, source.Id);
+
+        // …on a cell, where the Sickle of Plenty's aura takes more out of every swing and tap.
+        public double UnitsPerStrike(IHarvestSource source, Vector2Int cell)
+            => UnitsPerStrike(source) * Relics.RelicAuraExtensions.At(_aura, Relics.RelicStats.UNITS_PER_STRIKE, cell);
 
         // Seconds of work one tap is worth.
         public double TapWorkSeconds => _bonuses.Apply(TechStats.TAP_WORK_SECONDS, _tap.WorkSeconds);
@@ -139,7 +148,7 @@ namespace Codigames.Kingdom.Harvest
             if (!_mana.TrySpend(_tap.ManaCost, now)) return new TapResult(TapRefusal.NoMana);
 
             // A Harvest boost raises what a tap takes, never a crew's work.
-            var owed = TapWorkSeconds * UnitsPerStrike(source) / source.SecondsPerStrike * (_boosts?.Multiplier(BoostKind.Harvest) ?? 1);
+            var owed = TapWorkSeconds * UnitsPerStrike(source, cell) / source.SecondsPerStrike * (_boosts?.Multiplier(BoostKind.Harvest) ?? 1);
             _state.Carry.TryGetValue(source.Currency, out var carried);
             var total = owed + carried;
             var wanted = Math.Max(1, Math.Floor(total));
@@ -278,7 +287,9 @@ namespace Codigames.Kingdom.Harvest
         {
             if (source.RecoverySeconds > 0)
             {
-                var speed = Math.Max(1, _bonuses.Multiplier(TechStats.REGROWTH_SPEED, TargetKind.Harvest, source.Id));
+                // Stamped when the cell empties: one that runs dry inside an awake Staff keeps the shorter wait.
+                var speed = Math.Max(1, _bonuses.Multiplier(TechStats.REGROWTH_SPEED, TargetKind.Harvest, source.Id))
+                            * Relics.RelicAuraExtensions.At(_aura, Relics.RelicStats.RECOVERY_SPEED, cell);
                 var wait = Math.Max(MIN_RECOVERY_MS, source.RecoverySeconds * 1000 / speed);
                 _state.Depots[cell].ExhaustedUntil = now + wait;
                 _state.Depots[cell].WaitMs = wait;

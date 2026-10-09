@@ -29,9 +29,13 @@ namespace Codigames.Kingdom.Economy
         private readonly Harmony _harmony;
         private readonly Adjacency _adjacency;
 
+        private readonly Relics.IRelicAura _aura;
+
         public Stores(CityState city, ICatalog<IBuildingDefinition> buildings, IEconomySettings settings, ITreasury treasury,
-            Construction construction, IBonuses bonuses = null, IBoosts boosts = null, Harmony harmony = null, Adjacency adjacency = null)
+            Construction construction, IBonuses bonuses = null, IBoosts boosts = null, Harmony harmony = null, Adjacency adjacency = null,
+            Relics.IRelicAura aura = null)
         {
+            _aura = aura;
             _harmony = harmony;
             _adjacency = adjacency;
             _boosts = boosts;
@@ -68,7 +72,9 @@ namespace Codigames.Kingdom.Economy
             if (residents <= 0) return own;
             var surplus = _harmony?.Multiplier ?? 1;
             var rate = _bonuses.Apply(TechStats.TAX_RATE, _settings.GoldPerPopulationPerMinute * surplus, TargetKind.District, district.DefinitionId)
-                       * (_boosts?.Multiplier(BoostKind.Rent) ?? 1);
+                       * (_boosts?.Multiplier(BoostKind.Rent) ?? 1)
+                       // The Tribute Crown's aura over the house.
+                       * Relics.RelicAuraExtensions.Over(_aura, Relics.RelicStats.TAX_RATE, district);
             var rent = residents * rate * (1 + At(production.TaxBonusPerLevel, district.Level)) + (_adjacency?.GoldOf(district) ?? 0);
             return own + Math.Max(0, rent);
         }

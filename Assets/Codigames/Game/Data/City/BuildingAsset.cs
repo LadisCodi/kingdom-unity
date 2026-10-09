@@ -18,6 +18,7 @@ namespace Codigames.Game.Data.City
         [SerializeField, MinValue(1)] private int _height = 1;
         [TabGroup("Rules"), Tooltip("Off for what the city starts with.")]
         [SerializeField] private bool _buildable = true;
+        [SerializeField, Tooltip("A Shrine: it hosts a city relic.")] private bool _hostsRelic;
 
         [TabGroup("Cost"), HideLabel, InlineProperty]
         [SerializeField] private BuildingCostData _cost = new();
@@ -55,6 +56,7 @@ namespace Codigames.Game.Data.City
         public int Width => _width;
         public int Height => _height;
         public bool Buildable => _buildable;
+        public bool HostsRelic => _hostsRelic;
         public IBuildingCost Cost => _cost;
         public IBuildingDuration Duration => _duration;
         public IBuildingGates Gates => _gates;

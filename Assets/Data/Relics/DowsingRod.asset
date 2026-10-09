@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40b554f0043318e8cb5e6052cc621180, type: 3}
+  m_Name: DowsingRod
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Relics.RelicAsset
+  _id: DowsingRod
+  _name: Staff of Renewal
+  _icon: {fileID: 21300000, guid: 2871f910352532fc188d4f2779c5cd50, type: 3}
+  _fragments:
+  - {fileID: 21300000, guid: 9a8760cf0bc12692d8ff08dfecc3f5a1, type: 3}
+  - {fileID: 21300000, guid: c1cc355da9dcdeced9f3f6612d8c535f, type: 3}
+  - {fileID: 21300000, guid: 449cd4eba024e4c398102b355302a980, type: 3}
+  - {fileID: 21300000, guid: b8fcd48da989d56919f722558c6606c8, type: 3}
+  - {fileID: 21300000, guid: 851d7ea36d7040040b42e960dc457498, type: 3}
+  - {fileID: 21300000, guid: ca93e2d8865a47de295aa3a142b7869a, type: 3}
+  _text: Forests, fields, rocks and shoals hold more and grow back faster
+  _pending: 
+  _kind: 0
+  _door: Orcs
+  _stats:
+  - Stat: harvestStock
+    Add: 0
+  - Stat: recoverySpeed
+    Add: 0
+  _passiveBase: 1.2
+  _passivePerLevel: 0.2
+  _activationMana: 20
+  _activationRadius: 2
+  _spellName: 
+  _spellText: 

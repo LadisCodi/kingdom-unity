@@ -70,12 +70,22 @@ namespace Codigames.Game.Session
             builder.Register<Kingdom.Modifiers.IModifiers>(resolver => new Kingdom.Modifiers.ModifierStack(
                 new Kingdom.Modifiers.IModifierSource[] { resolver.Resolve<Kingdom.Heroes.Heroes>() },
                 () => resolver.Resolve<Timeline>().LastAdvance), Lifetime.Singleton);
+            // The relics: what is held and restored, and the Shrines that host and wake them.
+            builder.Register(resolver => resolver.Resolve<KingdomState>().Relics, Lifetime.Singleton);
+            builder.Register(resolver => new Kingdom.Relics.Relics(resolver.Resolve<KingdomState>().Relics,
+                resolver.Resolve<ICatalog<Kingdom.Relics.IRelicDefinition>>(), resolver.Resolve<Kingdom.Relics.IRelicSettings>(), resolver.Resolve<ITreasury>(),
+                resolver.Resolve<KingdomState>().Seed, resolver.Resolve<Researching>()), Lifetime.Singleton).AsSelf().As<Kingdom.Relics.IRelicDrops>();
+            builder.Register(resolver => new Kingdom.Relics.Shrines(resolver.Resolve<KingdomState>().Relics, resolver.Resolve<Kingdom.Relics.Relics>(),
+                resolver.Resolve<CityState>(), resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<ManaPool>(),
+                () => resolver.Resolve<Kingdom.Modifiers.IModifiers>()), Lifetime.Singleton).AsSelf().As<Kingdom.Relics.IRelicAura>();
+            builder.Register<Kingdom.Relics.ShrineLadder>(Lifetime.Singleton).As<IBuildLadder>();
             builder.Register<Kingdom.Battles.Combat>(Lifetime.Singleton);
             builder.Register<Kingdom.Battles.EnemyGenerator>(Lifetime.Singleton);
             builder.Register(resolver => new LairAttack(resolver.Resolve<Codigames.Kingdom.Lairs.Lairs>(), resolver.Resolve<Kingdom.Battles.Combat>(),
                 resolver.Resolve<Kingdom.Battles.EnemyGenerator>(), resolver.Resolve<Kingdom.Army.Army>(), resolver.Resolve<ITreasury>(),
                 resolver.Resolve<KingdomState>().Seed, resolver.Resolve<Data.Army.CombatSettingsAsset>().TroopSlots, resolver.Resolve<IItemGrants>(),
-                resolver.Resolve<IBonuses>(), resolver.Resolve<Kingdom.Heroes.Heroes>(), resolver.Resolve<Kingdom.Modifiers.IModifiers>()), Lifetime.Singleton);
+                resolver.Resolve<IBonuses>(), resolver.Resolve<Kingdom.Heroes.Heroes>(), resolver.Resolve<Kingdom.Modifiers.IModifiers>(),
+                resolver.Resolve<Kingdom.Relics.IRelicDrops>()), Lifetime.Singleton);
             builder.Register(resolver => new Codigames.Kingdom.Lairs.Lairs(resolver.Resolve<KingdomState>().Lairs, resolver.Resolve<LairGround>(),
                 resolver.Resolve<ILairSettings>(), resolver.Resolve<CityState>(), resolver.Resolve<Stores>(), resolver.Resolve<Workforce>(),
                 resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IBonuses>(), resolver.Resolve<Kingdom.Modifiers.IModifiers>()), Lifetime.Singleton);
@@ -129,7 +139,8 @@ namespace Codigames.Game.Session
                 resolver.Resolve<ICatalog<IFeatureDefinition>>(), resolver.Resolve<ICatalog<IHarvestSource>>(),
                 resolver.Resolve<ITerrainYields>(), resolver.Resolve<ITapSettings>(), resolver.Resolve<ITreasury>(),
                 resolver.Resolve<ManaPool>(), resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IRevealedGround>(),
-                resolver.Resolve<IResearchGates>(), resolver.Resolve<IBonuses>(), resolver.Resolve<IBoosts>(), resolver.Resolve<ILairGround>()), Lifetime.Singleton)
+                resolver.Resolve<IResearchGates>(), resolver.Resolve<IBonuses>(), resolver.Resolve<IBoosts>(), resolver.Resolve<ILairGround>(),
+                resolver.Resolve<Kingdom.Relics.IRelicAura>()), Lifetime.Singleton)
                 .AsSelf().As<IPlanting>();
             builder.Register<ResearchEffects>(Lifetime.Singleton);
             builder.Register<Transplanting>(Lifetime.Singleton);
@@ -158,7 +169,7 @@ namespace Codigames.Game.Session
                 resolver.Resolve<ISiteGround>(), resolver.Resolve<ITreasureSettings>(), resolver.Resolve<ITreasury>(),
                 resolver.Resolve<IProduction>(), resolver.Resolve<IResearchGates>(), resolver.Resolve<ICatalog<IHarvestSource>>(),
                 resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<Construction>(), resolver.Resolve<KingdomState>().Seed,
-                resolver.Resolve<IBonuses>()), Lifetime.Singleton);
+                resolver.Resolve<IBonuses>(), resolver.Resolve<Kingdom.Relics.IRelicDrops>()), Lifetime.Singleton);
 
             builder.Register(resolver =>
             {
@@ -199,6 +210,9 @@ namespace Codigames.Game.Session
                 var quests = resolver.Resolve<QuestChain>();
                 quests.Wake(state.LastAdvance);
                 timeline.Register(quests);
+
+                // A relic's window closes at its own moment, before the crews step through it.
+                timeline.Register(resolver.Resolve<Kingdom.Relics.Shrines>());
 
                 // The crews last: their steps run between the boundaries the others draw.
                 timeline.Register(resolver.Resolve<Workforce>());
