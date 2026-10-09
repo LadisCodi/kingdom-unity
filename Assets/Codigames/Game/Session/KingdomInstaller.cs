@@ -75,6 +75,7 @@ namespace Codigames.Game.Session
             builder.Register<ResearchEffects>(Lifetime.Singleton);
             builder.Register<Production>(Lifetime.Singleton).As<IProduction>();
             builder.Register<SiteManaSources>(Lifetime.Singleton).As<IManaSources>();
+            builder.Register<Sighting>(Lifetime.Singleton);
             builder.Register(resolver => new Landmarks(resolver.Resolve<SitesState>(), resolver.Resolve<IProvinceSites>(),
                 resolver.Resolve<FogOfWar>(), resolver.Resolve<ITreasury>(), resolver.Resolve<IKnowledgeSettings>(),
                 ((Data.Fog.FogSettingsAsset)resolver.Resolve<IFogSettings>()).ClaimDiscoverRadius, resolver.Resolve<IBonuses>(),

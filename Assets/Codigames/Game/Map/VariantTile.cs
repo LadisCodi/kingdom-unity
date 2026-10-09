@@ -16,6 +16,10 @@ namespace Codigames.Game.Map
 
         public string Id => _id;
 
+        // The drawing a cell gets, as the tilemap draws it.
+        public Sprite SpriteAt(Codigames.Modules.Core.Vector2Int cell)
+            => _variants.Length == 0 ? null : _variants[Variant(cell, _variants.Length)];
+
         public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
         {
             tileData.sprite = _variants.Length == 0 ? null : _variants[Variant(ProvinceCoordinates.FromTilemap(position), _variants.Length)];

@@ -32,6 +32,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private FogView _fogView;
         [SerializeField] private CrewsView _crewsView;
         [SerializeField] private TreasureArt _treasureArt;
+        [SerializeField] private SightArt _sightArt;
         [SerializeField] private MenuCatalog _menuCatalog;
         [SerializeField] private WorldFeedbackCatalog _worldFeedbackCatalog;
         [SerializeField] private QuickInfoMessageSettings _quickInfoMessageSettings;
@@ -54,6 +55,8 @@ namespace Codigames.Game.Startup
             builder.Register<TreasureInput>(Lifetime.Singleton);
             builder.RegisterInstance(_treasureArt);
             builder.RegisterEntryPoint<TreasuresView>();
+            builder.RegisterInstance(_sightArt);
+            builder.RegisterEntryPoint<SilhouettesView>();
             builder.RegisterComponent(_fogView);
             builder.RegisterComponent(_crewsView);
             builder.RegisterEntryPoint<MapTaps>();

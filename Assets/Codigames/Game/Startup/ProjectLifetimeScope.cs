@@ -95,7 +95,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_mana).As<IManaSettings>();
             builder.RegisterInstance(_economy).As<IEconomySettings>().As<IWorkerSettings>();
             builder.RegisterInstance(_training).As<ITrainingSettings>();
-            builder.RegisterInstance(_fog).As<IFogSettings>();
+            builder.RegisterInstance(_fog).As<IFogSettings>().As<ISightSettings>();
             builder.RegisterInstance(_technologies).As<ICatalog<ITechnology>>().As<ITechnologyCards>();
             builder.RegisterInstance(_techTree).AsSelf().As<ITechTree>();
             builder.RegisterInstance(_knowledge).As<IKnowledgeSettings>();
