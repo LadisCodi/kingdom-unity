@@ -43,14 +43,12 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private Button _pourMost;
         [SerializeField] private TMP_Text _pourMostLabel;
         [SerializeField] private GameObject _filled;
-        [SerializeField] private RectTransform _price;
-        [SerializeField] private CostChip _chipPrefab;
+        [SerializeField] private PriceLabel _price;
         [SerializeField] private Button _research;
         [SerializeField] private GameObject _researchPadlock;
         [SerializeField] private TMP_Text _note;
 
         private readonly List<RequirementRowView> _rows = new();
-        private readonly List<CostChip> _chips = new();
 
         public event Action CloseTapped;
         public event Action BuyWithGemsTapped;
@@ -106,14 +104,7 @@ namespace Codigames.Game.UI.Menus
             _pourMost.interactable = sheet.CanPour;
             _pourMostLabel.text = sheet.PourMost;
 
-            for (var i = 0; i < sheet.Price.Count; i++)
-            {
-                if (i == _chips.Count) _chips.Add(Instantiate(_chipPrefab, _price));
-                _chips[i].gameObject.SetActive(true);
-                _chips[i].Show(sheet.Price[i]);
-            }
-
-            for (var i = sheet.Price.Count; i < _chips.Count; i++) _chips[i].gameObject.SetActive(false);
+            _price.Show(sheet.Price);
 
             _research.interactable = sheet.CanResearch;
             _researchPadlock.SetActive(!sheet.Filled);

@@ -29,7 +29,7 @@ namespace Codigames.Game.UI.Data.Research
         public string PourMost { get; set; }
 
         // The price paid when its Knowledge is in, and why the button is shut (empty when it is not).
-        public IReadOnlyList<CostChipData> Price { get; set; } = new List<CostChipData>();
+        public IReadOnlyList<PriceTerm> Price { get; set; } = new List<PriceTerm>();
         public bool CanResearch { get; set; }
         public string Note { get; set; }
     }

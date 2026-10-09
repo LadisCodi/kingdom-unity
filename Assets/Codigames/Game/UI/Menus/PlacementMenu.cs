@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Codigames.Game.UI.Data;
 using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
@@ -21,12 +20,10 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private TMP_Text _promise;
         [SerializeField] private TMP_Text _wait;
         [SerializeField] private TMP_Text _reason;
-        [SerializeField] private RectTransform _price;
-        [SerializeField] private CostChip _chipPrefab;
+        [SerializeField] private PriceLabel _price;
         [SerializeField] private Button _build;
         [SerializeField] private Color _ordinalColor = new Color32(0xf4, 0xe4, 0xc1, 0xcc);
 
-        private readonly List<CostChip> _chips = new();
 
         public event Action CloseTapped;
         public event Action BuildTapped;
@@ -54,14 +51,7 @@ namespace Codigames.Game.UI.Menus
             _reason.gameObject.SetActive(!string.IsNullOrEmpty(panel.Reason));
             _build.interactable = panel.CanBuild;
 
-            for (var i = 0; i < panel.Price.Count; i++)
-            {
-                if (i == _chips.Count) _chips.Add(Instantiate(_chipPrefab, _price));
-                _chips[i].gameObject.SetActive(true);
-                _chips[i].Show(panel.Price[i]);
-            }
-
-            for (var i = panel.Price.Count; i < _chips.Count; i++) _chips[i].gameObject.SetActive(false);
+            _price.Show(panel.Price);
         }
 
         protected override void SubscribeToEventsInternal()

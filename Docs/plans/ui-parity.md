@@ -44,7 +44,7 @@ a label picks one and never sets a size of its own (`TextStyleTests`).
 |---|---|---|
 | Building card | another layout: the web has art + promise + Upgrade (no price), a grid of stat tiles (store full in red, income, fog ring, training), the villager section (portrait, tag, line, lock reason, Train with ×1, the queue) | major |
 | Upgrade | the web opens its own sheet: level 1 → 2 art, improvements with their gains, requirements ✓/✗, price and time, the button and why it is off; Unity upgrades from the card | major |
-| Prices everywhere | ~~coin 50 rpx and figure 36 rpx Bold, where the web has 76 rpx and body size ExtraBold~~ — fixed: `Cost.prefab` over buttons, `CostChip` in rows | done |
+| Prices everywhere | ~~coin 50 rpx and figure 36 rpx Bold, where the web has 76 rpx and body size ExtraBold~~ — fixed: inline-icon `PriceLabel` over buttons and in buy boxes, `CostChip` in rows | done |
 | Build menu | no builders plaque (1/1) over the window; locked rows not greyed (art and lock), the reason not in clay; Crop plots' art missing; "Construidos" for "Hechos" | medium |
 | Ruin card | no ABANDONED tag over the art; price not framed with plain figures; Repair enabled though short of Wood | medium |
 | Knowledge sheet | no head row (big book, title, when full) | small |
@@ -62,7 +62,7 @@ ground, toasts.
 
 ## 5. Order of the fixes
 
-1. ~~Shared size tokens; prices at their size everywhere.~~ Done: text styles, `Cost.prefab`.
+1. ~~Shared size tokens; prices at their size everywhere.~~ Done: text styles, inline icons (`PriceLine`).
 2. The building card and the upgrade sheet.
 3. Build menu.
 4. Ruin card, knowledge sheet, tech sheet.

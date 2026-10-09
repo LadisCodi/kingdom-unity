@@ -7,7 +7,7 @@ namespace Codigames.Game.UI.Data
     public sealed class BuildRowData
     {
         public BuildRowData(string id, string name, string ordinal, string promise, Sprite art,
-            IReadOnlyList<CostChipData> price, string wait, string built, bool available, bool locked = false)
+            IReadOnlyList<PriceTerm> price, string wait, string built, bool available, bool locked = false)
         {
             Locked = locked;
             Id = id;
@@ -29,7 +29,7 @@ namespace Codigames.Game.UI.Data
 
         public string Promise { get; }
         public Sprite Art { get; }
-        public IReadOnlyList<CostChipData> Price { get; }
+        public IReadOnlyList<PriceTerm> Price { get; }
         public string Wait { get; }
         public string Built { get; }
 

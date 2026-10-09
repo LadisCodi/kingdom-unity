@@ -8,7 +8,7 @@ namespace Codigames.Game.UI.Data
     public sealed class PlacementPanelData
     {
         public PlacementPanelData(string name, string ordinal, Sprite art, string promise, string wait,
-            IReadOnlyList<CostChipData> price, bool canBuild, string reason, string verb)
+            IReadOnlyList<PriceTerm> price, bool canBuild, string reason, string verb)
         {
             Verb = verb;
             Name = name;
@@ -30,7 +30,7 @@ namespace Codigames.Game.UI.Data
 
         // The button's one verb: Build, or Move.
         public string Verb { get; }
-        public IReadOnlyList<CostChipData> Price { get; }
+        public IReadOnlyList<PriceTerm> Price { get; }
         public bool CanBuild { get; }
 
         // Empty when nothing stands in the way, or when the price says it already.

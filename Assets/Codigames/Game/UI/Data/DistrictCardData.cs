@@ -7,7 +7,7 @@ namespace Codigames.Game.UI.Data
     public sealed class DistrictCardData
     {
         public DistrictCardData(string name, string ordinal, string level, Sprite art, string promise, bool working,
-            string work, float progress, string next, IReadOnlyList<CostChipData> price, bool canUpgrade, string reason, string store, bool storeFull, TrainingStripData training = null, CrewStripData crew = null)
+            string work, float progress, string next, IReadOnlyList<PriceTerm> price, bool canUpgrade, string reason, string store, bool storeFull, TrainingStripData training = null, CrewStripData crew = null)
         {
             Crew = crew;
             Training = training;
@@ -47,7 +47,7 @@ namespace Codigames.Game.UI.Data
         // The next level and its wait ("Lv 3 · 35s"); empty at the highest.
         public string Next { get; }
 
-        public IReadOnlyList<CostChipData> Price { get; }
+        public IReadOnlyList<PriceTerm> Price { get; }
         public bool CanUpgrade { get; }
 
         // Why it cannot be upgraded, when the price does not say it already.

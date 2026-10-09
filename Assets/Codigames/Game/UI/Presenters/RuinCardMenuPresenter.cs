@@ -1,7 +1,6 @@
 using System.Linq;
 using Codigames.Game.Audio;
 using Codigames.Game.Data.City;
-using Codigames.Game.Data.Economy;
 using Codigames.Game.UI.Data;
 using Codigames.Game.UI.Menus;
 using Codigames.Kingdom.Economy;
@@ -21,7 +20,6 @@ namespace Codigames.Game.UI.Presenters
         private readonly Ruins _ruins;
         private readonly BuildingCollection _buildings;
         private readonly ITreasury _treasury;
-        private readonly ICurrencyIcons _icons;
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
         private readonly IClock _clock;
@@ -29,14 +27,13 @@ namespace Codigames.Game.UI.Presenters
         private readonly IQuickInfoMessageService _messages;
 
         public RuinCardMenuPresenter(IMenuViewFactory views, UIManager ui, Ruins ruins, BuildingCollection buildings, ITreasury treasury,
-            ICurrencyIcons icons, NumberFormat numbers, Localizer localizer, IClock clock, ISoundService sounds,
+            NumberFormat numbers, Localizer localizer, IClock clock, ISoundService sounds,
             IQuickInfoMessageService messages) : base(views)
         {
             _ui = ui;
             _ruins = ruins;
             _buildings = buildings;
             _treasury = treasury;
-            _icons = icons;
             _numbers = numbers;
             _localizer = localizer;
             _clock = clock;
@@ -104,7 +101,7 @@ namespace Codigames.Game.UI.Presenters
 
             var building = _buildings.Get<BuildingAsset>(site.District);
             var price = _ruins.Price(site)
-                .Select(p => new CostChipData(_icons.IconOf(p.Key), _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
+                .Select(p => new PriceTerm(p.Key, _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
                 .ToList();
             var need = _ruins.MissingItem(site) == null
                 ? string.Empty

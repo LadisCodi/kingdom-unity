@@ -21,11 +21,9 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private TMP_Text _promise;
         [SerializeField] private GameObject _need;
         [SerializeField] private TMP_Text _needText;
-        [SerializeField] private RectTransform _price;
-        [SerializeField] private CostChip _chipPrefab;
+        [SerializeField] private PriceLabel _price;
         [SerializeField] private Button _repair;
 
-        private readonly List<CostChip> _chips = new();
 
         public event Action CloseTapped;
         public event Action RepairTapped;
@@ -37,7 +35,7 @@ namespace Codigames.Game.UI.Menus
             CoachTarget.Tag(_repair, "repair");
         }
 
-        public void Show(string title, Sprite art, string promise, string need, IReadOnlyList<CostChipData> price)
+        public void Show(string title, Sprite art, string promise, string need, IReadOnlyList<PriceTerm> price)
         {
             _title.text = title;
             _art.sprite = art;
@@ -46,14 +44,7 @@ namespace Codigames.Game.UI.Menus
             _need.SetActive(!string.IsNullOrEmpty(need));
             _needText.text = need;
 
-            for (var i = 0; i < price.Count; i++)
-            {
-                if (i == _chips.Count) _chips.Add(Instantiate(_chipPrefab, _price));
-                _chips[i].gameObject.SetActive(true);
-                _chips[i].Show(price[i]);
-            }
-
-            for (var i = price.Count; i < _chips.Count; i++) _chips[i].gameObject.SetActive(false);
+            _price.Show(price);
         }
 
         protected override void SubscribeToEventsInternal()

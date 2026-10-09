@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Codigames.Game.Audio;
 using Codigames.Game.Data.City;
-using Codigames.Game.Data.Economy;
 using Codigames.Game.UI.Data;
 using Codigames.Game.UI.Menus;
 using Codigames.Game.UI.Research;
@@ -26,7 +25,6 @@ namespace Codigames.Game.UI.Presenters
         private readonly Construction _construction;
         private readonly ITreasury _treasury;
         private readonly IBuildingCards _cards;
-        private readonly ICurrencyIcons _icons;
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
         private readonly ISoundService _sounds;
@@ -36,7 +34,7 @@ namespace Codigames.Game.UI.Presenters
         private string _tab = FIRST_TAB;
 
         public BuildMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, ITreasury treasury,
-            IBuildingCards cards, ICurrencyIcons icons, NumberFormat numbers, Localizer localizer, ISoundService sounds,
+            IBuildingCards cards, NumberFormat numbers, Localizer localizer, ISoundService sounds,
             TechProse prose) : base(views)
         {
             _prose = prose;
@@ -45,7 +43,6 @@ namespace Codigames.Game.UI.Presenters
             _construction = construction;
             _treasury = treasury;
             _cards = cards;
-            _icons = icons;
             _numbers = numbers;
             _localizer = localizer;
         }
@@ -139,11 +136,11 @@ namespace Codigames.Game.UI.Presenters
             {
                 return new BuildRowData(card.Id, _localizer.Capitalized(_localizer.Tr(card.DisplayName)), string.Empty,
                     _localizer.Tr("Research {tech}", ("tech", _prose.Name(offer.RequiredTech))), card.ArtFor(1),
-                    Array.Empty<CostChipData>(), string.Empty, string.Empty, false, true);
+                    Array.Empty<PriceTerm>(), string.Empty, string.Empty, false, true);
             }
 
             var price = offer.Price
-                .Select(p => new CostChipData(_icons.IconOf(p.Key), _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
+                .Select(p => new PriceTerm(p.Key, _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
                 .ToList();
 
             var built = offer.Cap.HasValue
@@ -154,7 +151,7 @@ namespace Codigames.Game.UI.Presenters
 
             return new BuildRowData(card.Id, _localizer.Capitalized(_localizer.Tr(card.DisplayName)),
                 offer.Numbered && !atCap ? "#" + _numbers.Number(offer.Ordinal) : string.Empty,
-                _localizer.Tr(card.Promise), card.ArtFor(1), atCap ? Array.Empty<CostChipData>() : price,
+                _localizer.Tr(card.Promise), card.ArtFor(1), atCap ? Array.Empty<PriceTerm>() : price,
                 atCap ? "--" : _numbers.Duration(offer.Seconds), built, offer.Refusal == ConstructionRefusal.None);
         }
     }
