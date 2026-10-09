@@ -141,6 +141,12 @@ namespace Codigames.Game.Editor.WebImport
                 SetDoubles(so.FindProperty("_production._storageCapacityPerLevel"), row.StorageCapacityPerLevel);
                 SetInts(so.FindProperty("_production._populationCapacityPerLevel"), row.PopulationCapacityPerLevel);
                 SetDoubles(so.FindProperty("_production._taxBonusPerLevel"), row.TaxBonusPerLevel);
+                SetStrings(so.FindProperty("_production._harvestSources"), row.HarvestSources);
+                SetInts(so.FindProperty("_production._maxWorkersPerLevel"), row.MaxWorkersPerLevel);
+                SetInts(so.FindProperty("_production._influenceRadiusPerLevel"), row.InfluenceRadiusPerLevel);
+                SetDoubles(so.FindProperty("_production._strikeSpeedPerLevel"), row.StrikeSpeedPerLevel);
+                SetDoubles(so.FindProperty("_production._extraUnitsPerDeliveryPerLevel"), row.ExtraUnitsPerDeliveryPerLevel);
+                SetStrings(so.FindProperty("_crew"), row.Crew);
                 so.FindProperty("_fog._revealRadius").intValue = (int)row.FogRevealRadius;
                 SetInts(so.FindProperty("_fog._revealRadiusPerLevel"), row.FogRevealRadiusPerLevel);
                 so.FindProperty("_fog._discoverRadius").intValue = (int)row.FogDiscoverRadius;
@@ -239,6 +245,7 @@ namespace Codigames.Game.Editor.WebImport
             var settings = new SerializedObject(LoadOrCreate<EconomySettingsAsset>("Settings", "Economy"));
             settings.FindProperty("_goldPerPopulationPerMinute").doubleValue = economy.Taxes.GoldPerPopulationPerMinute;
             settings.FindProperty("_collectSeconds").doubleValue = economy.Storage.CollectSeconds;
+            settings.FindProperty("_moveSpeedTilesPerSecond").doubleValue = economy.Worker.MoveSpeedTilesPerSecond;
             settings.ApplyModifiedPropertiesWithoutUndo();
 
             var training = new SerializedObject(LoadOrCreate<TrainingSettingsAsset>("Settings", "Training"));
@@ -327,6 +334,13 @@ namespace Codigames.Game.Editor.WebImport
                 tier.FindPropertyRelative("_fromLevel").intValue = tiers[i].Level;
                 tier.FindPropertyRelative("_sprite").objectReferenceValue = tiers[i].Sprite;
             }
+        }
+
+        private static void SetStrings(SerializedProperty list, List<string> values)
+        {
+            values ??= new List<string>();
+            list.arraySize = values.Count;
+            for (var i = 0; i < values.Count; i++) list.GetArrayElementAtIndex(i).stringValue = values[i];
         }
 
         private static void SetDoubles(SerializedProperty list, List<double> values)

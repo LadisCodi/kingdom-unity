@@ -140,6 +140,32 @@ MonoBehaviour:
     - 170000
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+    _harvestSources:
+    - Fish
+    _maxWorkersPerLevel: 03000000030000000300000003000000030000000300000003000000030000000300000003000000
+    _influenceRadiusPerLevel: 04000000040000000400000004000000040000000400000004000000040000000400000004000000
+    _strikeSpeedPerLevel:
+    - 1
+    - 1.25
+    - 1.5
+    - 1.75
+    - 2
+    - 2.2
+    - 2.4
+    - 2.6
+    - 2.8
+    - 3
+    _extraUnitsPerDeliveryPerLevel:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
   _fog:
     _revealRadius: 0
     _revealRadiusPerLevel: 
@@ -148,6 +174,8 @@ MonoBehaviour:
   _promise: Boats bring in fish
   _description: Fishing boats set out from here and come home full.
   _buildTab: Economy
+  _crew:
+  - fisher_boat
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: f438bb6af5104349781c472bbf8d63ac, type: 3}

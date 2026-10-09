@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Codigames.Game.Cameras;
 using Codigames.Game.City;
+using Codigames.Game.Crews;
 using Codigames.Game.Feedback;
 using Codigames.Game.Fog;
 using Codigames.Game.Harvest;
@@ -26,6 +27,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private GroundView _groundView;
         [SerializeField] private GhostView _ghostView;
         [SerializeField] private FogView _fogView;
+        [SerializeField] private CrewsView _crewsView;
         [SerializeField] private MenuCatalog _menuCatalog;
         [SerializeField] private WorldFeedbackCatalog _worldFeedbackCatalog;
         [SerializeField] private QuickInfoMessageSettings _quickInfoMessageSettings;
@@ -46,6 +48,7 @@ namespace Codigames.Game.Startup
             builder.Register<CollectInput>(Lifetime.Singleton);
             builder.Register<FogInput>(Lifetime.Singleton);
             builder.RegisterComponent(_fogView);
+            builder.RegisterComponent(_crewsView);
             builder.RegisterEntryPoint<MapTaps>();
             RegisterUI(builder);
             RegisterFeedback(builder);

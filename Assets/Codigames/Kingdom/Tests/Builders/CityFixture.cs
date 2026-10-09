@@ -20,7 +20,7 @@ namespace Codigames.Kingdom.Tests.Builders
         {
             Map = new FakeMap(-5, 5);
             Townhall = MakeTownhall();
-            Buildings = new Catalog<IBuildingDefinition>(new[] { Townhall }.Concat(extraBuildings));
+            Buildings = new Catalog<IBuildingDefinition>(new[] { Townhall }.Concat(extraBuildings).Concat(ExtraBuildings()));
             Settings = new FakeSettings { Townhall = Townhall };
             Currencies = new Catalog<ICurrencyDefinition>(new ICurrencyDefinition[]
             {
@@ -39,6 +39,9 @@ namespace Codigames.Kingdom.Tests.Builders
             Timeline = new Timeline(0);
             Timeline.Register(Construction);
         }
+
+        // Buildings a derived fixture adds of its own.
+        protected virtual IBuildingDefinition[] ExtraBuildings() => new IBuildingDefinition[0];
 
         protected virtual IBuildingDefinition MakeTownhall()
             => new BuildingBuilder().WithId("Townhall").WithMaxLevel(5).WithSize(2, 2).NotBuildable().Build();

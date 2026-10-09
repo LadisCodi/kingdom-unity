@@ -130,6 +130,11 @@ MonoBehaviour:
     _storageCapacityPerLevel: []
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+    _harvestSources: []
+    _maxWorkersPerLevel: 01000000020000000300000003000000040000000400000005000000050000000600000006000000
+    _influenceRadiusPerLevel: 
+    _strikeSpeedPerLevel: []
+    _extraUnitsPerDeliveryPerLevel: []
   _fog:
     _revealRadius: 0
     _revealRadiusPerLevel: 
@@ -138,6 +143,8 @@ MonoBehaviour:
   _promise: Villagers smelt ore into Iron
   _description: Ore goes into the furnace and comes out as iron.
   _buildTab: Economy
+  _crew:
+  - smith
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: 2fec78a0a6c79d5d2ac1ea823ce6e388, type: 3}

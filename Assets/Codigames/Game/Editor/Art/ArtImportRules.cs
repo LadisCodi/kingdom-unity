@@ -8,6 +8,7 @@ namespace Codigames.Game.Editor.Art
     // - Art/Features: standing on their cell's bottom corner (pivot at the bottom centre), their canvas two
     //   plots across their footprint (a "_2x2" / "_3x3" suffix says how many cells), one for a crop plot.
     // - Art/Buildings: pivot at the bottom centre; the view scales each to its footprint.
+    // - Art/Characters: animation frames planted by the feet (characters.json), a person 0.38 of a plot tall.
     // - Art/Fog: the clouds and the floor's diamond, centred on their cell, one cell wide (a cloud's tile scales it).
     // - Art/World: things drawn over the map (the collect bubble): pivot at the bottom centre, 100 px a unit.
     // - Art/UI: sprites at 100 px a unit; a sliced piece keeps its border (below). plate-fill and plate-rim are
@@ -36,6 +37,12 @@ namespace Codigames.Game.Editor.Art
         private const string UI = "Assets/Art/UI/";
         private const string WORLD = "Assets/Art/World/";
         private const string ONE_PLOT_FEATURE = "farmlands";
+        private const string CHARACTERS = "Assets/Art/Characters/";
+        private const string CHARACTER_FEET = CHARACTERS + "characters.json";
+
+        // How tall a person stands, as a fraction of a plot's width: a little under a cottage's door, as the web
+        // draws them (characters.ts UNIT_PLOTS).
+        private const float PERSON_PLOTS = 0.38f;
         private const string FOG = "Assets/Art/Fog/";
 
         private void OnPreprocessTexture()
@@ -46,7 +53,8 @@ namespace Codigames.Game.Editor.Art
             var isUi = assetPath.StartsWith(UI);
             var isWorld = assetPath.StartsWith(WORLD);
             var isFog = assetPath.StartsWith(FOG);
-            if (!isTerrain && !isFeature && !isBuilding && !isUi && !isWorld && !isFog) return;
+            var isCharacter = assetPath.StartsWith(CHARACTERS);
+            if (!isTerrain && !isFeature && !isBuilding && !isUi && !isWorld && !isFog && !isCharacter) return;
 
             var importer = (TextureImporter)assetImporter;
             importer.textureType = TextureImporterType.Sprite;
@@ -65,6 +73,16 @@ namespace Codigames.Game.Editor.Art
                 settings.spritePixelsPerUnit = 100;
                 var stem = System.IO.Path.GetFileNameWithoutExtension(assetPath);
                 if (SLICED.TryGetValue(stem, out var border)) settings.spriteBorder = border;
+            }
+            else if (isCharacter)
+            {
+                // Planted by the feet (characters.json, from the web's atlas index), a person 0.38 of a plot tall.
+                var stem = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+                importer.GetSourceTextureWidthAndHeight(out var width, out _);
+                var feet = Feet(stem);
+                settings.spriteAlignment = (int)SpriteAlignment.Custom;
+                settings.spritePivot = new Vector2(feet.X / width, 0f);
+                settings.spritePixelsPerUnit = feet.Height / PERSON_PLOTS;
             }
             else if (isFog)
             {
@@ -94,6 +112,15 @@ namespace Codigames.Game.Editor.Art
         // one plot across.
         private static int FeatureCanvasPlots(string path)
             => System.IO.Path.GetFileNameWithoutExtension(path).StartsWith(ONE_PLOT_FEATURE) ? 1 : 2;
+
+        private static (float X, float Height) Feet(string stem)
+        {
+            if (!System.IO.File.Exists(CHARACTER_FEET)) return (0, 128);
+
+            var all = Newtonsoft.Json.Linq.JObject.Parse(System.IO.File.ReadAllText(CHARACTER_FEET));
+            var frame = all[stem];
+            return frame == null ? (0, 128) : (frame.Value<float>("feet"), frame.Value<float>("height"));
+        }
 
         private static int FootprintCells(string path)
         {

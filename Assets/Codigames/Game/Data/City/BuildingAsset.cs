@@ -42,6 +42,8 @@ namespace Codigames.Game.Data.City
         [SerializeField] private string _description;
         [TabGroup("Presentation"), ValueDropdown(nameof(BuildTabs))]
         [SerializeField] private string _buildTab;
+        [TabGroup("Presentation"), Tooltip("The characters its crew is drawn from.")]
+        [SerializeField] private List<string> _crew = new();
         [TabGroup("Presentation"), Tooltip("By tier: a level draws the highest tier at or below it.")]
         [ListDrawerSettings(ShowFoldout = false)]
         [SerializeField] private List<LevelArt> _art = new();
@@ -60,6 +62,7 @@ namespace Codigames.Game.Data.City
         public string Promise => _promise;
         public string Description => _description;
         public string BuildTab => _buildTab;
+        public IReadOnlyList<string> Crew => _crew;
 
         // The art a level draws: the highest tier at or below it, or the lowest tier when none is.
         public Sprite ArtFor(int level)

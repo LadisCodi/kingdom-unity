@@ -15,6 +15,9 @@ namespace Codigames.Kingdom.City.State
         // Villagers in training at the Townhall, in order.
         public List<Trainee> Trainees { get; set; } = new();
 
+        // Villagers working for a building's crew.
+        public List<Codigames.Kingdom.Crews.State.WorkerState> Workers { get; set; } = new();
+
         // Ids are handed out in order and never reused.
         public int NextId { get; set; } = 1;
 

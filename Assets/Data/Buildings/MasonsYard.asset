@@ -150,6 +150,11 @@ MonoBehaviour:
     _storageCapacityPerLevel: []
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+    _harvestSources: []
+    _maxWorkersPerLevel: 01000000020000000300000003000000040000000400000005000000050000000600000006000000
+    _influenceRadiusPerLevel: 
+    _strikeSpeedPerLevel: []
+    _extraUnitsPerDeliveryPerLevel: []
   _fog:
     _revealRadius: 0
     _revealRadiusPerLevel: 
@@ -158,6 +163,8 @@ MonoBehaviour:
   _promise: Villagers dress Stone into blocks
   _description: Masons shape raw stone into fine building blocks.
   _buildTab: Economy
+  _crew:
+  - stonemason
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: 18b0f2fa9ed47f5ab9c840cd2097e053, type: 3}

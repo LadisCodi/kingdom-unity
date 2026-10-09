@@ -130,6 +130,11 @@ MonoBehaviour:
     _storageCapacityPerLevel: []
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+    _harvestSources: []
+    _maxWorkersPerLevel: 01000000020000000300000003000000040000000400000005000000050000000600000006000000
+    _influenceRadiusPerLevel: 
+    _strikeSpeedPerLevel: []
+    _extraUnitsPerDeliveryPerLevel: []
   _fog:
     _revealRadius: 0
     _revealRadiusPerLevel: 
@@ -138,6 +143,8 @@ MonoBehaviour:
   _promise: Villagers work Wood into Planks
   _description: Rough logs go in, and smooth planks come out.
   _buildTab: Economy
+  _crew:
+  - carpenter
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: 4f206b8a8d76386b6a2ad7de2809959a, type: 3}

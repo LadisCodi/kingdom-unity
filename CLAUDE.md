@@ -257,6 +257,10 @@ Tools/                     outside Unity: PureTests, Codegen, WebData (the web's
 - Fingers on the map go through `MapGestures`: a tap names a province cell,
   and an `IMapDragHandler` (placement's ghost) may claim a finger before the
   camera pans with it. A finger that starts over the UI is never the map's.
+- Crews (`Kingdom/Crews/Workforce`) run their own steps inside the advance,
+  each at its absolute moment (no timeline boundary per step); `CrewsView`
+  draws them from `CharacterCatalog` (the web's frames in `Art/Characters`,
+  planted by the feet listed in `characters.json`).
 - The fog (`Kingdom/Fog/FogOfWar`) is drawn by `FogView` on two tilemaps
   under the province's grid: the bank's floor and the veil between terrain
   and features, the clouds sorted with the features. `GroundView` draws

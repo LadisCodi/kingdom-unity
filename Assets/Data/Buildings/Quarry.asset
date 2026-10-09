@@ -140,6 +140,34 @@ MonoBehaviour:
     - 110000
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+    _harvestSources:
+    - Stone
+    - MountainIron
+    - MountainGold
+    _maxWorkersPerLevel: 03000000030000000300000003000000030000000300000003000000030000000300000003000000
+    _influenceRadiusPerLevel: 01000000010000000100000001000000010000000100000001000000010000000100000001000000
+    _strikeSpeedPerLevel:
+    - 1
+    - 1.25
+    - 1.5
+    - 1.75
+    - 2
+    - 2.2
+    - 2.4
+    - 2.6
+    - 2.8
+    - 3
+    _extraUnitsPerDeliveryPerLevel:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
   _fog:
     _revealRadius: 0
     _revealRadiusPerLevel: 
@@ -148,6 +176,8 @@ MonoBehaviour:
   _promise: Workers cut stone from nearby rock
   _description: Its workers cut stone and iron from the hills nearby.
   _buildTab: Economy
+  _crew:
+  - quarryman
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: 194bbc1a80fdc61e28250be2a609830a, type: 3}

@@ -140,6 +140,32 @@ MonoBehaviour:
     - 290000
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+    _harvestSources:
+    - Forest
+    _maxWorkersPerLevel: 03000000030000000300000003000000030000000300000003000000030000000300000003000000
+    _influenceRadiusPerLevel: 02000000020000000200000002000000020000000200000002000000020000000200000002000000
+    _strikeSpeedPerLevel:
+    - 1
+    - 1.25
+    - 1.5
+    - 1.75
+    - 2
+    - 2.2
+    - 2.4
+    - 2.6
+    - 2.8
+    - 3
+    _extraUnitsPerDeliveryPerLevel:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
   _fog:
     _revealRadius: 0
     _revealRadiusPerLevel: 
@@ -148,6 +174,8 @@ MonoBehaviour:
   _promise: Workers fell the forest around it
   _description: Woodcutters fell the forest nearby and stack the timber.
   _buildTab: Economy
+  _crew:
+  - woodcutter
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: eadcc2666141d0f52bde13e6173792f3, type: 3}
