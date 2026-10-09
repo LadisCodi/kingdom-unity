@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89fdb41d6469c1f53a13912316af0a2f, type: 3}
+  m_Name: Goods
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Goods.GoodCollection
+  _entries:
+  - {fileID: 11400000, guid: 1cfe5b7aeb99f0489b2a5632fd76b273, type: 2}
+  - {fileID: 11400000, guid: a23869cfd77b16ed9819cbce3ccf0bee, type: 2}
+  - {fileID: 11400000, guid: 5ab469773cf85d43eb10a8d9788e404a, type: 2}
+  - {fileID: 11400000, guid: f225947a73ce85f26a04b5c8d5ee97b5, type: 2}
+  - {fileID: 11400000, guid: 3af2a5c01dcafb676a754c825c46c31b, type: 2}
+  - {fileID: 11400000, guid: 5f764b07bcad129079e8da231f47c9f4, type: 2}
+  - {fileID: 11400000, guid: 1f1ed5f11492fe78f87b1637af637e78, type: 2}

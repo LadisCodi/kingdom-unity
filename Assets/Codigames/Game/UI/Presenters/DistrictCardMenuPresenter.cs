@@ -219,7 +219,7 @@ namespace Codigames.Game.UI.Presenters
 
         private void OnCrewMinus()
         {
-            _crews.Unassign(Data);
+            _crews.Unassign(Data, _clock.NowMs);
             Refresh();
         }
 

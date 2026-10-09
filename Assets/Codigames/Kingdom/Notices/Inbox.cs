@@ -32,6 +32,20 @@ namespace Codigames.Kingdom.Notices
             Changed?.Invoke();
         }
 
+        // Files a news that adds up: the same event again raises its count instead of filing a second.
+        public void Tally(News news)
+        {
+            var filed = _state.News.FirstOrDefault(n => n.Key == news.Key);
+            if (filed == null)
+            {
+                Post(news);
+                return;
+            }
+
+            filed.Count += news.Count;
+            Changed?.Invoke();
+        }
+
         // A group's news, newest first.
         public IReadOnlyList<News> Of(NewsGroup group) => _state.News.Where(n => n.Group == group).ToList();
 

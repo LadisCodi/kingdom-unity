@@ -38,6 +38,8 @@ namespace Codigames.Kingdom
 
         public NoticesState Notices { get; set; } = new();
 
+        public Goods.State.GoodsState Goods { get; set; } = new();
+
         // This kingdom's own randomness: every draw hashes it with the parts that name the event.
         public uint Seed { get; set; }
 

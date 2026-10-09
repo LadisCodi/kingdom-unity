@@ -19,10 +19,12 @@ namespace Codigames.Kingdom.Research
         private readonly IExploredGround _explored;
         private readonly KnowledgeBar _bar;
         private readonly ITreasury _treasury;
+        private readonly Goods.Stockpile _stockpile;
 
         public Researching(ResearchState state, ICatalog<ITechnology> technologies, ITechTree tree, IBookshelf shelf,
-            IExploredGround explored, KnowledgeBar bar, ITreasury treasury)
+            IExploredGround explored, KnowledgeBar bar, ITreasury treasury, Goods.Stockpile stockpile = null)
         {
+            _stockpile = stockpile;
             _state = state;
             _technologies = technologies;
             _tree = tree;
@@ -96,7 +98,13 @@ namespace Codigames.Kingdom.Research
             return PourResult.Poured;
         }
 
-        public bool CanAfford(string id) => _treasury.CanAfford(_technologies.Get(id).Price);
+        public bool CanAfford(string id) => _treasury.CanAfford(_technologies.Get(id).Price) && HasGoods(id);
+
+        // The refined goods it asks, as charged.
+        public IReadOnlyDictionary<string, double> GoodsFor(string id)
+            => _stockpile?.Priced(_technologies.Get(id).GoodsPrice) ?? new Dictionary<string, double>();
+
+        private bool HasGoods(string id) => _stockpile == null || _stockpile.CanAfford(_technologies.Get(id).GoodsPrice);
 
         // Could it be completed this second?
         public bool CanResearch(string id) => Refusal(id) == ResearchRefusal.None && IsFilled(id) && CanAfford(id);
@@ -106,7 +114,10 @@ namespace Codigames.Kingdom.Research
         {
             if (Refusal(id) != ResearchRefusal.None) return ResearchResult.Refused;
             if (!IsFilled(id)) return ResearchResult.NotFilled;
-            if (!_treasury.TryPay(_technologies.Get(id).Price)) return ResearchResult.CannotAfford;
+            if (!_treasury.CanAfford(_technologies.Get(id).Price)) return ResearchResult.CannotAfford;
+            if (!HasGoods(id)) return ResearchResult.NotEnoughGoods;
+            _treasury.TryPay(_technologies.Get(id).Price);
+            _stockpile?.TryPay(_technologies.Get(id).GoodsPrice);
 
             Completing?.Invoke(id, now);
 

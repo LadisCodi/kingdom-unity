@@ -6,8 +6,10 @@ namespace Codigames.Kingdom.City
     public sealed class UpgradeOffer
     {
         public UpgradeOffer(int targetLevel, IReadOnlyDictionary<string, double> price, double seconds,
-            ConstructionRefusal refusal, int requiredTownhallLevel, int requiredPopulation = 0, string requiredTech = null)
+            ConstructionRefusal refusal, int requiredTownhallLevel, int requiredPopulation = 0, string requiredTech = null,
+            IReadOnlyDictionary<string, double> goods = null)
         {
+            Goods = goods ?? new Dictionary<string, double>();
             RequiredTech = requiredTech;
             RequiredPopulation = requiredPopulation;
             TargetLevel = targetLevel;
@@ -16,6 +18,9 @@ namespace Codigames.Kingdom.City
             Refusal = refusal;
             RequiredTownhallLevel = requiredTownhallLevel;
         }
+
+        // The refined goods it costs on top, as charged.
+        public IReadOnlyDictionary<string, double> Goods { get; }
 
         public int TargetLevel { get; }
 

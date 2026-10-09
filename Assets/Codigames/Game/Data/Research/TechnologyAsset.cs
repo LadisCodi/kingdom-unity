@@ -50,6 +50,7 @@ namespace Codigames.Game.Data.Research
         [SerializeField] private string _description;
 
         private Dictionary<string, double> _priceLookup;
+        private Dictionary<string, double> _goodsLookup;
         private List<TechUnlock> _unlockList;
         private List<TechEffect> _effectList;
 
@@ -62,6 +63,7 @@ namespace Codigames.Game.Data.Research
         public double Knowledge => _knowledge;
         public IReadOnlyDictionary<string, double> Price => _priceLookup ??= _price.ToDictionary(a => a.Id, a => a.Value);
         public IReadOnlyList<Amount> Goods => _goods;
+        public IReadOnlyDictionary<string, double> GoodsPrice => _goodsLookup ??= _goods.ToDictionary(a => a.Id, a => a.Value);
         public int AnyPrecious => _anyPrecious;
         public TechKind Kind => _kind;
         public IReadOnlyList<TechUnlock> Unlocks => _unlockList ??= _unlocks.Select(u => u.ToUnlock()).ToList();
@@ -83,6 +85,7 @@ namespace Codigames.Game.Data.Research
         {
             base.OnValidate();
             _priceLookup = null;
+            _goodsLookup = null;
             _unlockList = null;
             _effectList = null;
         }

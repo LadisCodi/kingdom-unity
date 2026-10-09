@@ -17,11 +17,18 @@ namespace Codigames.Kingdom.Notices
         // Sighted: the landmark or abandoned building.
         public string Site { get; set; }
 
+        // Goods: the good, and how many came off the bench together.
+        public string Good { get; set; }
+        public int Count { get; set; }
+
         public static News Built(string district, int level, double at)
             => new() { Group = NewsGroup.Built, Key = $"built:{district}:{level}", At = at, District = district, Level = level };
 
         public static News Sighted(string site, double at)
             => new() { Group = NewsGroup.Sighted, Key = $"sighted:{site}", At = at, Site = site };
+
+        public static News Goods(string district, string good, double at)
+            => new() { Group = NewsGroup.Goods, Key = $"goods:{district}:{at}", At = at, District = district, Good = good, Count = 1 };
 
         public static News ChainDone(double at) => new() { Group = NewsGroup.ChainDone, Key = "chainDone", At = at };
     }

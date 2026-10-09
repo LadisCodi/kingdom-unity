@@ -29,6 +29,9 @@ namespace Codigames.Kingdom.Research
         // Paid once, when its Knowledge is in: Gold, and on some cards Wood, Stone or Food.
         IReadOnlyDictionary<string, double> Price { get; }
 
+        // Refined goods and precious materials paid with it.
+        IReadOnlyDictionary<string, double> GoodsPrice { get; }
+
         TechKind Kind { get; }
 
         IReadOnlyList<TechUnlock> Unlocks { get; }

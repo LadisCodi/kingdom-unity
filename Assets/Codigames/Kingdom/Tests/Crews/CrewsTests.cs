@@ -54,7 +54,7 @@ namespace Codigames.Kingdom.Tests.Crews
             var reach = fixture.Crews.Reach(fixture.Mill);
 
             Assert.That(reach.Count, Is.EqualTo(25));
-            Assert.That(reach, Does.Contain(Fixture.MILL).And.Contain(HarvestFixture.TREE));
+            Assert.That(reach, Has.Member(Fixture.MILL).And.Member(HarvestFixture.TREE));
             Assert.That(fixture.Crews.Workable(fixture.Mill), Is.EqualTo(new[] { HarvestFixture.TREE }));
         }
 

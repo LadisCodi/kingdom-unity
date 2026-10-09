@@ -62,6 +62,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private StageSettingsAsset _stage;
         [SerializeField] private UnlockCollection _unlocks;
         [SerializeField] private ItemCollection _items;
+        [SerializeField] private Data.Goods.GoodCollection _goods;
 
         [Header("App")]
         [SerializeField] private LocalizationCatalog _localization;
@@ -121,6 +122,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_stage).As<IStageSettings>();
             builder.RegisterInstance(_unlocks).As<ICatalog<IUnlock>>();
             builder.RegisterInstance(_items).AsSelf().As<ICatalog<IItemDefinition>>();
+            builder.RegisterInstance(_goods).AsSelf().As<ICatalog<Kingdom.Goods.IGoodDefinition>>();
         }
     }
 }

@@ -73,9 +73,35 @@ namespace Codigames.Game.Editor.WebImport
             ImportQuests();
             ImportStage();
             ImportItems();
+            ImportGoods();
 
             AssetDatabase.SaveAssets();
             Debug.Log($"#Data# Imported {currencies} currencies, {buildings.Count} buildings and {technologies} technologies from the web prototype.");
+        }
+
+        private static void ImportGoods()
+        {
+            var web = Read<Dictionary<string, GoodData>>("Game/goods.json");
+            var assets = new List<Codigames.Game.Data.Goods.GoodAsset>();
+            foreach (var (id, row) in web)
+            {
+                var asset = LoadOrCreate<Codigames.Game.Data.Goods.GoodAsset>("Goods", id);
+                var so = new SerializedObject(asset);
+                so.FindProperty("_id").stringValue = id;
+                so.FindProperty("_name").stringValue = row.Name;
+                so.FindProperty("_icon").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/UI/Icons/{id}.png");
+                so.FindProperty("_tier").intValue = (int)row.Tier;
+                so.FindProperty("_precious").boolValue = row.Precious;
+                SetAmounts(so.FindProperty("_input"), row.Input ?? new Dictionary<string, double>());
+                so.FindProperty("_inputMana").doubleValue = row.InputMana;
+                so.FindProperty("_inputGood").stringValue = row.InputGood ?? "";
+                so.FindProperty("_inputGoodAmount").intValue = (int)row.InputGoodAmount;
+                so.FindProperty("_workSeconds").doubleValue = row.WorkSeconds ?? 0;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                assets.Add(asset);
+            }
+
+            SetEntries(LoadOrCreate<Codigames.Game.Data.Goods.GoodCollection>(null, "Goods"), assets);
         }
 
         private static int ImportCurrencies()
@@ -156,6 +182,8 @@ namespace Codigames.Game.Editor.WebImport
                 so.FindProperty("_production._harmonySupply").doubleValue = row.HarmonySupply;
                 SetDoubles(so.FindProperty("_production._harmonyCostPerLevel"), row.HarmonyCostPerLevel);
                 so.FindProperty("_production._plants").stringValue = row.Plants ?? "";
+                so.FindProperty("_production._produces").stringValue = row.Produces ?? "";
+                SetInts(so.FindProperty("_production._queueLengthPerLevel"), row.QueueLengthPerLevel);
                 SetInts(so.FindProperty("_production._maxWorkersPerLevel"), row.MaxWorkersPerLevel);
                 SetInts(so.FindProperty("_production._influenceRadiusPerLevel"), row.InfluenceRadiusPerLevel);
                 SetDoubles(so.FindProperty("_production._strikeSpeedPerLevel"), row.StrikeSpeedPerLevel);

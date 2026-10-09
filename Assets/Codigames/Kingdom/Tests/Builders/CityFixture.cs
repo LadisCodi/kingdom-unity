@@ -46,12 +46,15 @@ namespace Codigames.Kingdom.Tests.Builders
             Gates = new ResearchGates(ResearchState, Technologies);
             Bonuses = new TechBonuses(ResearchState, Technologies);
             Harmony = new Harmony(City, Buildings, new Tiers(), Bonuses);
-            Construction = new Construction(City, Treasury, Placement, Buildings, Settings, Gates, Bonuses, null, Harmony);
+            Stockpile = new Codigames.Kingdom.Goods.Stockpile(GoodsState, new Catalog<Codigames.Kingdom.Goods.IGoodDefinition>(new Codigames.Kingdom.Goods.IGoodDefinition[0]));
+            Construction = new Construction(City, Treasury, Placement, Buildings, Settings, Gates, Bonuses, null, Harmony, Stockpile);
             Timeline = new Timeline(0);
             Timeline.Register(Construction);
         }
 
         public Harmony Harmony { get; }
+        public Codigames.Kingdom.Goods.State.GoodsState GoodsState { get; } = new();
+        public Codigames.Kingdom.Goods.Stockpile Stockpile { get; }
 
         // The web's surplus tiers: 110% pays +5%, 125% +10%, 150% +15%.
         private sealed class Tiers : IHarmonySettings

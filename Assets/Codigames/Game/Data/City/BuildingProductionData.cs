@@ -29,6 +29,9 @@ namespace Codigames.Game.Data.City
         [Tooltip("The Harmony it demands at each level from 1: a total, not a step."), ListDrawerSettings(ShowIndexLabels = true)]
         [SerializeField] private List<double> _harmonyCostPerLevel = new();
         [SerializeField, Tooltip("The feature it plants instead of standing (Crops); empty for a building.")] private string _plants;
+        [SerializeField, Tooltip("The good a workshop makes; empty for a building that is not one.")] private string _produces;
+        [Tooltip("How many goods a workshop may hold queued, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
+        [SerializeField] private List<int> _queueLengthPerLevel = new();
         [Tooltip("How many villagers may work for it, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
         [SerializeField] private List<int> _maxWorkersPerLevel = new();
         [Tooltip("How far round its footprint its crew reaches, in rings, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
@@ -43,6 +46,8 @@ namespace Codigames.Game.Data.City
         public double HarmonySupply => _harmonySupply;
         public IReadOnlyList<double> HarmonyCostPerLevel => _harmonyCostPerLevel;
         public string Plants => string.IsNullOrEmpty(_plants) ? null : _plants;
+        public string Produces => string.IsNullOrEmpty(_produces) ? null : _produces;
+        public IReadOnlyList<int> QueueLengthPerLevel => _queueLengthPerLevel;
         public IReadOnlyList<int> MaxWorkersPerLevel => _maxWorkersPerLevel;
         public IReadOnlyList<int> InfluenceRadiusPerLevel => _influenceRadiusPerLevel;
         public IReadOnlyList<double> StrikeSpeedPerLevel => _strikeSpeedPerLevel;

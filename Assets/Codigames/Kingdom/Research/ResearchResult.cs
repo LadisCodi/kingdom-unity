@@ -6,5 +6,6 @@ namespace Codigames.Kingdom.Research
         Refused,
         NotFilled,
         CannotAfford,
+        NotEnoughGoods,
     }
 }

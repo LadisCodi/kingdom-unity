@@ -8,8 +8,9 @@ namespace Codigames.Kingdom.City
     public sealed class BuildOffer
     {
         public BuildOffer(string definitionId, int ordinal, IReadOnlyDictionary<string, double> price, double seconds,
-            int count, int? cap, ConstructionRefusal refusal, string requiredTech = null)
+            int count, int? cap, ConstructionRefusal refusal, string requiredTech = null, IReadOnlyDictionary<string, double> goods = null)
         {
+            Goods = goods ?? new Dictionary<string, double>();
             RequiredTech = requiredTech;
             DefinitionId = definitionId;
             Ordinal = ordinal;
@@ -23,6 +24,9 @@ namespace Codigames.Kingdom.City
         public string DefinitionId { get; }
         public int Ordinal { get; }
         public IReadOnlyDictionary<string, double> Price { get; }
+
+        // The refined goods it costs on top, as charged.
+        public IReadOnlyDictionary<string, double> Goods { get; }
         public double Seconds { get; }
         public int Count { get; }
 

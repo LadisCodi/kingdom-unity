@@ -20,9 +20,12 @@ namespace Codigames.Kingdom.Bag
         private readonly VillagerTraining _training;
 
         private readonly CityState _city;
+        private readonly Goods.Workshops _workshops;
 
-        public Speedups(Bag bag, ICatalog<IItemDefinition> items, Construction construction, VillagerTraining training, CityState city)
+        public Speedups(Bag bag, ICatalog<IItemDefinition> items, Construction construction, VillagerTraining training, CityState city,
+            Goods.Workshops workshops = null)
         {
+            _workshops = workshops;
             _city = city;
             _bag = bag;
             _items = items;
@@ -38,8 +41,12 @@ namespace Codigames.Kingdom.Bag
                && (item.Speeds == SpeedupKind.General || item.Speeds == job.Kind);
 
         // Seconds left on the timer at `now`; null when it is not running.
-        public double? RemainingSeconds(SpeedJob job, double now)
-            => job.Kind == SpeedupKind.Construction ? _construction.RemainingSeconds(job.JobId, now) : _training.RemainingSeconds(now);
+        public double? RemainingSeconds(SpeedJob job, double now) => job.Kind switch
+        {
+            SpeedupKind.Construction => _construction.RemainingSeconds(job.JobId, now),
+            SpeedupKind.Workshop => _workshops?.FrontSeconds(job.JobId, now),
+            _ => _training.RemainingSeconds(now),
+        };
 
         // The timers running at `now`: the builders' jobs, then the Townhall's line.
         public IEnumerable<SpeedJob> Running(double now)
@@ -47,6 +54,9 @@ namespace Codigames.Kingdom.Bag
             foreach (var job in _city.Jobs)
                 if (_construction.RemainingSeconds(job.Id, now) > 0) yield return SpeedJob.Construction(job.Id);
             if (_training.RemainingSeconds(now) > 0) yield return SpeedJob.Training();
+            if (_workshops == null) yield break;
+            foreach (var district in _city.Districts)
+                if (_workshops.FrontSeconds(district.Id, now) > 0) yield return SpeedJob.Workshop(district.Id);
         }
 
         // The first running timer a speed-up fits — where the Bag sends it; null when nothing of its kind runs.
@@ -77,6 +87,7 @@ namespace Codigames.Kingdom.Bag
 
             var seconds = _items.Get(id).Seconds * count;
             if (job.Kind == SpeedupKind.Construction) _construction.Hurry(job.JobId, seconds, now);
+            else if (job.Kind == SpeedupKind.Workshop) _workshops?.Cut(job.JobId, seconds, now);
             else _training.Hurry(seconds, now);
             _bag.Take(id, count);
             Used?.Invoke(job, id, count);
