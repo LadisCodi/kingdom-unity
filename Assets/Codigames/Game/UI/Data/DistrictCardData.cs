@@ -31,6 +31,10 @@ namespace Codigames.Game.UI.Data
         // Speed up's words on a timer's button, its hourglass inline.
         public string SpeedUp { get; set; }
 
+        // A workshop's panel; null for a building that is not one, or not standing yet.
+        public string WorkshopHead { get; set; }
+        public WorkshopPanelData Workshop { get; set; }
+
         // Harmony: what a decoration supplies, or on the Townhall the city's supply and demand; null for none.
         public string HarmonyHead { get; set; }
         public string HarmonyLine { get; set; }

@@ -41,6 +41,7 @@ namespace Codigames.Game.UI.Presenters
         private readonly Kingdom.Crews.Workforce _crews;
         private readonly Harvesting _harvesting;
         private readonly Kingdom.Map.IProvinceMap _province;
+        private readonly PriceTerms _prices;
         // A pill's height, in tile widths: the web's labels, a fifth of a tile with their padding.
         private const float PILL_HEIGHT = 0.29f;
         private readonly Placement _placement;
@@ -71,9 +72,10 @@ namespace Codigames.Game.UI.Presenters
             Transplanting transplanting, ITreasury treasury, BuildingCollection buildings, FeatureCollection features, CityState city,
             GroundState ground, ProvinceMap map, MapGestures gestures, GhostView ghost, CityView cityView,
             GroundView groundView, CameraController camera, IClock clock, NumberFormat numbers, Localizer localizer, ISoundService sounds,
-            Adjacency adjacency, WorkAreaView workArea, Kingdom.Crews.Workforce crews, Harvesting harvesting, Kingdom.Map.IProvinceMap province)
+            Adjacency adjacency, WorkAreaView workArea, Kingdom.Crews.Workforce crews, Harvesting harvesting, Kingdom.Map.IProvinceMap province, PriceTerms prices)
             : base(views)
         {
+            _prices = prices;
             _province = province;
             _workArea = workArea;
             _crews = crews;
@@ -249,9 +251,7 @@ namespace Codigames.Game.UI.Presenters
             ShowGhost(building.ArtFor(1), null, problem);
             ShowNeighbours(null);
 
-            var price = offer.Price
-                .Select(p => new PriceTerm(p.Key, _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
-                .ToList();
+            var price = _prices.Of(offer.Price, offer.Goods);
 
             View.Show(new PlacementPanelData(
                 _localizer.Capitalized(_localizer.Tr(building.DisplayName)),
@@ -398,6 +398,7 @@ namespace Codigames.Game.UI.Presenters
             {
                 ConstructionRefusal.NoFreeBuilder => _localizer.Tr("Every builder is busy"),
                 ConstructionRefusal.NeedsHarmony => _localizer.Tr("Needs more Harmony"),
+                ConstructionRefusal.NotEnoughGoods => _localizer.Tr("Not enough refined goods — queue some at a workshop"),
                 _ => string.Empty,
             };
         }

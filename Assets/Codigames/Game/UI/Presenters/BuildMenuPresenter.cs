@@ -37,6 +37,7 @@ namespace Codigames.Game.UI.Presenters
         private readonly Harmony _harmony;
         private readonly IHarmonySettings _harmonySettings;
         private readonly Kit.UiIcons _icons;
+        private readonly PriceTerms _prices;
 
         // Remembered between openings, so placement's way back lands on the same tab.
         private string _tab = FIRST_TAB;
@@ -44,8 +45,9 @@ namespace Codigames.Game.UI.Presenters
         public BuildMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, ITreasury treasury,
             IBuildingCards cards, NumberFormat numbers, Localizer localizer, ISoundService sounds,
             TechProse prose, ICatalog<IBuildingDefinition> buildings, CityState city, IConstructionSettings settings, Harmony harmony,
-            IHarmonySettings harmonySettings, Kit.UiIcons icons) : base(views)
+            IHarmonySettings harmonySettings, Kit.UiIcons icons, PriceTerms prices) : base(views)
         {
+            _prices = prices;
             _harmony = harmony;
             _harmonySettings = harmonySettings;
             _icons = icons;
@@ -199,9 +201,7 @@ namespace Codigames.Game.UI.Presenters
                     _localizer.Tr("Research {tech}", ("tech", _prose.Name(offer.RequiredTech))), known: false);
             }
 
-            var price = offer.Price
-                .Select(p => new PriceTerm(p.Key, _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
-                .ToList();
+            var price = _prices.Of(offer.Price, offer.Goods);
 
             var built = offer.Cap.HasValue
                 ? _localizer.Tr("Built {count}/{max}", ("count", _numbers.Number(offer.Count)), ("max", _numbers.Number(offer.Cap.Value)))

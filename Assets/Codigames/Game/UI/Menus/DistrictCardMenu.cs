@@ -60,6 +60,11 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private TMP_Text _crewLimit;
         [SerializeField] private KitButton _crewPlus;
 
+        [Header("Workshop")]
+        [SerializeField] private GameObject _workshopBlock;
+        [SerializeField] private SectionHead _workshopHead;
+        [SerializeField] private Buildings.WorkshopPanel _workshop;
+
         [Header("Harmony and neighbours")]
         [SerializeField] private GameObject _harmonyBlock;
         [SerializeField] private SectionHead _harmonyHead;
@@ -85,6 +90,10 @@ namespace Codigames.Game.UI.Menus
         public event Action FinishWorkTapped;
         public event Action SpeedUpWorkTapped;
         public event Action SpeedUpTrainingTapped;
+        public event Action MakeTapped;
+        public event Action<int> CancelGoodTapped;
+        public event Action FinishGoodTapped;
+        public event Action SpeedUpGoodTapped;
         public event Action AmountTapped;
         public event Action TrainTapped;
         public event Action FinishTrainingTapped;
@@ -130,6 +139,13 @@ namespace Codigames.Game.UI.Menus
             _stats.Show(card.Stats);
             ShowTraining(card);
             ShowCrew(card);
+            _workshopBlock.SetActive(card.Workshop != null);
+            if (card.Workshop != null)
+            {
+                _workshopHead.Title = card.WorkshopHead;
+                _workshop.Show(card.Workshop);
+            }
+
             ShowHarmony(card);
             ShowNeighbours(card);
             LayoutRebuilder.MarkLayoutForRebuild(_window);
@@ -213,6 +229,10 @@ namespace Codigames.Game.UI.Menus
             _finishWork.Button.onClick.AddListener(OnFinishWork);
             _speedUpWork.onClick.AddListener(OnSpeedUpWork);
             _speedUpTraining.onClick.AddListener(OnSpeedUpTraining);
+            _workshop.MakeTapped += OnMake;
+            _workshop.CancelTapped += OnCancelGood;
+            _workshop.FinishTapped += OnFinishGood;
+            _workshop.SpeedUpTapped += OnSpeedUpGood;
             _amount.onClick.AddListener(OnAmount);
             _train.Button.onClick.AddListener(OnTrain);
             _finishTraining.Button.onClick.AddListener(OnFinishTraining);
@@ -228,6 +248,10 @@ namespace Codigames.Game.UI.Menus
             _finishWork.Button.onClick.RemoveListener(OnFinishWork);
             _speedUpWork.onClick.RemoveListener(OnSpeedUpWork);
             _speedUpTraining.onClick.RemoveListener(OnSpeedUpTraining);
+            _workshop.MakeTapped -= OnMake;
+            _workshop.CancelTapped -= OnCancelGood;
+            _workshop.FinishTapped -= OnFinishGood;
+            _workshop.SpeedUpTapped -= OnSpeedUpGood;
             _amount.onClick.RemoveListener(OnAmount);
             _train.Button.onClick.RemoveListener(OnTrain);
             _finishTraining.Button.onClick.RemoveListener(OnFinishTraining);
@@ -241,6 +265,10 @@ namespace Codigames.Game.UI.Menus
         private void OnFinishWork() => FinishWorkTapped?.Invoke();
         private void OnSpeedUpWork() => SpeedUpWorkTapped?.Invoke();
         private void OnSpeedUpTraining() => SpeedUpTrainingTapped?.Invoke();
+        private void OnMake() => MakeTapped?.Invoke();
+        private void OnCancelGood(int index) => CancelGoodTapped?.Invoke(index);
+        private void OnFinishGood() => FinishGoodTapped?.Invoke();
+        private void OnSpeedUpGood() => SpeedUpGoodTapped?.Invoke();
         private void OnAmount() => AmountTapped?.Invoke();
         private void OnTrain() => TrainTapped?.Invoke();
         private void OnFinishTraining() => FinishTrainingTapped?.Invoke();

@@ -23,6 +23,7 @@ namespace Codigames.Game.UI.Presenters
     // press. Nothing announces it: the press is the news (but the last card of a chapter says what it paid).
     public class TechSheetMenuPresenter : AbstractDataMenuPresenter<TechSheetMenu, string>, IPopupMenuPresenter
     {
+        private readonly PriceTerms _prices;
         private readonly UIManager _ui;
         private readonly Researching _research;
         private readonly KnowledgeBar _bar;
@@ -40,8 +41,9 @@ namespace Codigames.Game.UI.Presenters
         public TechSheetMenuPresenter(IMenuViewFactory views, UIManager ui, Researching research, KnowledgeBar bar,
             KnowledgeMarket market, ICatalog<ITechnology> technologies, ITechnologyCards cards, ITreasury treasury,
             TechProse prose, NumberFormat numbers, Localizer localizer, IClock clock, ISoundService sounds,
-            IQuickInfoMessageService messages) : base(views)
+            IQuickInfoMessageService messages, PriceTerms prices) : base(views)
         {
+            _prices = prices;
             _ui = ui;
             _research = research;
             _bar = bar;
@@ -207,11 +209,8 @@ namespace Codigames.Game.UI.Presenters
             sheet.CanBuyWithGems = _treasury.Get(KnowledgeMarket.GEMS) >= gems;
             sheet.CanPour = Most > 0;
             sheet.PourMost = "+" + _numbers.Exact(Most);
-            sheet.Price = tech.Price
-                .Where(line => line.Value > 0)
-                .OrderBy(line => line.Key == KnowledgeMarket.GOLD ? 0 : 1)
-                .Select(line => new PriceTerm(line.Key, _numbers.Exact(line.Value), _treasury.Get(line.Key) < line.Value))
-                .ToList();
+            sheet.Price = _prices.Of(tech.Price.OrderBy(line => line.Key == KnowledgeMarket.GOLD ? 0 : 1).ToDictionary(l => l.Key, l => l.Value),
+                _research.GoodsFor(Data));
             sheet.CanResearch = sheet.Filled && _research.CanAfford(Data);
             sheet.ResearchLabel = _localizer.Tr("Research");
             sheet.Note = sheet.Filled ? "" : _localizer.Tr("Assign all its Knowledge to research it");

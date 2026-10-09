@@ -53,6 +53,10 @@ namespace Codigames.Game.UI.Presenters
         private readonly IHarmonySettings _harmonySettings;
         private readonly Adjacency _adjacency;
         private readonly City.WorkAreaView _workArea;
+        private readonly Kingdom.Goods.Workshops _workshops;
+        private readonly Kingdom.Goods.Stockpile _stockpile;
+        private readonly Codigames.Game.Data.Goods.GoodCollection _goods;
+        private readonly PriceTerms _prices;
 
         // The second the card was last drawn at: it is redrawn once a second.
         private double _shownSeconds = -1;
@@ -64,8 +68,14 @@ namespace Codigames.Game.UI.Presenters
             BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, IClock clock, NumberFormat numbers,
             Localizer localizer, Stores stores, VillagerTraining training, Workforce crews, BuildingStats stats,
             BuildingStatProse prose, GemRush rush, UiIcons icons, PortraitArt portraits, ISoundService sounds,
-            CardFraming framing, Speedups speedups, Harmony harmony, IHarmonySettings harmonySettings, Adjacency adjacency, City.WorkAreaView workArea) : base(views)
+            CardFraming framing, Speedups speedups, Harmony harmony, IHarmonySettings harmonySettings, Adjacency adjacency, City.WorkAreaView workArea,
+            Kingdom.Goods.Workshops workshops, Kingdom.Goods.Stockpile stockpile, Codigames.Game.Data.Goods.GoodCollection goods,
+            PriceTerms prices) : base(views)
         {
+            _workshops = workshops;
+            _stockpile = stockpile;
+            _goods = goods;
+            _prices = prices;
             _workArea = workArea;
             _harmony = harmony;
             _harmonySettings = harmonySettings;
@@ -139,6 +149,10 @@ namespace Codigames.Game.UI.Presenters
             view.FinishWorkTapped += OnFinishWork;
             view.SpeedUpWorkTapped += OnSpeedUpWork;
             view.SpeedUpTrainingTapped += OnSpeedUpTraining;
+            view.MakeTapped += OnMake;
+            view.CancelGoodTapped += OnCancelGood;
+            view.FinishGoodTapped += OnFinishGood;
+            view.SpeedUpGoodTapped += OnSpeedUpGood;
             view.AmountTapped += OnAmount;
             view.TrainTapped += OnTrain;
             view.FinishTrainingTapped += OnFinishTraining;
@@ -154,6 +168,10 @@ namespace Codigames.Game.UI.Presenters
             view.FinishWorkTapped -= OnFinishWork;
             view.SpeedUpWorkTapped -= OnSpeedUpWork;
             view.SpeedUpTrainingTapped -= OnSpeedUpTraining;
+            view.MakeTapped -= OnMake;
+            view.CancelGoodTapped -= OnCancelGood;
+            view.FinishGoodTapped -= OnFinishGood;
+            view.SpeedUpGoodTapped -= OnSpeedUpGood;
             view.AmountTapped -= OnAmount;
             view.TrainTapped -= OnTrain;
             view.FinishTrainingTapped -= OnFinishTraining;
@@ -197,6 +215,90 @@ namespace Codigames.Game.UI.Presenters
         }
 
         private void OnSpeedUpTraining() => _ = _ui.ShowMenu<SpeedupMenu, SpeedJob>(SpeedJob.Training());
+
+        private void OnMake()
+        {
+            var refusal = _workshops.Enqueue(Data, _clock.NowMs);
+            _sounds.Play(refusal == Kingdom.Goods.WorkshopRefusal.None ? SoundIds.BUTTON_PRESS : SoundIds.ERROR);
+            Refresh();
+        }
+
+        private void OnCancelGood(int index)
+        {
+            _sounds.Play(SoundIds.BUTTON_PRESS);
+            _workshops.Cancel(Data, index, _clock.NowMs);
+            Refresh();
+        }
+
+        private void OnFinishGood()
+        {
+            var refusal = _workshops.Rush(Data, _clock.NowMs);
+            _sounds.Play(refusal == Kingdom.Goods.WorkshopRefusal.None ? SoundIds.GEM_SPEND : SoundIds.ERROR);
+            Refresh();
+        }
+
+        private void OnSpeedUpGood() => _ = _ui.ShowMenu<SpeedupMenu, SpeedJob>(SpeedJob.Workshop(Data));
+
+        // The workshop's panel: its good and recipe, its stock, its crew, its queue, the next out, and Make.
+        private WorkshopPanelData Workshop(DistrictState district, double now)
+        {
+            var good = _workshops.GoodOf(district);
+            if (good == null || !district.Built) return null;
+
+            var asset = _goods.Get<Codigames.Game.Data.Goods.GoodAsset>(good.Id);
+            var name = _localizer.Tr(good.Name);
+            var crew = _crews.Assigned(district.Id);
+            var queue = _workshops.Queue(district.Id);
+            var capacity = _workshops.Capacity(district);
+            var worked = Math.Min(crew, queue.Count);
+            var slots = new List<WorkshopSlotData>();
+            for (var i = 0; i < Math.Max(capacity, queue.Count); i++)
+            {
+                slots.Add(i < queue.Count
+                    ? new WorkshopSlotData { Icon = asset.Icon, Filled = true, Working = i < worked, Progress = (float)_workshops.Progress(district.Id, i, now) }
+                    : new WorkshopSlotData());
+            }
+
+            var recipe = string.Join("  ", good.Input.Where(p => p.Value > 0).Select(p => Inline(p.Key, p.Value))
+                .Concat(string.IsNullOrEmpty(good.InputGood) ? Array.Empty<string>() : new[] { Inline(good.InputGood, good.InputGoodAmount) })
+                .Concat(good.InputMana > 0 ? new[] { Inline(Kingdom.Magic.ManaPool.MANA, good.InputMana) } : Array.Empty<string>()));
+
+            var inputGoods = string.IsNullOrEmpty(good.InputGood) ? null : new Dictionary<string, double> { [good.InputGood] = good.InputGoodAmount };
+            var price = _prices.Of(good.InputMana > 0
+                ? good.Input.Concat(new[] { new KeyValuePair<string, double>(Kingdom.Magic.ManaPool.MANA, good.InputMana) }).ToDictionary(p => p.Key, p => p.Value)
+                : good.Input, inputGoods);
+            var refusal = _workshops.Refusal(district.Id, now);
+            var next = _workshops.NextSeconds(district.Id, now);
+            var gems = _workshops.RushCost(district.Id, now);
+
+            return new WorkshopPanelData
+            {
+                GoodIcon = asset.Icon,
+                GoodName = name,
+                Recipe = recipe,
+                Held = _numbers.Exact(_stockpile.Get(good.Id)),
+                HeldLabel = _localizer.Tr("in store"),
+                CrewLine = "<sprite name=\"workers\"> " + (crew == 0
+                    ? _localizer.Tr("No villagers here — nothing is being made")
+                    : _localizer.Tr("{n} working · {time} each", ("n", _numbers.Exact(crew)), ("time", _numbers.Duration(_workshops.NeedMs(district) / 1000 / crew)))),
+                CrewWarning = crew == 0,
+                Slots = slots,
+                Next = next == null ? null : "<sprite name=\"hourglass\"> " + _localizer.Tr("next in {time}", ("time", _numbers.Countdown(Math.Ceiling(next.Value)))),
+                SpeedUp = _speedups.For(SpeedJob.Workshop(district.Id)).Count > 0,
+                SpeedUpLabel = "<sprite name=\"hourglass\"> " + _localizer.Tr("Speed up"),
+                Finish = new[] { new PriceTerm(GemRush.GEMS, _numbers.Exact(gems), _treasury.Get(GemRush.GEMS) < gems) },
+                CanFinish = _treasury.Get(GemRush.GEMS) >= gems,
+                FinishLabel = _localizer.Tr("Finish"),
+                MakeLabel = _localizer.Tr("Make {good}", ("good", name)),
+                MakePrice = price,
+                CanMake = refusal == Kingdom.Goods.WorkshopRefusal.None,
+                MakeNote = refusal == Kingdom.Goods.WorkshopRefusal.QueueFull
+                    ? _localizer.Tr("The queue is full")
+                    : _localizer.Tr("{n}/{cap} queued", ("n", _numbers.Exact(queue.Count)), ("cap", _numbers.Exact(capacity))),
+            };
+        }
+
+        private string Inline(string id, double amount) => "<sprite name=\"" + id + "\"> " + _numbers.Exact(amount);
 
         private void OnAmount()
         {
@@ -259,6 +361,8 @@ namespace Codigames.Game.UI.Presenters
                 SpeedUp = "<sprite name=\"hourglass\"> " + _localizer.Tr("Speed up"),
                 Crew = _crews.HasCrew(district) && district.Built ? Crew(district) : null,
             };
+            card.WorkshopHead = _localizer.Tr("Workshop");
+            card.Workshop = Workshop(district, now);
             HarmonyOf(card, building, district);
             // Its work area on the map, and who its crew works, rimmed.
             if (district.Built && _crews.HasCrew(district) && _crews.Radius(district) > 0) _workArea.Show(_crews.Reach(district), _crews.Workable(district));
