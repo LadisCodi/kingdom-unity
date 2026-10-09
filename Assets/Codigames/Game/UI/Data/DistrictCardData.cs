@@ -28,5 +28,7 @@ namespace Codigames.Game.UI.Data
 
         public string CrewHead { get; set; }
         public CrewPanelData Crew { get; set; }
+        // Speed up's words on a timer's button, its hourglass inline.
+        public string SpeedUp { get; set; }
     }
 }

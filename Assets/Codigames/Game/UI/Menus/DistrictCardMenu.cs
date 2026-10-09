@@ -29,6 +29,7 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private KitButton _upgrade;
         [SerializeField] private CtaBadge _upgradeCta;
         [SerializeField] private CostButton _finishWork;
+        [SerializeField] private KitButton _speedUpWork;
 
         [Header("Stats")]
         [SerializeField] private StatBand _stats;
@@ -48,6 +49,7 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private ProgressBar _batchBar;
         [SerializeField] private TMP_Text _batchTotal;
         [SerializeField] private CostButton _finishTraining;
+        [SerializeField] private KitButton _speedUpTraining;
 
         [Header("Crew")]
         [SerializeField] private SectionHead _crewHead;
@@ -69,6 +71,8 @@ namespace Codigames.Game.UI.Menus
         public event Action MoveTapped;
         public event Action UpgradeTapped;
         public event Action FinishWorkTapped;
+        public event Action SpeedUpWorkTapped;
+        public event Action SpeedUpTrainingTapped;
         public event Action AmountTapped;
         public event Action TrainTapped;
         public event Action FinishTrainingTapped;
@@ -84,6 +88,7 @@ namespace Codigames.Game.UI.Menus
             CoachTarget.Tag(_train.Button, "card:train");
             CoachTarget.Tag(_finishTraining.Button, "card:finish-training");
             CoachTarget.Tag(_crewPlus, "card:workers");
+            CoachTarget.Tag(_speedUpWork, "speedup");
         }
 
         public void Show(DistrictCardData card)
@@ -97,7 +102,10 @@ namespace Codigames.Game.UI.Menus
             var work = card.Work;
             _workBar.gameObject.SetActive(work != null);
             _doing.gameObject.SetActive(work != null);
-            _finishWork.gameObject.SetActive(work != null);
+            _finishWork.gameObject.SetActive(work != null && !work.SpeedUp);
+            _speedUpWork.gameObject.SetActive(work != null && work.SpeedUp);
+            _speedUpWork.Label = card.SpeedUp;
+            _speedUpTraining.Label = card.SpeedUp;
             _upgrade.gameObject.SetActive(work == null && card.Upgradable);
             _upgradeCta.Show(work == null && card.UpgradeReady ? 1 : 0);
             if (work != null)
@@ -139,6 +147,8 @@ namespace Codigames.Game.UI.Menus
             // Training runs green, as the web's batch bar does.
             _batchBar.Set(batch.Progress, batch.Left, done: true);
             _batchTotal.text = batch.Total;
+            _finishTraining.gameObject.SetActive(!batch.SpeedUp);
+            _speedUpTraining.gameObject.SetActive(batch.SpeedUp);
             _finishTraining.Show(batch.Finish, batch.CanFinish);
         }
 
@@ -163,6 +173,8 @@ namespace Codigames.Game.UI.Menus
             _move.onClick.AddListener(OnMove);
             _upgrade.onClick.AddListener(OnUpgrade);
             _finishWork.Button.onClick.AddListener(OnFinishWork);
+            _speedUpWork.onClick.AddListener(OnSpeedUpWork);
+            _speedUpTraining.onClick.AddListener(OnSpeedUpTraining);
             _amount.onClick.AddListener(OnAmount);
             _train.Button.onClick.AddListener(OnTrain);
             _finishTraining.Button.onClick.AddListener(OnFinishTraining);
@@ -176,6 +188,8 @@ namespace Codigames.Game.UI.Menus
             _move.onClick.RemoveListener(OnMove);
             _upgrade.onClick.RemoveListener(OnUpgrade);
             _finishWork.Button.onClick.RemoveListener(OnFinishWork);
+            _speedUpWork.onClick.RemoveListener(OnSpeedUpWork);
+            _speedUpTraining.onClick.RemoveListener(OnSpeedUpTraining);
             _amount.onClick.RemoveListener(OnAmount);
             _train.Button.onClick.RemoveListener(OnTrain);
             _finishTraining.Button.onClick.RemoveListener(OnFinishTraining);
@@ -187,6 +201,8 @@ namespace Codigames.Game.UI.Menus
         private void OnMove() => MoveTapped?.Invoke();
         private void OnUpgrade() => UpgradeTapped?.Invoke();
         private void OnFinishWork() => FinishWorkTapped?.Invoke();
+        private void OnSpeedUpWork() => SpeedUpWorkTapped?.Invoke();
+        private void OnSpeedUpTraining() => SpeedUpTrainingTapped?.Invoke();
         private void OnAmount() => AmountTapped?.Invoke();
         private void OnTrain() => TrainTapped?.Invoke();
         private void OnFinishTraining() => FinishTrainingTapped?.Invoke();

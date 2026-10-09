@@ -51,6 +51,8 @@ a label picks one and never sets a size of its own (`TextStyleTests`).
 | Tech sheet | done: kit buttons with their icons in their words, the big Research | done |
 | Placement | done: portrait tile, priced Build (bare when moving), the wait with its hourglass | done |
 | Landmark card | done: docked, status tag, priced Claim | done |
+| Bag | done: five tabs in rows of four (an empty one dulled), square tiles tinted by rarity with their size, count, badge and sparkle, the popover under the tile's row (choice plates, − slider + with Max, total, Use), boost ribbons | done |
+| Speed-up picker | done: the timer (icon, bar, time left), Auto's plan, one row per fitting speed-up (scrolling past five), gem Finish; Speed up with its hourglass on the card's timers | done |
 
 Not built yet, so not differences: the Survey widget, settings and friends
 buttons, the builder sheet, the other books' bookmarks.

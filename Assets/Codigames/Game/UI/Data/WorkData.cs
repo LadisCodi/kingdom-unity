@@ -17,6 +17,9 @@ namespace Codigames.Game.UI.Data
             Total = total;
         }
 
+        // The Bag holds a speed-up that fits: Speed up takes Finish's place (the web's timerButton).
+        public bool SpeedUp { get; set; }
+
         public string Doing { get; }
         public float Progress { get; }
         public string Left { get; }

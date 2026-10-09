@@ -15,6 +15,9 @@ namespace Codigames.Game.UI.Widgets
         [SerializeField] private RectTransform _content;
         [SerializeField, Tooltip("How far the face sinks while open, in reference pixels.")] private float _press = 8;
         [SerializeField, Tooltip("How many of the tab's buildings can be built now.")] private Kit.CtaBadge _badge;
+        [SerializeField, Tooltip("Optional: a tab whose words are set from code.")] private TMPro.TMP_Text _label;
+        [SerializeField, Tooltip("An empty tab, darkened (the web's is-empty brightness).")] private Color _dimmed = new Color32(0xd9, 0xd9, 0xd9, 0xff);
+        [SerializeField, Tooltip("Optional: an empty tab's dulled wood (the web's is-empty saturate).")] private Material _dull;
 
         public event Action Tapped;
 
@@ -23,6 +26,17 @@ namespace Codigames.Game.UI.Widgets
         public void SetBadge(int count)
         {
             if (_badge != null) _badge.Show(count);
+        }
+
+        public void SetLabel(string label)
+        {
+            if (_label != null) _label.text = label;
+        }
+
+        public void SetDim(bool dim)
+        {
+            _plate.color = dim ? _dimmed : Color.white;
+            _plate.material = dim ? _dull : null;
         }
 
         public void SetOpen(bool open)
