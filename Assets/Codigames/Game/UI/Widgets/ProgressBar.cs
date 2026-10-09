@@ -34,6 +34,15 @@ namespace Codigames.Game.UI.Widgets
             Fit();
         }
 
+        // A bar in a fill of its own (a fragments bar's gold toward a recruit).
+        public void Set(float fraction, string label, Sprite fill)
+        {
+            _fraction = Mathf.Clamp01(fraction);
+            _fill.sprite = fill != null ? fill : _blue;
+            _label.text = label;
+            Fit();
+        }
+
         private void OnRectTransformDimensionsChange() => Fit();
 
         private void Fit()

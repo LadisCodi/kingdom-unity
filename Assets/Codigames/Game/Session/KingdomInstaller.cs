@@ -62,6 +62,7 @@ namespace Codigames.Game.Session
                 resolver.Resolve<Kingdom.Goods.Stockpile>(), resolver.Resolve<CityState>(), resolver.Resolve<ICatalog<IBuildingDefinition>>(),
                 resolver.Resolve<IBonuses>(), () => resolver.Resolve<Kingdom.Modifiers.IModifiers>()), Lifetime.Singleton);
             builder.Register(resolver => resolver.Resolve<KingdomState>().Gacha, Lifetime.Singleton);
+            builder.Register<Kingdom.Heroes.Reveals>(Lifetime.Singleton);
             builder.Register(resolver => new Kingdom.Heroes.Gacha(resolver.Resolve<KingdomState>().Gacha, resolver.Resolve<Kingdom.Heroes.Heroes>(),
                 resolver.Resolve<ICatalog<Kingdom.Heroes.IBannerDefinition>>(), resolver.Resolve<IItemHoldings>(), resolver.Resolve<ITreasury>(),
                 resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IBonuses>()), Lifetime.Singleton);

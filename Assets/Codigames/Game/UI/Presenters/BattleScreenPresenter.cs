@@ -100,6 +100,7 @@ namespace Codigames.Game.UI.Presenters
         private double? _resultAt;
         private bool _plaqueUp;
         private bool _exitUp;
+        private bool _rewardsUp;
 
         public BattleScreenPresenter(IMenuViewFactory views, UIManager ui, Combat combat, PortraitArt portraits, ProvinceSitesAsset sites,
             IClock clock, NumberFormat numbers, Localizer localizer, ISoundService sounds, MusicDirector music, PlaybackPreferences preferences) : base(views)
@@ -138,6 +139,8 @@ namespace Codigames.Game.UI.Presenters
             _resultAt = null;
             _plaqueUp = false;
             _exitUp = false;
+            _rewardsUp = false;
+            _ui.MenuHidden += OnMenuHidden;
             _finalBlow = _log.Events[_log.Events.Count - 1].Kind == BattleEventKind.End && _log.Reason == EndReason.Wiped;
 
             var start = _log.Events[0];
@@ -190,8 +193,15 @@ namespace Codigames.Game.UI.Presenters
 
         protected override void UnbindInternal(BattleScreen view)
         {
+            _ui.MenuHidden -= OnMenuHidden;
             _music.Set(MusicMoment.Battle, false);
             foreach (var slot in _slots.Values) slot.Lunge?.Kill();
+        }
+
+        // The spoils have been collected.
+        private void OnMenuHidden(IMenuPresenter menu)
+        {
+            if (menu.MenuType == typeof(RevealScreen)) Data?.TakeRewards();
         }
 
         protected override void SubscribeToViewEventsInternal(BattleScreen view)
@@ -343,6 +353,16 @@ namespace Codigames.Game.UI.Presenters
                 // The bar tells the truth at the end: a wiped side is worth nothing.
                 _power[won ? 1 : 0] = 0;
                 PaintBar();
+            }
+
+            // The spoils deal on the reveal, over the board; the way out comes once they are collected.
+            if (Data.Phase == PlaybackPhase.Rewards && _plaqueUp && !_rewardsUp)
+            {
+                _rewardsUp = true;
+                _ = _ui.ShowMenu<RevealScreen, Kingdom.Heroes.Reveal>(new Kingdom.Heroes.Reveal
+                {
+                    Chest = Kingdom.Heroes.RevealChest.Spoils, Caption = _localizer.Tr("Spoils"), Prizes = Data.Prizes,
+                });
             }
 
             if (Data.Phase == PlaybackPhase.Done && _plaqueUp && !_exitUp)

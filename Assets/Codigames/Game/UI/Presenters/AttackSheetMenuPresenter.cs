@@ -154,7 +154,14 @@ namespace Codigames.Game.UI.Presenters
             var playback = new BattlePlayback(report.Log, _localizer.Tr(lair.Name),
                 _localizer.Tr("{creature} · Fight {n} of {total}", ("creature", _words.Creature(lair)), ("n", _numbers.Exact(fight)),
                     ("total", _numbers.Exact(_lairs.Fights(lair)))),
-                _attack.TickMs, _clock.NowMs, _preferences.Speed) { Creatures = true };
+                _attack.TickMs, _clock.NowMs, _preferences.Speed)
+            {
+                Creatures = true,
+                // A fight short of the last pays its share of Hero XP on the field; the last pays at the claim.
+                Prizes = report.HeroXp > 0
+                    ? new[] { Kingdom.Heroes.Prize.Currency(Kingdom.Heroes.Heroes.HERO_XP, (int)report.HeroXp) }
+                    : System.Array.Empty<Kingdom.Heroes.Prize>(),
+            };
             // Won: the sheet is done, and the player lands back on the lair's card when the playback closes.
             if (report.Result is LairResult.Won or LairResult.Cleared) RequestClose();
             else Refresh();

@@ -57,5 +57,30 @@ namespace Codigames.Game.Audio
             "Fish" => "tapFish",
             _ => POP,
         };
+    
+
+        // The chest reveal.
+        public const string BAR_FILL = "barFill";
+        public const string CARD_DRAW = "cardDraw";
+        public const string CARD_FLIP = "cardFlip";
+        public const string CARD_IMPACT = "cardImpact";
+        public const string CARD_REVEAL_COMMON = "cardRevealCommon";
+        public const string CARD_REVEAL_LEGEND = "cardRevealLegend";
+        public const string CARD_REVEAL_RARE = "cardRevealRare";
+        public const string CARD_SETTLE = "cardSettle";
+        public const string CARD_SPARKLE = "cardSparkle";
+        public const string CARD_WHOOSH = "cardWhoosh";
+        public const string CHEST_LAND = "chestLand";
+        public const string CHEST_OPEN = "chestOpen";
+        public const string CHEST_SUMMARY = "chestSummary";
+        public const string CHEST_UNLOCK = "chestUnlock";
+        public const string HERO_APPLAUSE = "heroApplause";
+        public const string HERO_FANFARE = "heroFanfare";
+        public const string HERO_FANFARE_LEGEND = "heroFanfareLegend";
+        public const string HERO_LEGEND = "heroLegend";
+        public const string HERO_NEW = "heroNew";
+        public const string HERO_POP = "heroPop";
+        public const string HERO_RISER = "heroRiser";
+        public const string HERO_RISER_SHORT = "heroRiserShort";
     }
 }
