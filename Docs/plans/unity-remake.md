@@ -2,8 +2,8 @@
 
 > **Scope:** how Kingdom is rebuilt in Unity — the order of the work, what
 > each step delivers, and what is still to decide.
-> **Status:** foundation, architecture, balance, the city and the economy done;
-> the fog's core and research built; the fog's extras, then the rest, next.
+> **Status:** foundation, architecture, balance, the city, the economy and the
+> fog done; research built; quests and the tutorials next.
 
 ## 1. Principles
 
@@ -28,7 +28,7 @@
 | 2 | **Balance** ✓ | definition interfaces in Kingdom; ScriptableObjects in `Assets/Data`; a one-off import from the web's JSON; the *Kingdom › Data* Odin window and its validation |
 | 3 | **The city** ✓ | the province grid with its terrain and features; place, build and upgrade buildings with builders; the wallet; the offline advance |
 | 4 | **The economy** ✓ | harvest by tap, Mana, stores and collecting, villager training and rent, harvest by crew; tap feedback (punch, reward flight) |
-| 5 | **The fog** — under way | reveal ✓, the Gold price by ring ✓, the Townhall's reach ✓; treasures, landmarks, sighting, ruins |
+| 5 | **The fog** ✓ | reveal, the Gold price by ring, the Townhall's reach and its border, mountain blocks, abandoned buildings and their repair, treasures, landmarks and their claim, sighting; the discovery banner waits for the notices, lairs for the army |
 | 6 | **Research** — under way | the Knowledge bar ✓, buying Knowledge ✓, the tree and its book ✓, a technology's sheet ✓, gates enforced ✓, bonuses read ✓; goods and precious materials in a price (with goods), the Atlas (with landmarks), Knowledge lumps (with landmarks, lairs and quests) |
 | 7 | **The rest, in order** | army and lairs, heroes, quests and tutorials, store, world map |
 | 8 | **On device** | atlases, profiling on iOS and Android, the dev panel |
