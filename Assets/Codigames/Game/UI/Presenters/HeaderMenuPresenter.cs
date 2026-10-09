@@ -39,6 +39,7 @@ namespace Codigames.Game.UI.Presenters
         private readonly Workforce _crews;
         private readonly IInspectedDistrict _inspected;
         private readonly UiIcons _icons;
+        private readonly Kingdom.Bag.Bag _bag;
 
         private PlaqueKind _plaqueKind = PlaqueKind.Unset;
         private int _plaqueValue;
@@ -49,8 +50,10 @@ namespace Codigames.Game.UI.Presenters
 
         public HeaderMenuPresenter(IMenuViewFactory views, ITreasury treasury, IPlankCurrencies currencies, ManaPool mana,
             IClock clock, NumberFormat numbers, Localizer localizer, RewardHold hold, UIManager ui, CityState city,
-            Workforce crews, IInspectedDistrict inspected, UiIcons icons, Kingdom.Army.Army army, Modules.Core.ICatalog<Kingdom.City.IBuildingDefinition> buildings) : base(views)
+            Workforce crews, IInspectedDistrict inspected, UiIcons icons, Kingdom.Army.Army army, Modules.Core.ICatalog<Kingdom.City.IBuildingDefinition> buildings,
+            Kingdom.Bag.Bag bag) : base(views)
         {
+            _bag = bag;
             _army = army;
             _buildings = buildings;
             _ui = ui;
@@ -130,6 +133,8 @@ namespace Codigames.Game.UI.Presenters
             _hold.Changed += Refresh;
             _ui.MenuShown += OnMenu;
             _ui.MenuHidden += OnMenu;
+            _bag.Granted += OnItems;
+            _bag.Taken += OnItems;
         }
 
         protected override void UnbindInternal(HeaderMenu view)
@@ -138,7 +143,12 @@ namespace Codigames.Game.UI.Presenters
             _hold.Changed -= Refresh;
             _ui.MenuShown -= OnMenu;
             _ui.MenuHidden -= OnMenu;
+            _bag.Granted -= OnItems;
+            _bag.Taken -= OnItems;
         }
+
+        // A purse may count items (the keys over the store).
+        private void OnItems(string id, int count) => Refresh();
 
         private void OnChanged(string currency, double amount) => Refresh();
 
@@ -167,7 +177,10 @@ namespace Codigames.Game.UI.Presenters
                 if (slot.CurrencyId == ManaPool.MANA) continue;
 
                 // Less whatever a reward in flight has not landed yet.
-                slot.SetAmount(_numbers.Count(System.Math.Max(0, _treasury.Get(slot.CurrencyId) - _hold.HeldOf(slot.CurrencyId))));
+                var held = _bag.IsItem(slot.CurrencyId)
+                    ? _bag.Count(slot.CurrencyId)
+                    : System.Math.Max(0, _treasury.Get(slot.CurrencyId) - _hold.HeldOf(slot.CurrencyId));
+                slot.SetAmount(_numbers.Count(held));
                 slot.SetGauge(null);
             }
 

@@ -111,8 +111,8 @@ namespace Codigames.Game.UI.Presenters
         {
             if (!_heroes.Owns(Data))
             {
-                if (_heroes.Recruit(Data) == HeroRecruitResult.Recruited) _sounds.Play(SoundIds.CHAIN_FINISHED);
-                else Say("Not enough fragments yet");
+                if (!_heroes.CanRecruit(Data)) _ = _ui.ShowMenu<StoreMenu, string>(StoreMenuPresenter.HEROES);
+                else if (_heroes.Recruit(Data) == HeroRecruitResult.Recruited) _sounds.Play(SoundIds.CHAIN_FINISHED);
                 return;
             }
 
@@ -171,15 +171,10 @@ namespace Codigames.Game.UI.Presenters
                 var need = _heroes.RecruitCost(id);
                 sheet.Read = Reading(_localizer.Tr("Fragments"), have, need);
                 sheet.ReadShare = need > 0 ? (float)have / need : 0;
-                // The banner is the other door to a hero; until its screen is in, only the recruit is offered here.
-                if (have >= need)
-                {
-                    sheet.ReadBuy = new HeroBuy
-                    {
-                        Price = new[] { new PriceTerm("fragment", _numbers.Count(need), false) },
-                        Label = _localizer.Tr("Recruit"),
-                    };
-                }
+                // Whichever of the two doors to them is open: Recruit once the price has piled up, the banner until then.
+                sheet.ReadBuy = have >= need
+                    ? new HeroBuy { Price = new[] { new PriceTerm("fragment", _numbers.Count(need), false) }, Label = _localizer.Tr("Recruit") }
+                    : new HeroBuy { Label = "<sprite name=\"star\"> " + _localizer.Tr("Call for aid"), Material = ButtonMaterial.Gem };
 
                 return sheet;
             }

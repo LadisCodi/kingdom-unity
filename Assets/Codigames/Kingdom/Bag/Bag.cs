@@ -46,10 +46,16 @@ namespace Codigames.Kingdom.Bag
         // Items came in: their id, and how many.
         public event Action<string, int> Granted;
 
+        // Some of an item was taken out for what spends it (a key on a call, a speed-up on a timer).
+        public event Action<string, int> Taken;
+
         // Items were used: their id, how many, and what they paid by currency (empty for a boost).
         public event Action<string, int, IReadOnlyDictionary<string, double>> Used;
 
         public int Count(string id) => _state.Held.TryGetValue(id, out var n) ? n : 0;
+
+        // An item of the Bag, rather than a currency.
+        public bool IsItem(string id) => _items.Contains(id);
 
         // Every item held, in the catalog's order: the Bag's.
         public IEnumerable<IItemDefinition> Held => _items.Items.Where(i => Count(i.Id) > 0);
@@ -131,6 +137,7 @@ namespace Codigames.Kingdom.Bag
                 _state.Fresh.Remove(id);
             }
 
+            Taken?.Invoke(id, count);
             return true;
         }
 

@@ -121,6 +121,7 @@ namespace Codigames.Game.UI.Presenters
             else if (id == RESEARCH) _ = _ui.ShowMenu<ResearchMenu>();
             else if (id == BAG) _ = _ui.ShowMenu<BagMenu>();
             else if (id == HEROES) _ = _ui.ShowMenu<HeroesMenu>();
+            else if (id == "store") _ = _ui.ShowMenu<StoreMenu, string>(StoreMenuPresenter.HEROES);
         }
 
         private void OnPoured(string id, double amount) => ShowBadges();
