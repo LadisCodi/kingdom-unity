@@ -25,6 +25,11 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private CostButton _repair;
 
 
+        [SerializeField, Tooltip("Its window: where its top edge stands, for the camera.")] private MapCard _card;
+
+        // The window's top edge, as a share of the screen's height from the bottom.
+        public float CardTop() => _card.ViewportTop();
+
         public event Action CloseTapped;
         public event Action RepairTapped;
 

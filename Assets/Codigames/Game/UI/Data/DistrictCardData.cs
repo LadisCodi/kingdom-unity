@@ -8,6 +8,7 @@ namespace Codigames.Game.UI.Data
     // worth now, and the blocks of what it does: its training, its crew.
     public sealed class DistrictCardData
     {
+        public string Id { get; set; }
         public string Title { get; set; }
         public Sprite Art { get; set; }
         public string What { get; set; }

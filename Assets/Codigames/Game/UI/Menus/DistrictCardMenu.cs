@@ -60,6 +60,11 @@ namespace Codigames.Game.UI.Menus
 
         [SerializeField] private RectTransform _window;
 
+        [SerializeField, Tooltip("Its window: where its top edge stands, for the camera.")] private MapCard _card;
+
+        // The window's top edge, as a share of the screen's height from the bottom.
+        public float CardTop() => _card.ViewportTop();
+
         public event Action CloseTapped;
         public event Action MoveTapped;
         public event Action UpgradeTapped;
@@ -86,6 +91,7 @@ namespace Codigames.Game.UI.Menus
             _title.text = card.Title;
             _move.gameObject.SetActive(card.Movable);
             _portrait.Show(card.Art);
+            _portrait.SetWorking(card.Work != null ? card.Id : null);
             _what.text = card.What;
 
             var work = card.Work;

@@ -46,6 +46,7 @@ namespace Codigames.Game.UI.Presenters
         private readonly UiIcons _icons;
         private readonly PortraitArt _portraits;
         private readonly ISoundService _sounds;
+        private readonly CardFraming _framing;
 
         // The second the card was last drawn at: it is redrawn once a second.
         private double _shownSeconds = -1;
@@ -56,8 +57,10 @@ namespace Codigames.Game.UI.Presenters
         public DistrictCardMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, CityState city,
             BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, IClock clock, NumberFormat numbers,
             Localizer localizer, Stores stores, VillagerTraining training, Workforce crews, BuildingStats stats,
-            BuildingStatProse prose, GemRush rush, UiIcons icons, PortraitArt portraits, ISoundService sounds) : base(views)
+            BuildingStatProse prose, GemRush rush, UiIcons icons, PortraitArt portraits, ISoundService sounds,
+            CardFraming framing) : base(views)
         {
+            _framing = framing;
             _ui = ui;
             _construction = construction;
             _city = city;
@@ -96,6 +99,12 @@ namespace Codigames.Game.UI.Presenters
         protected override void BindInternal(DistrictCardMenu view)
         {
             Refresh();
+            if (District is { } district)
+            {
+                var building = _buildings.Get<BuildingAsset>(district.DefinitionId);
+                _framing.Frame(district.Anchor, building.Width, building.Height, View.CardTop);
+            }
+
             _treasury.Changed += OnTreasuryChanged;
             _construction.JobStarted += OnJob;
             _construction.JobCompleted += OnJobCompleted;
@@ -211,6 +220,7 @@ namespace Codigames.Game.UI.Presenters
 
             View.Show(new DistrictCardData
             {
+                Id = district.Id,
                 Title = Title(building, district),
                 Art = building.ArtFor(district.Level),
                 What = _localizer.Tr(building.Description),

@@ -1566,6 +1566,7 @@ GameObject:
   - component: {fileID: 8714717811718054332}
   - component: {fileID: 4675128009842112788}
   - component: {fileID: 6714156730347057829}
+  - component: {fileID: 5271365050264104125}
   m_Layer: 0
   m_Name: Window
   m_TagString: Untagged
@@ -1641,6 +1642,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &5271365050264104125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4022943295392622804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4b97d54aba32b3d99c14d480ee8dd8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.UI.Kit.MapCard
 --- !u!1 &4152230882391084258
 GameObject:
   m_ObjectHideFlags: 0
@@ -2592,6 +2605,7 @@ MonoBehaviour:
   _crewLimit: {fileID: 3896052954217705699}
   _crewPlus: {fileID: 2741385433220972777}
   _window: {fileID: 8714717811718054332}
+  _card: {fileID: 5271365050264104125}
 --- !u!1 &6527221164632228170
 GameObject:
   m_ObjectHideFlags: 0

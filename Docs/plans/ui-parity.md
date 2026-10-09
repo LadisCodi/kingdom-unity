@@ -42,7 +42,7 @@ a label picks one and never sets a size of its own (`TextStyleTests`).
 
 | Screen | Difference | Weight |
 |---|---|---|
-| Building card | done: the web's layout from kit pieces — portrait, description, Upgrade with its call to action (gem Finish and the bar while building), stat band, villager panel (bust, tag, ×1/×10/×100/All, priced or gated Train, batch with gem Finish), crew stepper. Still to do: the working hammer over the portrait, the camera framing the building above the card | done |
+| Building card | done: the web's layout from kit pieces — portrait, description, Upgrade with its call to action (gem Finish and the bar while building), stat band, villager panel (bust, tag, ×1/×10/×100/All, priced or gated Train, batch with gem Finish), crew stepper.; the hammer works over the portrait while it is built, and the camera moves the building into the map above the card (ruins and landmarks too) | done |
 | Upgrade | done: its own sheet in the card's place — levels with plaques, improvements, requirements ✓/✗, wide price with the wait, Upgrade locked with why | done |
 | Prices everywhere | ~~coin 50 rpx and figure 36 rpx Bold, where the web has 76 rpx and body size ExtraBold~~ — fixed: inline-icon `PriceLabel` over buttons and in buy boxes, `CostChip` in rows | done |
 | Build menu | done: the header's contextual plaque (builders free; villagers free on a crew's card), the window under it, shut rows (research or cap) on locked paper with drained art, padlock and the reason in clay, Crop plots' art, "Hechos", tab badges, the scrim under sheets | done |
@@ -51,7 +51,6 @@ a label picks one and never sets a size of its own (`TextStyleTests`).
 | Tech sheet | done: kit buttons with their icons in their words, the big Research | done |
 | Placement | done: portrait tile, priced Build (bare when moving), the wait with its hourglass | done |
 | Landmark card | done: docked, status tag, priced Claim | done |
-| Camera | the web frames the building above its card | small |
 
 Not built yet, so not differences: the Survey widget, settings and friends
 buttons, the builder sheet, the other books' bookmarks.

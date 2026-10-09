@@ -13,12 +13,21 @@ namespace Codigames.Game.UI.Kit
 
         [SerializeField] private RectTransform _mask;
         [SerializeField] private Image _art;
+        [SerializeField, Tooltip("Over the portrait while the building is being built; optional.")] private PortraitHammer _hammer;
 
         public void Show(Sprite art)
         {
             _art.sprite = art;
             _art.enabled = art != null;
             Fit();
+        }
+
+        // The hammer works over it while `working` names the building being built; null rests it.
+        public void SetWorking(string working)
+        {
+            if (_hammer == null) return;
+            if (working == null) _hammer.Rest();
+            else _hammer.Work(working);
         }
 
         private void OnRectTransformDimensionsChange() => Fit();
