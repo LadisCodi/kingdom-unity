@@ -186,6 +186,12 @@ MonoBehaviour:
     - 20
     - 30
     _plants: 
+    _produces: 
+    _trains:
+    - Villager
+    _armyCapPerLevel: 
+    _bedsPerLevel: 
+    _queueLengthPerLevel: 
     _maxWorkersPerLevel: 
     _influenceRadiusPerLevel: 
     _strikeSpeedPerLevel: []

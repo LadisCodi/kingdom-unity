@@ -12,7 +12,7 @@ using UnityEngine;
 namespace Codigames.Game.Data.Economy
 {
     [CreateAssetMenu(fileName = "Economy", menuName = "Kingdom/Data/Economy Settings")]
-    public class EconomySettingsAsset : DataSettings, IEconomySettings, IWorkerSettings, IBagSettings, IRushSettings, INoticeSettings, IHarmonySettings, IAdjacencyRules
+    public class EconomySettingsAsset : DataSettings, IEconomySettings, IWorkerSettings, IBagSettings, IRushSettings, INoticeSettings, IHarmonySettings, IAdjacencyRules, Kingdom.Army.IArmySettings
     {
         [SerializeField, MinValue(0), SuffixLabel("Gold / villager / min"), Tooltip("The rent every housed villager pays.")]
         private double _goldPerPopulationPerMinute = 30;
@@ -58,6 +58,15 @@ namespace Codigames.Game.Data.Economy
 
         public IReadOnlyList<HarmonyTier> SurplusTiers => _harmonyTiers.Select(t => new HarmonyTier(t.At, t.Bonus)).ToList();
         public IReadOnlyList<AdjacencyRule> Rules => _adjacency.Select(r => new AdjacencyRule(r.District, r.Neighbor, r.Stat, r.Magnitude)).ToList();
+
+        [SerializeField, Range(0, 1), Tooltip("Of the soldiers who fall, the share that reaches a bed instead of dying.")]
+        private double _woundedShare = 0.1;
+        [SerializeField, Range(0, 1), Tooltip("Mending a batch against training as many: its price.")] private double _healCostShare = 0.3;
+        [SerializeField, Range(0, 1), Tooltip("Mending a batch against training as many: its time.")] private double _healTimeShare = 0.25;
+
+        public double WoundedShare => _woundedShare;
+        public double HealCostShare => _healCostShare;
+        public double HealTimeShare => _healTimeShare;
 
         public int Shown => _noticesShown;
         public int Kept => _noticesKept;

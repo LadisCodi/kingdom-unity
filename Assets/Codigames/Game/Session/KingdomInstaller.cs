@@ -74,7 +74,7 @@ namespace Codigames.Game.Session
             builder.Register(resolver => new NewsDesk(resolver.Resolve<Inbox>(), resolver.Resolve<NoticesState>(),
                 resolver.Resolve<Construction>(), resolver.Resolve<FogOfWar>(), resolver.Resolve<SiteFinds>(), resolver.Resolve<QuestChain>(),
                 resolver.Resolve<ICatalog<ISceneDefinition>>().Items, resolver.Resolve<KingdomState>().Tutorial, resolver.Resolve<KingdomState>(),
-                resolver.Resolve<Kingdom.Goods.Workshops>()),
+                resolver.Resolve<Kingdom.Goods.Workshops>(), resolver.Resolve<Kingdom.Army.Army>()),
                 Lifetime.Singleton);
             builder.Register<ITreasury>(resolver => new Treasury(
                 resolver.Resolve<ICatalog<ICurrencyDefinition>>(), resolver.Resolve<KingdomState>().Balances), Lifetime.Singleton);
@@ -86,6 +86,8 @@ namespace Codigames.Game.Session
             builder.Register<Kingdom.Goods.ShutPreciousGate>(Lifetime.Singleton).As<Kingdom.Goods.IPreciousGate>();
             builder.Register<Kingdom.Goods.Stockpile>(Lifetime.Singleton);
             builder.Register<Kingdom.Goods.Workshops>(Lifetime.Singleton);
+            builder.Register(resolver => resolver.Resolve<KingdomState>().Army, Lifetime.Singleton);
+            builder.Register<Kingdom.Army.Army>(Lifetime.Singleton);
             builder.Register<BuildingGroups>(Lifetime.Singleton);
             builder.Register(resolver => new Adjacency(resolver.Resolve<CityState>(), resolver.Resolve<ICatalog<IBuildingDefinition>>(),
                 resolver.Resolve<IAdjacencyRules>(), resolver.Resolve<BuildingGroups>()), Lifetime.Singleton);
@@ -140,6 +142,7 @@ namespace Codigames.Game.Session
                 resolver.Resolve<NewsDesk>();
                 timeline.Register(resolver.Resolve<VillagerTraining>());
                 timeline.Register(resolver.Resolve<Kingdom.Goods.Workshops>());
+                timeline.Register(resolver.Resolve<Kingdom.Army.Army>());
 
                 // A pool left below its cap without a clock (an older save) starts gaining where the kingdom left off.
                 var mana = resolver.Resolve<ManaPool>();

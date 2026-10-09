@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7816b2eae2b02817d998dbc5f128bb21, type: 3}
+  m_Name: Archer
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Army.UnitAsset
+  _id: Archer
+  _name: Archer
+  _description: 'Ranged support: the most attack per Gold, and the least of everything
+    else.'
+  _tags:
+  - Distance
+  _squadSize: 80
+  _frontage: 20
+  _cooldown: 12
+  _speed: 8
+  _range: 1000
+  _ranks:
+  - Portrait: {fileID: 21300000, guid: 1204c081a2eabf47c84daafbd7125b8e, type: 3}
+    Atk: 6
+    Dmg: 6
+    Def: 2
+    Hp: 30
+    Power: 4
+    Cost:
+    - _id: Gold
+      _value: 130
+    - _id: Wood
+      _value: 12
+    TrainSeconds: 12
+    MinHallLevel: 1
+  - Portrait: {fileID: 21300000, guid: 20972c29e8f11eb3a84a002def9cff39, type: 3}
+    Atk: 8
+    Dmg: 10
+    Def: 4
+    Hp: 48
+    Power: 6
+    Cost:
+    - _id: Gold
+      _value: 260
+    - _id: Wood
+      _value: 24
+    TrainSeconds: 18
+    MinHallLevel: 3
+  - Portrait: {fileID: 21300000, guid: ae8b4721548ca5120981da6f28f807b9, type: 3}
+    Atk: 10
+    Dmg: 16
+    Def: 6
+    Hp: 78
+    Power: 10
+    Cost:
+    - _id: Gold
+      _value: 520
+    - _id: Wood
+      _value: 48
+    TrainSeconds: 27
+    MinHallLevel: 5
+  - Portrait: {fileID: 21300000, guid: ee7c47c25ca3b9bdeb0dc654e0b4f7a5, type: 3}
+    Atk: 12
+    Dmg: 25
+    Def: 8
+    Hp: 126
+    Power: 17
+    Cost:
+    - _id: Gold
+      _value: 1040
+    - _id: Wood
+      _value: 96
+    TrainSeconds: 41
+    MinHallLevel: 7
+  - Portrait: {fileID: 21300000, guid: 81cbeb0d8d9f1f2d89a2b31fa082cb15, type: 3}
+    Atk: 14
+    Dmg: 41
+    Def: 10
+    Hp: 204
+    Power: 27
+    Cost:
+    - _id: Gold
+      _value: 2080
+    - _id: Wood
+      _value: 192
+    TrainSeconds: 60
+    MinHallLevel: 9

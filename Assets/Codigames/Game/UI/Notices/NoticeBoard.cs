@@ -124,6 +124,7 @@ namespace Codigames.Game.UI.Notices
             NewsGroup.Built => _localizer.Tr("{n} buildings finished", ("n", _numbers.Exact(count))),
             NewsGroup.Sighted => _localizer.Tr("{n} new places", ("n", _numbers.Exact(count))),
             NewsGroup.Goods => _localizer.Tr("Goods ready"),
+            NewsGroup.Trained => _localizer.Tr("Training complete"),
             _ => _localizer.Tr("The chain is done"),
         };
 
@@ -139,6 +140,7 @@ namespace Codigames.Game.UI.Notices
             NewsGroup.Built => Built(news),
             NewsGroup.Sighted => Sighted(news),
             NewsGroup.Goods => Goods(news),
+            NewsGroup.Trained => Trained(news),
             NewsGroup.ChainDone => new NewsLine
             {
                 Row = new NoticeRowData
@@ -173,6 +175,25 @@ namespace Codigames.Game.UI.Notices
                 },
                 Title = built ? _localizer.Tr("Construction complete!") : _localizer.Tr("Upgrade complete!"),
                 Body = built ? _localizer.Tr(building.Description) : _localizer.Tr("{name} is now level {n}.", ("name", name), ("n", level)),
+            };
+        }
+
+        private NewsLine Trained(News news)
+        {
+            var district = _city.Districts.FirstOrDefault(d => d.Id == news.District);
+            if (district == null) return null;
+            var building = _buildings.Get<BuildingAsset>(district.DefinitionId);
+            var name = _localizer.Tr(building.DisplayName) + " #" + _numbers.Exact(district.Ordinal);
+            var unit = news.Troop == null ? string.Empty : _localizer.Tr(Kingdom.Army.Troops.UnitOf(news.Troop));
+            return new NewsLine
+            {
+                Row = new NoticeRowData
+                {
+                    Art = building.ArtFor(district.Level), ArtIsBuilding = true, Name = name, Line = _localizer.Tr("Queue done"),
+                    Go = () => Open<DistrictCardMenu>(district.Id),
+                },
+                Title = _localizer.Tr("Training complete"),
+                Body = _localizer.Tr("{name} has trained its last {unit} and stands idle. Queue more to keep it busy.", ("name", name), ("unit", unit)),
             };
         }
 

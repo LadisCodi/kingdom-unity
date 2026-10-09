@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7816b2eae2b02817d998dbc5f128bb21, type: 3}
+  m_Name: Warrior
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Army.UnitAsset
+  _id: Warrior
+  _name: Warrior
+  _description: 'Sturdy front line: the most armour and health per Gold.'
+  _tags:
+  - Melee
+  _squadSize: 100
+  _frontage: 15
+  _cooldown: 10
+  _speed: 10
+  _range: 90
+  _ranks:
+  - Portrait: {fileID: 21300000, guid: 92feb6e85bf67b30ea6af6a38154bc59, type: 3}
+    Atk: 4
+    Dmg: 5
+    Def: 6
+    Hp: 60
+    Power: 3
+    Cost:
+    - _id: Gold
+      _value: 100
+    - _id: Wood
+      _value: 5
+    - _id: Food
+      _value: 8
+    TrainSeconds: 15
+    MinHallLevel: 1
+  - Portrait: {fileID: 21300000, guid: f22e8044cd7ea7cfba2716bba130d447, type: 3}
+    Atk: 6
+    Dmg: 8
+    Def: 8
+    Hp: 96
+    Power: 5
+    Cost:
+    - _id: Gold
+      _value: 200
+    - _id: Wood
+      _value: 10
+    - _id: Food
+      _value: 16
+    TrainSeconds: 23
+    MinHallLevel: 3
+  - Portrait: {fileID: 21300000, guid: 62e87577713c83c51941e7ce71f8730f, type: 3}
+    Atk: 8
+    Dmg: 13
+    Def: 10
+    Hp: 156
+    Power: 8
+    Cost:
+    - _id: Gold
+      _value: 400
+    - _id: Wood
+      _value: 20
+    - _id: Food
+      _value: 32
+    TrainSeconds: 34
+    MinHallLevel: 5
+  - Portrait: {fileID: 21300000, guid: 9890adb3e955061afb100adbbee63a1f, type: 3}
+    Atk: 10
+    Dmg: 21
+    Def: 12
+    Hp: 252
+    Power: 13
+    Cost:
+    - _id: Gold
+      _value: 800
+    - _id: Wood
+      _value: 40
+    - _id: Food
+      _value: 64
+    TrainSeconds: 51
+    MinHallLevel: 7
+  - Portrait: {fileID: 21300000, guid: 717aeda177dc1b9b78887a40e8a699ee, type: 3}
+    Atk: 12
+    Dmg: 34
+    Def: 14
+    Hp: 408
+    Power: 20
+    Cost:
+    - _id: Gold
+      _value: 1600
+    - _id: Wood
+      _value: 80
+    - _id: Food
+      _value: 128
+    TrainSeconds: 75
+    MinHallLevel: 9

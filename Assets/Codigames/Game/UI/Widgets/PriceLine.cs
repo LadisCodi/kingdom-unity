@@ -11,8 +11,9 @@ namespace Codigames.Game.UI.Widgets
     public static class PriceLine
     {
         private const string SHORT = "#D4553E";
-        private const string GAP = "<space=0.58em>";
-        private const string WIDE_GAP = "<space=1.04em>";
+        // A zero-width space after each gap: where a price too long for its button may break, and only there.
+        private const string GAP = "<space=0.58em>\u200B";
+        private const string WIDE_GAP = "<space=1.04em>\u200B";
         private const string WIDE_MARK = "<space=0.29em>";
 
         public static string Of(IReadOnlyList<PriceTerm> terms, bool wide = false)

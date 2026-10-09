@@ -60,6 +60,27 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private TMP_Text _crewLimit;
         [SerializeField] private KitButton _crewPlus;
 
+        [Header("A hall's troops")]
+        [SerializeField] private RectTransform _troopStats;
+        [SerializeField] private Buildings.TroopStatTile _troopStatPrefab;
+        [SerializeField, Tooltip("The portrait as a button: the hall's ranks.")] private Button _pick;
+        [SerializeField] private GameObject _caret;
+        [SerializeField] private GameObject _rankMenu;
+        [SerializeField] private RectTransform _rankRows;
+        [SerializeField] private Buildings.RankRow _rankRowPrefab;
+
+        [Header("Ward")]
+        [SerializeField] private GameObject _wardBlock;
+        [SerializeField] private SectionHead _wardHead;
+        [SerializeField] private TMP_Text _wardBeds;
+        [SerializeField] private TMP_Text _wardEmpty;
+        [SerializeField] private RectTransform _wardRows;
+        [SerializeField] private Buildings.WardRow _wardRowPrefab;
+
+        private readonly System.Collections.Generic.List<Buildings.TroopStatTile> _troopStatViews = new();
+        private readonly System.Collections.Generic.List<Buildings.RankRow> _rankRowViews = new();
+        private readonly System.Collections.Generic.List<Buildings.WardRow> _wardRowViews = new();
+
         [Header("Workshop")]
         [SerializeField] private GameObject _workshopBlock;
         [SerializeField] private SectionHead _workshopHead;
@@ -91,6 +112,8 @@ namespace Codigames.Game.UI.Menus
         public event Action SpeedUpWorkTapped;
         public event Action SpeedUpTrainingTapped;
         public event Action MakeTapped;
+        public event Action<string> RankPicked;
+        public event Action<string> HealTapped;
         public event Action<int> CancelGoodTapped;
         public event Action FinishGoodTapped;
         public event Action SpeedUpGoodTapped;
@@ -146,6 +169,7 @@ namespace Codigames.Game.UI.Menus
                 _workshop.Show(card.Workshop);
             }
 
+            ShowWard(card);
             ShowHarmony(card);
             ShowNeighbours(card);
             LayoutRebuilder.MarkLayoutForRebuild(_window);
@@ -160,6 +184,8 @@ namespace Codigames.Game.UI.Menus
 
             _trainingHead.Title = card.TrainingHead;
             _trainee.Show(training.Bust, training.BustShift, training.BustScale, training.Owned);
+            _trainee.ShowRank(training.Rank);
+            ShowTroop(training);
             _tag.Label = training.Tag;
             _traineeLine.text = training.Description;
             _amount.Label = training.Amount;
@@ -173,6 +199,7 @@ namespace Codigames.Game.UI.Menus
             if (batch == null) return;
 
             _batchFace.Show(training.Bust, training.BustShift, training.BustScale, batch.Count);
+            _batchFace.ShowRank(training.Rank);
             _batchWhat.text = batch.Doing;
             // Training runs green, as the web's batch bar does.
             _batchBar.Set(batch.Progress, batch.Left, done: true);
@@ -180,6 +207,66 @@ namespace Codigames.Game.UI.Menus
             _finishTraining.gameObject.SetActive(!batch.SpeedUp);
             _speedUpTraining.gameObject.SetActive(batch.SpeedUp);
             _finishTraining.Show(batch.Finish, batch.CanFinish);
+        }
+
+        // A troop's numbers under its line, and its hall's ranks behind its portrait.
+        private void ShowTroop(TrainingPanelData training)
+        {
+            _troopStats.gameObject.SetActive(training.Stats.Count > 0);
+            for (var i = 0; i < training.Stats.Count; i++)
+            {
+                if (i == _troopStatViews.Count) _troopStatViews.Add(Instantiate(_troopStatPrefab, _troopStats));
+                _troopStatViews[i].gameObject.SetActive(true);
+                _troopStatViews[i].Show(training.Stats[i]);
+            }
+
+            for (var i = training.Stats.Count; i < _troopStatViews.Count; i++) _troopStatViews[i].gameObject.SetActive(false);
+
+            _pick.interactable = training.Ranks.Count > 1;
+            _caret.SetActive(training.Ranks.Count > 1);
+            if (training.Ranks.Count <= 1) _rankMenu.SetActive(false);
+            for (var i = 0; i < training.Ranks.Count; i++)
+            {
+                if (i == _rankRowViews.Count)
+                {
+                    var row = Instantiate(_rankRowPrefab, _rankRows);
+                    row.Tapped += troop => RankPicked?.Invoke(troop);
+                    _rankRowViews.Add(row);
+                }
+
+                _rankRowViews[i].gameObject.SetActive(true);
+                _rankRowViews[i].Show(training.Ranks[i]);
+            }
+
+            for (var i = training.Ranks.Count; i < _rankRowViews.Count; i++) _rankRowViews[i].gameObject.SetActive(false);
+        }
+
+        public void CloseRanks() => _rankMenu.SetActive(false);
+
+        private void OnPick() => _rankMenu.SetActive(!_rankMenu.activeSelf);
+
+        private void ShowWard(DistrictCardData card)
+        {
+            _wardBlock.SetActive(card.Ward != null);
+            if (card.Ward == null) return;
+            _wardHead.Title = card.WardHead;
+            _wardBeds.text = card.Ward.Beds;
+            _wardEmpty.gameObject.SetActive(card.Ward.Rows.Count == 0);
+            _wardEmpty.text = card.Ward.Empty;
+            for (var i = 0; i < card.Ward.Rows.Count; i++)
+            {
+                if (i == _wardRowViews.Count)
+                {
+                    var row = Instantiate(_wardRowPrefab, _wardRows);
+                    row.HealTapped += troop => HealTapped?.Invoke(troop);
+                    _wardRowViews.Add(row);
+                }
+
+                _wardRowViews[i].gameObject.SetActive(true);
+                _wardRowViews[i].Show(card.Ward.Rows[i]);
+            }
+
+            for (var i = card.Ward.Rows.Count; i < _wardRowViews.Count; i++) _wardRowViews[i].gameObject.SetActive(false);
         }
 
         private void ShowHarmony(DistrictCardData card)
@@ -230,6 +317,7 @@ namespace Codigames.Game.UI.Menus
             _speedUpWork.onClick.AddListener(OnSpeedUpWork);
             _speedUpTraining.onClick.AddListener(OnSpeedUpTraining);
             _workshop.MakeTapped += OnMake;
+            _pick.onClick.AddListener(OnPick);
             _workshop.CancelTapped += OnCancelGood;
             _workshop.FinishTapped += OnFinishGood;
             _workshop.SpeedUpTapped += OnSpeedUpGood;
@@ -249,6 +337,7 @@ namespace Codigames.Game.UI.Menus
             _speedUpWork.onClick.RemoveListener(OnSpeedUpWork);
             _speedUpTraining.onClick.RemoveListener(OnSpeedUpTraining);
             _workshop.MakeTapped -= OnMake;
+            _pick.onClick.RemoveListener(OnPick);
             _workshop.CancelTapped -= OnCancelGood;
             _workshop.FinishTapped -= OnFinishGood;
             _workshop.SpeedUpTapped -= OnSpeedUpGood;

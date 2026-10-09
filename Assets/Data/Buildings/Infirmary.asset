@@ -164,6 +164,11 @@ MonoBehaviour:
     - 4
     - 6
     _plants: 
+    _produces: 
+    _trains: []
+    _armyCapPerLevel: 
+    _bedsPerLevel: 1e000000320000004b000000690000008c000000b4000000e1000000130100004a01000090010000
+    _queueLengthPerLevel: 
     _maxWorkersPerLevel: 
     _influenceRadiusPerLevel: 
     _strikeSpeedPerLevel: []

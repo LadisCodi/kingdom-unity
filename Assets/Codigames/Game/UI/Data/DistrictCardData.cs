@@ -31,6 +31,10 @@ namespace Codigames.Game.UI.Data
         // Speed up's words on a timer's button, its hourglass inline.
         public string SpeedUp { get; set; }
 
+        // The Infirmary's ward; null for any other building.
+        public string WardHead { get; set; }
+        public WardData Ward { get; set; }
+
         // A workshop's panel; null for a building that is not one, or not standing yet.
         public string WorkshopHead { get; set; }
         public WorkshopPanelData Workshop { get; set; }

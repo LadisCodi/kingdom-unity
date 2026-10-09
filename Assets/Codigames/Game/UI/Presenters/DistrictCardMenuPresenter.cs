@@ -57,6 +57,11 @@ namespace Codigames.Game.UI.Presenters
         private readonly Kingdom.Goods.Stockpile _stockpile;
         private readonly Codigames.Game.Data.Goods.GoodCollection _goods;
         private readonly PriceTerms _prices;
+        private readonly Kingdom.Army.Army _army;
+        private readonly Codigames.Game.UI.Research.TechProse _techs;
+
+        // A hall's chosen rank for this session, and the best rank open when it was chosen: a better one opening lets it lapse.
+        private readonly Dictionary<string, (string Troop, string Best)> _picks = new();
 
         // The second the card was last drawn at: it is redrawn once a second.
         private double _shownSeconds = -1;
@@ -70,8 +75,10 @@ namespace Codigames.Game.UI.Presenters
             BuildingStatProse prose, GemRush rush, UiIcons icons, PortraitArt portraits, ISoundService sounds,
             CardFraming framing, Speedups speedups, Harmony harmony, IHarmonySettings harmonySettings, Adjacency adjacency, City.WorkAreaView workArea,
             Kingdom.Goods.Workshops workshops, Kingdom.Goods.Stockpile stockpile, Codigames.Game.Data.Goods.GoodCollection goods,
-            PriceTerms prices) : base(views)
+            PriceTerms prices, Kingdom.Army.Army army, Codigames.Game.UI.Research.TechProse techs) : base(views)
         {
+            _army = army;
+            _techs = techs;
             _workshops = workshops;
             _stockpile = stockpile;
             _goods = goods;
@@ -150,6 +157,8 @@ namespace Codigames.Game.UI.Presenters
             view.SpeedUpWorkTapped += OnSpeedUpWork;
             view.SpeedUpTrainingTapped += OnSpeedUpTraining;
             view.MakeTapped += OnMake;
+            view.RankPicked += OnRankPicked;
+            view.HealTapped += OnHeal;
             view.CancelGoodTapped += OnCancelGood;
             view.FinishGoodTapped += OnFinishGood;
             view.SpeedUpGoodTapped += OnSpeedUpGood;
@@ -169,6 +178,8 @@ namespace Codigames.Game.UI.Presenters
             view.SpeedUpWorkTapped -= OnSpeedUpWork;
             view.SpeedUpTrainingTapped -= OnSpeedUpTraining;
             view.MakeTapped -= OnMake;
+            view.RankPicked -= OnRankPicked;
+            view.HealTapped -= OnHeal;
             view.CancelGoodTapped -= OnCancelGood;
             view.FinishGoodTapped -= OnFinishGood;
             view.SpeedUpGoodTapped -= OnSpeedUpGood;
@@ -214,7 +225,8 @@ namespace Codigames.Game.UI.Presenters
             if (JobOf(Data) is { } job) _ = _ui.ShowMenu<SpeedupMenu, SpeedJob>(SpeedJob.Construction(job.Id));
         }
 
-        private void OnSpeedUpTraining() => _ = _ui.ShowMenu<SpeedupMenu, SpeedJob>(SpeedJob.Training());
+        private void OnSpeedUpTraining()
+            => _ = _ui.ShowMenu<SpeedupMenu, SpeedJob>(District is { } hall && _army.Line(hall.Id).Count > 0 ? SpeedJob.Hall(hall.Id) : SpeedJob.Training());
 
         private void OnMake()
         {
@@ -308,15 +320,196 @@ namespace Codigames.Game.UI.Presenters
 
         private void OnTrain()
         {
-            var refusal = _training.Train(_training.Plan(_amount).Count, _clock.NowMs);
-            if (refusal != TrainRefusal.None) _sounds.Play(SoundIds.ERROR);
+            if (District is { } hall && IsHall(_buildings.Get<BuildingAsset>(hall.DefinitionId)))
+            {
+                var troop = Picked(hall);
+                var refusal = _army.Train(hall.Id, troop, Amount(troop), _clock.NowMs);
+                _sounds.Play(refusal == Kingdom.Army.ArmyRefusal.None ? SoundIds.BUTTON_PRESS : SoundIds.ERROR);
+                Refresh();
+                return;
+            }
+
+            var villagers = _training.Train(_training.Plan(_amount).Count, _clock.NowMs);
+            if (villagers != TrainRefusal.None) _sounds.Play(SoundIds.ERROR);
             Refresh();
         }
 
         private void OnFinishTraining()
         {
-            if (!_rush.FinishLine(_clock.NowMs)) _sounds.Play(SoundIds.ERROR);
+            var done = District is { } hall && _army.Line(hall.Id).Count > 0
+                ? _army.Rush(hall.Id, _clock.NowMs) == Kingdom.Army.ArmyRefusal.None
+                : _rush.FinishLine(_clock.NowMs);
+            _sounds.Play(done ? SoundIds.GEM_SPEND : SoundIds.ERROR);
             Refresh();
+        }
+
+        private void OnRankPicked(string troop)
+        {
+            if (District is not { } hall) return;
+            if (_army.Gate(troop, hall) != Kingdom.Army.ArmyRefusal.None)
+            {
+                _sounds.Play(SoundIds.ERROR);
+                return;
+            }
+
+            _sounds.Play(SoundIds.BUTTON_PRESS);
+            _picks[hall.Id] = (troop, BestOpen(hall));
+            View.CloseRanks();
+            Refresh();
+        }
+
+        private void OnHeal(string troop)
+        {
+            var refusal = _army.Heal(troop, _clock.NowMs);
+            _sounds.Play(refusal == Kingdom.Army.ArmyRefusal.None ? SoundIds.BUTTON_PRESS : SoundIds.ERROR);
+            Refresh();
+        }
+
+        private bool IsHall(BuildingAsset building) => _army.IsHall(building);
+
+        // The rank a hall shows: the one chosen, until a better one opens; else the best open; else its first.
+        private string Picked(DistrictState hall)
+        {
+            var best = BestOpen(hall);
+            return _picks.TryGetValue(hall.Id, out var pick) && pick.Best == best ? pick.Troop : best;
+        }
+
+        private string BestOpen(DistrictState hall)
+        {
+            var troops = _army.TroopsOf(hall);
+            return troops.LastOrDefault(t => _army.Gate(t, hall) == Kingdom.Army.ArmyRefusal.None) ?? troops.FirstOrDefault();
+        }
+
+        private string TroopName(string troop)
+        {
+            if (troop == null) return string.Empty;
+            var rank = Kingdom.Army.Troops.RankOf(troop);
+            var name = _localizer.Tr(_army.UnitOf(troop).Name);
+            return rank > 1 ? name + " " + Kingdom.Army.Troops.Roman(rank) : name;
+        }
+
+        private int Amount(string troop) => _amount switch
+        {
+            TrainAmount.One => 1,
+            TrainAmount.Ten => 10,
+            TrainAmount.Hundred => 100,
+            _ => _army.Most(troop),
+        };
+
+        // Why a troop cannot be trained here now; null when it can, or when only the purse stands in the way.
+        private string GateWords(DistrictState hall, string troop, int count)
+        {
+            var refusal = _army.Refusal(hall.Id, troop, count);
+            var room = Math.Max(0, _army.Cap - _army.Committed);
+            return refusal switch
+            {
+                Kingdom.Army.ArmyRefusal.HallLevel => _localizer.Tr("{name} level {n}", ("name", _localizer.Tr(_buildings.Get<BuildingAsset>(hall.DefinitionId).DisplayName)),
+                    ("n", _numbers.Exact(_army.RankOf(troop).MinHallLevel))),
+                Kingdom.Army.ArmyRefusal.TechRequired => _localizer.Tr("Needs {tech}", ("tech", _techs.Name(_army.TechFor(troop)))),
+                Kingdom.Army.ArmyRefusal.OtherRank => _localizer.Tr("Finish the current batch"),
+                Kingdom.Army.ArmyRefusal.AtCapacity => room == 0 ? _localizer.Tr("Max army reached") : _localizer.Tr("Room for {n}", ("n", _numbers.Exact(room))),
+                _ => null,
+            };
+        }
+
+        // A military hall's troops: the rank shown, its numbers, Train for the knob's amount or why not, its ranks, the line.
+        private TrainingPanelData Hall(DistrictState hall, double now)
+        {
+            var troop = Picked(hall);
+            if (troop == null) return null;
+            var unit = _army.UnitOf(troop);
+            var rank = _army.RankOf(troop);
+            var bust = _portraits.Of(troop);
+            var count = Amount(troop);
+            var gate = GateWords(hall, troop, count);
+            var price = _army.TrainCost(troop, count);
+            var type = unit.Tags.Contains("Distance") ? _localizer.Tr("Ranged") : unit.Tags.Contains("Mounted") ? _localizer.Tr("Mounted") : _localizer.Tr("Melee");
+            var picked = troop;
+
+            return new TrainingPanelData
+            {
+                Bust = bust?.Sprite,
+                BustShift = bust?.Shift ?? Vector2.zero,
+                BustScale = bust?.Scale ?? 1,
+                Owned = "x" + _numbers.Exact(_army.Count(troop)),
+                Rank = Kingdom.Army.Troops.RankOf(troop),
+                Tag = type,
+                Description = _localizer.Tr(unit.Description),
+                Stats = new[]
+                {
+                    new StatTileData(_icons.Get("atk"), _localizer.Tr("stat::Attack"), _numbers.Exact(rank.Atk)),
+                    new StatTileData(_icons.Get("dmg"), _localizer.Tr("Damage"), _numbers.Exact(rank.Dmg)),
+                    new StatTileData(_icons.Get("def"), _localizer.Tr("Defence"), _numbers.Exact(rank.Def)),
+                    new StatTileData(_icons.Get("hp"), _localizer.Tr("Health"), _numbers.Exact(rank.Hp)),
+                },
+                Ranks = _army.TroopsOf(hall).Select(t =>
+                {
+                    var r = _army.RankOf(t);
+                    var b = _portraits.Of(t);
+                    var shut = _army.Gate(t, hall) switch
+                    {
+                        Kingdom.Army.ArmyRefusal.HallLevel => _localizer.Tr("{troop} needs the hall at level {n}", ("troop", TroopName(t)), ("n", _numbers.Exact(r.MinHallLevel))),
+                        Kingdom.Army.ArmyRefusal.TechRequired => _localizer.Tr("{troop} is not researched yet", ("troop", TroopName(t))),
+                        _ => null,
+                    };
+                    return new RankRowData
+                    {
+                        Troop = t, Bust = b?.Sprite, BustShift = b?.Shift ?? Vector2.zero, BustScale = b?.Scale ?? 1, Rank = Kingdom.Army.Troops.RankOf(t),
+                        Name = TroopName(t), Locked = shut == null ? null : "<sprite name=\"padlock\"> " + shut,
+                        Numbers = $"<sprite name=\"atk\">{_numbers.Exact(r.Atk)}  <sprite name=\"dmg\">{_numbers.Exact(r.Dmg)}  <sprite name=\"def\">{_numbers.Exact(r.Def)}  <sprite name=\"hp\">{_numbers.Exact(r.Hp)}",
+                        Picked = t == picked,
+                    };
+                }).ToList(),
+                Amount = _amount == TrainAmount.All ? _localizer.Tr("All") : "x" + _numbers.Exact(count),
+                Price = _prices.Of(price),
+                Gate = gate,
+                CanTrain = gate == null && _treasury.CanAfford(price),
+                Batch = HallBatch(hall, now),
+                Empty = _localizer.Tr("Nothing in training"),
+            };
+        }
+
+        private WorkData HallBatch(DistrictState hall, double now)
+        {
+            var line = _army.Line(hall.Id);
+            if (line.Count == 0) return null;
+            var head = line[0];
+            var left = head.StartedAt.HasValue ? Math.Max(0, head.CompletesAt - now) / 1000 : head.Seconds;
+            var gems = _army.RushCost(hall.Id, now);
+            var count = line.Sum(i => i.Count);
+            return new WorkData(head.Kind == Kingdom.Army.State.HallItemKind.Heal ? _localizer.Tr("Mending") : _localizer.Tr("Training"),
+                (float)_army.HeadProgress(hall.Id, now), _numbers.Duration(Math.Ceiling(left)), Gems(gems), _treasury.Get(GemRush.GEMS) >= gems,
+                count > 1 ? "x" + _numbers.Exact(count) : string.Empty,
+                _localizer.Tr("Total time: {time}", ("time", _numbers.Duration(Math.Ceiling(_army.RemainingSeconds(hall.Id, now) ?? 0)))))
+            {
+                SpeedUp = _speedups.For(SpeedJob.Hall(hall.Id)).Count > 0,
+            };
+        }
+
+        // The Infirmary's beds: who lies in them, and the price of mending each troop.
+        private WardData Ward()
+        {
+            return new WardData
+            {
+                Beds = _localizer.Tr("{used} of {cap} beds taken", ("used", _numbers.Exact(_army.WoundedCount)), ("cap", _numbers.Exact(_army.Beds))),
+                Empty = _localizer.Tr("Nobody in the beds. Soldiers hurt in a fight wait here instead of dying."),
+                Rows = _army.Ward.Where(w => w.Value > 0).Select(w =>
+                {
+                    var bust = _portraits.Of(w.Key);
+                    var refusal = _army.HealRefusal(w.Key);
+                    return new WardRowData
+                    {
+                        Troop = w.Key, Bust = bust?.Sprite, BustShift = bust?.Shift ?? Vector2.zero, BustScale = bust?.Scale ?? 1,
+                        Rank = Kingdom.Army.Troops.RankOf(w.Key),
+                        Name = _numbers.Exact(w.Value) + " " + TroopName(w.Key),
+                        Line = _localizer.Tr("Off the roster until they are back on their feet. Cheaper to mend than to replace."),
+                        Price = _prices.Of(_army.HealCost(w.Key, w.Value)),
+                        Gate = refusal == Kingdom.Army.ArmyRefusal.AtCapacity ? _localizer.Tr("No room in the ranks — upgrade this hall") : null,
+                        CanHeal = refusal == Kingdom.Army.ArmyRefusal.None,
+                        HealLabel = _localizer.Tr("Heal"),
+                    };
+                }).ToList(),
+            };
         }
 
         private void OnCrewMinus()
@@ -355,8 +548,12 @@ namespace Codigames.Game.UI.Presenters
                 UpgradeReady = offer != null && offer.Refusal == ConstructionRefusal.None,
                 Work = job == null ? null : Work(job, now),
                 Stats = Stats(building, district, now),
-                TrainingHead = _localizer.Tr("Villager"),
-                Training = district.DefinitionId == _settings.Townhall.Id && district.Built ? Training(now) : null,
+                TrainingHead = IsHall(building) ? TroopName(Picked(district)) : _localizer.Tr("Villager"),
+                Training = !district.Built ? null
+                    : IsHall(building) ? Hall(district, now)
+                    : district.DefinitionId == _settings.Townhall.Id ? Training(now) : null,
+                WardHead = _localizer.Tr("Ward"),
+                Ward = district.Built && Kingdom.Army.Army.IsInfirmary(building) ? Ward() : null,
                 CrewHead = _localizer.Tr("Workers"),
                 SpeedUp = "<sprite name=\"hourglass\"> " + _localizer.Tr("Speed up"),
                 Crew = _crews.HasCrew(district) && district.Built ? Crew(district) : null,
@@ -482,6 +679,11 @@ namespace Codigames.Game.UI.Presenters
 
                 tiles.Add(new StatTileData(_prose.Icon(stat), _prose.Short(stat.Kind), value, bad));
             }
+
+            // A hall's soldiers' time, at the rank it shows.
+            if (district.Built && IsHall(building))
+                tiles.Add(new StatTileData(_icons.Get("hourglass"), _prose.Short(StatKind.TrainTime),
+                    _numbers.Duration(_army.TrainSeconds(Picked(district), district))));
 
             return tiles;
         }

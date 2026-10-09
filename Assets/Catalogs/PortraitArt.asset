@@ -17,3 +17,83 @@ MonoBehaviour:
     _sprite: {fileID: 21300000, guid: c49d1de9398bc2c26a5b91ef333fc2dd, type: 3}
     _shift: {x: -13, y: 2}
     _scale: 1.18
+  - _unit: Warrior
+    _sprite: {fileID: 21300000, guid: 92feb6e85bf67b30ea6af6a38154bc59, type: 3}
+    _shift: {x: -8, y: -3}
+    _scale: 1.2
+  - _unit: Warrior_e2
+    _sprite: {fileID: 21300000, guid: f22e8044cd7ea7cfba2716bba130d447, type: 3}
+    _shift: {x: 0, y: -5}
+    _scale: 1.15
+  - _unit: Warrior_e3
+    _sprite: {fileID: 21300000, guid: 62e87577713c83c51941e7ce71f8730f, type: 3}
+    _shift: {x: 2, y: -22}
+    _scale: 1.15
+  - _unit: Warrior_e4
+    _sprite: {fileID: 21300000, guid: 9890adb3e955061afb100adbbee63a1f, type: 3}
+    _shift: {x: -29, y: -14}
+    _scale: 1.15
+  - _unit: Warrior_e5
+    _sprite: {fileID: 21300000, guid: 717aeda177dc1b9b78887a40e8a699ee, type: 3}
+    _shift: {x: -25, y: -22}
+    _scale: 1.15
+  - _unit: Lancer
+    _sprite: {fileID: 21300000, guid: cb728f8d1f09cdd0d9ab1a4441ce4cb0, type: 3}
+    _shift: {x: 0, y: -18}
+    _scale: 1.22
+  - _unit: Lancer_e2
+    _sprite: {fileID: 21300000, guid: 71fe8121dbeaaabf7869692bd086e1e9, type: 3}
+    _shift: {x: 2, y: -18}
+    _scale: 1.21
+  - _unit: Lancer_e3
+    _sprite: {fileID: 21300000, guid: e8c4bab400cdad5e2984af3e06a09ce8, type: 3}
+    _shift: {x: 0, y: -18}
+    _scale: 1.24
+  - _unit: Lancer_e4
+    _sprite: {fileID: 21300000, guid: b08e71f953d1e1cacba659d94a9e9cb5, type: 3}
+    _shift: {x: 0, y: 0}
+    _scale: 1.23
+  - _unit: Lancer_e5
+    _sprite: {fileID: 21300000, guid: 6650ebb71984517258005e114df45750, type: 3}
+    _shift: {x: 0, y: 0}
+    _scale: 1.23
+  - _unit: Archer
+    _sprite: {fileID: 21300000, guid: 1204c081a2eabf47c84daafbd7125b8e, type: 3}
+    _shift: {x: 0, y: 0}
+    _scale: 1.18
+  - _unit: Archer_e2
+    _sprite: {fileID: 21300000, guid: 20972c29e8f11eb3a84a002def9cff39, type: 3}
+    _shift: {x: 0, y: 0}
+    _scale: 1.16
+  - _unit: Archer_e3
+    _sprite: {fileID: 21300000, guid: ae8b4721548ca5120981da6f28f807b9, type: 3}
+    _shift: {x: 0, y: 0}
+    _scale: 1.17
+  - _unit: Archer_e4
+    _sprite: {fileID: 21300000, guid: ee7c47c25ca3b9bdeb0dc654e0b4f7a5, type: 3}
+    _shift: {x: 0, y: 0}
+    _scale: 1.18
+  - _unit: Archer_e5
+    _sprite: {fileID: 21300000, guid: 81cbeb0d8d9f1f2d89a2b31fa082cb15, type: 3}
+    _shift: {x: 0, y: 0}
+    _scale: 1.14
+  - _unit: Cavalry
+    _sprite: {fileID: 21300000, guid: 95007c4702805a926ac86e108a80aa1b, type: 3}
+    _shift: {x: -23, y: 0}
+    _scale: 1.16
+  - _unit: Cavalry_e2
+    _sprite: {fileID: 21300000, guid: c03132df080e6ccf282c279cc8c7c782, type: 3}
+    _shift: {x: -20, y: -5}
+    _scale: 1.13
+  - _unit: Cavalry_e3
+    _sprite: {fileID: 21300000, guid: cf1b22dc83a8b260da834195fd7b7429, type: 3}
+    _shift: {x: -7, y: -22}
+    _scale: 1.17
+  - _unit: Cavalry_e4
+    _sprite: {fileID: 21300000, guid: a39523a4e00621011b5ed38e6ae4b674, type: 3}
+    _shift: {x: 0, y: 0}
+    _scale: 1.14
+  - _unit: Cavalry_e5
+    _sprite: {fileID: 21300000, guid: 8f4384f9f0529dc188f5acb196c39c60, type: 3}
+    _shift: {x: 0, y: 0}
+    _scale: 1.12

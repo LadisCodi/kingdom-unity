@@ -21,10 +21,12 @@ namespace Codigames.Kingdom.Bag
 
         private readonly CityState _city;
         private readonly Goods.Workshops _workshops;
+        private readonly Army.Army _army;
 
         public Speedups(Bag bag, ICatalog<IItemDefinition> items, Construction construction, VillagerTraining training, CityState city,
-            Goods.Workshops workshops = null)
+            Goods.Workshops workshops = null, Army.Army army = null)
         {
+            _army = army;
             _workshops = workshops;
             _city = city;
             _bag = bag;
@@ -45,6 +47,7 @@ namespace Codigames.Kingdom.Bag
         {
             SpeedupKind.Construction => _construction.RemainingSeconds(job.JobId, now),
             SpeedupKind.Workshop => _workshops?.FrontSeconds(job.JobId, now),
+            SpeedupKind.Training when job.JobId != null => _army?.RemainingSeconds(job.JobId, now),
             _ => _training.RemainingSeconds(now),
         };
 
@@ -54,6 +57,9 @@ namespace Codigames.Kingdom.Bag
             foreach (var job in _city.Jobs)
                 if (_construction.RemainingSeconds(job.Id, now) > 0) yield return SpeedJob.Construction(job.Id);
             if (_training.RemainingSeconds(now) > 0) yield return SpeedJob.Training();
+            if (_army != null)
+                foreach (var hall in _city.Districts)
+                    if (_army.RemainingSeconds(hall.Id, now) > 0) yield return SpeedJob.Hall(hall.Id);
             if (_workshops == null) yield break;
             foreach (var district in _city.Districts)
                 if (_workshops.FrontSeconds(district.Id, now) > 0) yield return SpeedJob.Workshop(district.Id);
@@ -88,6 +94,7 @@ namespace Codigames.Kingdom.Bag
             var seconds = _items.Get(id).Seconds * count;
             if (job.Kind == SpeedupKind.Construction) _construction.Hurry(job.JobId, seconds, now);
             else if (job.Kind == SpeedupKind.Workshop) _workshops?.Cut(job.JobId, seconds, now);
+            else if (job.JobId != null) _army?.Cut(job.JobId, seconds, now);
             else _training.Hurry(seconds, now);
             _bag.Take(id, count);
             Used?.Invoke(job, id, count);

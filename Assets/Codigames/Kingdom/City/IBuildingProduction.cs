@@ -26,6 +26,15 @@ namespace Codigames.Kingdom.City
         // The Harmony it demands at each level, a total (entry 0 is what building it asks); empty for none.
         IReadOnlyList<double> HarmonyCostPerLevel { get; }
 
+        // The units a military hall trains; empty for any other building.
+        IReadOnlyList<string> Trains { get; }
+
+        // The army a hall allows at each level: a total, not a step.
+        IReadOnlyList<int> ArmyCapPerLevel { get; }
+
+        // The wounded an Infirmary keeps, by level.
+        IReadOnlyList<int> BedsPerLevel { get; }
+
         // The good a workshop makes; null for a building that is not one.
         string Produces { get; }
 

@@ -68,6 +68,11 @@ namespace Codigames.Kingdom.City
             if (production.TaxBonusPerLevel.Count > 0)
                 stats.Add(new BuildingStat(StatKind.Rent, Math.Round(At(production.TaxBonusPerLevel, level) * 100), onCard: false));
 
+            if (production.ArmyCapPerLevel.Count > 0)
+                stats.Add(new BuildingStat(StatKind.ArmyCap, At(production.ArmyCapPerLevel, level)));
+            if (production.BedsPerLevel.Count > 0)
+                stats.Add(new BuildingStat(StatKind.Wards, At(production.BedsPerLevel, level)));
+
             if (id == _settings.Townhall.Id)
             {
                 if (production.GoldPerMinutePerLevel.Count > 0)

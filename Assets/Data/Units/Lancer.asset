@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7816b2eae2b02817d998dbc5f128bb21, type: 3}
+  m_Name: Lancer
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Army.UnitAsset
+  _id: Lancer
+  _name: Lancer
+  _description: Long reach that keeps the line safe.
+  _tags:
+  - Melee
+  _squadSize: 100
+  _frontage: 15
+  _cooldown: 10
+  _speed: 10
+  _range: 120
+  _ranks:
+  - Portrait: {fileID: 21300000, guid: cb728f8d1f09cdd0d9ab1a4441ce4cb0, type: 3}
+    Atk: 6
+    Dmg: 8
+    Def: 4
+    Hp: 48
+    Power: 4
+    Cost:
+    - _id: Gold
+      _value: 200
+    - _id: Wood
+      _value: 12
+    - _id: Food
+      _value: 4
+    TrainSeconds: 20
+    MinHallLevel: 1
+  - Portrait: {fileID: 21300000, guid: 71fe8121dbeaaabf7869692bd086e1e9, type: 3}
+    Atk: 8
+    Dmg: 13
+    Def: 6
+    Hp: 77
+    Power: 6
+    Cost:
+    - _id: Gold
+      _value: 400
+    - _id: Wood
+      _value: 24
+    - _id: Food
+      _value: 8
+    TrainSeconds: 30
+    MinHallLevel: 3
+  - Portrait: {fileID: 21300000, guid: e8c4bab400cdad5e2984af3e06a09ce8, type: 3}
+    Atk: 10
+    Dmg: 21
+    Def: 8
+    Hp: 125
+    Power: 10
+    Cost:
+    - _id: Gold
+      _value: 800
+    - _id: Wood
+      _value: 48
+    - _id: Food
+      _value: 16
+    TrainSeconds: 45
+    MinHallLevel: 5
+  - Portrait: {fileID: 21300000, guid: b08e71f953d1e1cacba659d94a9e9cb5, type: 3}
+    Atk: 12
+    Dmg: 34
+    Def: 10
+    Hp: 202
+    Power: 17
+    Cost:
+    - _id: Gold
+      _value: 1600
+    - _id: Wood
+      _value: 96
+    - _id: Food
+      _value: 32
+    TrainSeconds: 68
+    MinHallLevel: 7
+  - Portrait: {fileID: 21300000, guid: 6650ebb71984517258005e114df45750, type: 3}
+    Atk: 14
+    Dmg: 54
+    Def: 12
+    Hp: 326
+    Power: 27
+    Cost:
+    - _id: Gold
+      _value: 3200
+    - _id: Wood
+      _value: 192
+    - _id: Food
+      _value: 64
+    TrainSeconds: 100
+    MinHallLevel: 9

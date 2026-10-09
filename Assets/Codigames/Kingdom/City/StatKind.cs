@@ -24,5 +24,9 @@ namespace Codigames.Kingdom.City
         Fog,
         // Seconds one of its trainees takes.
         TrainTime,
+        // The army a military hall allows.
+        ArmyCap,
+        // The wounded an Infirmary keeps.
+        Wards,
     }
 }

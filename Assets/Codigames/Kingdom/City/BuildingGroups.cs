@@ -9,6 +9,8 @@ namespace Codigames.Kingdom.City
     {
         public const string ANY_DECORATION = "AnyDecoration";
         public const string ANY_PRODUCER = "AnyProducer";
+        public const string ANY_HALL = "AnyHall";
+        public const string ANY_WORKSHOP = "AnyWorkshop";
 
         private readonly ICatalog<IBuildingDefinition> _buildings;
 
@@ -22,6 +24,8 @@ namespace Codigames.Kingdom.City
             {
                 ANY_DECORATION => building.Production.HarmonySupply > 0,
                 ANY_PRODUCER => building.Production.HarvestSources.Count > 0,
+                ANY_HALL => building.Production.ArmyCapPerLevel.Count > 0,
+                ANY_WORKSHOP => !string.IsNullOrEmpty(building.Production.Produces),
                 _ => definitionId == target,
             };
         }

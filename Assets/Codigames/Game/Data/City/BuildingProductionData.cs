@@ -30,6 +30,12 @@ namespace Codigames.Game.Data.City
         [SerializeField] private List<double> _harmonyCostPerLevel = new();
         [SerializeField, Tooltip("The feature it plants instead of standing (Crops); empty for a building.")] private string _plants;
         [SerializeField, Tooltip("The good a workshop makes; empty for a building that is not one.")] private string _produces;
+        [Header("Army")]
+        [SerializeField, Tooltip("The units a military hall trains.")] private List<string> _trains = new();
+        [Tooltip("The army a hall allows, by level from 1: a total."), ListDrawerSettings(ShowIndexLabels = true)]
+        [SerializeField] private List<int> _armyCapPerLevel = new();
+        [Tooltip("The wounded an Infirmary keeps, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
+        [SerializeField] private List<int> _bedsPerLevel = new();
         [Tooltip("How many goods a workshop may hold queued, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
         [SerializeField] private List<int> _queueLengthPerLevel = new();
         [Tooltip("How many villagers may work for it, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
@@ -47,6 +53,9 @@ namespace Codigames.Game.Data.City
         public IReadOnlyList<double> HarmonyCostPerLevel => _harmonyCostPerLevel;
         public string Plants => string.IsNullOrEmpty(_plants) ? null : _plants;
         public string Produces => string.IsNullOrEmpty(_produces) ? null : _produces;
+        public IReadOnlyList<string> Trains => _trains;
+        public IReadOnlyList<int> ArmyCapPerLevel => _armyCapPerLevel;
+        public IReadOnlyList<int> BedsPerLevel => _bedsPerLevel;
         public IReadOnlyList<int> QueueLengthPerLevel => _queueLengthPerLevel;
         public IReadOnlyList<int> MaxWorkersPerLevel => _maxWorkersPerLevel;
         public IReadOnlyList<int> InfluenceRadiusPerLevel => _influenceRadiusPerLevel;

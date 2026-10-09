@@ -32,6 +32,8 @@ namespace Codigames.Game.UI.Buildings
             StatKind.Rent => "Gold",
             StatKind.Income => "Gold",
             StatKind.Fog => "Townhall",
+            StatKind.ArmyCap => "army",
+            StatKind.Wards => "bed",
             _ => "hourglass",
         });
 
@@ -46,6 +48,8 @@ namespace Codigames.Game.UI.Buildings
             StatKind.Rent => _localizer.Tr("Rent each"),
             StatKind.Income => _localizer.Tr("Gold /h"),
             StatKind.Fog => _localizer.Tr("Fog reach"),
+            StatKind.ArmyCap => _localizer.Tr("Army cap"),
+            StatKind.Wards => _localizer.Tr("Beds"),
             _ => _localizer.Tr("Training time"),
         };
 
@@ -61,6 +65,8 @@ namespace Codigames.Game.UI.Buildings
             StatKind.Rent => _localizer.Tr("Rent"),
             StatKind.Income => _localizer.Tr("Income"),
             StatKind.Fog => _localizer.Tr("Fog"),
+            StatKind.ArmyCap => _localizer.Tr("Army"),
+            StatKind.Wards => _localizer.Tr("Beds"),
             _ => _localizer.Tr("tile::Training"),
         };
 

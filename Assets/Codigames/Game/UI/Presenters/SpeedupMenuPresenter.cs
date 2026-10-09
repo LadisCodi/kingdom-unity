@@ -23,6 +23,7 @@ namespace Codigames.Game.UI.Presenters
     // the speed-ups that fit, and the Gems that finish it. It closes once the timer is done.
     public class SpeedupMenuPresenter : AbstractDataMenuPresenter<SpeedupMenu, SpeedJob>, IClosableMenuPresenter, ITickable
     {
+        private readonly Kingdom.Army.Army _army;
         private readonly Kingdom.Goods.Workshops _workshops;
         private readonly Codigames.Game.Data.Goods.GoodCollection _goods;
         private readonly UIManager _ui;
@@ -47,8 +48,9 @@ namespace Codigames.Game.UI.Presenters
         public SpeedupMenuPresenter(IMenuViewFactory views, UIManager ui, Speedups speedups, Kingdom.Bag.Bag bag, ItemCollection items,
             ItemTiles tiles, GemRush rush, CityState city, BuildingCollection buildings, IConstructionSettings settings,
             VillagerTraining training, ITreasury treasury, UiIcons icons, NumberFormat numbers, Localizer localizer, IClock clock,
-            ISoundService sounds, Kingdom.Goods.Workshops workshops, Codigames.Game.Data.Goods.GoodCollection goods) : base(views)
+            ISoundService sounds, Kingdom.Goods.Workshops workshops, Codigames.Game.Data.Goods.GoodCollection goods, Kingdom.Army.Army army) : base(views)
         {
+            _army = army;
             _workshops = workshops;
             _goods = goods;
             _ui = ui;
@@ -118,6 +120,7 @@ namespace Codigames.Game.UI.Presenters
             {
                 SpeedupKind.Construction => _rush.FinishJob(Data.JobId, now),
                 SpeedupKind.Workshop => _workshops.Rush(Data.JobId, now) == Kingdom.Goods.WorkshopRefusal.None,
+                SpeedupKind.Training when Data.JobId != null => _army.Rush(Data.JobId, now) == Kingdom.Army.ArmyRefusal.None,
                 _ => _rush.FinishLine(now),
             };
             _sounds.Play(done ? SoundIds.GEM_SPEND : SoundIds.ERROR);
@@ -175,6 +178,16 @@ namespace Codigames.Game.UI.Presenters
                 var title = _localizer.Tr(good.Name) + " · " + _localizer.Tr(_buildings.Get<BuildingAsset>(shop.DefinitionId).DisplayName);
                 return (title, _goods.Get<Codigames.Game.Data.Goods.GoodAsset>(good.Id).Icon, (float)_workshops.Progress(shop.Id, 0, now),
                     _workshops.RushCost(shop.Id, now));
+            }
+
+            if (Data.JobId != null)
+            {
+                // A hall's line: "Barracks · 12 training".
+                var line = _city.Districts.First(d => d.Id == Data.JobId);
+                var count = _army.Line(line.Id).Sum(i => i.Count);
+                var hallName = _localizer.Tr(_buildings.Get<BuildingAsset>(line.DefinitionId).DisplayName);
+                return (_localizer.Tr("{name} · {n} training", ("name", hallName), ("n", _numbers.Exact(count))), _icons.Get(line.DefinitionId),
+                    (float)_army.HeadProgress(line.Id, now), _army.RushCost(line.Id, now));
             }
 
             var townhall = _settings.Townhall.Id;

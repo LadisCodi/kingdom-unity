@@ -16,6 +16,8 @@ namespace Codigames.Game.UI.Kit
         [SerializeField] private Image _bust;
         [SerializeField] private GameObject _countPill;
         [SerializeField] private TMP_Text _count;
+        [SerializeField, Tooltip("The rank coin over its bottom-right, from rank II.")] private GameObject _rankCoin;
+        [SerializeField] private TMP_Text _rankNumeral;
 
         private Vector2 _shift;
         private float _scale = 1f;
@@ -28,6 +30,14 @@ namespace Codigames.Game.UI.Kit
             _countPill.SetActive(!string.IsNullOrEmpty(count));
             _count.text = count;
             Fit();
+        }
+
+        // The rank struck on its coin; none below II.
+        public void ShowRank(int rank)
+        {
+            if (_rankCoin == null) return;
+            _rankCoin.SetActive(rank >= 2);
+            if (rank >= 2) _rankNumeral.text = Kingdom.Army.Troops.Roman(rank);
         }
 
         private void OnRectTransformDimensionsChange() => Fit();

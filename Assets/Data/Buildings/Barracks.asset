@@ -162,6 +162,12 @@ MonoBehaviour:
     - 4
     - 6
     _plants: 
+    _produces: 
+    _trains:
+    - Warrior
+    _armyCapPerLevel: 96000000fa0000009001000058020000520300004c04000078050000d606000066080000280a0000
+    _bedsPerLevel: 
+    _queueLengthPerLevel: 
     _maxWorkersPerLevel: 
     _influenceRadiusPerLevel: 
     _strikeSpeedPerLevel: []
