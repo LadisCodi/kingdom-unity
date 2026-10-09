@@ -60,6 +60,9 @@ namespace Codigames.Kingdom.Fog
         // A share of a cell was paid: the cell, and the taps paid so far.
         public event Action<Vector2Int, int> Tapped;
 
+        // A cell (or a block) was paid for and cleared: its cells, and the cells it brought into view.
+        public event Action<IReadOnlyList<Vector2Int>, IReadOnlyList<Vector2Int>> PaidReveal;
+
         public int RevealedCount => _state.Revealed.Count;
 
         public int TapsToReveal => _settings.TapsToReveal;
@@ -130,7 +133,10 @@ namespace Codigames.Kingdom.Fog
             }
 
             _state.Progress.Remove(AnchorOf(cell));
+            var fresh = block.SelectMany(GridMath.Neighbours).Distinct()
+                .Where(c => _map.Contains(c) && !block.Contains(c) && VisibilityAt(c) == Visibility.Undiscovered).ToList();
             Reveal(block);
+            PaidReveal?.Invoke(block, fresh);
             return RevealResult.Revealed;
         }
 

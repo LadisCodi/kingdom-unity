@@ -70,6 +70,9 @@ namespace Codigames.Kingdom.Harvest
         public event Action<Vector2Int> FeatureRemoved;
         public event Action<Vector2Int, string> FeatureAppeared;
 
+        // A source by id; null when there is none.
+        public IHarvestSource Source(string id) => _sources.TryGet(id, out var source) ? source : null;
+
         // The source a cell yields; null when nothing can be taken from it.
         public IHarvestSource SourceAt(Vector2Int cell)
         {

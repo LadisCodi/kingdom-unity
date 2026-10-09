@@ -73,6 +73,13 @@ namespace Codigames.Game.Session
                 resolver.Resolve<ManaPool>(), resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IRevealedGround>(),
                 resolver.Resolve<IResearchGates>(), resolver.Resolve<IBonuses>()), Lifetime.Singleton);
             builder.Register<ResearchEffects>(Lifetime.Singleton);
+            builder.Register<Production>(Lifetime.Singleton).As<IProduction>();
+            builder.Register(resolver => new Treasures(resolver.Resolve<KingdomState>().Fog, resolver.Resolve<FogOfWar>(),
+                resolver.Resolve<IProvinceMap>(), resolver.Resolve<Footprints>(), resolver.Resolve<GroundState>(),
+                resolver.Resolve<ISiteGround>(), resolver.Resolve<ITreasureSettings>(), resolver.Resolve<ITreasury>(),
+                resolver.Resolve<IProduction>(), resolver.Resolve<IResearchGates>(), resolver.Resolve<ICatalog<IHarvestSource>>(),
+                resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<Construction>(), resolver.Resolve<KingdomState>().Seed,
+                resolver.Resolve<IBonuses>()), Lifetime.Singleton);
 
             builder.Register(resolver =>
             {
@@ -101,8 +108,9 @@ namespace Codigames.Game.Session
                 // The crews last: their steps run between the boundaries the others draw.
                 timeline.Register(resolver.Resolve<Workforce>());
 
-                // What a technology completing does to the rest of the kingdom.
+                // What a technology completing does to the rest of the kingdom; treasures set down as the fog is paid for.
                 resolver.Resolve<ResearchEffects>();
+                resolver.Resolve<Treasures>();
                 return timeline;
             }, Lifetime.Singleton);
 

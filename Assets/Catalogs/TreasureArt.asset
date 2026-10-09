@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4d3eb73a5085f3eb88a8e2a2f02a83b, type: 3}
+  m_Name: TreasureArt
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Fog.TreasureArt
+  _closed: {fileID: 21300000, guid: 28351e331b481ac64a131d08cb7ce2cc, type: 3}
+  _coins:
+  - Coin: Gold
+    Sprite: {fileID: 21300000, guid: af74db483b852626a9983b72e26e0019, type: 3}
+  - Coin: Food
+    Sprite: {fileID: 21300000, guid: 8f0ea65f8e67e859ca92bdc9cee02762, type: 3}
+  - Coin: Wood
+    Sprite: {fileID: 21300000, guid: 5e4fb84faf8ddd9aa95823b2c7be3a0f, type: 3}
+  - Coin: Stone
+    Sprite: {fileID: 21300000, guid: ff381aa37b186096eb5d2c491292302c, type: 3}
+  - Coin: Knowledge
+    Sprite: {fileID: 21300000, guid: 361eceffde99b3f898829743e398ed2a, type: 3}

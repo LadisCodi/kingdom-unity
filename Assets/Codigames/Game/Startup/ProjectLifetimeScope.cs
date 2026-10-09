@@ -47,6 +47,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private TechTreeAsset _techTree;
         [SerializeField] private KnowledgeSettingsAsset _knowledge;
         [SerializeField] private ProvinceSitesAsset _sites;
+        [SerializeField] private TreasureSettingsAsset _treasure;
 
         [Header("App")]
         [SerializeField] private LocalizationCatalog _localization;
@@ -99,6 +100,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_techTree).AsSelf().As<ITechTree>();
             builder.RegisterInstance(_knowledge).As<IKnowledgeSettings>();
             builder.RegisterInstance(_sites).As<IProvinceSites>();
+            builder.RegisterInstance(_treasure).As<ITreasureSettings>();
         }
     }
 }

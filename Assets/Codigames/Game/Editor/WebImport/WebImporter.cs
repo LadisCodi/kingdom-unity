@@ -67,6 +67,7 @@ namespace Codigames.Game.Editor.WebImport
             ImportMagic();
             var technologies = ImportResearch();
             ImportSites();
+            ImportTreasure();
 
             AssetDatabase.SaveAssets();
             Debug.Log($"#Data# Imported {currencies} currencies, {buildings.Count} buildings and {technologies} technologies from the web prototype.");
@@ -393,6 +394,20 @@ namespace Codigames.Game.Editor.WebImport
             settings.ApplyModifiedPropertiesWithoutUndo();
 
             return assets.Count;
+        }
+
+        private static void ImportTreasure()
+        {
+            var treasure = Read<ExplorationData>("Game/exploration.json").Treasure;
+            var settings = new SerializedObject(LoadOrCreate<TreasureSettingsAsset>("Settings", "Treasure"));
+            settings.FindProperty("_everyReveals").intValue = (int)treasure.EveryReveals;
+            settings.FindProperty("_workSeconds").doubleValue = treasure.WorkSeconds;
+            SetAmounts(settings.FindProperty("_floor"), treasure.Floor);
+            SetAmounts(settings.FindProperty("_weights"), treasure.Weights);
+            settings.FindProperty("_knowledge").doubleValue = treasure.Knowledge;
+            settings.FindProperty("_firstCoin").stringValue = treasure.FirstCoin;
+            settings.FindProperty("_firstAmount").doubleValue = treasure.FirstAmount;
+            settings.ApplyModifiedPropertiesWithoutUndo();
         }
 
         // The abandoned buildings, as region-map.json places them.
