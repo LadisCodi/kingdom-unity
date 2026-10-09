@@ -25,10 +25,12 @@ namespace Codigames.Kingdom.Economy
         private readonly IEconomySettings _settings;
         private readonly ITreasury _treasury;
         private readonly IBonuses _bonuses;
+        private readonly IBoosts _boosts;
 
         public Stores(CityState city, ICatalog<IBuildingDefinition> buildings, IEconomySettings settings, ITreasury treasury,
-            Construction construction, IBonuses bonuses = null)
+            Construction construction, IBonuses bonuses = null, IBoosts boosts = null)
         {
+            _boosts = boosts;
             _bonuses = bonuses;
             _city = city;
             _buildings = buildings;
@@ -53,7 +55,9 @@ namespace Codigames.Kingdom.Economy
 
             var production = _buildings.Get(district.DefinitionId).Production;
             var own = At(production.GoldPerMinutePerLevel, district.Level) * _bonuses.Multiplier(TechStats.OWN_GOLD);
-            var rate = _bonuses.Apply(TechStats.TAX_RATE, _settings.GoldPerPopulationPerMinute, TargetKind.District, district.DefinitionId);
+            // The rent, raised by the tree and by a Rent boost running.
+            var rate = _bonuses.Apply(TechStats.TAX_RATE, _settings.GoldPerPopulationPerMinute, TargetKind.District, district.DefinitionId)
+                       * (_boosts?.Multiplier(BoostKind.Rent) ?? 1);
             var rent = Residents(district) * rate * (1 + At(production.TaxBonusPerLevel, district.Level));
             return own + rent;
         }

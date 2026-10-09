@@ -40,12 +40,14 @@ namespace Codigames.Kingdom.Harvest
         private readonly IRevealedGround _revealed;
         private readonly IResearchGates _gates;
         private readonly IBonuses _bonuses;
+        private readonly IBoosts _boosts;
 
         public Harvesting(HarvestState state, GroundState ground, CityState city, IProvinceMap map,
             ICatalog<IBuildingDefinition> buildings, ICatalog<IFeatureDefinition> features, ICatalog<IHarvestSource> sources,
             ITerrainYields yields, ITapSettings tap, ITreasury treasury, ManaPool mana, uint seed, IRevealedGround revealed,
-            IResearchGates gates = null, IBonuses bonuses = null)
+            IResearchGates gates = null, IBonuses bonuses = null, IBoosts boosts = null)
         {
+            _boosts = boosts;
             _gates = gates;
             _bonuses = bonuses;
             _revealed = revealed;
@@ -133,7 +135,8 @@ namespace Codigames.Kingdom.Harvest
             if (IsExhausted(cell, now)) return new TapResult(TapRefusal.Exhausted);
             if (!_mana.TrySpend(_tap.ManaCost, now)) return new TapResult(TapRefusal.NoMana);
 
-            var owed = TapWorkSeconds * UnitsPerStrike(source) / source.SecondsPerStrike;
+            // A Harvest boost raises what a tap takes, never a crew's work.
+            var owed = TapWorkSeconds * UnitsPerStrike(source) / source.SecondsPerStrike * (_boosts?.Multiplier(BoostKind.Harvest) ?? 1);
             _state.Carry.TryGetValue(source.Currency, out var carried);
             var total = owed + carried;
             var wanted = Math.Max(1, Math.Floor(total));

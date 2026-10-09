@@ -77,6 +77,41 @@ namespace Codigames.Kingdom.City
             => Math.Round(_settings.Seconds * Math.Pow(_settings.SecondsGrowth, place) / Math.Max(1, _bonuses.Multiplier(TechStats.VILLAGER_TRAINING_SPEED)),
                 MidpointRounding.AwayFromZero);
 
+        // Seconds left on the whole line at `now`: the one on the bench, and each behind it at its own place's wait.
+        public double? RemainingSeconds(double now)
+        {
+            if (_city.Trainees.Count == 0) return null;
+            var total = 0.0;
+            for (var i = 0; i < _city.Trainees.Count; i++)
+            {
+                var trainee = _city.Trainees[i];
+                total += trainee.ArrivesAt is double at ? Math.Max(0, (at - now) / 1000) : SecondsAt(_city.Population + i);
+            }
+
+            return total;
+        }
+
+        // Takes `seconds` off the line at `now` (a speed-up): whoever it finishes arrives now, the next starts now, and
+        // what is left over is lost.
+        public void Hurry(double seconds, double now)
+        {
+            var budget = seconds * 1000;
+            while (budget > 0 && Current is { } head)
+            {
+                if (head.StartedAt == null) StartNext(now);
+                var left = Math.Max(0, head.ArrivesAt.Value - now);
+                if (budget < left)
+                {
+                    head.Seconds -= budget / 1000;
+                    return;
+                }
+
+                head.Seconds = (now - head.StartedAt.Value) / 1000;
+                budget -= left;
+                ApplyDue(now);
+            }
+        }
+
         public double? NextBoundary(double after)
         {
             var at = Current?.ArrivesAt;

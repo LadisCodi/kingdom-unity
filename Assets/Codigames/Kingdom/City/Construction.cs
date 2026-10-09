@@ -217,6 +217,24 @@ namespace Codigames.Kingdom.City
 
         private static int At(System.Collections.Generic.IReadOnlyList<int> list, int index) => index < list.Count ? list[index] : 0;
 
+        // Takes `seconds` off a job at `now` (a speed-up): it never ends before `now`, and what a bigger cut leaves over
+        // is lost. A job that ends finishes at once.
+        public bool Hurry(string jobId, double seconds, double now)
+        {
+            var job = _city.Jobs.FirstOrDefault(j => j.Id == jobId);
+            if (job == null) return false;
+            job.Seconds = Math.Max((now - job.StartedAt) / 1000, job.Seconds - seconds);
+            if (job.CompletesAt <= now) ApplyDue(now);
+            return true;
+        }
+
+        // Seconds left on a job at `now`; null when there is no such job.
+        public double? RemainingSeconds(string jobId, double now)
+        {
+            var job = _city.Jobs.FirstOrDefault(j => j.Id == jobId);
+            return job == null ? null : Math.Max(0, (job.CompletesAt - now) / 1000);
+        }
+
         // Free and instant; an unfinished building moves too, keeping its place in the work and its wait.
         public ConstructionRefusal Move(string districtId, Vector2Int anchor)
         {

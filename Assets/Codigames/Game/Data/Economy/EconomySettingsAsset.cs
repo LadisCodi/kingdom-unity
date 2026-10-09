@@ -1,3 +1,4 @@
+using Codigames.Kingdom.Bag;
 using Codigames.Kingdom.Crews;
 using Codigames.Kingdom.Economy;
 using Sirenix.OdinInspector;
@@ -6,7 +7,7 @@ using UnityEngine;
 namespace Codigames.Game.Data.Economy
 {
     [CreateAssetMenu(fileName = "Economy", menuName = "Kingdom/Data/Economy Settings")]
-    public class EconomySettingsAsset : DataSettings, IEconomySettings, IWorkerSettings
+    public class EconomySettingsAsset : DataSettings, IEconomySettings, IWorkerSettings, IBagSettings
     {
         [SerializeField, MinValue(0), SuffixLabel("Gold / villager / min"), Tooltip("The rent every housed villager pays.")]
         private double _goldPerPopulationPerMinute = 30;
@@ -16,7 +17,11 @@ namespace Codigames.Game.Data.Economy
         [SerializeField, MinValue(0.1), SuffixLabel("cells / s"), Tooltip("How fast a villager walks.")]
         private double _moveSpeedTilesPerSecond = 1;
 
+        [SerializeField, MinValue(0), SuffixLabel("units / h"), Tooltip("What a chest pays an hour of a coin the city barely makes yet.")]
+        private double _chestFloorPerHour = 60;
+
         public double GoldPerPopulationPerMinute => _goldPerPopulationPerMinute;
+        public double ChestFloorPerHour => _chestFloorPerHour;
         public double MoveSpeedTilesPerSecond => _moveSpeedTilesPerSecond;
         public double CollectSeconds => _collectSeconds;
     }
