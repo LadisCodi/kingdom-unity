@@ -122,6 +122,11 @@ namespace Codigames.Game.UI.Hud
             _layer.anchorMax = Vector2.one;
             _layer.offsetMin = _layer.offsetMax = Vector2.zero;
             _layer.SetAsLastSibling();
+
+            // Over the plank, which has a canvas of its own above the menus: the fragments land in its slots.
+            var canvas = go.AddComponent<Canvas>();
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = 40;
             return _layer;
         }
 

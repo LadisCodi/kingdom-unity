@@ -12,6 +12,8 @@ namespace Codigames.Game.UI.Widgets
         [SerializeField] private Button _button;
         [SerializeField] private GameObject _face;
         [SerializeField] private GameObject _padlock;
+        [SerializeField, Tooltip("The orb with a count: presses worth making behind this door.")] private GameObject _badge;
+        [SerializeField] private TMPro.TMP_Text _badgeCount;
 
         public event Action Tapped;
 
@@ -21,6 +23,14 @@ namespace Codigames.Game.UI.Widgets
         {
             _face.SetActive(!locked);
             _padlock.SetActive(locked);
+        }
+
+        public void SetBadge(int count)
+        {
+            if (_badge == null) return;
+
+            _badge.SetActive(count > 0);
+            if (_badgeCount != null) _badgeCount.text = count > 9 ? "9+" : count.ToString();
         }
 
         private void OnEnable() => _button.onClick.AddListener(OnTapped);
