@@ -35,6 +35,9 @@ namespace Codigames.Kingdom.City
         // The wounded an Infirmary keeps, by level.
         IReadOnlyList<int> BedsPerLevel { get; }
 
+        // A Tavern's raise on every Hero XP paid, a percent by level: a total, not a step.
+        IReadOnlyList<double> HeroXpBonusPerLevel { get; }
+
         // The good a workshop makes; null for a building that is not one.
         string Produces { get; }
 

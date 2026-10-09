@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9645b9e17a3d3ba9eada4a7ee50663f7, type: 3}
+  m_Name: Necromancer
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Heroes.HeroAsset
+  _id: Necromancer
+  _name: The Necromancer
+  _title: Asks the previous expedition
+  _art: {fileID: 21300000, guid: f6b8653f0cfd915b0826e2fbe245b354, type: 3}
+  _portrait: {fileID: 21300000, guid: 512a172044a9de97b9fc915b2776c1a2, type: 3}
+  _fragment: {fileID: 21300000, guid: e2902f5ae6898d0b9bef4cbc4473a220, type: 3}
+  _rarity: 2
+  _bagRank: 1
+  _unitType: Archer
+  _skill: Volley
+  _skillValue: 60
+  _skillEvery: 4.5
+  _atk: 2
+  _dmg: 78
+  _def: 2
+  _hp: 1104
+  _cooldown: 12
+  _atkPerLevel: 0.024
+  _dmgPerLevel: 2.06
+  _defPerLevel: 0.024
+  _hpPerLevel: 34.25
+  _troopDmgMult: 1.25
+  _troopHpMult: 1.15
+  _troopDefBonus: 2
+  _boonStat: knowledgeYield
+  _boonValue: 1.25

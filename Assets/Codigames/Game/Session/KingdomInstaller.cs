@@ -55,15 +55,25 @@ namespace Codigames.Game.Session
             builder.Register<SiteGround>(Lifetime.Singleton).AsSelf().As<ISiteGround>();
             builder.Register(resolver => resolver.Resolve<KingdomState>().Lairs, Lifetime.Singleton);
             builder.Register<LairGround>(Lifetime.Singleton).AsSelf().As<ILairGround>();
+            builder.Register(resolver => resolver.Resolve<KingdomState>().Heroes, Lifetime.Singleton);
+            builder.Register<Kingdom.Heroes.HeroLadder>(Lifetime.Singleton);
+            builder.Register(resolver => new Kingdom.Heroes.Heroes(resolver.Resolve<KingdomState>().Heroes,
+                resolver.Resolve<ICatalog<Kingdom.Heroes.IHeroDefinition>>(), resolver.Resolve<Kingdom.Heroes.HeroLadder>(), resolver.Resolve<ITreasury>(),
+                resolver.Resolve<Kingdom.Goods.Stockpile>(), resolver.Resolve<CityState>(), resolver.Resolve<ICatalog<IBuildingDefinition>>(),
+                resolver.Resolve<IBonuses>(), () => resolver.Resolve<Kingdom.Modifiers.IModifiers>()), Lifetime.Singleton);
+            // The kingdom's modifier stack: the Legendaries' boons now; relics and events join it.
+            builder.Register<Kingdom.Modifiers.IModifiers>(resolver => new Kingdom.Modifiers.ModifierStack(
+                new Kingdom.Modifiers.IModifierSource[] { resolver.Resolve<Kingdom.Heroes.Heroes>() },
+                () => resolver.Resolve<Timeline>().LastAdvance), Lifetime.Singleton);
             builder.Register<Kingdom.Battles.Combat>(Lifetime.Singleton);
             builder.Register<Kingdom.Battles.EnemyGenerator>(Lifetime.Singleton);
             builder.Register(resolver => new LairAttack(resolver.Resolve<Codigames.Kingdom.Lairs.Lairs>(), resolver.Resolve<Kingdom.Battles.Combat>(),
                 resolver.Resolve<Kingdom.Battles.EnemyGenerator>(), resolver.Resolve<Kingdom.Army.Army>(), resolver.Resolve<ITreasury>(),
                 resolver.Resolve<KingdomState>().Seed, resolver.Resolve<Data.Army.CombatSettingsAsset>().TroopSlots, resolver.Resolve<IItemGrants>(),
-                resolver.Resolve<IBonuses>()), Lifetime.Singleton);
+                resolver.Resolve<IBonuses>(), resolver.Resolve<Kingdom.Heroes.Heroes>(), resolver.Resolve<Kingdom.Modifiers.IModifiers>()), Lifetime.Singleton);
             builder.Register(resolver => new Codigames.Kingdom.Lairs.Lairs(resolver.Resolve<KingdomState>().Lairs, resolver.Resolve<LairGround>(),
                 resolver.Resolve<ILairSettings>(), resolver.Resolve<CityState>(), resolver.Resolve<Stores>(), resolver.Resolve<Workforce>(),
-                resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IBonuses>()), Lifetime.Singleton);
+                resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IBonuses>(), resolver.Resolve<Kingdom.Modifiers.IModifiers>()), Lifetime.Singleton);
             // No Bag yet: a ruin missing a piece waits for it.
             builder.Register(resolver => new Ruins(resolver.Resolve<SitesState>(), resolver.Resolve<SiteGround>(),
                 resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<Construction>(), resolver.Resolve<IRevealedGround>(), lairs: resolver.Resolve<ILairGround>()),
@@ -131,12 +141,13 @@ namespace Codigames.Game.Session
             builder.Register(resolver => new QuestChain(resolver.Resolve<KingdomState>().Quests, resolver.Resolve<ICatalog<IQuestDefinition>>(),
                 resolver.Resolve<IQuestGoals>(), resolver.Resolve<ITreasury>(), resolver.Resolve<CityState>(),
                 resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<Stores>(), resolver.Resolve<Harvesting>(),
-                resolver.Resolve<FogOfWar>(), resolver.Resolve<GroundState>(), resolver.Resolve<IBonuses>(), resolver.Resolve<IItemGrants>()),
+                resolver.Resolve<FogOfWar>(), resolver.Resolve<GroundState>(), resolver.Resolve<IBonuses>(), resolver.Resolve<IItemGrants>(),
+                resolver.Resolve<Kingdom.Modifiers.IModifiers>()),
                 Lifetime.Singleton);
             builder.Register(resolver => new Landmarks(resolver.Resolve<SitesState>(), resolver.Resolve<IProvinceSites>(),
                 resolver.Resolve<FogOfWar>(), resolver.Resolve<ITreasury>(), resolver.Resolve<IKnowledgeSettings>(),
                 ((Data.Fog.FogSettingsAsset)resolver.Resolve<IFogSettings>()).ClaimDiscoverRadius, resolver.Resolve<IBonuses>(),
-                resolver.Resolve<ManaPool>(), resolver.Resolve<ILairGround>()), Lifetime.Singleton);
+                resolver.Resolve<ManaPool>(), resolver.Resolve<ILairGround>(), resolver.Resolve<Kingdom.Modifiers.IModifiers>()), Lifetime.Singleton);
             builder.Register(resolver => new Treasures(resolver.Resolve<KingdomState>().Fog, resolver.Resolve<FogOfWar>(),
                 resolver.Resolve<IProvinceMap>(), resolver.Resolve<Footprints>(), resolver.Resolve<GroundState>(),
                 resolver.Resolve<ISiteGround>(), resolver.Resolve<ITreasureSettings>(), resolver.Resolve<ITreasury>(),

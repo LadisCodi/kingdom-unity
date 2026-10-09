@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9645b9e17a3d3ba9eada4a7ee50663f7, type: 3}
+  m_Name: ElvenPrincess
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Heroes.HeroAsset
+  _id: ElvenPrincess
+  _name: The Elven Princess
+  _title: Travels light, and expects you to
+  _art: {fileID: 21300000, guid: 1b7468875437b6ec0a07505fa49fe31d, type: 3}
+  _portrait: {fileID: 21300000, guid: 3179fcb947e2bae01bdd7f0dcca9526f, type: 3}
+  _fragment: {fileID: 21300000, guid: 41cf5b118d8aa364bbbea482447e362f, type: 3}
+  _rarity: 2
+  _bagRank: 1
+  _unitType: Lancer
+  _skill: Wave
+  _skillValue: 6
+  _skillEvery: 4.5
+  _atk: 4
+  _dmg: 66
+  _def: 4
+  _hp: 1536
+  _cooldown: 12
+  _atkPerLevel: 0.032
+  _dmgPerLevel: 2.06
+  _defPerLevel: 0.032
+  _hpPerLevel: 45.67
+  _troopDmgMult: 1.25
+  _troopHpMult: 1.15
+  _troopDefBonus: 2
+  _boonStat: manaRegen
+  _boonValue: 1.25

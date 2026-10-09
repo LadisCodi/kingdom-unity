@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9645b9e17a3d3ba9eada4a7ee50663f7, type: 3}
+  m_Name: Wizard
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Heroes.HeroAsset
+  _id: Wizard
+  _name: The Wizard
+  _title: Certain about the wrong things, loudly
+  _art: {fileID: 21300000, guid: d6f35f34c5f1eb82ea6ee9c519764aab, type: 3}
+  _portrait: {fileID: 21300000, guid: ff9204054589cd887b4bcd32277cddab, type: 3}
+  _fragment: {fileID: 21300000, guid: 70e038beb1531f78e965841429feaf51, type: 3}
+  _rarity: 1
+  _bagRank: 2
+  _unitType: Archer
+  _skill: Volley
+  _skillValue: 40
+  _skillEvery: 4.5
+  _atk: 2
+  _dmg: 54
+  _def: 2
+  _hp: 864
+  _cooldown: 12
+  _atkPerLevel: 0.019
+  _dmgPerLevel: 1.74
+  _defPerLevel: 0.019
+  _hpPerLevel: 27.59
+  _troopDmgMult: 1.15
+  _troopHpMult: 1.1
+  _troopDefBonus: 1
+  _boonStat: 
+  _boonValue: 1

@@ -80,6 +80,104 @@ namespace Codigames.Kingdom.Tests.Battles
             },
         });
 
+        public sealed class FakeHero : Codigames.Kingdom.Heroes.IHeroDefinition
+        {
+            public string Id { get; set; }
+            public string Name => Id;
+            public string Title => "";
+            public Codigames.Kingdom.Heroes.HeroRarity Rarity { get; set; }
+            public int BagRank => 1;
+            public string UnitType { get; set; }
+            public string Skill { get; set; }
+            public double SkillValue { get; set; }
+            public double SkillEvery { get; set; }
+            public double Atk { get; set; }
+            public double Dmg { get; set; }
+            public double Def { get; set; }
+            public double Hp { get; set; }
+            public int Cooldown { get; set; }
+            public double AtkPerLevel { get; set; }
+            public double DmgPerLevel { get; set; }
+            public double DefPerLevel { get; set; }
+            public double HpPerLevel { get; set; }
+            public double TroopDmgMult { get; set; }
+            public double TroopHpMult { get; set; }
+            public int TroopDefBonus { get; set; }
+            public string BoonStat { get; set; }
+            public double BoonValue { get; set; }
+        }
+
+        // The web's heroLadder.json.
+        public sealed class Ladder : Codigames.Kingdom.Heroes.IHeroLadderSettings
+        {
+            public int AscensionStars => 5;
+            public int AscensionStepsPerStar => 6;
+            public int RecruitFragments(Codigames.Kingdom.Heroes.HeroRarity rarity) => rarity switch
+            {
+                Codigames.Kingdom.Heroes.HeroRarity.Common => 15, Codigames.Kingdom.Heroes.HeroRarity.Rare => 25, _ => 40,
+            };
+            public double FragmentsPerStepBase => 1;
+            public double FragmentsPerStepGrowth => 2;
+            public double AscensionStardustBase => 4;
+            public double AscensionStardustGrowth => 2;
+            public double XpLevelCostBase => 20;
+            public double XpLevelCostGrowth => 1.0165;
+            public int HeroLevelsPerStar => 0;
+            public int HeroLevelsPerAscension => 10;
+            public double StatsPerAscension => 0.02;
+            public int HeroMaxLevel => 310;
+            public IReadOnlyList<int> SkillRankLevels { get; } = new[] { 71, 131, 191, 251 };
+            public IReadOnlyList<double> SkillRankStardust { get; } = new double[] { 100, 200, 400, 800 };
+            public IReadOnlyList<double> SkillRankMaterial { get; } = new double[] { 2, 4, 8, 12 };
+            public double SkillRankStep => 0.25;
+            public int HeroSlots => 3;
+            public double HeroSlotGemCostBase => 2500;
+            public double HeroSlotGemCostGrowth => 2;
+            public double HeroRecoverHours => 8;
+        }
+
+        private static FakeHero H(string id, Codigames.Kingdom.Heroes.HeroRarity rarity, string type, string skill, double value, double every,
+            double atk, double dmg, double def, double hp, int cooldown, double atkL, double dmgL, double defL, double hpL, double dm, double hm, int db)
+            => new()
+            {
+                Id = id, Rarity = rarity, UnitType = type, Skill = skill, SkillValue = value, SkillEvery = every, Atk = atk, Dmg = dmg, Def = def, Hp = hp,
+                Cooldown = cooldown, AtkPerLevel = atkL, DmgPerLevel = dmgL, DefPerLevel = defL, HpPerLevel = hpL, TroopDmgMult = dm, TroopHpMult = hm,
+                TroopDefBonus = db,
+            };
+
+        // Five of the web's heroes.json, as they stand.
+        public static Catalog<Codigames.Kingdom.Heroes.IHeroDefinition> Heroes() => new(new Codigames.Kingdom.Heroes.IHeroDefinition[]
+        {
+            H("Warden", Codigames.Kingdom.Heroes.HeroRarity.Common, "Warrior", "Shield", 15, 4.5, 3, 24, 3, 1152, 12, 0.04, 0.95, 0.04, 45.67, 1.1, 1.05, 1),
+            H("Rogue", Codigames.Kingdom.Heroes.HeroRarity.Common, "Cavalry", "Sharpshot", 80, 3.5, 2, 42, 2, 816, 12, 0.019, 1.9, 0.019, 30.45, 1.1, 1.05, 1),
+            H("Bard", Codigames.Kingdom.Heroes.HeroRarity.Common, "Archer", "WarCry", 5, 0, 1, 42, 1, 624, 12, 0.016, 1.43, 0.016, 22.83, 1.1, 1.05, 1),
+            H("Cleric", Codigames.Kingdom.Heroes.HeroRarity.Common, "Warrior", "Mend", 10, 3.5, 3, 24, 3, 1152, 12, 0.04, 0.95, 0.04, 45.67, 1.1, 1.05, 1),
+            H("Joker", Codigames.Kingdom.Heroes.HeroRarity.Common, "Archer", "Daze", 1, 4.5, 1, 42, 1, 624, 12, 0.016, 1.43, 0.016, 22.83, 1.1, 1.05, 1),
+        });
+
+        [Test]
+        public void HeroesOnTheBoard_ShouldFightAsTheWebsDo()
+        {
+            var heroes = Heroes();
+            var ladder = new Codigames.Kingdom.Heroes.HeroLadder(new Ladder());
+            var specs = File.ReadAllLines(Golden()).Where(l => l.StartsWith("hero|")).Select(l =>
+            {
+                var p = l.Split('|');
+                var hero = heroes.Get(p[1]);
+                var body = ladder.Body(hero, int.Parse(p[2]), int.Parse(p[3]));
+                return new FighterSpec
+                {
+                    Id = hero.Id, Name = hero.Name, Type = hero.UnitType, Atk = body.Atk, Dmg = body.Dmg, Def = body.Def, Hp = body.Hp,
+                    HpNow = p[5] == "-" ? null : double.Parse(p[5], CultureInfo.InvariantCulture), Cooldown = hero.Cooldown,
+                    Power = Combat.JsRound(body.Dmg * 1.67), TroopDmgMult = hero.TroopDmgMult, TroopHpMult = hero.TroopHpMult,
+                    TroopDefBonus = hero.TroopDefBonus, Skill = ladder.SlotSkill(hero, int.Parse(p[4]), 100),
+                };
+            }).ToList();
+
+            Fight("heroes", new[] { Q("Warrior", 80), Q("Archer", 60) }, specs.Take(3).ToList(), new[] { Q("Lancer_e2", 70), Q("Cavalry", 40) },
+                specs.Skip(3).ToList());
+        }
+
         private static FighterSpec F(string id = "probe", string type = "Warrior", int hp = 100, int dmg = 10, int def = 0, int cooldown = 10,
             double dmgMult = 1, double hpMult = 1, int defBonus = 0, SlotSkill skill = null, int? hpNow = null)
             => new()
@@ -103,6 +201,7 @@ namespace Codigames.Kingdom.Tests.Battles
             List<string> current = null;
             foreach (var line in File.ReadAllLines(Golden()))
             {
+                if (line.StartsWith("hero|")) continue;
                 if (line.StartsWith("# "))
                 {
                     current = new List<string>();
@@ -122,7 +221,7 @@ namespace Codigames.Kingdom.Tests.Battles
             double D(int i) => double.Parse(p[i], CultureInfo.InvariantCulture);
             return new FighterSpec
             {
-                Id = p[1], Name = p[1], Type = p[2], Atk = D(3), Dmg = (int)D(4), Def = D(5), Hp = (int)D(6), Cooldown = (int)D(7), Power = (int)D(8),
+                Id = p[1], Name = p[1], Type = p[2], Atk = D(3), Dmg = D(4), Def = D(5), Hp = D(6), Cooldown = (int)D(7), Power = (int)D(8),
                 TroopDmgMult = D(9), TroopHpMult = D(10), TroopDefBonus = (int)D(11), Skill = new SlotSkill(p[12], (int)D(13), (int)D(14)),
             };
         }).ToList();
@@ -187,7 +286,7 @@ namespace Codigames.Kingdom.Tests.Battles
             var lines = new List<string>
             {
                 "squads|" + string.Join(";", plan.Squads.Select(s => $"{s.Troop}x{s.Count}")),
-                "fighters|" + string.Join(";", plan.Fighters.Select(f => $"{f.Id},{f.Hp},{f.Dmg},{f.Power},{N(f.Atk)},{N(f.Def)}")),
+                "fighters|" + string.Join(";", plan.Fighters.Select(f => $"{f.Id},{N(f.Hp)},{N(f.Dmg)},{f.Power},{N(f.Atk)},{N(f.Def)}")),
             };
             Assert.That(lines, Is.EqualTo(_golden["plan " + name].Where(l => !l.StartsWith("villain|")).ToList()), name);
         }
@@ -200,11 +299,28 @@ namespace Codigames.Kingdom.Tests.Battles
             var expected = _golden["fight " + name];
             var actual = log.Events.Select(Line).ToList();
             for (var i = 0; i < Math.Min(expected.Count, actual.Count); i++)
-                Assert.That(actual[i], Is.EqualTo(expected[i]), $"{name}, event {i}");
+                Assert.That(Same(actual[i], expected[i]), Is.True, $"{name}, event {i}:\n  ours: {actual[i]}\n  web:  {expected[i]}");
             Assert.That(actual.Count, Is.EqualTo(expected.Count), name);
         }
 
-        private static string N(double v) => v.ToString(CultureInfo.InvariantCulture);
+        private static string N(double v) => v.ToString("R", CultureInfo.InvariantCulture);
+
+        // Two lines say the same when every field does: a number by its value, so a double printed by another engine's
+        // shortest form still matches.
+        private static bool Same(string a, string b)
+        {
+            var x = a.Split('|', ',', ';', '/');
+            var y = b.Split('|', ',', ';', '/');
+            if (x.Length != y.Length) return false;
+            for (var i = 0; i < x.Length; i++)
+            {
+                if (x[i] == y[i]) continue;
+                if (!double.TryParse(x[i], NumberStyles.Float, CultureInfo.InvariantCulture, out var p)
+                    || !double.TryParse(y[i], NumberStyles.Float, CultureInfo.InvariantCulture, out var q) || p != q) return false;
+            }
+
+            return true;
+        }
 
         private static string Ref(SlotRef r) => r.ToString();
 
@@ -212,16 +328,16 @@ namespace Codigames.Kingdom.Tests.Battles
         {
             BattleEventKind.Start => $"start|{e.Ours.Count + e.Theirs.Count}|" + string.Join("/", new[] { e.Ours, e.Theirs }.Select(side =>
                 string.Join(";", side.Select(p => $"{p.Slot.Id},{(p.Slot.IsHero ? "hero" : "troop")},{(p.Slot.Row == Row.Front ? "front" : "back")},{p.Slot.Type},"
-                                                  + $"{p.Slot.Troop ?? "-"},{p.Slot.Count},{p.Slot.Frontage},{p.Slot.Atk},{p.Slot.Dmg},{N(p.Slot.Def)},{p.Slot.HpUnit},"
-                                                  + $"{p.Slot.HpPool},{p.Slot.Cooldown},{p.Slot.Power},{p.At.X},{p.At.Y}")))),
+                                                  + $"{p.Slot.Troop ?? "-"},{p.Slot.Count},{p.Slot.Frontage},{p.Slot.Atk},{N(p.Slot.Dmg)},{N(p.Slot.Def)},{N(p.Slot.HpUnit)},"
+                                                  + $"{N(p.Slot.HpPool)},{p.Slot.Cooldown},{p.Slot.Power},{p.At.X},{p.At.Y}")))),
             BattleEventKind.Move => $"move|{e.Tick}|{Ref(e.At)}|{e.X}|{e.Y}",
             BattleEventKind.Attack => $"attack|{e.Tick}|{Ref(e.From)}|{Ref(e.At)}|{e.Hits}|{e.Dealt}|{e.Skill ?? "-"}|{e.Absorbed}|"
                                       + (e.Edge > 0 ? "adv" : e.Edge < 0 ? "dis" : "-"),
             BattleEventKind.Skill => $"skill|{e.Tick}|{Ref(e.From)}|{e.Skill}",
-            BattleEventKind.Healed => $"healed|{e.Tick}|{Ref(e.At)}|{e.Amount}|{e.Alive}|{e.HpPool}",
+            BattleEventKind.Healed => $"healed|{e.Tick}|{Ref(e.At)}|{N(e.Healed)}|{e.Alive}|{N(e.HpPool)}",
             BattleEventKind.Shielded => $"shielded|{e.Tick}|{Ref(e.At)}|{e.Amount}",
             BattleEventKind.Dazed => $"dazed|{e.Tick}|{Ref(e.At)}|{e.Amount}",
-            BattleEventKind.TroopsLost => $"lost|{e.Tick}|{Ref(e.At)}|{e.Alive}|{e.HpPool}",
+            BattleEventKind.TroopsLost => $"lost|{e.Tick}|{Ref(e.At)}|{e.Alive}|{N(e.HpPool)}",
             BattleEventKind.SlotWiped => $"wiped|{e.Tick}|{Ref(e.At)}",
             _ => $"end|{e.Tick}|{(e.Winner == Side.Ours ? "ours" : "theirs")}|{(e.Reason == EndReason.Wiped ? "wiped" : "timeout")}",
         };

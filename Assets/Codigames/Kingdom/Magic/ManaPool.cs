@@ -14,11 +14,13 @@ namespace Codigames.Kingdom.Magic
         private readonly IBonuses _bonuses;
         private readonly IManaSources _sources;
         private readonly IBoosts _boosts;
+        private readonly Modifiers.IModifiers _modifiers;
 
         public ManaPool(ManaState state, ITreasury treasury, IManaSettings settings, IBonuses bonuses = null, IManaSources sources = null,
-            IBoosts boosts = null)
+            IBoosts boosts = null, Modifiers.IModifiers modifiers = null)
             : base(state, treasury, MANA)
         {
+            _modifiers = modifiers;
             _boosts = boosts;
             _settings = settings;
             _bonuses = bonuses;
@@ -30,7 +32,8 @@ namespace Codigames.Kingdom.Magic
             => System.Math.Round((_settings.BaseCap + (_sources?.ExtraCap ?? 0)) * _bonuses.Multiplier(TechStats.MANA_CAP),
                 System.MidpointRounding.AwayFromZero);
 
-        public override double PerHour => (_settings.BasePerHour + (_sources?.ExtraPerHour ?? 0)) * _bonuses.Multiplier(TechStats.MANA_REGEN)
+        public override double PerHour => Modifiers.ModifiersExtensions.Apply(_modifiers, "manaRegen",
+                                              (_settings.BasePerHour + (_sources?.ExtraPerHour ?? 0)) * _bonuses.Multiplier(TechStats.MANA_REGEN))
                                           * (_boosts?.Multiplier(BoostKind.Mana) ?? 1);
     }
 }

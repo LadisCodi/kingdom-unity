@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9645b9e17a3d3ba9eada4a7ee50663f7, type: 3}
+  m_Name: Bard
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Heroes.HeroAsset
+  _id: Bard
+  _name: The Bard
+  _title: Sings the road shorter
+  _art: {fileID: 21300000, guid: 03a31a1a13b13fe9caea052d6762b210, type: 3}
+  _portrait: {fileID: 21300000, guid: 9dce3f9a5404fdfac9cbfa8f96d2fe0a, type: 3}
+  _fragment: {fileID: 21300000, guid: 9888c469d6f24c3c5902a064819c75f9, type: 3}
+  _rarity: 0
+  _bagRank: 5
+  _unitType: Archer
+  _skill: WarCry
+  _skillValue: 5
+  _skillEvery: 0
+  _atk: 1
+  _dmg: 42
+  _def: 1
+  _hp: 624
+  _cooldown: 12
+  _atkPerLevel: 0.016
+  _dmgPerLevel: 1.43
+  _defPerLevel: 0.016
+  _hpPerLevel: 22.83
+  _troopDmgMult: 1.1
+  _troopHpMult: 1.05
+  _troopDefBonus: 1
+  _boonStat: 
+  _boonValue: 1

@@ -76,6 +76,7 @@ namespace Codigames.Game.Editor.WebImport
             ImportGoods();
             ImportUnits();
             ImportLairs();
+            ImportHeroes();
 
             AssetDatabase.SaveAssets();
             Debug.Log($"#Data# Imported {currencies} currencies, {buildings.Count} buildings and {technologies} technologies from the web prototype.");
@@ -247,6 +248,7 @@ namespace Codigames.Game.Editor.WebImport
                 SetStrings(so.FindProperty("_production._trains"), row.Trains);
                 SetInts(so.FindProperty("_production._armyCapPerLevel"), row.ArmyCapPerLevel);
                 SetInts(so.FindProperty("_production._bedsPerLevel"), row.BedsPerLevel);
+                SetDoubles(so.FindProperty("_production._heroXpBonusPerLevel"), row.HeroXpBonusPerLevel);
                 SetInts(so.FindProperty("_production._queueLengthPerLevel"), row.QueueLengthPerLevel);
                 SetInts(so.FindProperty("_production._maxWorkersPerLevel"), row.MaxWorkersPerLevel);
                 SetInts(so.FindProperty("_production._influenceRadiusPerLevel"), row.InfluenceRadiusPerLevel);

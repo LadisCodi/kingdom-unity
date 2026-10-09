@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Codigames.Kingdom.Modifiers;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Crews;
 using Codigames.Kingdom.Economy;
@@ -32,11 +33,14 @@ namespace Codigames.Kingdom.Lairs
         private readonly Workforce _crews;
         private readonly uint _seed;
         private readonly IBonuses _bonuses;
+        // The kingdom's modifier stack: a Legendary's boon reaches the lump.
+        private IModifiers Stack { get; }
 
         public Lairs(LairsState state, LairGround ground, ILairSettings settings, CityState city, Stores stores, Workforce crews, uint seed,
-            IBonuses bonuses = null)
+            IBonuses bonuses = null, IModifiers modifiers = null)
         {
             _bonuses = bonuses;
+            Stack = modifiers;
             _state = state;
             _ground = ground;
             _settings = settings;
@@ -78,10 +82,18 @@ namespace Codigames.Kingdom.Lairs
         public double FightXp(ILairSite lair) => Economy.Prices.RoundPrice(GarrisonOf(lair).HeroXp / Fights(lair));
 
         // What clearing it pays on top of its hoard: a fight's Hero XP, and the first-clear Knowledge lump.
+        // The last fight's Hero XP and the first-clear Knowledge lump, each raised by the spoils the party that beat it
+        // carried — Seasoned and Lore.
         public (double HeroXp, double Knowledge) ClearReward(ILairSite lair)
-            => (Economy.Prices.RoundPrice(FightXp(lair)),
-                Math.Max(0, Math.Round(_settings.FirstClearKnowledge * (_bonuses?.Multiplier(LAIR_KNOWLEDGE) ?? 1)
-                    * (_bonuses?.Multiplier(KNOWLEDGE_YIELD) ?? 1), MidpointRounding.AwayFromZero)));
+        {
+            var state = StateOf(lair.Id);
+            var lump = Math.Max(0, Math.Round(Stack.Apply(KNOWLEDGE_YIELD,
+                _bonuses.Apply(KNOWLEDGE_YIELD, _settings.FirstClearKnowledge * (_bonuses?.Multiplier(LAIR_KNOWLEDGE) ?? 1))), MidpointRounding.AwayFromZero));
+            return (Economy.Prices.RoundPrice(FightXp(lair) * (1 + (state?.SpoilsSeasoned ?? 0))),
+                Math.Round(lump * (1 + (state?.SpoilsLore ?? 0)), MidpointRounding.AwayFromZero));
+        }
+
+
 
         // Carries all it can of a material: what raids take past it is lost.
         public bool HoardFull(ILairSite lair, string currency, double now)

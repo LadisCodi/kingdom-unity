@@ -23,6 +23,7 @@ namespace Codigames.Kingdom.Quests
         private const string GOLD = "Gold";
         private const string KNOWLEDGE_YIELD = "knowledgeYield";
 
+        private readonly Modifiers.IModifiers _modifiers;
         private readonly QuestState _state;
         private readonly ICatalog<IQuestDefinition> _quests;
         private readonly IQuestGoals _goals;
@@ -36,8 +37,9 @@ namespace Codigames.Kingdom.Quests
 
         public QuestChain(QuestState state, ICatalog<IQuestDefinition> quests, IQuestGoals goals, ITreasury treasury, CityState city,
             ICatalog<IBuildingDefinition> buildings, Stores stores, Harvesting harvesting, FogOfWar fog, GroundState ground,
-            IBonuses bonuses = null, IItemGrants items = null)
+            IBonuses bonuses = null, IItemGrants items = null, Modifiers.IModifiers modifiers = null)
         {
+            _modifiers = modifiers;
             _items = items;
             _state = state;
             _quests = quests;
@@ -78,7 +80,7 @@ namespace Codigames.Kingdom.Quests
             foreach (var line in quest.Reward.Where(l => l.Value > 0)) _treasury.Add(line.Key, line.Value);
             if (quest.RewardKnowledge > 0)
             {
-                var lump = Math.Max(0, Math.Round(quest.RewardKnowledge * _bonuses.Multiplier(KNOWLEDGE_YIELD), MidpointRounding.AwayFromZero));
+                var lump = Math.Max(0, Math.Round(Modifiers.ModifiersExtensions.Apply(_modifiers, KNOWLEDGE_YIELD, quest.RewardKnowledge * _bonuses.Multiplier(KNOWLEDGE_YIELD)), MidpointRounding.AwayFromZero));
                 _treasury.Add(KnowledgeBar.KNOWLEDGE, lump);
             }
 
