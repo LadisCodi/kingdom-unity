@@ -34,10 +34,13 @@ namespace Codigames.Game.City
         private ICurrencyIcons _icons;
         private float _nextStoreCheck;
 
+        private Kingdom.Doors.Doors _doors;
+
         [Inject]
         public void Construct(CityState city, Construction construction, BuildingCollection buildings, ProvinceMap map, IClock clock,
-            NumberFormat numbers, Stores stores, ICurrencyIcons icons)
+            NumberFormat numbers, Stores stores, ICurrencyIcons icons, Kingdom.Doors.Doors doors)
         {
+            _doors = doors;
             _numbers = numbers;
             _stores = stores;
             _icons = icons;
@@ -91,7 +94,8 @@ namespace Codigames.Game.City
             {
                 if (!_views.TryGetValue(district.Id, out var view)) continue;
 
-                var ready = _stores.IsReady(district, now);
+                // Through the First Morning, the Townhall's own Gold shows no bubble.
+                var ready = _stores.IsReady(district, now) && !(_doors.FirstMorningOn && _stores.MakesItsOwn(district));
                 view.SetStore(ready, ready ? _icons.IconOf(Stores.GOLD) : null, ready && _stores.IsFull(district, now));
             }
         }

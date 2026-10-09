@@ -31,10 +31,13 @@ namespace Codigames.Game.City
         private readonly UI.Hud.RewardFlight _flight;
         private readonly UI.Hud.RewardFragments _fragments;
 
+        private readonly Kingdom.Doors.Doors _doors;
+
         public CollectInput(Stores stores, ICatalog<IBuildingDefinition> buildings, ProvinceMap map, IClock clock,
             IWorldFeedbackService feedback, ICurrencyIcons icons, NumberFormat numbers, ISoundService sounds,
-            Feedback.TapPunch punch, UI.Hud.RewardFlight flight, UI.Hud.RewardFragments fragments)
+            Feedback.TapPunch punch, UI.Hud.RewardFlight flight, UI.Hud.RewardFragments fragments, Kingdom.Doors.Doors doors)
         {
+            _doors = doors;
             _punch = punch;
             _flight = flight;
             _fragments = fragments;
@@ -52,7 +55,7 @@ namespace Codigames.Game.City
         public bool TryCollect(DistrictState district)
         {
             var now = _clock.NowMs;
-            if (!_stores.IsReady(district, now)) return false;
+            if (!_stores.IsReady(district, now) || (_doors.FirstMorningOn && _stores.MakesItsOwn(district))) return false;
 
             var houses = _stores.Residents(district) > 0;
             var moved = _stores.Collect(district, now);

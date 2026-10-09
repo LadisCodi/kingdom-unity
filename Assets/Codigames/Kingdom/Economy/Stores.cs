@@ -58,6 +58,10 @@ namespace Codigames.Kingdom.Economy
             return own + rent;
         }
 
+        // What a building makes by itself a minute (the Townhall's own Gold), with nobody in it.
+        public bool MakesItsOwn(DistrictState district)
+            => district.Built && At(_buildings.Get(district.DefinitionId).Production.GoldPerMinutePerLevel, district.Level) > 0;
+
         public double Capacity(DistrictState district)
             => At(_buildings.Get(district.DefinitionId).Production.StorageCapacityPerLevel, district.Level)
                * _bonuses.Multiplier(TechStats.STORAGE_CAPACITY, TargetKind.District, district.DefinitionId);

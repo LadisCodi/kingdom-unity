@@ -22,12 +22,15 @@ namespace Codigames.Game.UI.Presenters
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
 
+        private readonly Kingdom.Doors.Doors _doors;
+
         private HeaderMenu _header;
         private double _shownAt = double.MinValue;
 
         public KnowledgeTabPresenter(IMenuViewFactory views, UIManager ui, KnowledgeBar bar, IClock clock, NumberFormat numbers,
-            Localizer localizer)
+            Localizer localizer, Kingdom.Doors.Doors doors)
         {
+            _doors = doors;
             _views = views;
             _ui = ui;
             _bar = bar;
@@ -58,6 +61,9 @@ namespace Codigames.Game.UI.Presenters
         public void Tick()
         {
             if (_header == null || _header.Knowledge == null) return;
+
+            // A readout with nothing to read yet is absent: the bar comes with the books.
+            _header.Knowledge.gameObject.SetActive(_doors.IsOpen(Kingdom.Doors.DoorId.Knowledge));
 
             var now = _clock.NowMs;
             if (now - _shownAt < REFRESH_MS) return;
