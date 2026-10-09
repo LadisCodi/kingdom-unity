@@ -8,20 +8,22 @@ using ModuleVector2 = Codigames.Modules.Core.Vector2;
 namespace Codigames.Game.Cameras
 {
     // Reports touches and the mouse wheel to the camera module: one finger drags, two pinch. A finger that
-    // starts over the UI moves nothing.
+    // starts over the UI, or that the map's drag handler takes (MapGestures), moves nothing.
     public class CameraInputHook : MonoBehaviour
     {
         // LeanTouch's simulated fingers (mouse pinch emulation) carry these indices.
         private const int SIMULATED_FINGER = 42;
 
         private CameraController _camera;
+        private Map.MapGestures _gestures;
         private LeanFinger _dragFinger;
         private bool _wasPinching;
 
         [Inject]
-        public void Construct(CameraController camera)
+        public void Construct(CameraController camera, Map.MapGestures gestures)
         {
             _camera = camera;
+            _gestures = gestures;
         }
 
         private void OnEnable()
@@ -93,7 +95,7 @@ namespace Codigames.Game.Cameras
 
         private bool IsDragFinger(LeanFinger finger)
             => finger != null && !finger.StartedOverGui && Mathf.Abs(finger.Index) != SIMULATED_FINGER
-               && (_dragFinger == null || finger == _dragFinger);
+               && (_dragFinger == null || finger == _dragFinger) && !_gestures.Claims(finger);
 
         private static ModuleVector2 ToModule(UnityEngine.Vector2 v) => new(v.x, v.y);
     }

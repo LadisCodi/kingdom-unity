@@ -5,6 +5,7 @@ using Codigames.Game.Map;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Modules.Clock;
+using Codigames.Modules.Localization;
 using UnityEngine;
 using VContainer;
 
@@ -24,10 +25,13 @@ namespace Codigames.Game.City
         private BuildingCollection _buildings;
         private ProvinceMap _map;
         private IClock _clock;
+        private NumberFormat _numbers;
 
         [Inject]
-        public void Construct(CityState city, Construction construction, BuildingCollection buildings, ProvinceMap map, IClock clock)
+        public void Construct(CityState city, Construction construction, BuildingCollection buildings, ProvinceMap map, IClock clock,
+            NumberFormat numbers)
         {
+            _numbers = numbers;
             _city = city;
             _construction = construction;
             _buildings = buildings;
@@ -60,8 +64,10 @@ namespace Codigames.Game.City
             var now = _clock.NowMs;
             foreach (var job in _city.Jobs)
             {
-                if (_views.TryGetValue(job.DistrictId, out var view))
-                    view.SetProgress((float)((now - job.StartedAt) / (job.Seconds * 1000)));
+                if (!_views.TryGetValue(job.DistrictId, out var view)) continue;
+
+                var remaining = System.Math.Max(0, job.StartedAt + job.Seconds * 1000 - now) / 1000;
+                view.SetProgress((float)((now - job.StartedAt) / (job.Seconds * 1000)), _numbers.Duration(System.Math.Ceiling(remaining)));
             }
         }
 

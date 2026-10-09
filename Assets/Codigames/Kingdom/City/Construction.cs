@@ -79,13 +79,13 @@ namespace Codigames.Kingdom.City
                 : ConstructionRefusal.CannotAfford;
         }
 
-        // One more of a kind, as the build menu shows it: its wait is the one on the plot nearest the Townhall.
-        public BuildOffer Offer(string definitionId)
+        // One more of a kind, its wait on a plot: the one given, else the one nearest the Townhall.
+        public BuildOffer Offer(string definitionId, Vector2Int? at = null)
         {
             var building = _buildings.Get(definitionId);
             var count = CityQueries.Count(_city, definitionId);
-            var nearest = _placement.Nearest(definitionId);
-            var rings = nearest.HasValue ? CityQueries.DistanceFromTownhall(_city, _buildings, _settings, nearest.Value) : 0;
+            var plot = at ?? _placement.Nearest(definitionId);
+            var rings = plot.HasValue ? CityQueries.DistanceFromTownhall(_city, _buildings, _settings, plot.Value) : 0;
 
             return new BuildOffer(definitionId, count + 1, BuildingPricing.Currencies(building, count + 1, 1),
                 BuildingDurations.BuildSeconds(building.Duration, count, rings), count,
