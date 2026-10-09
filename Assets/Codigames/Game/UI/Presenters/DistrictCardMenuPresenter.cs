@@ -96,6 +96,7 @@ namespace Codigames.Game.UI.Presenters
         protected override void SubscribeToViewEventsInternal(DistrictCardMenu view)
         {
             view.CloseTapped += RequestClose;
+            view.MoveTapped += OnMove;
             view.UpgradeTapped += OnUpgrade;
             view.TrainTapped += OnTrain;
             view.CrewMinusTapped += OnCrewMinus;
@@ -105,10 +106,20 @@ namespace Codigames.Game.UI.Presenters
         protected override void UnsubscribeFromViewEventsInternal(DistrictCardMenu view)
         {
             view.CloseTapped -= RequestClose;
+            view.MoveTapped -= OnMove;
             view.UpgradeTapped -= OnUpgrade;
             view.TrainTapped -= OnTrain;
             view.CrewMinusTapped -= OnCrewMinus;
             view.CrewPlusTapped -= OnCrewPlus;
+        }
+
+        // Moving it: the card makes way for the ghost, and comes back when it is put down.
+        private async void OnMove()
+        {
+            var district = District;
+            if (district == null) return;
+            await _ui.CloseAll();
+            _ = _ui.ShowMenu<PlacementMenu, PlacementOrder>(PlacementOrder.MoveDistrict(district.Id, district.DefinitionId));
         }
 
         private void OnTreasuryChanged(string currency, double amount) => Refresh();
@@ -207,7 +218,7 @@ namespace Codigames.Game.UI.Presenters
 
                 View.Show(new DistrictCardData(name, ordinal, level, building.ArtFor(district.Level), promise, true,
                     doing + " · " + _numbers.Duration(Math.Ceiling(remaining)), progress, string.Empty,
-                    Array.Empty<CostChipData>(), false, string.Empty, store, storeFull, Training(district, now), Crew(district)));
+                    Array.Empty<CostChipData>(), false, string.Empty, store, storeFull, Training(district, now), Crew(district)) { Movable = building.Buildable });
                 return;
             }
 
@@ -221,7 +232,7 @@ namespace Codigames.Game.UI.Presenters
                 : _localizer.Tr("Lv {n}", ("n", _numbers.Number(offer.TargetLevel))) + " · " + _numbers.Duration(offer.Seconds);
 
             View.Show(new DistrictCardData(name, ordinal, level, building.ArtFor(district.Level), promise, false,
-                string.Empty, 0, next, price, offer.Refusal == ConstructionRefusal.None, Reason(offer), store, storeFull, Training(district, now), Crew(district)));
+                string.Empty, 0, next, price, offer.Refusal == ConstructionRefusal.None, Reason(offer), store, storeFull, Training(district, now), Crew(district)) { Movable = building.Buildable });
         }
 
         private string Reason(UpgradeOffer offer) => offer.Refusal switch

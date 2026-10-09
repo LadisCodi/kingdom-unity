@@ -16,6 +16,7 @@ namespace Codigames.Game.UI.Menus
     {
         [SerializeField] private TMP_Text _title;
         [SerializeField] private Button _close;
+        [SerializeField, Tooltip("Left of Close: it moves the building; hidden for one that never moves.")] private Button _move;
         [SerializeField] private Image _art;
         [SerializeField] private AspectRatioFitter _artFit;
         [SerializeField] private TMP_Text _level;
@@ -54,6 +55,7 @@ namespace Codigames.Game.UI.Menus
         private readonly List<CostChip> _trainChips = new();
 
         public event Action CloseTapped;
+        public event Action MoveTapped;
         public event Action UpgradeTapped;
         public event Action TrainTapped;
         public event Action CrewMinusTapped;
@@ -63,6 +65,7 @@ namespace Codigames.Game.UI.Menus
         protected override void InitializeInternal()
         {
             CoachTarget.Tag(_close, "close", "card:close");
+            CoachTarget.Tag(_move, "card:move");
             CoachTarget.Tag(_upgrade, "card:upgrade", "upgrade-go");
             CoachTarget.Tag(_train, "card:train");
             CoachTarget.Tag(_crewPlus, "card:workers");
@@ -70,6 +73,7 @@ namespace Codigames.Game.UI.Menus
 
         public void Show(DistrictCardData card)
         {
+            _move.gameObject.SetActive(card.Movable);
             _title.text = string.IsNullOrEmpty(card.Ordinal)
                 ? card.Name
                 : $"{card.Name}<size=75%><color=#{ColorUtility.ToHtmlStringRGBA(_ordinalColor)}> {card.Ordinal}</color></size>";
@@ -133,6 +137,7 @@ namespace Codigames.Game.UI.Menus
         protected override void SubscribeToEventsInternal()
         {
             _close.onClick.AddListener(OnClose);
+            _move.onClick.AddListener(OnMove);
             _upgrade.onClick.AddListener(OnUpgrade);
             _train.onClick.AddListener(OnTrain);
             _crewMinus.onClick.AddListener(OnCrewMinus);
@@ -142,6 +147,7 @@ namespace Codigames.Game.UI.Menus
         protected override void UnsubscribeFromEventsInternal()
         {
             _close.onClick.RemoveListener(OnClose);
+            _move.onClick.RemoveListener(OnMove);
             _upgrade.onClick.RemoveListener(OnUpgrade);
             _train.onClick.RemoveListener(OnTrain);
             _crewMinus.onClick.RemoveListener(OnCrewMinus);
@@ -149,6 +155,7 @@ namespace Codigames.Game.UI.Menus
         }
 
         private void OnClose() => CloseTapped?.Invoke();
+        private void OnMove() => MoveTapped?.Invoke();
         private void OnUpgrade() => UpgradeTapped?.Invoke();
         private void OnTrain() => TrainTapped?.Invoke();
         private void OnCrewMinus() => CrewMinusTapped?.Invoke();

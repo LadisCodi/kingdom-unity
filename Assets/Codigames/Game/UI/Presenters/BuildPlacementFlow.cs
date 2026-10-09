@@ -1,4 +1,5 @@
 using System;
+using Codigames.Game.UI.Data;
 using Codigames.Game.UI.Menus;
 using Codigames.Modules.UI;
 using VContainer.Unity;
@@ -22,6 +23,6 @@ namespace Codigames.Game.UI.Presenters
 
         public void Dispose() => _buildMenu.Picked -= OnPicked;
 
-        private void OnPicked(string definitionId) => _ = _ui.ShowMenu<PlacementMenu, string>(definitionId);
+        private void OnPicked(string definitionId) => _ = _ui.ShowMenu<PlacementMenu, PlacementOrder>(PlacementOrder.Build(definitionId));
     }
 }

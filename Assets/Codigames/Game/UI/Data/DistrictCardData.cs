@@ -27,6 +27,9 @@ namespace Codigames.Game.UI.Data
             Reason = reason;
         }
 
+        // It may be moved: everything the player built, never the Townhall.
+        public bool Movable { get; set; }
+
         public string Name { get; }
         public string Ordinal { get; }
 

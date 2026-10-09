@@ -74,6 +74,7 @@ namespace Codigames.Game.Session
                 resolver.Resolve<ManaPool>(), resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IRevealedGround>(),
                 resolver.Resolve<IResearchGates>(), resolver.Resolve<IBonuses>()), Lifetime.Singleton).AsSelf().As<IPlanting>();
             builder.Register<ResearchEffects>(Lifetime.Singleton);
+            builder.Register<Transplanting>(Lifetime.Singleton);
             builder.Register<Production>(Lifetime.Singleton).As<IProduction>();
             builder.Register<SiteManaSources>(Lifetime.Singleton).As<IManaSources>();
             builder.Register<Sighting>(Lifetime.Singleton);

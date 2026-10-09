@@ -111,6 +111,9 @@ namespace Codigames.Game.UI.Stage
         // A scene is on the stage.
         public bool IsPlaying => _playing != null;
 
+        // May a long press pick something up? Not while a line waits for a tap or holds anything but the map.
+        public bool AllowsHold => _playing == null || (!WaitsForTap && !InGrace && (LockNow == LineLock.None || LockNow == LineLock.Map));
+
         private ISceneLine Line => _playing?.Line;
 
         // A line that waits for a tap takes one anywhere, and keeps it.

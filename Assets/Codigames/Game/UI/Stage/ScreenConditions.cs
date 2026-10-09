@@ -9,7 +9,7 @@ using Codigames.Modules.UI;
 namespace Codigames.Game.UI.Stage
 {
     // The conditions the screen answers: which sheet is open, what is being placed, which card is up, what control
-    // is on screen, how many taps since a line began. The world board and moving a building are not in the game
+    // is on screen, how many taps since a line began, what is placed or moved. The world board is not in the game
     // yet: never true.
     public class ScreenConditions : IConditionReader
     {
@@ -48,11 +48,12 @@ namespace Codigames.Game.UI.Stage
                 // Back on the map: no sheet, no card, no placing.
                 ConditionKind.MainScreen => !_ui.HasOverlayOpen,
                 ConditionKind.Ui => _targets.Find(c.Target) != null,
-                ConditionKind.Placing => _placement.Shows(c.Target),
+                ConditionKind.Placing => _placement.PlacingId == c.Target,
+                ConditionKind.Moving => _placement.MovingId == c.Target,
                 ConditionKind.Taps => _taps.Taps - tapsAtStart >= c.AtLeast(),
                 // A ruin's card open, or the ruin already repaired.
                 ConditionKind.SiteOpen => _sites.Repaired.Contains(c.Target) || _ruinCard.Shows(c.Target),
-                ConditionKind.Moving or ConditionKind.GhostReaches or ConditionKind.WorldOpen => false,
+                ConditionKind.GhostReaches or ConditionKind.WorldOpen => false,
                 _ => null,
             };
 

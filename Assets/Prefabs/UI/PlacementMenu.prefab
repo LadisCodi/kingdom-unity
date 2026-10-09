@@ -363,7 +363,6 @@ GameObject:
   - component: {fileID: 1725503655999097800}
   - component: {fileID: 8008330863420916000}
   - component: {fileID: 51554753434586003}
-  - component: {fileID: 1825770763871529885}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -490,18 +489,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &1825770763871529885
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3733719408117108961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 427badabe3ac899188e0b3ad56cca91d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.UI.Widgets.LocalizedText
 --- !u!1 &4159943580380936572
 GameObject:
   m_ObjectHideFlags: 0
