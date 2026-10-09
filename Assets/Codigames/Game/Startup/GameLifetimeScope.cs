@@ -22,6 +22,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private ProvinceMap _province;
         [SerializeField] private CityView _cityView;
         [SerializeField] private GroundView _groundView;
+        [SerializeField] private GhostView _ghostView;
         [SerializeField] private MenuCatalog _menuCatalog;
         [SerializeField] private WorldFeedbackCatalog _worldFeedbackCatalog;
         [SerializeField] private QuickInfoMessageSettings _quickInfoMessageSettings;
@@ -36,6 +37,8 @@ namespace Codigames.Game.Startup
             KingdomInstaller.Install(builder);
             builder.RegisterComponent(_cityView);
             builder.RegisterComponent(_groundView);
+            builder.RegisterComponent(_ghostView);
+            builder.RegisterEntryPoint<MapGestures>().AsSelf();
             RegisterUI(builder);
             RegisterFeedback(builder);
             RegisterCamera(builder);
@@ -56,6 +59,8 @@ namespace Codigames.Game.Startup
             builder.Register<HeaderMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<NavMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<BuildMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
+            builder.Register<PlacementMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.RegisterEntryPoint<BuildPlacementFlow>();
         }
 
         private void RegisterFeedback(IContainerBuilder builder)

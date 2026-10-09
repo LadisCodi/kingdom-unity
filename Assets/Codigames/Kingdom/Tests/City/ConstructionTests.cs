@@ -166,5 +166,17 @@ namespace Codigames.Kingdom.Tests.City
 
             Assert.That(fixture.Construction.Offer("Housing").Refusal, Is.EqualTo(ConstructionRefusal.CannotAfford));
         }
+    
+
+        [Test]
+        public void Offer_ShouldTimeTheWaitOnTheGivenPlot()
+        {
+            var house = new BuildingBuilder().WithId("Housing").WithLevelPrices(BuildingBuilder.Price("Gold", 10))
+                .WithBuildSeconds(100).WithBuildGrowth(1, 2).Build();
+            var fixture = new CityFixture(house);
+
+            Assert.That(fixture.Construction.Offer("Housing").Seconds, Is.EqualTo(200));
+            Assert.That(fixture.Construction.Offer("Housing", new Vector2Int(4, 0)).Seconds, Is.EqualTo(100 * 8));
+        }
     }
 }

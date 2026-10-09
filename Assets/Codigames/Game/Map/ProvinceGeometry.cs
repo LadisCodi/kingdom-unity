@@ -19,5 +19,16 @@ namespace Codigames.Game.Map
             var rightX = right.x + cell.x / 2f;
             return (new Vector3((leftX + rightX) / 2f, bottom.y - cell.y / 2f, 0f), rightX - leftX);
         }
+
+        // The footprint's diamond, corner by corner clockwise from the top.
+        public static Vector3[] Corners(ProvinceMap map, ModuleVector2Int anchor, int width, int height)
+        {
+            var cell = map.Grid.cellSize;
+            var top = map.CellCentre(anchor) + new Vector3(0f, cell.y / 2f, 0f);
+            var right = map.CellCentre(new ModuleVector2Int(anchor.X + width - 1, anchor.Y)) + new Vector3(cell.x / 2f, 0f, 0f);
+            var bottom = map.CellCentre(new ModuleVector2Int(anchor.X + width - 1, anchor.Y + height - 1)) - new Vector3(0f, cell.y / 2f, 0f);
+            var left = map.CellCentre(new ModuleVector2Int(anchor.X, anchor.Y + height - 1)) - new Vector3(cell.x / 2f, 0f, 0f);
+            return new[] { top, right, bottom, left };
+        }
     }
 }

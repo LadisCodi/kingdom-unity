@@ -12,6 +12,9 @@ namespace Codigames.Game.Editor.Art
     //   a white rounded plate and its rim, generated, tinted wherever a card or a chip needs one.
     public class ArtImportRules : AssetPostprocessor
     {
+        // Every label button's slab: one 557 × 188 canvas, its rounded ends and lip in the slices.
+        private static readonly Vector4 SLAB = new(90, 90, 90, 70);
+
         // The border each sliced piece keeps, in source pixels (left, bottom, right, top), as the web slices it.
         private static readonly System.Collections.Generic.Dictionary<string, Vector4> SLICED = new()
         {
@@ -20,6 +23,7 @@ namespace Codigames.Game.Editor.Art
             ["nav-tab"] = new Vector4(30, 50, 30, 30), ["nav-tab-down"] = new Vector4(30, 50, 30, 30),
             ["window-frame"] = new Vector4(64, 64, 64, 64), ["window-header"] = Ends(60),
             ["plate-fill"] = new Vector4(26, 26, 26, 26), ["plate-rim"] = new Vector4(26, 26, 26, 26),
+            ["btn-paint-green"] = SLAB, ["btn-paint-green-down"] = SLAB, ["btn-paint-green-off"] = SLAB,
         };
 
         private static Vector4 Ends(int width) => new(width, 0, width, 0);

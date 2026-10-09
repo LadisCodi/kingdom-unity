@@ -96,6 +96,19 @@ namespace Codigames.Modules.UI.Tests
         }
 
         [Test]
+        public async Task CloseAll_ShouldCloseTheStackWithoutRevealingIt()
+        {
+            await _ui.ShowMenu<HeroesView>();
+            await _ui.ShowMenu<ShopView>();
+
+            await _ui.CloseAll();
+
+            Assert.That(_shop.IsShown, Is.False);
+            Assert.That(_heroes.IsShown, Is.False);
+            Assert.That(_ui.HasOverlayOpen, Is.False);
+        }
+
+        [Test]
         public void ShowMenu_ShouldRefuseAMenuWithNoPresenter()
         {
             var ui = new UIManager(() => new List<IMenuPresenter>(), new Groups());

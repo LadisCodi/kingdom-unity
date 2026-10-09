@@ -254,6 +254,9 @@ Tools/                     outside Unity: PureTests, Codegen, WebData (the web's
 - The city is drawn by `CityView` (a `DistrictView` per district: its tier's
   art on its plot, faint with the web's wood-and-glass bar while it is built)
   and `GroundView` (the features layer kept to the ground's state).
+- Fingers on the map go through `MapGestures`: a tap names a province cell,
+  and an `IMapDragHandler` (placement's ghost) may claim a finger before the
+  camera pans with it. A finger that starts over the UI is never the map's.
 - Play in the editor always starts from `Boot` (`Game/Editor/PlayFromBoot.cs`).
 
 ## Five invariants. Breaking one is a bug even if the tests pass.

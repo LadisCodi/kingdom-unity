@@ -35,6 +35,9 @@ namespace Codigames.Game.Map
         // Where a province cell's diamond centre is in the world.
         public Vector3 CellCentre(ModuleVector2Int cell) => _grid.GetCellCenterWorld(ProvinceCoordinates.ToTilemap(cell));
 
+        // The province cell under a world point, whether or not the province holds it.
+        public ModuleVector2Int CellAt(Vector3 world) => ProvinceCoordinates.FromTilemap(_grid.WorldToCell(new Vector3(world.x, world.y, 0f)));
+
         private static Dictionary<ModuleVector2Int, string> Read(Tilemap layer)
         {
             var cells = new Dictionary<ModuleVector2Int, string>();

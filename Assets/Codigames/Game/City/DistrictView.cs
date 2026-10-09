@@ -6,6 +6,7 @@ namespace Codigames.Game.City
     public class DistrictView : MonoBehaviour
     {
         private const float UNDER_CONSTRUCTION_ALPHA = 0.55f;
+        private const float BAR_HEIGHT = 0.2f;
 
         [SerializeField] private SpriteRenderer _art;
         [SerializeField] private ProgressBarView _bar;
@@ -22,10 +23,17 @@ namespace Codigames.Game.City
             }
 
             _art.color = new Color(1f, 1f, 1f, built ? 1f : UNDER_CONSTRUCTION_ALPHA);
-            _bar.SetWidth(plotWidth * 0.8f);
+
+            // On the plot's middle, not over the art: the bar belongs to the ground being worked.
+            _bar.transform.localPosition = new Vector3(0f, plotWidth / 4f, 0f);
+            _bar.SetSize(Mathf.Max(BAR_HEIGHT * 4f, plotWidth * 0.6f), BAR_HEIGHT);
             _bar.gameObject.SetActive(!built);
         }
 
-        public void SetProgress(float fraction) => _bar.SetFraction(fraction);
+        public void SetProgress(float fraction, string remaining)
+        {
+            _bar.SetFraction(fraction);
+            _bar.SetLabel(remaining);
+        }
     }
 }

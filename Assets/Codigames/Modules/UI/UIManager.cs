@@ -74,6 +74,18 @@ namespace Codigames.Modules.UI
             if (presenter.IsShown) await Close(presenter);
         }
 
+        // Closes every closable menu at once: the top through its own hide, the ones it covered (already hidden)
+        // without being revealed. Persistent menus stay.
+        public async Task CloseAll()
+        {
+            var top = Top;
+            if (top == null) return;
+
+            _stack.Clear();
+            top.OnFocusLost();
+            await Close(top);
+        }
+
         public async Task HideAllMenus()
         {
             _stack.Clear();
