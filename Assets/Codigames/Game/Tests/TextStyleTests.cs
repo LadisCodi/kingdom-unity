@@ -24,6 +24,8 @@ namespace Codigames.Game.Tests
             "CurrencySlot/Amount",
             "HeaderMenu/KnowledgeTab/",
             "Bar/Label",
+            // A hero card's HP bar: the kit's bar under another name.
+            "Hp/Label",
             // The rank struck on its coin: sized to the coin, whatever the portrait.
             "RankCoin/Numeral",
             // A fight's floating number: its size says the blow — larger on an advantage, smaller against the chart.
@@ -37,7 +39,9 @@ namespace Codigames.Game.Tests
         private static readonly HashSet<string> DISPLAY_ROLES = new() { "Title", "Subtitle", "Heading" };
         private static readonly HashSet<string> MATERIAL_ROLES = new() { "Button", "Button Big", "Quest Button", "Tab", "Nav", "Toast", "Plaque", "Plaque Small", "Tile Count",
             // A painting's flavour line: white on its own shadowed face, over the art.
-            "Flavour" };
+            "Flavour",
+            // A hero card's pill, a stat on the stage and a rarity's ribbon: white on their plank face, over the art.
+            "Card Pill", "Stat Label", "Stat Value", "Ribbon" };
 
         [Test]
         public void TheSheet_ShouldBeTextMeshProsDefault()

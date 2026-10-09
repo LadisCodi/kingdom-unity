@@ -20,6 +20,7 @@ namespace Codigames.Game.UI.Kit
         [SerializeField] private int _press = 8;
 
         private SelectionState _state;
+        private bool _latched;
 
         public ButtonMaterial Material
         {
@@ -27,6 +28,17 @@ namespace Codigames.Game.UI.Kit
             set
             {
                 _material = value;
+                Paint(_state);
+            }
+        }
+
+        // Held pushed in, as a filter that is on (the web's is-pressed).
+        public bool Latched
+        {
+            get => _latched;
+            set
+            {
+                _latched = value;
                 Paint(_state);
             }
         }
@@ -66,7 +78,7 @@ namespace Codigames.Game.UI.Kit
             if (skin == null) return;
 
             var off = state == SelectionState.Disabled;
-            var down = state == SelectionState.Pressed;
+            var down = state == SelectionState.Pressed || _latched;
             _face.sprite = off ? skin.Off(_shape) : down ? skin.Down(_shape) : skin.Rest(_shape);
 
             if (_label != null)
