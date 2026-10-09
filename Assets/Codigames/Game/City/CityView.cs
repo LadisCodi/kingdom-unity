@@ -58,6 +58,7 @@ namespace Codigames.Game.City
             _construction.DistrictPlaced += Refresh;
             _construction.DistrictMoved += Refresh;
             _construction.JobCompleted += OnJobCompleted;
+            _construction.JobStarted += OnJobStarted;
         }
 
         private void OnDestroy()
@@ -67,6 +68,7 @@ namespace Codigames.Game.City
             _construction.DistrictPlaced -= Refresh;
             _construction.DistrictMoved -= Refresh;
             _construction.JobCompleted -= OnJobCompleted;
+            _construction.JobStarted -= OnJobStarted;
         }
 
         private void Update()
@@ -104,6 +106,12 @@ namespace Codigames.Game.City
 
         private void OnJobCompleted(ConstructionJob job, DistrictState district) => Refresh(district);
 
+        private void OnJobStarted(ConstructionJob job)
+        {
+            var district = _city.Districts.FirstOrDefault(d => d.Id == job.DistrictId);
+            if (district != null) Refresh(district);
+        }
+
         private void Refresh(DistrictState district)
         {
             if (!_views.TryGetValue(district.Id, out var view))
@@ -116,6 +124,7 @@ namespace Codigames.Game.City
             var building = _buildings.Get<BuildingAsset>(district.DefinitionId);
             var (basePosition, width) = ProvinceGeometry.Footprint(_map, district.Anchor, building.Width, building.Height);
             view.Show(building.ArtFor(district.Level), basePosition, width, district.Built && !_city.Jobs.Any(j => j.DistrictId == district.Id && j.TargetLevel == 1));
+            view.SetWorking(_city.Jobs.Any(j => j.DistrictId == district.Id));
         }
     }
 }

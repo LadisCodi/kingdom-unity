@@ -782,10 +782,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1237387555}
     m_Modifications:
+    - target: {fileID: 1847643652133509823, guid: 9ca0611c574183f1ca37d9584f572482, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2592980630927733396, guid: 9ca0611c574183f1ca37d9584f572482, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4290897140
+      objectReference: {fileID: 0}
+    - target: {fileID: 2592980630927733396, guid: 9ca0611c574183f1ca37d9584f572482, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 2735862970645442547, guid: 9ca0611c574183f1ca37d9584f572482, type: 3}
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 6678615433628975576, guid: 73a261c2e4247eb499abd7c1c1e61e1a, type: 2}
+    - target: {fileID: 2735862970645442547, guid: 9ca0611c574183f1ca37d9584f572482, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4292933375
+      objectReference: {fileID: 0}
+    - target: {fileID: 2735862970645442547, guid: 9ca0611c574183f1ca37d9584f572482, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 6137204634247371419, guid: 9ca0611c574183f1ca37d9584f572482, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4292933375
+      objectReference: {fileID: 0}
+    - target: {fileID: 6137204634247371419, guid: 9ca0611c574183f1ca37d9584f572482, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 6818584959495045757, guid: 9ca0611c574183f1ca37d9584f572482, type: 3}
       propertyPath: m_Name
       value: UnlockSplash
@@ -1806,6 +1834,7 @@ MonoBehaviour:
   _uiRoot: {fileID: 1237387551}
   _stage: {fileID: 1467622789}
   _unlockSplash: {fileID: 683152001}
+  _sownPlot: {fileID: 6879841534382463474, guid: cb27934ce3254d8b4874e05b88697acb, type: 3}
   _cameraRig: {fileID: 1480592035}
   _cameraInput: {fileID: 1480592034}
   _cameraSettings: {fileID: 11400000, guid: a1a8ecb3854c4e3959f3d5b04189ec8f, type: 2}

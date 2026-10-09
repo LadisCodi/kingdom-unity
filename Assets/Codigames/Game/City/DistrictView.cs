@@ -8,6 +8,9 @@ namespace Codigames.Game.City
         private const float UNDER_CONSTRUCTION_ALPHA = 0.55f;
         private const float BAR_HEIGHT = 0.2f;
         private const float BUBBLE_HEIGHT = 0.6f;
+        // The hammer's frame: at most this many cells wide, its top this far up the art.
+        private const float HAMMER_CELLS = 1.6f;
+        private const float HAMMER_TOP = 0.85f;
 
         private float _plotWidth = 1f;
         private Vector3 _artScale = Vector3.one;
@@ -15,6 +18,7 @@ namespace Codigames.Game.City
         [SerializeField] private SpriteRenderer _art;
         [SerializeField] private ProgressBarView _bar;
         [SerializeField] private StoreBubbleView _bubble;
+        [SerializeField] private WorkingHammer _hammer;
 
         public void Show(Sprite sprite, Vector3 basePosition, float plotWidth, bool built)
         {
@@ -31,11 +35,19 @@ namespace Codigames.Game.City
 
             _art.color = new Color(1f, 1f, 1f, built ? 1f : UNDER_CONSTRUCTION_ALPHA);
 
+            // A builder at work hammers over the art's upper half.
+            var tall = sprite != null ? sprite.rect.height / sprite.pixelsPerUnit * _artScale.y : plotWidth;
+            var hammerWidth = Mathf.Min(plotWidth, HAMMER_CELLS);
+            _hammer.Place(new Vector3(-hammerWidth / 2f, tall * HAMMER_TOP, 0f), hammerWidth, name);
+
             // On the plot's middle, not over the art: the bar belongs to the ground being worked.
             _bar.transform.localPosition = new Vector3(0f, plotWidth / 4f, 0f);
             _bar.SetSize(Mathf.Max(BAR_HEIGHT * 4f, plotWidth * 0.6f), BAR_HEIGHT);
             _bar.gameObject.SetActive(!built);
         }
+
+        // A builder is at work on it: a build or an upgrade.
+        public void SetWorking(bool working) => _hammer.gameObject.SetActive(working);
 
         // A tap's squash and stretch, about the building's feet.
         public void SetPunch(Vector2 scale) => _art.transform.localScale = new Vector3(_artScale.x * scale.x, _artScale.y * scale.y, 1f);

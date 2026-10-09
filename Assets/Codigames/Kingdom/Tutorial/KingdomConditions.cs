@@ -34,11 +34,15 @@ namespace Codigames.Kingdom.Tutorial
         private readonly KnowledgeBar _knowledge;
         private readonly Stores _stores;
         private readonly Workforce _crews;
+        private readonly ICatalog<IBuildingDefinition> _buildings;
+        private readonly IPlanting _planting;
 
         public KingdomConditions(KingdomState state, QuestChain chain, ICatalog<IQuestDefinition> quests, Researching research,
             IBookshelf shelf, Doors.Doors doors, IBuildingGroups groups, FogOfWar fog, Sighting sighting, IProvinceSites sites, Ruins ruins,
-            ManaPool mana, KnowledgeBar knowledge, Stores stores, Workforce crews)
+            ManaPool mana, KnowledgeBar knowledge, Stores stores, Workforce crews, ICatalog<IBuildingDefinition> buildings, IPlanting planting)
         {
+            _buildings = buildings;
+            _planting = planting;
             _state = state;
             _chain = chain;
             _quests = quests;
@@ -68,8 +72,8 @@ namespace Codigames.Kingdom.Tutorial
                 ConditionKind.QuestProgress => QuestDone(c.Target, q => _chain.Value(q) >= c.AtLeast()),
                 ConditionKind.TechDone => _research.IsComplete(c.Target),
                 ConditionKind.TechFilled => _research.IsComplete(c.Target) || IsFilled(c.Target),
-                ConditionKind.Placed => City.Districts.Count(d => d.DefinitionId == c.Target) >= c.AtLeast(),
-                ConditionKind.Built => City.Districts.Count(d => d.Built && d.DefinitionId == c.Target) >= c.AtLeast(),
+                ConditionKind.Placed => City.Districts.Count(d => d.DefinitionId == c.Target) + Planted(c.Target) >= c.AtLeast(),
+                ConditionKind.Built => City.Districts.Count(d => d.Built && d.DefinitionId == c.Target) + Planted(c.Target) >= c.AtLeast(),
                 ConditionKind.Upgraded => Upgraded(c),
                 ConditionKind.Population => City.Population >= c.AtLeast(),
                 // Villagers called: home or on their way.
@@ -105,6 +109,10 @@ namespace Codigames.Kingdom.Tutorial
             holds = answer ?? false;
             return answer.HasValue;
         }
+
+        // A plantable stands as its feature on the ground, never as a district.
+        private int Planted(string target)
+            => _buildings.TryGet(target, out var building) && building.Production.Plants != null ? _planting.Count(building.Production.Plants) : 0;
 
         private int TreasuresPicked => _state.Fog.TreasuresPlaced - _state.Fog.Treasures.Count;
 

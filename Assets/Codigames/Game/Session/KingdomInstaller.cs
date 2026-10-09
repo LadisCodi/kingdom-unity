@@ -72,7 +72,7 @@ namespace Codigames.Game.Session
                 resolver.Resolve<ICatalog<IFeatureDefinition>>(), resolver.Resolve<ICatalog<IHarvestSource>>(),
                 resolver.Resolve<ITerrainYields>(), resolver.Resolve<ITapSettings>(), resolver.Resolve<ITreasury>(),
                 resolver.Resolve<ManaPool>(), resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IRevealedGround>(),
-                resolver.Resolve<IResearchGates>(), resolver.Resolve<IBonuses>()), Lifetime.Singleton);
+                resolver.Resolve<IResearchGates>(), resolver.Resolve<IBonuses>()), Lifetime.Singleton).AsSelf().As<IPlanting>();
             builder.Register<ResearchEffects>(Lifetime.Singleton);
             builder.Register<Production>(Lifetime.Singleton).As<IProduction>();
             builder.Register<SiteManaSources>(Lifetime.Singleton).As<IManaSources>();

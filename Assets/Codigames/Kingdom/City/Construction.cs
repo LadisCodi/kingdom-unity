@@ -11,7 +11,8 @@ namespace Codigames.Kingdom.City
 {
     // Builds, upgrades and moves buildings. A job needs a free builder and is paid when it starts; there is no
     // waiting line and no cancelling. A job finishes at its own moment — live or in a replayed absence — so
-    // this is a timed system on the timeline.
+    // this is a timed system on the timeline. A plantable (a crop plot) is bought the same way but takes no builder
+    // and raises no district: it puts its feature on the ground, and how many of that feature stand is its count.
     public class Construction : ITimedSystem
     {
         public const string DISTRICT_PREFIX = "district";
@@ -24,10 +25,12 @@ namespace Codigames.Kingdom.City
         private readonly IConstructionSettings _settings;
         private readonly IResearchGates _gates;
         private readonly IBonuses _bonuses;
+        private readonly IPlanting _planting;
 
         public Construction(CityState city, ITreasury treasury, Placement placement, ICatalog<IBuildingDefinition> buildings,
-            IConstructionSettings settings, IResearchGates gates = null, IBonuses bonuses = null)
+            IConstructionSettings settings, IResearchGates gates = null, IBonuses bonuses = null, IPlanting planting = null)
         {
+            _planting = planting;
             _gates = gates;
             _bonuses = bonuses;
             _city = city;
@@ -43,6 +46,14 @@ namespace Codigames.Kingdom.City
         // A job is about to finish, at its own moment: the district is still what it was.
         public event Action<ConstructionJob, DistrictState> JobCompleting;
         public event Action<ConstructionJob, DistrictState> JobCompleted;
+        // A plantable put on the ground: its definition and its cell.
+        public event Action<string, Vector2Int> Planted;
+
+        public static bool IsPlantable(IBuildingDefinition building) => building.Production.Plants != null;
+
+        // How many of a kind stand: districts, or for a plantable its feature on the ground.
+        public int CountOf(IBuildingDefinition building)
+            => IsPlantable(building) ? _planting?.Count(building.Production.Plants) ?? 0 : CityQueries.Count(_city, building.Id);
 
         public ConstructionRefusal Build(string definitionId, Vector2Int anchor, double now)
         {
@@ -51,8 +62,9 @@ namespace Codigames.Kingdom.City
             if (_placement.Check(definitionId, anchor) != PlacementProblem.None) return ConstructionRefusal.Placement;
 
             var building = _buildings.Get(definitionId);
-            var ordinal = CityQueries.Count(_city, definitionId) + 1;
+            var ordinal = CountOf(building) + 1;
             if (!_treasury.TryPay(BuildingPricing.Currencies(building, ordinal, 1))) return ConstructionRefusal.CannotAfford;
+            if (IsPlantable(building)) return Plant(building, anchor, now);
 
             var district = Place(definitionId, ordinal, anchor);
 
@@ -69,8 +81,10 @@ namespace Codigames.Kingdom.City
             if (refusal != ConstructionRefusal.None) return refusal;
 
             var building = _buildings.Get(definitionId);
-            var ordinal = CityQueries.Count(_city, definitionId) + 1;
+            var ordinal = CountOf(building) + 1;
             if (!_treasury.TryPay(BuildingPricing.Currencies(building, ordinal, 1))) return ConstructionRefusal.CannotAfford;
+            // A plot's repair is its planting: it grows for its source's growth, not a repair's wait.
+            if (IsPlantable(building)) return Plant(building, anchor, now);
 
             var district = Place(definitionId, ordinal, anchor);
             var rings = CityQueries.DistanceFromTownhall(_city, _buildings, _settings, anchor);
@@ -83,10 +97,10 @@ namespace Codigames.Kingdom.City
         {
             if (!_buildings.TryGet(definitionId, out var building)) return ConstructionRefusal.NotFound;
 
-            var count = CityQueries.Count(_city, definitionId);
+            var count = CountOf(building);
             var cap = MaxCount(building);
             if (cap.HasValue && count >= cap.Value) return ConstructionRefusal.AtCap;
-            if (!CityQueries.HasFreeBuilder(_city)) return ConstructionRefusal.NoFreeBuilder;
+            if (!IsPlantable(building) && !CityQueries.HasFreeBuilder(_city)) return ConstructionRefusal.NoFreeBuilder;
 
             return _treasury.CanAfford(BuildingPricing.Currencies(building, count + 1, 1))
                 ? ConstructionRefusal.None
@@ -100,10 +114,10 @@ namespace Codigames.Kingdom.City
             if (!building.Buildable) return ConstructionRefusal.NotBuildable;
             if (MissingTech(_gates?.DistrictTech(definitionId)) != null) return ConstructionRefusal.NeedsResearch;
 
-            var count = CityQueries.Count(_city, definitionId);
+            var count = CountOf(building);
             var cap = MaxCount(building);
             if (cap.HasValue && count >= cap.Value) return ConstructionRefusal.AtCap;
-            if (!CityQueries.HasFreeBuilder(_city)) return ConstructionRefusal.NoFreeBuilder;
+            if (!IsPlantable(building) && !CityQueries.HasFreeBuilder(_city)) return ConstructionRefusal.NoFreeBuilder;
 
             return _treasury.CanAfford(BuildingPricing.Currencies(building, count + 1, 1))
                 ? ConstructionRefusal.None
@@ -114,7 +128,7 @@ namespace Codigames.Kingdom.City
         public BuildOffer Offer(string definitionId, Vector2Int? at = null)
         {
             var building = _buildings.Get(definitionId);
-            var count = CityQueries.Count(_city, definitionId);
+            var count = CountOf(building);
             var plot = at ?? _placement.Nearest(definitionId);
             var rings = plot.HasValue ? CityQueries.DistanceFromTownhall(_city, _buildings, _settings, plot.Value) : 0;
 
@@ -244,6 +258,13 @@ namespace Codigames.Kingdom.City
 
         public void RunUntil(double time)
         {
+        }
+
+        private ConstructionRefusal Plant(IBuildingDefinition building, Vector2Int anchor, double now)
+        {
+            _planting?.Plant(building.Production.Plants, anchor, now);
+            Planted?.Invoke(building.Id, anchor);
+            return ConstructionRefusal.None;
         }
 
         private DistrictState Place(string definitionId, int ordinal, Vector2Int anchor)

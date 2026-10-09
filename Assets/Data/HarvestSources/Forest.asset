@@ -19,3 +19,4 @@ MonoBehaviour:
   _stock: 10
   _recoverySeconds: 180
   _respawnSeconds: 0
+  _growSeconds: 86400

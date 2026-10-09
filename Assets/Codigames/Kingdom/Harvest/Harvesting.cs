@@ -20,7 +20,7 @@ namespace Codigames.Kingdom.Harvest
     // cell's own rhythm, pays at least one unit (a fraction owed is carried to the next tap) and never more than
     // the cell holds. Emptied, a forest or a crop grows back in place; a bush, a herd or a shoal is gone, and
     // comes back next to where it stood. Both happen at their own moments, so this is on the timeline.
-    public class Harvesting : ITimedSystem
+    public class Harvesting : ITimedSystem, IPlanting
     {
         private const string RESPAWN_PREFIX = "respawn";
         private const double MIN_RECOVERY_MS = 1000;
@@ -155,6 +155,44 @@ namespace Codigames.Kingdom.Harvest
             return Draw(cell, source, want, now, out _);
         }
 
+        public int Count(string feature) => _ground.Features.Values.Count(f => f == feature);
+
+        // A planted feature lands growing for its source's growth, flat: an emptied cell whose wait is its growth,
+        // which cannot be tapped or worked and comes back full. With no growth it is full at once.
+        public void Plant(string feature, Vector2Int cell, double now)
+        {
+            _ground.Features[cell] = feature;
+            var source = _features.TryGet(feature, out var definition) && definition.Source != null
+                ? Source(definition.Source)
+                : null;
+            var growMs = (source?.GrowSeconds ?? 0) * 1000;
+            if (growMs <= 0) _state.Depots.Remove(cell);
+            else _state.Depots[cell] = new CellDepot { Units = 0, ExhaustedUntil = now + growMs, WaitMs = growMs, Growing = true };
+            FeatureAppeared?.Invoke(cell, feature);
+            DepotChanged?.Invoke(cell);
+        }
+
+        // Planted or moved and still coming up.
+        public bool IsGrowing(Vector2Int cell, double now)
+            => _state.Depots.TryGetValue(cell, out var depot) && depot.Growing && depot.ExhaustedUntil > now;
+
+        // How far through its wait an emptied or growing cell is, 0 to 1; null when it is not waiting.
+        public double? Regrowth(Vector2Int cell, double now)
+        {
+            if (!_state.Depots.TryGetValue(cell, out var depot) || !(depot.ExhaustedUntil > now)) return null;
+            if (depot.WaitMs <= 0) return 0;
+            return Math.Clamp(1 - (depot.ExhaustedUntil.Value - now) / depot.WaitMs, 0, 1);
+        }
+
+        // What is left of a cell's stock, 0 to 1: 1 for one never drawn on, or bedrock.
+        public double StockLeft(Vector2Int cell)
+        {
+            var source = SourceAt(cell);
+            if (source == null || source.Stock <= 0 || !_state.Depots.TryGetValue(cell, out var depot)) return 1;
+            var full = FullStock(cell, source);
+            return full <= 0 ? 1 : Math.Clamp((double)depot.Units / full, 0, 1);
+        }
+
         // When an emptied cell is full again; null when it is not empty.
         public double? RecoversAt(Vector2Int cell) => ExhaustedUntil(cell);
 
@@ -220,7 +258,9 @@ namespace Codigames.Kingdom.Harvest
             if (source.RecoverySeconds > 0)
             {
                 var speed = Math.Max(1, _bonuses.Multiplier(TechStats.REGROWTH_SPEED, TargetKind.Harvest, source.Id));
-                _state.Depots[cell].ExhaustedUntil = now + Math.Max(MIN_RECOVERY_MS, source.RecoverySeconds * 1000 / speed);
+                var wait = Math.Max(MIN_RECOVERY_MS, source.RecoverySeconds * 1000 / speed);
+                _state.Depots[cell].ExhaustedUntil = now + wait;
+                _state.Depots[cell].WaitMs = wait;
                 DepotChanged?.Invoke(cell);
                 return;
             }

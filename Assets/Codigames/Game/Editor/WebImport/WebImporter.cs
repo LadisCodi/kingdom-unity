@@ -153,6 +153,7 @@ namespace Codigames.Game.Editor.WebImport
                 SetDoubles(so.FindProperty("_production._taxBonusPerLevel"), row.TaxBonusPerLevel);
                 SetStrings(so.FindProperty("_production._harvestSources"), row.HarvestSources);
                 so.FindProperty("_production._harmonySupply").doubleValue = row.HarmonySupply;
+                so.FindProperty("_production._plants").stringValue = row.Plants ?? "";
                 SetInts(so.FindProperty("_production._maxWorkersPerLevel"), row.MaxWorkersPerLevel);
                 SetInts(so.FindProperty("_production._influenceRadiusPerLevel"), row.InfluenceRadiusPerLevel);
                 SetDoubles(so.FindProperty("_production._strikeSpeedPerLevel"), row.StrikeSpeedPerLevel);
@@ -201,6 +202,7 @@ namespace Codigames.Game.Editor.WebImport
                 so.FindProperty("_stock").doubleValue = row.Stock;
                 so.FindProperty("_recoverySeconds").doubleValue = row.RecoverySeconds;
                 so.FindProperty("_respawnSeconds").doubleValue = row.RespawnSeconds;
+                so.FindProperty("_growSeconds").doubleValue = row.GrowSeconds;
                 so.ApplyModifiedPropertiesWithoutUndo();
                 sources[id] = asset;
             }
