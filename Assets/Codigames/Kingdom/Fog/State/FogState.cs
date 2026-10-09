@@ -14,5 +14,14 @@ namespace Codigames.Kingdom.Fog.State
 
         // Taps already paid on a cell being cleared.
         public Dictionary<Vector2Int, int> Progress { get; set; } = new();
+
+        // Cells revealed by paying for them: the pace treasures come at.
+        public int PaidReveals { get; set; }
+
+        // Treasures placed so far: the next one's number.
+        public int TreasuresPlaced { get; set; }
+
+        // Treasures waiting where they were set down, until picked up.
+        public Dictionary<Vector2Int, Treasure> Treasures { get; set; } = new();
     }
 }

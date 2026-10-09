@@ -319,6 +319,7 @@ MonoBehaviour:
   _techTree: {fileID: 11400000, guid: 76ff82d954a1cdcf9a78d3ff4887d48f, type: 2}
   _knowledge: {fileID: 11400000, guid: ebbe0d3c79e33a340bca5aa6ee43679b, type: 2}
   _sites: {fileID: 11400000, guid: f5be6234054baa5ffadf3c9e8842127d, type: 2}
+  _treasure: {fileID: 11400000, guid: a997340940dcad53b873379dc3f2321c, type: 2}
   _localization: {fileID: 11400000, guid: 4cb132bacd1c8e6019e5b08554960ec9, type: 2}
   _soundCatalog: {fileID: 11400000, guid: 83451c6dc2a68dd0d98655410dd96f32, type: 2}
   _music: {fileID: 11400000, guid: cf05f11578e47cd17bd4eecd9fc6e947, type: 2}

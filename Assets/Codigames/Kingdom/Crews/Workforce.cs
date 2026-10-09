@@ -64,6 +64,25 @@ namespace Codigames.Kingdom.Crews
 
         public int Radius(DistrictState district) => Raised(TechStats.INFLUENCE_RADIUS, Production(district).InfluenceRadiusPerLevel, district);
 
+        // What the crews bring home of a currency a second, nominally: each worker's walk out and back across its
+        // building's reach and its swing, a building with several sources splitting its crew between them.
+        public double GatherPerSecond(string currency)
+        {
+            var total = 0.0;
+            foreach (var district in _city.Districts.Where(d => d.Built))
+            {
+                var crew = Assigned(district.Id);
+                var sources = Production(district).HarvestSources;
+                var source = sources.Select(_harvesting.Source).FirstOrDefault(s => s != null && s.Currency == currency);
+                if (crew == 0 || source == null) continue;
+
+                var cycleSeconds = 2 * Radius(district) / WalkSpeed + StrikeMs(source, district) / 1000;
+                if (cycleSeconds > 0) total += (double)crew / sources.Count * Delivery(source, district) / cycleSeconds;
+            }
+
+            return total;
+        }
+
         public bool HasCrew(DistrictState district) => Production(district).HarvestSources.Count > 0;
 
         public bool CanAssign(DistrictState district)
@@ -220,9 +239,7 @@ namespace Codigames.Kingdom.Crews
                         break;
                     }
 
-                    var delivery = (_harvesting.UnitsPerStrike(source) + At(Production(building).ExtraUnitsPerDeliveryPerLevel, building.Level))
-                                   * _bonuses.Multiplier(TechStats.CREW_YIELD);
-                    var owed = delivery + worker.StrikeCarry;
+                    var owed = Delivery(source, building) + worker.StrikeCarry;
                     var want = Math.Floor(owed + 1e-9);
                     worker.StrikeCarry = Math.Max(0, owed - want);
                     worker.Carrying = _harvesting.Draw(cell, want, t);
@@ -283,9 +300,14 @@ namespace Codigames.Kingdom.Crews
             return source != null && sources.Contains(source.Id) && _harvesting.MissingTech(source) == null;
         }
 
-        private double WalkMs(Vector2Int cell, DistrictState building)
-            => GridMath.Euclidean(cell, building.Anchor)
-               / Math.Max(0.1, _settings.MoveSpeedTilesPerSecond * _bonuses.Multiplier(TechStats.WORKER_SPEED)) * 1000;
+        private double WalkMs(Vector2Int cell, DistrictState building) => GridMath.Euclidean(cell, building.Anchor) / WalkSpeed * 1000;
+
+        private double WalkSpeed => Math.Max(0.1, _settings.MoveSpeedTilesPerSecond * _bonuses.Multiplier(TechStats.WORKER_SPEED));
+
+        // Units one strike brings home: the ground's yield and the building's late levels, raised by the crews' yield.
+        private double Delivery(IHarvestSource source, DistrictState building)
+            => (_harvesting.UnitsPerStrike(source) + At(Production(building).ExtraUnitsPerDeliveryPerLevel, building.Level))
+               * _bonuses.Multiplier(TechStats.CREW_YIELD);
 
         private double StrikeMs(IHarvestSource source, DistrictState building)
         {
