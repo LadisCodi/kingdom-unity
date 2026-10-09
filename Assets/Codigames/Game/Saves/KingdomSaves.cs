@@ -10,12 +10,14 @@ namespace Codigames.Game.Saves
     public static class KingdomSaves
     {
         public const string SLOT = "kingdom";
-        public const int VERSION = 2;
+        public const int VERSION = 3;
 
         private static readonly ISaveMigration<JObject>[] MIGRATIONS =
         {
             // 1 → 2: the ground worked by hand, the Mana pool's clock and the kingdom's seed.
             new AdditiveMigration<JObject>(1),
+            // 2 → 3: every building's store, and the city's population.
+            new AdditiveMigration<JObject>(2),
         };
 
         public static SaveSlot<KingdomState, JObject> Slot(ISaveStorage storage)

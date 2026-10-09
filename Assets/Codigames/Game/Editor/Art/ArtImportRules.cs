@@ -8,6 +8,7 @@ namespace Codigames.Game.Editor.Art
     // - Art/Features: standing on their cell, pivot at the bottom centre, as wide as their footprint
     //   (a "_2x2" / "_3x3" suffix says how many cells across).
     // - Art/Buildings: pivot at the bottom centre; the view scales each to its footprint.
+    // - Art/World: things drawn over the map (the collect bubble): pivot at the bottom centre, 100 px a unit.
     // - Art/UI: sprites at 100 px a unit; a sliced piece keeps its border (below). plate-fill and plate-rim are
     //   a white rounded plate and its rim, generated, tinted wherever a card or a chip needs one.
     public class ArtImportRules : AssetPostprocessor
@@ -32,6 +33,7 @@ namespace Codigames.Game.Editor.Art
         private const string FEATURES = "Assets/Art/Features/";
         private const string BUILDINGS = "Assets/Art/Buildings/";
         private const string UI = "Assets/Art/UI/";
+        private const string WORLD = "Assets/Art/World/";
 
         private void OnPreprocessTexture()
         {
@@ -39,7 +41,8 @@ namespace Codigames.Game.Editor.Art
             var isFeature = assetPath.StartsWith(FEATURES);
             var isBuilding = assetPath.StartsWith(BUILDINGS);
             var isUi = assetPath.StartsWith(UI);
-            if (!isTerrain && !isFeature && !isBuilding && !isUi) return;
+            var isWorld = assetPath.StartsWith(WORLD);
+            if (!isTerrain && !isFeature && !isBuilding && !isUi && !isWorld) return;
 
             var importer = (TextureImporter)assetImporter;
             importer.textureType = TextureImporterType.Sprite;

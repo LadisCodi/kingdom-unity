@@ -121,6 +121,31 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 020000000400000006000000090000000b0000000d0000000f000000110000001300000015000000
     _requiredTownhallLevelPerLevel: 00000000000000000300000004000000060000000700000008000000090000000a000000
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel:
+    - 3600
+    - 12000
+    - 28000
+    - 58000
+    - 110000
+    - 190000
+    - 330000
+    - 550000
+    - 880000
+    - 1400000
+    _populationCapacityPerLevel: 020000000400000006000000080000000a0000000c0000000e000000100000001200000014000000
+    _taxBonusPerLevel:
+    - 0
+    - 0.25
+    - 0.5
+    - 0.75
+    - 1
+    - 1.25
+    - 1.5
+    - 1.75
+    - 2
+    - 2.25
   _displayName: Housing
   _promise: Villagers live here and pay taxes
   _description: A snug home for villagers, who pay their rent in gold.

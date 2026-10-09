@@ -147,6 +147,31 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 
     _requiredTownhallLevelPerLevel: 
     _requiredPopulationPerLevel: 03000000050000000c000000140000001e00000028000000320000003c00000048000000
+  _production:
+    _goldPerMinutePerLevel:
+    - 10
+    - 60
+    - 240
+    - 560
+    - 1050
+    - 1700
+    - 2500
+    - 3400
+    - 4500
+    - 5400
+    _storageCapacityPerLevel:
+    - 600
+    - 4700
+    - 25000
+    - 77000
+    - 190000
+    - 410000
+    - 790000
+    - 1400000
+    - 2500000
+    - 3900000
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
   _displayName: Townhall
   _promise: Trains new villagers
   _description: The heart of the city, where new villagers begin their lives.

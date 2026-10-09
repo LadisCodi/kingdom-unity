@@ -28,6 +28,9 @@ namespace Codigames.Game.Data.City
         [TabGroup("Gates"), HideLabel, InlineProperty]
         [SerializeField] private BuildingGatesData _gates = new();
 
+        [TabGroup("Production"), HideLabel, InlineProperty]
+        [SerializeField] private BuildingProductionData _production = new();
+
         [TabGroup("Presentation")]
         [SerializeField] private string _displayName;
         [TabGroup("Presentation"), Tooltip("The build card's one line.")]
@@ -47,6 +50,7 @@ namespace Codigames.Game.Data.City
         public IBuildingCost Cost => _cost;
         public IBuildingDuration Duration => _duration;
         public IBuildingGates Gates => _gates;
+        public IBuildingProduction Production => _production;
 
         public string DisplayName => _displayName;
         public string Promise => _promise;

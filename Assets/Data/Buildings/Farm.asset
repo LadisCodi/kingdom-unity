@@ -125,6 +125,21 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 01000000010000000200000003000000030000000400000004000000050000000500000005000000
     _requiredTownhallLevelPerLevel: 02000000030000000300000004000000060000000700000008000000090000000a000000
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel:
+    - 1400
+    - 3000
+    - 5500
+    - 9300
+    - 15000
+    - 39000
+    - 78000
+    - 140000
+    - 230000
+    - 360000
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
   _displayName: Farm
   _promise: Workers harvest crops nearby
   _description: Its farmhands reap the fields nearby and fill the granary.

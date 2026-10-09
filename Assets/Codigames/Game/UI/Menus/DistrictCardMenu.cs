@@ -19,6 +19,9 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private AspectRatioFitter _artFit;
         [SerializeField] private TMP_Text _level;
         [SerializeField] private TMP_Text _promise;
+        [SerializeField] private TMP_Text _store;
+        [SerializeField] private Color _storeColor = new Color32(0x7a, 0x5c, 0x3e, 0xff);
+        [SerializeField] private Color _storeFullColor = new Color32(0xd4, 0x55, 0x3e, 0xff);
         [SerializeField] private GameObject _workRow;
         [SerializeField] private TMP_Text _work;
         [SerializeField] private Image _workFill;
@@ -46,6 +49,9 @@ namespace Codigames.Game.UI.Menus
             if (card.Art != null) _artFit.aspectRatio = card.Art.rect.width / card.Art.rect.height;
             _level.text = card.Level;
             _promise.text = card.Promise;
+            _store.text = card.Store;
+            _store.color = card.StoreFull ? _storeFullColor : _storeColor;
+            _store.gameObject.SetActive(!string.IsNullOrEmpty(card.Store));
 
             _workRow.SetActive(card.Working);
             _work.text = card.Work;

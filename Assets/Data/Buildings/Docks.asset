@@ -125,6 +125,21 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 01000000020000000300000004000000040000000500000005000000050000000600000006000000
     _requiredTownhallLevelPerLevel: 00000000030000000300000004000000060000000700000008000000090000000a000000
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel:
+    - 1100
+    - 2400
+    - 4400
+    - 7400
+    - 12000
+    - 24000
+    - 42000
+    - 68000
+    - 110000
+    - 170000
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
   _displayName: Docks
   _promise: Boats bring in fish
   _description: Fishing boats set out from here and come home full.

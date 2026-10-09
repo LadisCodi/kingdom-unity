@@ -41,6 +41,7 @@ namespace Codigames.Game.Startup
             builder.RegisterComponent(_ghostView);
             builder.RegisterEntryPoint<MapGestures>().AsSelf();
             builder.Register<HarvestInput>(Lifetime.Singleton);
+            builder.Register<CollectInput>(Lifetime.Singleton);
             builder.RegisterEntryPoint<MapTaps>();
             RegisterUI(builder);
             RegisterFeedback(builder);

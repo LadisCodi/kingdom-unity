@@ -18,5 +18,8 @@ namespace Codigames.Kingdom.City.State
 
         // False until its first build finishes.
         public bool Built { get; set; }
+
+        // What it has made and not yet handed over; empty for a building that makes nothing.
+        public StoreState Store { get; set; } = new();
     }
 }

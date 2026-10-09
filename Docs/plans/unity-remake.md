@@ -3,7 +3,8 @@
 > **Scope:** how Kingdom is rebuilt in Unity — the order of the work, what
 > each step delivers, and what is still to decide.
 > **Status:** foundation, architecture, balance and the city done; the economy
-> under way (harvest by tap and the Mana pool built; crews, stores, rent next).
+> under way (harvest by tap, the Mana pool, stores and collecting built;
+> villager training and crews next).
 
 ## 1. Principles
 
@@ -27,7 +28,7 @@
 | 1 | **Architecture** ✓ | `Codigames/{Modules,Kingdom,Game}`, content outside, modules independent behind ports, `dotnet test` for pure code |
 | 2 | **Balance** ✓ | definition interfaces in Kingdom; ScriptableObjects in `Assets/Data`; a one-off import from the web's JSON; the *Kingdom › Data* Odin window and its validation |
 | 3 | **The city** ✓ | the province grid with its terrain and features; place, build and upgrade buildings with builders; the wallet; the offline advance |
-| 4 | **The economy** — under way | harvest by tap ✓ and Mana ✓; stores, rent, harvest by crew, collecting |
+| 4 | **The economy** — under way | harvest by tap ✓, Mana ✓, stores and collecting ✓ (the Townhall's Gold, rent by residents); villager training, harvest by crew |
 | 5 | **The fog** | reveal, the Gold price by ring, treasures |
 | 6 | **Research** | Knowledge, the tech tree and its gates |
 | 7 | **The rest, in order** | army and lairs, heroes, quests and tutorials, store, world map |
