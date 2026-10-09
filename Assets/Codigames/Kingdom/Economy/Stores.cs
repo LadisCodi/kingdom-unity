@@ -26,10 +26,14 @@ namespace Codigames.Kingdom.Economy
         private readonly ITreasury _treasury;
         private readonly IBonuses _bonuses;
         private readonly IBoosts _boosts;
+        private readonly Harmony _harmony;
+        private readonly Adjacency _adjacency;
 
         public Stores(CityState city, ICatalog<IBuildingDefinition> buildings, IEconomySettings settings, ITreasury treasury,
-            Construction construction, IBonuses bonuses = null, IBoosts boosts = null)
+            Construction construction, IBonuses bonuses = null, IBoosts boosts = null, Harmony harmony = null, Adjacency adjacency = null)
         {
+            _harmony = harmony;
+            _adjacency = adjacency;
             _boosts = boosts;
             _bonuses = bonuses;
             _city = city;
@@ -37,9 +41,12 @@ namespace Codigames.Kingdom.Economy
             _settings = settings;
             _treasury = treasury;
 
-            // A level finishing changes what a building makes: what it made until then is counted at the old rate.
-            construction.JobCompleting += (job, district) => Settle(district, job.CompletesAt);
-            construction.JobCompleted += (job, district) => Wake(district, job.CompletesAt);
+            // A level finishing, a building placed or moved, change what buildings make — its own, and through Harmony and
+            // its neighbours everyone's: what they made until then is counted at the old rates.
+            construction.JobCompleting += (job, district) => SettleAll(job.CompletesAt);
+            construction.JobCompleted += (job, district) => WakeAll(job.CompletesAt);
+            construction.CityChanging += SettleAll;
+            construction.CityChanged += WakeAll;
         }
 
         // A store was collected: the district, what moved to the treasury, and when.
@@ -55,11 +62,15 @@ namespace Codigames.Kingdom.Economy
 
             var production = _buildings.Get(district.DefinitionId).Production;
             var own = At(production.GoldPerMinutePerLevel, district.Level) * _bonuses.Multiplier(TechStats.OWN_GOLD);
-            // The rent, raised by the tree and by a Rent boost running.
-            var rate = _bonuses.Apply(TechStats.TAX_RATE, _settings.GoldPerPopulationPerMinute, TargetKind.District, district.DefinitionId)
+            // The rent: a Harmony surplus at its base, then the tree, then a Rent boost running; the neighbours' Gold on
+            // top. An empty house pays nothing, its neighbours' share neither.
+            var residents = Residents(district);
+            if (residents <= 0) return own;
+            var surplus = _harmony?.Multiplier ?? 1;
+            var rate = _bonuses.Apply(TechStats.TAX_RATE, _settings.GoldPerPopulationPerMinute * surplus, TargetKind.District, district.DefinitionId)
                        * (_boosts?.Multiplier(BoostKind.Rent) ?? 1);
-            var rent = Residents(district) * rate * (1 + At(production.TaxBonusPerLevel, district.Level));
-            return own + rent;
+            var rent = residents * rate * (1 + At(production.TaxBonusPerLevel, district.Level)) + (_adjacency?.GoldOf(district) ?? 0);
+            return own + Math.Max(0, rent);
         }
 
         // What a building makes by itself a minute (the Townhall's own Gold), with nobody in it.

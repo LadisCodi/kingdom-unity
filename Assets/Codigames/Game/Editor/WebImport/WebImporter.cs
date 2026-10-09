@@ -154,6 +154,7 @@ namespace Codigames.Game.Editor.WebImport
                 SetDoubles(so.FindProperty("_production._taxBonusPerLevel"), row.TaxBonusPerLevel);
                 SetStrings(so.FindProperty("_production._harvestSources"), row.HarvestSources);
                 so.FindProperty("_production._harmonySupply").doubleValue = row.HarmonySupply;
+                SetDoubles(so.FindProperty("_production._harmonyCostPerLevel"), row.HarmonyCostPerLevel);
                 so.FindProperty("_production._plants").stringValue = row.Plants ?? "";
                 SetInts(so.FindProperty("_production._maxWorkersPerLevel"), row.MaxWorkersPerLevel);
                 SetInts(so.FindProperty("_production._influenceRadiusPerLevel"), row.InfluenceRadiusPerLevel);
@@ -276,6 +277,30 @@ namespace Codigames.Game.Editor.WebImport
             settings.FindProperty("_secondsPerGem").doubleValue = economy.Rush.SecondsPerGem;
             settings.FindProperty("_noticesShown").intValue = (int)economy.Notices.Shown;
             settings.FindProperty("_noticesKept").intValue = (int)economy.Notices.Kept;
+            var tiers = settings.FindProperty("_harmonyTiers");
+            tiers.arraySize = economy.Harmony.SurplusTiers.Count;
+            for (var i = 0; i < tiers.arraySize; i++)
+            {
+                tiers.GetArrayElementAtIndex(i).FindPropertyRelative("At").doubleValue = economy.Harmony.SurplusTiers[i].At;
+                tiers.GetArrayElementAtIndex(i).FindPropertyRelative("Bonus").doubleValue = economy.Harmony.SurplusTiers[i].Bonus;
+            }
+
+            var adjacency = Read<List<AdjacencyRuleData>>("Game/adjacency.json");
+            var rules = settings.FindProperty("_adjacency");
+            rules.arraySize = adjacency.Count;
+            for (var i = 0; i < adjacency.Count; i++)
+            {
+                var rule = rules.GetArrayElementAtIndex(i);
+                rule.FindPropertyRelative("District").stringValue = adjacency[i].District;
+                rule.FindPropertyRelative("Neighbor").stringValue = adjacency[i].Neighbor;
+                rule.FindPropertyRelative("Stat").enumValueIndex = adjacency[i].Stat switch
+                {
+                    "workTime" => (int)Kingdom.City.AdjacencyStat.WorkTime,
+                    "trainTime" => (int)Kingdom.City.AdjacencyStat.TrainTime,
+                    _ => (int)Kingdom.City.AdjacencyStat.GoldPerMinute,
+                };
+                rule.FindPropertyRelative("Magnitude").doubleValue = adjacency[i].Magnitude;
+            }
             settings.ApplyModifiedPropertiesWithoutUndo();
 
             var training = new SerializedObject(LoadOrCreate<TrainingSettingsAsset>("Settings", "Training"));

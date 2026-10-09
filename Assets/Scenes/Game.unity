@@ -152,6 +152,7 @@ Transform:
   - {fileID: 2007333689}
   - {fileID: 426193283}
   - {fileID: 890528004}
+  - {fileID: 2098815419}
   m_Father: {fileID: 172435652}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &132387083
@@ -173,6 +174,7 @@ MonoBehaviour:
   _legal: {r: 0.55, g: 0.95, b: 0.45, a: 1}
   _illegal: {r: 0.95, g: 0.3, b: 0.25, a: 1}
   _plotAlpha: 0.3
+  _pills: {fileID: 2098815420}
 --- !u!1 &172435649
 GameObject:
   m_ObjectHideFlags: 0
@@ -1939,6 +1941,57 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2098815418
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2098815419}
+  - component: {fileID: 2098815420}
+  m_Layer: 0
+  m_Name: Pills
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2098815419
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098815418}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 132387082}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2098815420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098815418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96b1ff9a65101f1de8fe2150e83ed7ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.City.MapPills
+  _capsule: {fileID: 21300000, guid: a9b4c934971bdf595abec63bb714e980, type: 3}
+  _font: {fileID: 11400000, guid: 163df27064717a01b93ab86797d92ee2, type: 2}
+  _fill: {r: 0.07058824, g: 0.0627451, b: 0.05490196, a: 0.88}
+  _plain: {r: 1, g: 1, b: 1, a: 1}
+  _good: {r: 0.6156863, g: 1, b: 0.6156863, a: 1}
+  _bad: {r: 1, g: 0.6039216, b: 0.5254902, a: 1}
+  _order: 5000
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

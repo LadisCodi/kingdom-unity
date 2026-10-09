@@ -142,6 +142,19 @@ MonoBehaviour:
     _taxBonusPerLevel: []
     _harvestSources:
     - Forest
+    _harmonySupply: 0
+    _harmonyCostPerLevel:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 2
+    - 4
+    - 6
+    _plants: 
     _maxWorkersPerLevel: 03000000030000000300000003000000030000000300000003000000030000000300000003000000
     _influenceRadiusPerLevel: 02000000020000000200000002000000020000000200000002000000020000000200000002000000
     _strikeSpeedPerLevel:

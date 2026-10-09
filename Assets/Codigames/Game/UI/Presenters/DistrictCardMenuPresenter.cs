@@ -49,6 +49,9 @@ namespace Codigames.Game.UI.Presenters
         private readonly ISoundService _sounds;
         private readonly CardFraming _framing;
         private readonly Speedups _speedups;
+        private readonly Harmony _harmony;
+        private readonly IHarmonySettings _harmonySettings;
+        private readonly Adjacency _adjacency;
 
         // The second the card was last drawn at: it is redrawn once a second.
         private double _shownSeconds = -1;
@@ -60,8 +63,11 @@ namespace Codigames.Game.UI.Presenters
             BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, IClock clock, NumberFormat numbers,
             Localizer localizer, Stores stores, VillagerTraining training, Workforce crews, BuildingStats stats,
             BuildingStatProse prose, GemRush rush, UiIcons icons, PortraitArt portraits, ISoundService sounds,
-            CardFraming framing, Speedups speedups) : base(views)
+            CardFraming framing, Speedups speedups, Harmony harmony, IHarmonySettings harmonySettings, Adjacency adjacency) : base(views)
         {
+            _harmony = harmony;
+            _harmonySettings = harmonySettings;
+            _adjacency = adjacency;
             _speedups = speedups;
             _framing = framing;
             _ui = ui;
@@ -233,7 +239,7 @@ namespace Codigames.Game.UI.Presenters
             var job = JobOf(district.Id);
             var offer = job == null && district.Built ? _construction.UpgradeOffer(district.Id) : null;
 
-            View.Show(new DistrictCardData
+            var card = new DistrictCardData
             {
                 Id = district.Id,
                 Title = Title(building, district),
@@ -249,8 +255,70 @@ namespace Codigames.Game.UI.Presenters
                 CrewHead = _localizer.Tr("Workers"),
                 SpeedUp = "<sprite name=\"hourglass\"> " + _localizer.Tr("Speed up"),
                 Crew = _crews.HasCrew(district) && district.Built ? Crew(district) : null,
-            });
+            };
+            HarmonyOf(card, building, district);
+            NeighboursOf(card, building, district);
+            View.Show(card);
         }
+
+        // A decoration is one number, and this is it; the Townhall is where the taxes a surplus moves are collected —
+        // silent on a city that has neither supplied nor been asked for any.
+        private void HarmonyOf(DistrictCardData card, BuildingAsset building, DistrictState district)
+        {
+            card.HarmonyHead = _localizer.Tr("Harmony");
+            var icon = "<sprite name=\"harmony\"> ";
+            if (Harmony.IsDecoration(building))
+            {
+                card.HarmonyLine = icon + _localizer.Tr("Supplies {n} Harmony", ("n", _numbers.Exact(building.Production.HarmonySupply)));
+                card.HarmonyNote = _localizer.Tr("and a house beside it collects more rent");
+                return;
+            }
+
+            if (district.DefinitionId != _settings.Townhall.Id) return;
+            var supply = _harmony.Supply;
+            var demand = _harmony.Demand();
+            if (supply <= 0 && demand <= 0) return;
+
+            var tier = _harmony.Tier;
+            var next = _harmonySettings.SurplusTiers.Where(t => tier == null || t.At > tier.Value.At).Select(t => (HarmonyTier?)t).FirstOrDefault();
+            card.HarmonyLine = icon + _localizer.Tr("Harmony {supply} supplied, {demand} demanded", ("supply", _numbers.Exact(supply)), ("demand", _numbers.Exact(demand)));
+            card.HarmonyNote = tier is { } paying
+                ? _localizer.Tr("+{pct}% taxes", ("pct", _numbers.Exact(Math.Round(paying.Bonus * 100))))
+                : next is { } coming && demand > 0
+                    ? _localizer.Tr("{at}% of demand pays +{pct}% taxes", ("at", _numbers.Exact(Math.Round(coming.At * 100))), ("pct", _numbers.Exact(Math.Round(coming.Bonus * 100))))
+                    : _localizer.Tr("nothing demands it yet");
+        }
+
+        // What its neighbours do: a house's rent as a verdict, and every time they move, under a heading.
+        private void NeighboursOf(DistrictCardData card, BuildingAsset building, DistrictState district)
+        {
+            if (!district.Built) return;
+            var badges = new List<(string, bool)>();
+            if (building.Production.PopulationCapacityPerLevel.Count > 0)
+            {
+                var gold = _adjacency.GoldOf(district) * 60;
+                if (gold != 0)
+                {
+                    var n = Signed(gold) + " <sprite name=\"Gold\">";
+                    badges.Add(gold < 0
+                        ? (_localizer.Tr("Crowded {n}/h — houses too close together", ("n", n)), false)
+                        : (_localizer.Tr("Cosy neighbourhood {n}/h", ("n", n)), true));
+                }
+            }
+
+            var times = _adjacency.InEffect(district).Where(e => e.Stat != AdjacencyStat.GoldPerMinute).ToList();
+            foreach (var (stat, total) in times)
+            {
+                var what = stat == AdjacencyStat.WorkTime ? _localizer.Tr("Good neighbours — work time") : _localizer.Tr("A military quarter — training time");
+                badges.Add((_localizer.Tr("{what} {label}", ("what", what), ("label", Signed(Math.Round(total * 100)) + "%")), total < 0));
+            }
+
+            card.NeighboursHead = times.Count > 0 ? _localizer.Tr("Neighbours") : null;
+            card.Neighbours = badges;
+        }
+
+        // A signed figure, its minus the typographic one.
+        private string Signed(double value) => (value < 0 ? "\u2212" : "+") + _numbers.Exact(Math.Abs(value));
 
         // The name, its number when there can be more than one, and the level a size down: *Housing #3 Lv 2*.
         private string Title(BuildingAsset building, DistrictState district)

@@ -17,6 +17,8 @@ namespace Codigames.Kingdom.City
         // A technology opens it and is not researched yet.
         NeedsResearch,
         AlreadyUnderWay,
+        // The build or level asks more Harmony than the city's decorations supply.
+        NeedsHarmony,
         NotFound,
     }
 }

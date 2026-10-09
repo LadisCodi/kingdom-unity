@@ -15,6 +15,7 @@ namespace Codigames.Game.City
         [SerializeField] private Color _legal = new(0.55f, 0.95f, 0.45f, 1f);
         [SerializeField] private Color _illegal = new(0.95f, 0.3f, 0.25f, 1f);
         [SerializeField, Range(0f, 1f)] private float _plotAlpha = 0.3f;
+        [SerializeField, Tooltip("What its plot would do to its neighbours and they to it.")] private MapPills _pills;
 
         private Mesh _mesh;
 
@@ -34,7 +35,13 @@ namespace Codigames.Game.City
             _outline.startColor = _outline.endColor = tint;
         }
 
-        public void Hide() => gameObject.SetActive(false);
+        public void Hide()
+        {
+            _pills.Hide();
+            gameObject.SetActive(false);
+        }
+
+        public MapPills Pills => _pills;
 
         private void DrawPlot(Vector3[] corners, Color color)
         {

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Codigames.Game.Audio;
 using Codigames.Game.City;
@@ -34,6 +36,9 @@ namespace Codigames.Game.UI.Presenters
 
         private readonly UIManager _ui;
         private readonly Construction _construction;
+        private readonly Adjacency _adjacency;
+        // A pill's height, in tile widths: the web's labels, a fifth of a tile with their padding.
+        private const float PILL_HEIGHT = 0.29f;
         private readonly Placement _placement;
         private readonly Transplanting _transplanting;
         private readonly ITreasury _treasury;
@@ -61,9 +66,11 @@ namespace Codigames.Game.UI.Presenters
         public PlacementMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, Placement placement,
             Transplanting transplanting, ITreasury treasury, BuildingCollection buildings, FeatureCollection features, CityState city,
             GroundState ground, ProvinceMap map, MapGestures gestures, GhostView ghost, CityView cityView,
-            GroundView groundView, CameraController camera, IClock clock, NumberFormat numbers, Localizer localizer, ISoundService sounds)
+            GroundView groundView, CameraController camera, IClock clock, NumberFormat numbers, Localizer localizer, ISoundService sounds,
+            Adjacency adjacency)
             : base(views)
         {
+            _adjacency = adjacency;
             _sounds = sounds;
             _ui = ui;
             _construction = construction;
@@ -187,7 +194,7 @@ namespace Codigames.Game.UI.Presenters
         {
             if (!_anchor.HasValue) return;
 
-            if (Data.MovesDistrict) PutDown(_construction.Move(Data.DistrictId, _anchor.Value) == ConstructionRefusal.None, true);
+            if (Data.MovesDistrict) PutDown(_construction.Move(Data.DistrictId, _anchor.Value, _clock.NowMs) == ConstructionRefusal.None, true);
             else if (Data.MovesFeature)
                 PutDown(_transplanting.Move(Data.FeatureCell.Value, _anchor.Value, _clock.NowMs) == TransplantRefusal.None, false);
             else PutDown(_construction.Build(Data.DefinitionId, _anchor.Value, _clock.NowMs) == ConstructionRefusal.None, false);
@@ -231,6 +238,7 @@ namespace Codigames.Game.UI.Presenters
             var offer = _construction.Offer(Data.DefinitionId, _anchor);
             var problem = _anchor.HasValue ? _placement.Check(Data.DefinitionId, _anchor.Value) : PlacementProblem.OutsideProvince;
             ShowGhost(building.ArtFor(1), null, problem);
+            ShowNeighbours(null);
 
             var price = offer.Price
                 .Select(p => new PriceTerm(p.Key, _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
@@ -252,6 +260,7 @@ namespace Codigames.Game.UI.Presenters
             var art = building.ArtFor(district?.Level ?? 1);
             var problem = _anchor.HasValue && district != null ? _placement.Check(Data.DefinitionId, _anchor.Value, district.Id) : PlacementProblem.OutsideProvince;
             ShowGhost(art, null, problem);
+            ShowNeighbours(district?.Id);
 
             View.Show(new PlacementPanelData(
                 _localizer.Capitalized(_localizer.Tr(building.DisplayName)),
@@ -280,6 +289,33 @@ namespace Codigames.Game.UI.Presenters
         // Not carried anywhere yet: still on the cell it started from.
         private bool Unmoved => _anchor.HasValue && Origin.HasValue && _anchor.Value == Origin.Value;
 
+        // What the plot would do: on each standing neighbour what it would gain, rule by rule, and on the plot what it
+        // would receive. Gold as a signed figure; a time as a percentage, good when it falls.
+        private void ShowNeighbours(string exclude)
+        {
+            if (!_anchor.HasValue)
+            {
+                _ghost.Pills.Hide();
+                return;
+            }
+
+            var preview = _adjacency.Preview(Data.DefinitionId, _anchor.Value, exclude);
+            var labels = new List<(Vector3, string, MapPills.Tone)>();
+            foreach (var (district, stat, magnitude) in preview.Given) labels.Add(Pill(district.Anchor, stat, magnitude));
+            foreach (var (stat, total) in preview.Received) labels.Add(Pill(_anchor.Value, stat, total));
+            _ghost.Pills.Show(labels, _map.Grid.cellSize.x * PILL_HEIGHT);
+        }
+
+        private (Vector3, string, MapPills.Tone) Pill(ModuleVector2Int cell, AdjacencyStat stat, double value)
+        {
+            var at = _map.CellCentre(cell) - new Vector3(0, _map.Grid.cellSize.y * 0.4f, 0);
+            if (stat == AdjacencyStat.GoldPerMinute)
+                return (at, "<sprite name=\"Gold\"> " + Signed(value), value < 0 ? MapPills.Tone.Bad : MapPills.Tone.Good);
+            return (at, "<sprite name=\"hourglass\"> " + Signed(Math.Round(value * 100)) + "%", value > 0 ? MapPills.Tone.Bad : MapPills.Tone.Good);
+        }
+
+        private string Signed(double value) => (value < 0 ? "\u2212" : "+") + _numbers.Exact(Math.Abs(value));
+
         // The ghost on its plot, white or red; a feature's drawing at its own size.
         private void ShowGhost(Sprite art, float? artWidth, PlacementProblem problem)
         {
@@ -307,7 +343,12 @@ namespace Codigames.Game.UI.Presenters
                 case PlacementProblem.CountLimit: return _localizer.Tr("No more of these at this Townhall");
             }
 
-            return refusal == ConstructionRefusal.NoFreeBuilder ? _localizer.Tr("Every builder is busy") : string.Empty;
+            return refusal switch
+            {
+                ConstructionRefusal.NoFreeBuilder => _localizer.Tr("Every builder is busy"),
+                ConstructionRefusal.NeedsHarmony => _localizer.Tr("Needs more Harmony"),
+                _ => string.Empty,
+            };
         }
     }
 }

@@ -45,9 +45,31 @@ namespace Codigames.Kingdom.Tests.Builders
             Technologies = new Catalog<ITechnology>(technologies);
             Gates = new ResearchGates(ResearchState, Technologies);
             Bonuses = new TechBonuses(ResearchState, Technologies);
-            Construction = new Construction(City, Treasury, Placement, Buildings, Settings, Gates, Bonuses);
+            Harmony = new Harmony(City, Buildings, new Tiers(), Bonuses);
+            Construction = new Construction(City, Treasury, Placement, Buildings, Settings, Gates, Bonuses, null, Harmony);
             Timeline = new Timeline(0);
             Timeline.Register(Construction);
+        }
+
+        public Harmony Harmony { get; }
+
+        // The web's surplus tiers: 110% pays +5%, 125% +10%, 150% +15%.
+        private sealed class Tiers : IHarmonySettings
+        {
+            public System.Collections.Generic.IReadOnlyList<HarmonyTier> SurplusTiers { get; } =
+                new[] { new HarmonyTier(1.1, 0.05), new HarmonyTier(1.25, 0.1), new HarmonyTier(1.5, 0.15) };
+        }
+
+        // A building standing, finished, at a level.
+        public DistrictState Stand(string definitionId, Vector2Int anchor, int level = 1)
+        {
+            var district = new DistrictState
+            {
+                Id = City.NewId("district"), DefinitionId = definitionId, Ordinal = City.Districts.Count(d => d.DefinitionId == definitionId) + 1,
+                Level = level, Anchor = anchor, Built = true,
+            };
+            City.Districts.Add(district);
+            return district;
         }
 
         // Researched by adding to Completed.

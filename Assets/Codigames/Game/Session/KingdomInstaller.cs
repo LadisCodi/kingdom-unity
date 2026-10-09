@@ -80,6 +80,10 @@ namespace Codigames.Game.Session
 
             builder.Register<Placement>(Lifetime.Singleton);
             builder.Register<Construction>(Lifetime.Singleton);
+            builder.Register<Harmony>(Lifetime.Singleton);
+            builder.Register<BuildingGroups>(Lifetime.Singleton);
+            builder.Register(resolver => new Adjacency(resolver.Resolve<CityState>(), resolver.Resolve<ICatalog<IBuildingDefinition>>(),
+                resolver.Resolve<IAdjacencyRules>(), resolver.Resolve<BuildingGroups>()), Lifetime.Singleton);
             builder.Register<ManaPool>(Lifetime.Singleton);
             builder.Register<Stores>(Lifetime.Singleton);
             builder.Register<VillagerTraining>(Lifetime.Singleton);

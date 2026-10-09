@@ -30,5 +30,14 @@ namespace Codigames.Game.UI.Data
         public CrewPanelData Crew { get; set; }
         // Speed up's words on a timer's button, its hourglass inline.
         public string SpeedUp { get; set; }
+
+        // Harmony: what a decoration supplies, or on the Townhall the city's supply and demand; null for none.
+        public string HarmonyHead { get; set; }
+        public string HarmonyLine { get; set; }
+        public string HarmonyNote { get; set; }
+
+        // What its neighbours do to it, as verdicts: a heading (none for a house's rent) and a badge each.
+        public string NeighboursHead { get; set; }
+        public IReadOnlyList<(string Text, bool Good)> Neighbours { get; set; } = new List<(string, bool)>();
     }
 }

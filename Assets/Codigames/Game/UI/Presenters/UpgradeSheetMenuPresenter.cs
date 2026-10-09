@@ -144,6 +144,8 @@ namespace Codigames.Game.UI.Presenters
                 _localizer.Tr("Townhall level {n}", ("n", _numbers.Exact(gate.Amount))), gate.Met),
             RequirementKind.Research => new GateRowData(_icons.Get("research"),
                 _localizer.Tr("Research {tech}", ("tech", _techs.Name(gate.Tech))), gate.Met),
+            RequirementKind.Harmony => new GateRowData(_icons.Get("harmony"),
+                _localizer.Tr("{n} Harmony", ("n", _numbers.Exact(gate.Amount))), gate.Met),
             _ => new GateRowData(_icons.Get("population"),
                 _localizer.Tr("Reach {n} population", ("n", _numbers.Exact(gate.Amount))), gate.Met),
         };

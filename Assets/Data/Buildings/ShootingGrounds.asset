@@ -150,14 +150,37 @@ MonoBehaviour:
     _storageCapacityPerLevel: []
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+    _harvestSources: []
+    _harmonySupply: 0
+    _harmonyCostPerLevel:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 2
+    - 4
+    - 6
+    _plants: 
+    _maxWorkersPerLevel: 
+    _influenceRadiusPerLevel: 
+    _strikeSpeedPerLevel: []
+    _extraUnitsPerDeliveryPerLevel: []
   _fog:
     _revealRadius: 0
     _revealRadiusPerLevel: 
     _discoverRadius: 1
+  _repair:
+    _seconds: 0
+    _item: 
+    _ruinArt: {fileID: 0}
   _displayName: Shooting Grounds
   _promise: Trains Archers, all attack and no armour
   _description: Trains archers, deadly at range but fragile up close.
   _buildTab: Military
+  _crew: []
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: d61699884f4c9d5bd81bcf1c20215ae6, type: 3}

@@ -14,3 +14,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Economy.EconomySettingsAsset
   _goldPerPopulationPerMinute: 30
   _collectSeconds: 30
+  _moveSpeedTilesPerSecond: 1
+  _chestFloorPerHour: 60
+  _secondsPerGem: 5
+  _noticesShown: 4
+  _noticesKept: 30
+  _harmonyTiers:
+  - At: 1.1
+    Bonus: 0.05
+  - At: 1.25
+    Bonus: 0.1
+  - At: 1.5
+    Bonus: 0.15
+  _adjacency:
+  - District: Housing
+    Neighbor: Housing
+    Stat: 0
+    Magnitude: -1
+  - District: Housing
+    Neighbor: AnyDecoration
+    Stat: 0
+    Magnitude: 1
+  - District: AnyHall
+    Neighbor: AnyHall
+    Stat: 2
+    Magnitude: -0.1
+  - District: Carpenter
+    Neighbor: Sawmill
+    Stat: 1
+    Magnitude: -0.1
+  - District: MasonsYard
+    Neighbor: Quarry
+    Stat: 1
+    Magnitude: -0.1
+  - District: Smelter
+    Neighbor: Quarry
+    Stat: 1
+    Magnitude: -0.1
+  - District: RuneCarver
+    Neighbor: Sanctum
+    Stat: 1
+    Magnitude: -0.1

@@ -6,5 +6,7 @@ namespace Codigames.Kingdom.City
         TownhallLevel,
         Research,
         Population,
+        // The Harmony the city must supply for the level: its total demand there.
+        Harmony,
     }
 }

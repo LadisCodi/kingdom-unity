@@ -109,7 +109,7 @@ namespace Codigames.Kingdom.Tests.City
             var house = fixture.District("Housing");
             var gold = fixture.Treasury.Get("Gold");
 
-            Assert.That(fixture.Construction.Move(house.Id, new Vector2Int(-3, -3)), Is.EqualTo(ConstructionRefusal.None));
+            Assert.That(fixture.Construction.Move(house.Id, new Vector2Int(-3, -3), 0), Is.EqualTo(ConstructionRefusal.None));
             Assert.That(house.Anchor, Is.EqualTo(new Vector2Int(-3, -3)));
             Assert.That(fixture.Treasury.Get("Gold"), Is.EqualTo(gold));
             Assert.That(fixture.City.Jobs, Has.Count.EqualTo(1));

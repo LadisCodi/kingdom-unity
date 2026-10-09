@@ -142,6 +142,19 @@ MonoBehaviour:
     _taxBonusPerLevel: []
     _harvestSources:
     - Fish
+    _harmonySupply: 0
+    _harmonyCostPerLevel:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 2
+    - 4
+    - 6
+    _plants: 
     _maxWorkersPerLevel: 03000000030000000300000003000000030000000300000003000000030000000300000003000000
     _influenceRadiusPerLevel: 04000000040000000400000004000000040000000400000004000000040000000400000004000000
     _strikeSpeedPerLevel:
@@ -170,6 +183,10 @@ MonoBehaviour:
     _revealRadius: 0
     _revealRadiusPerLevel: 
     _discoverRadius: 2
+  _repair:
+    _seconds: 0
+    _item: 
+    _ruinArt: {fileID: 0}
   _displayName: Docks
   _promise: Boats bring in fish
   _description: Fishing boats set out from here and come home full.
