@@ -61,6 +61,48 @@ namespace Codigames.Kingdom.City
             return TrainRefusal.None;
         }
 
+        // Beds still free for a villager: the houses, less the town and everyone already queued.
+        public int Room => Math.Max(0, _stores.Housing - NextPlace);
+
+        // What one press orders at an amount, priced whole: "All" is as many as there are beds and Food for.
+        public TrainPlan Plan(TrainAmount amount)
+        {
+            if (amount != TrainAmount.All)
+            {
+                var count = amount == TrainAmount.One ? 1 : amount == TrainAmount.Ten ? 10 : 100;
+                return new TrainPlan(count, BatchCost(count));
+            }
+
+            var food = _treasury.Get(FOOD);
+            var all = 1;
+            while (all < Room && BatchCost(all + 1) <= food) all++;
+            return new TrainPlan(all, BatchCost(all));
+        }
+
+        // An order of `count` villagers as one: all of them or none — the beds and the whole price are checked before
+        // anything is paid, so a refused order leaves the town as it was.
+        public TrainRefusal Train(int count, double now)
+        {
+            if (count > 1)
+            {
+                if (Room < count) return TrainRefusal.NoRoom;
+                if (_treasury.Get(FOOD) < BatchCost(count)) return TrainRefusal.CannotAfford;
+            }
+
+            var first = Train(now);
+            if (first != TrainRefusal.None) return first;
+            for (var i = 1; i < count; i++) Train(now);
+            return TrainRefusal.None;
+        }
+
+        // What the next `count` villagers cost together.
+        public double BatchCost(int count)
+        {
+            var total = 0.0;
+            for (var i = 0; i < count; i++) total += CostAt(NextPlace + i);
+            return total;
+        }
+
         // What the villager at a place costs: the authored list, then each one a growth times the last.
         public double CostAt(int place)
         {

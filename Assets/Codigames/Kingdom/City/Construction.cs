@@ -175,6 +175,32 @@ namespace Codigames.Kingdom.City
                 MissingTech(_gates?.LevelTech(district.DefinitionId, target)));
         }
 
+        // Every gate on a district's next level, met and unmet alike — a list with ticks is a plan, where the first
+        // unmet one alone answered only "why not?". The price is not here: it is what the button spends.
+        public IReadOnlyList<UpgradeRequirement> UpgradeRequirements(string districtId)
+        {
+            var district = _city.Districts.First(d => d.Id == districtId);
+            var building = _buildings.Get(district.DefinitionId);
+            var requirements = new List<UpgradeRequirement>();
+            if (district.Level >= building.MaxLevel) return requirements;
+
+            var gateIndex = district.Level - 1;
+            var townhall = At(building.Gates.RequiredTownhallLevelPerLevel, gateIndex);
+            // The Townhall does not gate itself, and level 1 is no gate at all.
+            if (townhall > 1 && building.Id != _settings.Townhall.Id)
+                requirements.Add(new UpgradeRequirement(RequirementKind.TownhallLevel,
+                    CityQueries.TownhallLevel(_city, _settings) >= townhall, townhall));
+
+            var tech = _gates?.LevelTech(district.DefinitionId, district.Level + 1);
+            if (tech != null) requirements.Add(new UpgradeRequirement(RequirementKind.Research, _gates.IsOpen(tech), tech: tech));
+
+            var population = At(building.Gates.RequiredPopulationPerLevel, gateIndex);
+            if (population > 0)
+                requirements.Add(new UpgradeRequirement(RequirementKind.Population, _city.Population >= population, population));
+
+            return requirements;
+        }
+
         // What stands between a district and its next level, before the price.
         public ConstructionRefusal UpgradeRefusal(DistrictState district)
         {

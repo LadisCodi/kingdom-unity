@@ -13,10 +13,10 @@ namespace Codigames.Game.UI.Widgets
         [SerializeField] private TMP_Text _text;
         [SerializeField] private bool _wide;
 
-        public void Show(IReadOnlyList<PriceTerm> price)
+        public void Show(IReadOnlyList<PriceTerm> price, string trailing = null)
         {
-            gameObject.SetActive(price.Count > 0);
-            _text.text = PriceLine.Of(price, _wide);
+            gameObject.SetActive(price.Count > 0 || !string.IsNullOrEmpty(trailing));
+            _text.text = PriceLine.Of(price, _wide, trailing);
         }
     }
 }

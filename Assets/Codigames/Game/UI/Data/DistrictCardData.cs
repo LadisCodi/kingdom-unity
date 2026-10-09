@@ -3,64 +3,29 @@ using UnityEngine;
 
 namespace Codigames.Game.UI.Data
 {
-    // A district's card, ready to show: what it is, and either the work under way or its next level.
+    // A building's card, ready to show (the web's districtCard): its name and level on the band, its art and what it
+    // is, the one thing bought for it — Upgrade, or the gem Finish while it is being built — the band of what it is
+    // worth now, and the blocks of what it does: its training, its crew.
     public sealed class DistrictCardData
     {
-        public DistrictCardData(string name, string ordinal, string level, Sprite art, string promise, bool working,
-            string work, float progress, string next, IReadOnlyList<PriceTerm> price, bool canUpgrade, string reason, string store, bool storeFull, TrainingStripData training = null, CrewStripData crew = null)
-        {
-            Crew = crew;
-            Training = training;
-            Store = store;
-            StoreFull = storeFull;
-            Name = name;
-            Ordinal = ordinal;
-            Level = level;
-            Art = art;
-            Promise = promise;
-            Working = working;
-            Work = work;
-            Progress = progress;
-            Next = next;
-            Price = price;
-            CanUpgrade = canUpgrade;
-            Reason = reason;
-        }
-
-        // It may be moved: everything the player built, never the Townhall.
+        public string Title { get; set; }
+        public Sprite Art { get; set; }
+        public string What { get; set; }
         public bool Movable { get; set; }
 
-        public string Name { get; }
-        public string Ordinal { get; }
+        // Upgrade is shown below the top level; ready = every gate and the price met (its call-to-action badge).
+        public bool Upgradable { get; set; }
+        public bool UpgradeReady { get; set; }
 
-        // "Lv 2".
-        public string Level { get; }
+        // The construction under way, in Upgrade's place; null otherwise.
+        public WorkData Work { get; set; }
 
-        public Sprite Art { get; }
-        public string Promise { get; }
+        public IReadOnlyList<StatTileData> Stats { get; set; } = new List<StatTileData>();
 
-        // A builder is on it: Work says what and how long is left, Progress how far along.
-        public bool Working { get; }
-        public string Work { get; }
-        public float Progress { get; }
+        public string TrainingHead { get; set; }
+        public TrainingPanelData Training { get; set; }
 
-        // The next level and its wait ("Lv 3 · 35s"); empty at the highest.
-        public string Next { get; }
-
-        public IReadOnlyList<PriceTerm> Price { get; }
-        public bool CanUpgrade { get; }
-
-        // Why it cannot be upgraded, when the price does not say it already.
-        public string Reason { get; }
-
-        // What its store holds against its capacity ("Storage 120/600"); empty for a building with none.
-        public string Store { get; }
-        public bool StoreFull { get; }
-
-        // The villager line, on the building that trains them; null elsewhere.
-        public TrainingStripData Training { get; }
-
-        // The crew line, on a building that works the ground; null elsewhere.
-        public CrewStripData Crew { get; }
+        public string CrewHead { get; set; }
+        public CrewPanelData Crew { get; set; }
     }
 }

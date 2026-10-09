@@ -13,15 +13,19 @@ namespace Codigames.Modules.Localization
             _localizer = localizer;
         }
 
-        // Grouped, with up to maxDecimals decimals (at least minDecimals).
+        // Grouped, with up to maxDecimals decimals (at least minDecimals). Spanish groups only from five figures
+        // (4100, 25.000), as the CLDR's minimum grouping digits say and the web's Intl.NumberFormat writes it.
         public string Number(double value, int maxDecimals = 0, int minDecimals = 0)
         {
-            var pattern = "#,##0";
+            var rounded = Math.Round(value, maxDecimals, MidpointRounding.AwayFromZero);
+            var pattern = Math.Abs(rounded) < GroupingFrom ? "0" : "#,##0";
             if (maxDecimals > 0) pattern += "." + new string('0', minDecimals) + new string('#', maxDecimals - minDecimals);
 
-            var rounded = Math.Round(value, maxDecimals, MidpointRounding.AwayFromZero);
             return rounded.ToString(pattern, _localizer.Culture);
         }
+
+        // The least number that is written grouped in the player's language.
+        private double GroupingFrom => _localizer.Culture.TwoLetterISOLanguageName == "es" ? 10_000 : 1_000;
 
         // The exact figure, grouped: 25,000. For a prize or a price the game knows exactly.
         public string Exact(double value) => Number(value, 1);
