@@ -72,6 +72,7 @@ namespace Codigames.Game.Editor.WebImport
             ImportTreasure();
             ImportQuests();
             ImportStage();
+            ImportItems();
 
             AssetDatabase.SaveAssets();
             Debug.Log($"#Data# Imported {currencies} currencies, {buildings.Count} buildings and {technologies} technologies from the web prototype.");
@@ -271,6 +272,7 @@ namespace Codigames.Game.Editor.WebImport
             settings.FindProperty("_goldPerPopulationPerMinute").doubleValue = economy.Taxes.GoldPerPopulationPerMinute;
             settings.FindProperty("_collectSeconds").doubleValue = economy.Storage.CollectSeconds;
             settings.FindProperty("_moveSpeedTilesPerSecond").doubleValue = economy.Worker.MoveSpeedTilesPerSecond;
+            settings.FindProperty("_chestFloorPerHour").doubleValue = economy.Bag.ChestFloorPerHour;
             settings.ApplyModifiedPropertiesWithoutUndo();
 
             var training = new SerializedObject(LoadOrCreate<TrainingSettingsAsset>("Settings", "Training"));

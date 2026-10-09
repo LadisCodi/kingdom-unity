@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Codigames.Kingdom.Bag;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Economy;
@@ -31,11 +32,13 @@ namespace Codigames.Kingdom.Quests
         private readonly Stores _stores;
         private readonly GroundState _ground;
         private readonly IBonuses _bonuses;
+        private readonly IItemGrants _items;
 
         public QuestChain(QuestState state, ICatalog<IQuestDefinition> quests, IQuestGoals goals, ITreasury treasury, CityState city,
             ICatalog<IBuildingDefinition> buildings, Stores stores, Harvesting harvesting, FogOfWar fog, GroundState ground,
-            IBonuses bonuses = null)
+            IBonuses bonuses = null, IItemGrants items = null)
         {
+            _items = items;
             _state = state;
             _quests = quests;
             _goals = goals;
@@ -78,6 +81,9 @@ namespace Codigames.Kingdom.Quests
                 var lump = Math.Max(0, Math.Round(quest.RewardKnowledge * _bonuses.Multiplier(KNOWLEDGE_YIELD), MidpointRounding.AwayFromZero));
                 _treasury.Add(KnowledgeBar.KNOWLEDGE, lump);
             }
+
+            // Items go into the Bag.
+            foreach (var item in quest.RewardItems.Where(i => i.Value > 0)) _items?.Grant(item.Key, (int)item.Value);
 
             _state.Index++;
             _state.Progress = 0;

@@ -1,0 +1,22 @@
+namespace Codigames.Kingdom.Bag
+{
+    // A running timer a speed-up can be used on: a builder's job, or the Townhall's training line.
+    public readonly struct SpeedJob
+    {
+        private SpeedJob(SpeedupKind kind, string jobId)
+        {
+            Kind = kind;
+            JobId = jobId;
+        }
+
+        // The typed speed-up that fits it.
+        public SpeedupKind Kind { get; }
+
+        // A builder's job; null for the training line.
+        public string JobId { get; }
+
+        public static SpeedJob Construction(string jobId) => new(SpeedupKind.Construction, jobId);
+
+        public static SpeedJob Training() => new(SpeedupKind.Training, null);
+    }
+}

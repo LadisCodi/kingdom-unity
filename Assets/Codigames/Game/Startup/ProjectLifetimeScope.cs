@@ -1,5 +1,6 @@
 using Codigames.Game.App;
 using Codigames.Game.Audio;
+using Codigames.Game.Data.Bag;
 using Codigames.Game.Data.City;
 using Codigames.Game.Data.Doors;
 using Codigames.Game.Data.Economy;
@@ -11,6 +12,7 @@ using Codigames.Game.Data.Research;
 using Codigames.Game.Data.Sites;
 using Codigames.Game.Data.Tutorial;
 using Codigames.Game.Localization;
+using Codigames.Kingdom.Bag;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.Crews;
 using Codigames.Kingdom.Economy;
@@ -58,6 +60,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private SpeakerCollection _speakers;
         [SerializeField] private StageSettingsAsset _stage;
         [SerializeField] private UnlockCollection _unlocks;
+        [SerializeField] private ItemCollection _items;
 
         [Header("App")]
         [SerializeField] private LocalizationCatalog _localization;
@@ -103,7 +106,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_terrains).As<ITerrainYields>();
             builder.RegisterInstance(_tap).As<ITapSettings>();
             builder.RegisterInstance(_mana).As<IManaSettings>();
-            builder.RegisterInstance(_economy).As<IEconomySettings>().As<IWorkerSettings>();
+            builder.RegisterInstance(_economy).As<IEconomySettings>().As<IWorkerSettings>().As<IBagSettings>();
             builder.RegisterInstance(_training).As<ITrainingSettings>();
             builder.RegisterInstance(_fog).As<IFogSettings>().As<ISightSettings>();
             builder.RegisterInstance(_technologies).As<ICatalog<ITechnology>>().As<ITechnologyCards>();
@@ -116,6 +119,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_speakers).As<ICatalog<ISpeaker>>();
             builder.RegisterInstance(_stage).As<IStageSettings>();
             builder.RegisterInstance(_unlocks).As<ICatalog<IUnlock>>();
+            builder.RegisterInstance(_items).AsSelf().As<ICatalog<IItemDefinition>>();
         }
     }
 }

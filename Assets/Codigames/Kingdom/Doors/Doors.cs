@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Codigames.Kingdom.Bag.State;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Quests;
@@ -13,8 +14,8 @@ using Codigames.Modules.Core;
 namespace Codigames.Kingdom.Doors
 {
     // What opens each door: a fact about the kingdom, mostly how far along the quest chain it is. A door once open
-    // is remembered open for good. Doors for systems not in the game yet (heroes, relics, the store, the world, the
-    // Bag, friends) stay shut until their facts can happen.
+    // is remembered open for good. The Bag opens with the first item found. Doors for systems not in the game yet
+    // (heroes, relics, the store, the world, friends) stay shut until their facts can happen.
     public class Doors : IMorning
     {
         private const string TAVERN = "Tavern";
@@ -29,10 +30,12 @@ namespace Codigames.Kingdom.Doors
         private readonly SitesState _sites;
         private readonly IProvinceSites _provinceSites;
         private readonly IConstructionSettings _settings;
+        private readonly BagState _bag;
 
         public Doors(TutorialState tutorial, IChainPosition chain, ICatalog<IQuestDefinition> quests, Researching research, CityState city,
-            SitesState sites, IProvinceSites provinceSites, IConstructionSettings settings)
+            SitesState sites, IProvinceSites provinceSites, IConstructionSettings settings, BagState bag = null)
         {
+            _bag = bag;
             _tutorial = tutorial;
             _chain = chain;
             _quests = quests;
@@ -65,6 +68,8 @@ namespace Codigames.Kingdom.Doors
             DoorId.Heroes or DoorId.Banner => _city.Districts.Any(d => d.DefinitionId == TAVERN && d.Built),
             DoorId.Store or DoorId.Survey => CityQueries.TownhallLevel(_city, _settings) >= 2,
             DoorId.World => _city.Districts.Any(d => d.DefinitionId == WATCHTOWER && d.Built),
+            // The first item found opens the Bag.
+            DoorId.Bag => _bag != null && _bag.Held.Count > 0,
             _ => false,
         };
 
