@@ -23,6 +23,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 584b2a9a521584ffb8a27f77c2e92ed8, type: 3}
   - {fileID: 21300000, guid: 98518513efba42c838d6f4248d885cbd, type: 3}
   _text: Rooms pay more Stardust
+  _story: 'Draws starlight out of the dark: every room you clear in the depths pays
+    {p} more Stardust'
   _pending: when the world map opens
   _kind: 1
   _door: portal

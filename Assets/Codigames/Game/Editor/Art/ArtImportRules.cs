@@ -26,7 +26,7 @@ namespace Codigames.Game.Editor.Art
             ["hud-slot"] = Ends(50),
             ["nav-tab"] = new Vector4(30, 50, 30, 30), ["nav-tab-down"] = new Vector4(30, 50, 30, 30),
             ["window-frame"] = new Vector4(64, 64, 64, 64), ["window-header"] = Ends(60),
-            ["plate-fill"] = new Vector4(26, 26, 26, 26), ["plate-rim"] = new Vector4(26, 26, 26, 26),
+            ["plate-fill"] = new Vector4(26, 26, 26, 26), ["plate-rim"] = new Vector4(26, 26, 26, 26), ["slot-dash"] = new Vector4(26, 26, 26, 26),
             ["disc-fill"] = new Vector4(63, 63, 63, 63), ["disc-rim"] = new Vector4(63, 63, 63, 63),
             ["plate-parchment"] = new Vector4(64, 64, 64, 64),
             ["rb-page"] = new Vector4(56, 56, 56, 56), ["hud-know-tab"] = new Vector4(64, 70, 64, 20), ["know-frame"] = Ends(60),

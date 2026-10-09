@@ -33,6 +33,8 @@ namespace Codigames.Game.Tests
             "Research/ChapterBar/",
             "Research/TechCard/",
             "/Glyph",
+            // The resting Zs: sized to the art they rest on.
+            "Zs/Z",
         };
 
         // Roles whose label keeps its own face and material (a title's band, a slab button, a plank).
