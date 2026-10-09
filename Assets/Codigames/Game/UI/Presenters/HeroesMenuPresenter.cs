@@ -12,7 +12,7 @@ namespace Codigames.Game.UI.Presenters
 {
     // The roster's logic (the web's heroesSheet grid and Game.heroesList): the owned heroes by level or rarity, then the
     // ones not found yet in roster order, under one type filter; the orb on each card worth opening; a tap opens the
-    // hero's card in the roster's place.
+    // hero's card in the roster's place, and the banner is one button away.
     public class HeroesMenuPresenter : AbstractMenuPresenter<HeroesMenu>, IClosableMenuPresenter, IPurseMenu
     {
         private static readonly string[] PURSE = { Kingdom.Heroes.Heroes.HERO_XP, Kingdom.Heroes.Heroes.STARDUST };
@@ -66,6 +66,7 @@ namespace Codigames.Game.UI.Presenters
             view.FilterTapped += OnFilter;
             view.SortTapped += OnSort;
             view.CardTapped += OnCard;
+            view.CallTapped += OnCall;
         }
 
         protected override void UnsubscribeFromViewEventsInternal(HeroesMenu view)
@@ -74,6 +75,7 @@ namespace Codigames.Game.UI.Presenters
             view.FilterTapped -= OnFilter;
             view.SortTapped -= OnSort;
             view.CardTapped -= OnCard;
+            view.CallTapped -= OnCall;
         }
 
         private void OnTreasury(string currency, double amount)
@@ -101,9 +103,13 @@ namespace Codigames.Game.UI.Presenters
             _ = _ui.ShowMenu<HeroCardMenu, string>(id);
         }
 
+        // The banner lives in the store: the roster points at it.
+        private void OnCall() => _ = _ui.ShowMenu<StoreMenu, string>(StoreMenuPresenter.HEROES);
+
         private void Refresh()
         {
             if (View == null) return;
+            View.ShowCall("<sprite name=\"star\"> " + _localizer.Tr("Call for aid"));
             View.ShowBar(_filter, _byRarity ? _localizer.Tr("Rarity") : _localizer.Tr("Lv"));
             View.ShowFound(_localizer.Tr("{found} of {total} found", ("found", _numbers.Count(_heroes.Owned.Count)),
                 ("total", _numbers.Count(_heroes.All.Count))));

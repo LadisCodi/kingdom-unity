@@ -10,7 +10,8 @@ using UnityEngine.UI;
 namespace Codigames.Game.UI.Menus
 {
     // The Heroes screen's roster (the web's heroesSheet grid): the filter bar — All, a tab per unit type, the sort — how
-    // many are found, and the cards three to a row scrolling on their own. View only: the HeroesMenuPresenter fills it.
+    // many are found, the cards three to a row scrolling on their own, and under them the way to the banner. View only:
+    // the HeroesMenuPresenter fills it.
     public class HeroesMenu : Menu
     {
         [SerializeField] private Button _close;
@@ -22,6 +23,7 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private RectTransform _grid;
         [SerializeField] private HeroCardView _cardPrefab;
         [SerializeField] private TMP_Text _none;
+        [SerializeField] private KitButton _call;
 
         private readonly List<HeroCardView> _cards = new();
 
@@ -29,6 +31,7 @@ namespace Codigames.Game.UI.Menus
         public event Action<int> FilterTapped;
         public event Action SortTapped;
         public event Action<string> CardTapped;
+        public event Action CallTapped;
 
         protected override void InitializeInternal()
         {
@@ -41,6 +44,8 @@ namespace Codigames.Game.UI.Menus
             }
 
             _sort.onClick.AddListener(() => SortTapped?.Invoke());
+            _call.onClick.AddListener(() => CallTapped?.Invoke());
+            CoachTarget.Tag(_call, "heroes-call");
         }
 
         public void ShowBar(int filter, string sort)
@@ -50,6 +55,8 @@ namespace Codigames.Game.UI.Menus
         }
 
         public void ShowFound(string found) => _found.text = found;
+
+        public void ShowCall(string label) => _call.Label = label;
 
         public void ShowCards(IReadOnlyList<HeroCardData> heroes, string none)
         {

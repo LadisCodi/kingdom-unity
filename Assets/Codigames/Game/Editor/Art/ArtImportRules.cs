@@ -43,6 +43,8 @@ namespace Codigames.Game.Editor.Art
             ["plank-wood"] = Ends(115), ["plank-green"] = Ends(115),
             // A hero card's gilt frame (its corners and bevel the outer 50 px), and its level's dark glass pill.
             ["hero-card-frame"] = new Vector4(50, 50, 50, 50), ["hero-level-pill"] = Ends(44),
+            // The store's frames: a call's nailed wood and the golden call's plate, and the golden call's plank.
+            ["offer-frame"] = new Vector4(80, 80, 80, 80), ["plate-gold"] = new Vector4(64, 64, 64, 64), ["plank-gold-full"] = Ends(115),
         };
 
         private static Vector4 Ends(int width) => new(width, 0, width, 0);
