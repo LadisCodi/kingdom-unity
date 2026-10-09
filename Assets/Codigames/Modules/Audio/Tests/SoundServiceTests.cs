@@ -26,6 +26,8 @@ namespace Codigames.Modules.Audio.Tests
             public void Play(ISound sound, float volume) => Played.Add((sound, volume));
 
             public void SetVolume(SoundTrack track, float volume) => Volumes[track] = volume;
+
+            public ISoundLoop StartLoop(ISound sound, float volume, float fadeSeconds) => null;
         }
 
         private readonly FakeSound _click = new("click");

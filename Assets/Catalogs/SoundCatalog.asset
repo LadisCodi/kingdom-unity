@@ -12,4 +12,817 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50e8b68ab2cade60a85c6bff6cc21efb, type: 3}
   m_Name: SoundCatalog
   m_EditorClassIdentifier: Kingdom.Game::Kingdom.Game.Audio.SoundCatalog
-  _entries: []
+  _sounds:
+  - _id: ambush
+    _clips:
+    - {fileID: 8300000, guid: ecf445ada1cfbaf3599e08e1edba65bf, type: 3}
+    - {fileID: 8300000, guid: 541a4038316df23e2a34efaf8ff08b4b, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0.05
+    _rate: 1
+    _track: 0
+  - _id: armyHome
+    _clips:
+    - {fileID: 8300000, guid: 5baf4bf887ae43be8ad5edf151c52a0d, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: armyMarch
+    _clips:
+    - {fileID: 8300000, guid: 6e57be8f9a720c4b48b1a1956c6aa9b9, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: armyRecall
+    _clips:
+    - {fileID: 8300000, guid: 614bd783fd1253d8689ce740993fc9a4, type: 3}
+    _volume: 0.35
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: arrowHit
+    _clips:
+    - {fileID: 8300000, guid: 3ae90121cbd421f8fa8edf787e0fe43f, type: 3}
+    - {fileID: 8300000, guid: bad8d356d135f5879a07b80179376c49, type: 3}
+    - {fileID: 8300000, guid: 174ef1d147b9a5f9e8ebf14d1d532e37, type: 3}
+    _volume: 0.2
+    _pitchJitter: 0.08
+    _rate: 1
+    _track: 0
+  - _id: arrowLoose
+    _clips:
+    - {fileID: 8300000, guid: 0bb6c3198d3c6fad689f033fc461e119, type: 3}
+    - {fileID: 8300000, guid: 43e8d03ee89798f80bb570bfaae9aca9, type: 3}
+    - {fileID: 8300000, guid: 9efd93519c198b1d59881a015ab705ed, type: 3}
+    _volume: 0.16
+    _pitchJitter: 0.08
+    _rate: 1
+    _track: 0
+  - _id: barFill
+    _clips:
+    - {fileID: 8300000, guid: 8d3249f9c22db8bb2a80d49496a30e4e, type: 3}
+    _volume: 0.3
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: battleStart
+    _clips:
+    - {fileID: 8300000, guid: 1113d4508aede60109b159c0434c5415, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: boatSplash
+    _clips:
+    - {fileID: 8300000, guid: 40942bf77a88de4f09cf3746608bd2dd, type: 3}
+    _volume: 0.3
+    _pitchJitter: 0.1
+    _rate: 1
+    _track: 0
+  - _id: boltCast
+    _clips:
+    - {fileID: 8300000, guid: 4b2bced3f30b11b569f6afff93071e08, type: 3}
+    - {fileID: 8300000, guid: 38b00c8dce8c68e05b09c2221bc47c9a, type: 3}
+    _volume: 0.28
+    _pitchJitter: 0.06
+    _rate: 1
+    _track: 0
+  - _id: buildPlaced
+    _clips:
+    - {fileID: 8300000, guid: ec03a303ede2a08a3b2d463519db933e, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: bulwark
+    _clips:
+    - {fileID: 8300000, guid: 916d3817d61ba794f8f239f088842ac9, type: 3}
+    _volume: 0.42
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: cardDraw
+    _clips:
+    - {fileID: 8300000, guid: 4906ebf11cdda857ea6ebb1f9711ef6a, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0.06
+    _rate: 1
+    _track: 0
+  - _id: cardFlip
+    _clips:
+    - {fileID: 8300000, guid: 050476ac355d43f79b5996ee00838374, type: 3}
+    - {fileID: 8300000, guid: 7759da7bc905aee65a0c88ccc8916fa4, type: 3}
+    _volume: 0.55
+    _pitchJitter: 0.05
+    _rate: 1
+    _track: 0
+  - _id: cardImpact
+    _clips:
+    - {fileID: 8300000, guid: feaa730828dfbd47dbea7c0e8de2a558, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: cardRevealCommon
+    _clips:
+    - {fileID: 8300000, guid: e4c8708b1214b9319a7b4fec14c6c8a9, type: 3}
+    - {fileID: 8300000, guid: 2a6ed6e170e3637d7b2941cb01f03054, type: 3}
+    - {fileID: 8300000, guid: 4e9aa24306f6a825caec31a417335371, type: 3}
+    - {fileID: 8300000, guid: afdd136733d41c7798b8373ad6a836d1, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0.02
+    _rate: 1
+    _track: 0
+  - _id: cardRevealLegend
+    _clips:
+    - {fileID: 8300000, guid: 63a5545e87b309890a6c287af1003b6a, type: 3}
+    _volume: 0.6
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: cardRevealRare
+    _clips:
+    - {fileID: 8300000, guid: 51a68e96ba7dab07a9eaab1cacdf73ff, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: cardSettle
+    _clips:
+    - {fileID: 8300000, guid: 327299a4e01f5ace68fb410492350dce, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0.06
+    _rate: 1
+    _track: 0
+  - _id: cardSparkle
+    _clips:
+    - {fileID: 8300000, guid: fa1d3ff6ed07d1ca4920019444957372, type: 3}
+    _volume: 0.35
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: cardWhoosh
+    _clips:
+    - {fileID: 8300000, guid: 922331ba628d268038be5158928bde9b, type: 3}
+    _volume: 0.22
+    _pitchJitter: 0.08
+    _rate: 1
+    _track: 0
+  - _id: cavalryCharge
+    _clips:
+    - {fileID: 8300000, guid: b167ef3f0d0439f6ab1fee9f7c006877, type: 3}
+    - {fileID: 8300000, guid: 28ee8c77b65b8a285a1e34c0218548b4, type: 3}
+    _volume: 0.25
+    _pitchJitter: 0.06
+    _rate: 1
+    _track: 0
+  - _id: cavalryHit
+    _clips:
+    - {fileID: 8300000, guid: e13180b79f2fcccbc84679fa4edfab6c, type: 3}
+    - {fileID: 8300000, guid: ec6911dffa8e19625b954323ac7d0732, type: 3}
+    - {fileID: 8300000, guid: c8296a257ecdbdbf89bc2bb63ef89dec, type: 3}
+    _volume: 0.3
+    _pitchJitter: 0.08
+    _rate: 1
+    _track: 0
+  - _id: chainFinished
+    _clips:
+    - {fileID: 8300000, guid: bf895a5db6a04037fa0bad763f8c3472, type: 3}
+    _volume: 0.6
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: chestLand
+    _clips:
+    - {fileID: 8300000, guid: db35585137b62277fab94b48c8a122f8, type: 3}
+    _volume: 0.55
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: chestOpen
+    _clips:
+    - {fileID: 8300000, guid: cc7a1e6fab24b43ec90924a8597c2603, type: 3}
+    _volume: 0.6
+    _pitchJitter: 0.02
+    _rate: 1
+    _track: 0
+  - _id: chestSummary
+    _clips:
+    - {fileID: 8300000, guid: 4aa88b6dd2b846197b93fa85fd6bfc5c, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: chestUnlock
+    _clips:
+    - {fileID: 8300000, guid: 869e037d04d28b261a0c9f34f8ff83bf, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.02
+    _rate: 1
+    _track: 0
+  - _id: cleave
+    _clips:
+    - {fileID: 8300000, guid: 6465d88a45b949d85bd6580715251227, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: click
+    _clips:
+    - {fileID: 8300000, guid: 87d5462043ff1ebf1bd536e891ca890a, type: 3}
+    _volume: 0.35
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 1
+  - _id: coinSale
+    _clips:
+    - {fileID: 8300000, guid: 7475d5b82ed00e59ea5a38fb70e6b7b6, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: constructionComplete
+    _clips:
+    - {fileID: 8300000, guid: 04bedfa00e877ef97a41fed3b0e445d8, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: crush
+    _clips:
+    - {fileID: 8300000, guid: 5350cd0b1466bb9968c5c02cc4d27cab, type: 3}
+    _volume: 0.55
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: daze
+    _clips:
+    - {fileID: 8300000, guid: c82626aefe899a8a09901e80d08efcb8, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: defeat
+    _clips:
+    - {fileID: 8300000, guid: afd80427dbd0ac69dbf33669cb228126, type: 3}
+    _volume: 0.55
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: discovery
+    _clips:
+    - {fileID: 8300000, guid: a0316186096429cc98b3f9987e81496a, type: 3}
+    _volume: 0.55
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: error
+    _clips:
+    - {fileID: 8300000, guid: c71c2ce72feaa302f889b005981ee565, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0
+    _rate: 1
+    _track: 1
+  - _id: explorerDepart
+    _clips:
+    - {fileID: 8300000, guid: f130ffe3c07774bcb874287cb14a1766, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: explorerHome
+    _clips:
+    - {fileID: 8300000, guid: 134b050a0284f505fb1e6358e3cdc8e6, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: finalBlow
+    _clips:
+    - {fileID: 8300000, guid: 85c5144188c1022d6ad433d5e398d9ef, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: gemSpend
+    _clips:
+    - {fileID: 8300000, guid: 2ec185b41e34ce1eabf77e3d454228bd, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: ghostLift
+    _clips:
+    - {fileID: 8300000, guid: acc86b0567e36c3db95903b3d26ba51f, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0.05
+    _rate: 1
+    _track: 0
+  - _id: ghostPlant
+    _clips:
+    - {fileID: 8300000, guid: 014ae65154d19b7f4a2da98448ee55c6, type: 3}
+    _volume: 0.6
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: ghostStep
+    _clips:
+    - {fileID: 8300000, guid: a398b7c05cee71331b3108dabc9e26e6, type: 3}
+    _volume: 0.18
+    _pitchJitter: 0.08
+    _rate: 1
+    _track: 0
+  - _id: heal
+    _clips:
+    - {fileID: 8300000, guid: 929a020e9fd263234aa0da5f6d9bb67e, type: 3}
+    - {fileID: 8300000, guid: 3fd27e203b19d318a975c5c1ec8f346a, type: 3}
+    _volume: 0.36
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: heroApplause
+    _clips:
+    - {fileID: 8300000, guid: 0aee8ded240fcdd8e90773f3b132a060, type: 3}
+    _volume: 0.3
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: heroDown
+    _clips:
+    - {fileID: 8300000, guid: 041d0fd944b7d20fc92033e0cde0f07b, type: 3}
+    - {fileID: 8300000, guid: ca3be6cae3a020730afc5b1a46c430e6, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: heroFanfare
+    _clips:
+    - {fileID: 8300000, guid: 2ff78aa43b7cfe966b2df474ff67c611, type: 3}
+    _volume: 0.6
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: heroFanfareLegend
+    _clips:
+    - {fileID: 8300000, guid: fccc238152247ff0f8bf4163cb8adb44, type: 3}
+    _volume: 0.65
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: heroLegend
+    _clips:
+    - {fileID: 8300000, guid: e68a500bee43814d1a6a354fd143a3b6, type: 3}
+    _volume: 0.65
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: heroNew
+    _clips:
+    - {fileID: 8300000, guid: 88b3b219187f97da3a38a7729f4cabdd, type: 3}
+    _volume: 0.6
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: heroPop
+    _clips:
+    - {fileID: 8300000, guid: 299d64bc2dc01a27aa0bdfcef8c958ac, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: heroRiser
+    _clips:
+    - {fileID: 8300000, guid: 40642f734bb1f4d4798843c4af403baa, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: heroRiserShort
+    _clips:
+    - {fileID: 8300000, guid: ec5b4df0b3d937a329edfe2d1248940e, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: lanceHit
+    _clips:
+    - {fileID: 8300000, guid: bd16927bafedd509e9dcc9f95a2d88be, type: 3}
+    - {fileID: 8300000, guid: 6b1535718a7f7896bb1380015a4d8bdb, type: 3}
+    - {fileID: 8300000, guid: 54cfbe037477786658511573632f73c4, type: 3}
+    _volume: 0.26
+    _pitchJitter: 0.08
+    _rate: 1
+    _track: 0
+  - _id: offerSplash
+    _clips:
+    - {fileID: 8300000, guid: fa1d3ff6ed07d1ca4920019444957372, type: 3}
+    _volume: 0.25
+    _pitchJitter: 0
+    _rate: 0.85
+    _track: 0
+  - _id: pop
+    _clips:
+    - {fileID: 8300000, guid: 46f808eb7bf3d62309bb9df91d53c86e, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.08
+    _rate: 1
+    _track: 0
+  - _id: quest
+    _clips:
+    - {fileID: 8300000, guid: bcd7dcc5261660709a957555f2cc2f2d, type: 3}
+    _volume: 0.9
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: questComplete
+    _clips:
+    - {fileID: 8300000, guid: f90d6e5e030bfd1d3b328ae3db30f7a7, type: 3}
+    _volume: 0.55
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: raidAlarm
+    _clips:
+    - {fileID: 8300000, guid: 5464ec9ac7d3cb58381247afb97b4987, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: relicWake
+    _clips:
+    - {fileID: 8300000, guid: 2aa23b3a574b087cfbde3ac9f59b6514, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: research
+    _clips:
+    - {fileID: 8300000, guid: 986b786e95bd0e50293534b2dde68e7b, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: researchComplete
+    _clips:
+    - {fileID: 8300000, guid: ded6a8b75fd5b69b2b5922a38af4a4ec, type: 3}
+    _volume: 0.55
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: revealDone
+    _clips:
+    - {fileID: 8300000, guid: 755b00c6d91993f6ba483de5a2799baa, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: revealPaid
+    _clips:
+    - {fileID: 8300000, guid: 7252a73cca1fc606697d852a0740e34c, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0.06
+    _rate: 1
+    _track: 0
+  - _id: rewardBurst
+    _clips:
+    - {fileID: 8300000, guid: dc25f76df383991ddb3ab15baec22318, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: rewardCoin
+    _clips:
+    - {fileID: 8300000, guid: b3fe7fdaa7267b5bab939ddd71b0c9dc, type: 3}
+    - {fileID: 8300000, guid: 8aba00fd086aaa1d6a54ea5c77a2748e, type: 3}
+    - {fileID: 8300000, guid: c3180c2324fbad6ba8958e1025fdd20d, type: 3}
+    - {fileID: 8300000, guid: a0d62d6ed3ef1958c83c6f6cfc34f987, type: 3}
+    _volume: 0.3
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: rewardPop
+    _clips:
+    - {fileID: 8300000, guid: bebc05d0a6cba3702a1f4a7722547a5f, type: 3}
+    - {fileID: 8300000, guid: ee7c32e7cadf82caaa4255cf710e4133, type: 3}
+    - {fileID: 8300000, guid: c2d4863507f1648b6ae016de50f51e97, type: 3}
+    _volume: 0.35
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: ribbon
+    _clips:
+    - {fileID: 8300000, guid: 12621532340513e7dbf9371c76366223, type: 3}
+    - {fileID: 8300000, guid: c2b2ce89a33cbac65a33c7136f350403, type: 3}
+    _volume: 0.3
+    _pitchJitter: 0.06
+    _rate: 1
+    _track: 0
+  - _id: scrollClose
+    _clips:
+    - {fileID: 8300000, guid: 83c71f869c354c0e98767350dd90d567, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: scrollOpen
+    _clips:
+    - {fileID: 8300000, guid: 29baea595f8f63755b2d789e93d3a077, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: sharpshot
+    _clips:
+    - {fileID: 8300000, guid: 99bac09c1931c8bfe94ffbb2c7dc2591, type: 3}
+    _volume: 0.42
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: shieldBreak
+    _clips:
+    - {fileID: 8300000, guid: cadfea5b310652e2d8e7eeaf1c578557, type: 3}
+    _volume: 0.42
+    _pitchJitter: 0.05
+    _rate: 1
+    _track: 0
+  - _id: shieldSoak
+    _clips:
+    - {fileID: 8300000, guid: b55a9d7bb4e69f2bf86786b3e1af82d8, type: 3}
+    - {fileID: 8300000, guid: d9561a7f416c35e8f9705f6f5dbe7cc3, type: 3}
+    _volume: 0.26
+    _pitchJitter: 0.08
+    _rate: 1
+    _track: 0
+  - _id: shieldUp
+    _clips:
+    - {fileID: 8300000, guid: d5ce6b0c931f5c0d189d65e8d921ccd8, type: 3}
+    _volume: 0.38
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: skillCharge
+    _clips:
+    - {fileID: 8300000, guid: d73df6af039bcd50b90fc7d335559c0d, type: 3}
+    - {fileID: 8300000, guid: c0089b45296ac44b8a06e6e6bf3c794f, type: 3}
+    _volume: 0.35
+    _pitchJitter: 0.05
+    _rate: 1
+    _track: 0
+  - _id: skullStamp
+    _clips:
+    - {fileID: 8300000, guid: 58486bc67b7cf1dbc9b9960a17c1baae, type: 3}
+    _volume: 0.38
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: speedup
+    _clips:
+    - {fileID: 8300000, guid: 17af81797394907799b28c0ac492d068, type: 3}
+    - {fileID: 8300000, guid: e808696da9b2bebed914e9a0bce4635e, type: 3}
+    - {fileID: 8300000, guid: 31036c78a8c63c5368159adce6e1eba9, type: 3}
+    - {fileID: 8300000, guid: 283ee4c2dbd77c2028d31658e2e064fe, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: spellCast
+    _clips:
+    - {fileID: 8300000, guid: 7b2bf44b61b1c5d829aad510963e5bed, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0.02
+    _rate: 1
+    _track: 0
+  - _id: squadDown
+    _clips:
+    - {fileID: 8300000, guid: d0f31e2399460817e84a9dd901b632f2, type: 3}
+    _volume: 0.42
+    _pitchJitter: 0.06
+    _rate: 1
+    _track: 0
+  - _id: swordHit
+    _clips:
+    - {fileID: 8300000, guid: ea021041b1a27d66b990c763f6f93320, type: 3}
+    - {fileID: 8300000, guid: 7dbca2f1bddb270cf924296150f64c88, type: 3}
+    - {fileID: 8300000, guid: 9b979f1c83890349b90b4301f19432bb, type: 3}
+    - {fileID: 8300000, guid: 37bdd11b0346cf1acbeaff41d067535b, type: 3}
+    _volume: 0.26
+    _pitchJitter: 0.08
+    _rate: 1
+    _track: 0
+  - _id: tapAnimals
+    _clips:
+    - {fileID: 8300000, guid: 20826a71b450f4a7aad3ea69d3a2177e, type: 3}
+    - {fileID: 8300000, guid: 20826a71b450f4a7aad3ea69d3a2177e, type: 3}
+    - {fileID: 8300000, guid: 9e8e1b1c9c8c6d3c4baf674258c183a4, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.06
+    _rate: 1
+    _track: 0
+  - _id: tapBerries
+    _clips:
+    - {fileID: 8300000, guid: b834084025355617096a752eb2251086, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0.08
+    _rate: 1
+    _track: 0
+  - _id: tapEmpty
+    _clips:
+    - {fileID: 8300000, guid: bb8db9e69f9ef3538a8a10a69cf33f80, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0.05
+    _rate: 1
+    _track: 0
+  - _id: tapFish
+    _clips:
+    - {fileID: 8300000, guid: 40942bf77a88de4f09cf3746608bd2dd, type: 3}
+    _volume: 0.4
+    _pitchJitter: 0.08
+    _rate: 1.2
+    _track: 0
+  - _id: tapHouse
+    _clips:
+    - {fileID: 8300000, guid: c606d18b7b627a273a484851dacf8148, type: 3}
+    - {fileID: 8300000, guid: 242f557d184ec8c9faacc1da5b6b2aee, type: 3}
+    - {fileID: 8300000, guid: 1ce8d169f68de4d6b9a2846293724add, type: 3}
+    - {fileID: 8300000, guid: ac1d5b7a3f8e32cbe971e5bd36e7f372, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0.05
+    _rate: 1
+    _track: 0
+  - _id: tapIron
+    _clips:
+    - {fileID: 8300000, guid: fc0cd0e2d81dacd8d87c106a8c9711a7, type: 3}
+    - {fileID: 8300000, guid: df5ca5a328d37c1e897b65943c85878b, type: 3}
+    - {fileID: 8300000, guid: c1711e45f2b121c82839000714364ca0, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.05
+    _rate: 0.85
+    _track: 0
+  - _id: tapStone
+    _clips:
+    - {fileID: 8300000, guid: fc0cd0e2d81dacd8d87c106a8c9711a7, type: 3}
+    - {fileID: 8300000, guid: df5ca5a328d37c1e897b65943c85878b, type: 3}
+    - {fileID: 8300000, guid: c1711e45f2b121c82839000714364ca0, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.05
+    _rate: 1
+    _track: 0
+  - _id: tapTree
+    _clips:
+    - {fileID: 8300000, guid: 2fcc1c6566e661a45aa7cfe3098cb071, type: 3}
+    - {fileID: 8300000, guid: fd035ff49120966b3a96b9b68436d922, type: 3}
+    - {fileID: 8300000, guid: c0cd804ce577f8a3d95dbea8ba065a34, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.06
+    _rate: 1
+    _track: 0
+  - _id: textTick
+    _clips:
+    - {fileID: 8300000, guid: f6c3fc1cf869bb088bcf8245e2e60ec3, type: 3}
+    - {fileID: 8300000, guid: 99104748670f728d6be1dfbc9388354f, type: 3}
+    _volume: 0.3
+    _pitchJitter: 0.1
+    _rate: 1
+    _track: 0
+  - _id: tooltip
+    _clips:
+    - {fileID: 8300000, guid: 3e72f00d4d9dc4735af7164101f2b1c7, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0.06
+    _rate: 1
+    _track: 1
+  - _id: tribute
+    _clips:
+    - {fileID: 8300000, guid: f4f2285d25ec1548aa710db9fa8c61e3, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.05
+    _rate: 1
+    _track: 0
+  - _id: unitTrained
+    _clips:
+    - {fileID: 8300000, guid: 5706a2afc320300f190337be06ec8a36, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: unlock
+    _clips:
+    - {fileID: 8300000, guid: 8a3282ac33ac2d220858350546a9da57, type: 3}
+    _volume: 0.3
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: upgradeBought
+    _clips:
+    - {fileID: 8300000, guid: a12c31ef9bc042a48bdf59684b922ff9, type: 3}
+    _volume: 0.45
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: victory
+    _clips:
+    - {fileID: 8300000, guid: b95ecaaea11c338aea4145147578fcf5, type: 3}
+    _volume: 0.55
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: vigour
+    _clips:
+    - {fileID: 8300000, guid: 80132c2db510fc4e88e89d50b144f062, type: 3}
+    _volume: 0.42
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: villagerTrained
+    _clips:
+    - {fileID: 8300000, guid: 24b219ffdc1bab59fb6ebecbf57ca52b, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.04
+    _rate: 1
+    _track: 0
+  - _id: volley
+    _clips:
+    - {fileID: 8300000, guid: 3ab7685e19b7fd97ca519b0bc30bacce, type: 3}
+    _volume: 0.42
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: warCry
+    _clips:
+    - {fileID: 8300000, guid: 565974a3f4266c8be841aa0c7f718597, type: 3}
+    _volume: 0.42
+    _pitchJitter: 0
+    _rate: 1
+    _track: 0
+  - _id: musicHarp
+    _clips:
+    - {fileID: 8300000, guid: ef139b2153c9cb089a95c425bbe7643b, type: 3}
+    _volume: 1
+    _pitchJitter: 0
+    _rate: 1
+    _track: 2
+  - _id: musicAnthem
+    _clips:
+    - {fileID: 8300000, guid: 71db54527383dd325b8cbc7b89832e25, type: 3}
+    _volume: 1
+    _pitchJitter: 0
+    _rate: 1
+    _track: 2
+  - _id: musicLegendary
+    _clips:
+    - {fileID: 8300000, guid: eda926c5e3c2284478ae53ab79df0092, type: 3}
+    _volume: 1
+    _pitchJitter: 0
+    _rate: 1
+    _track: 2
+  - _id: musicFolks
+    _clips:
+    - {fileID: 8300000, guid: 6da974a592d01909ea7f0f97076259a3, type: 3}
+    _volume: 1
+    _pitchJitter: 0
+    _rate: 1
+    _track: 2
+  - _id: musicFeast
+    _clips:
+    - {fileID: 8300000, guid: a50c4788797a2a31f8e00f41e3add1b0, type: 3}
+    _volume: 1
+    _pitchJitter: 0
+    _rate: 1
+    _track: 2
+  - _id: musicBattle
+    _clips:
+    - {fileID: 8300000, guid: 0e01f8254a812520cb71d9a3d1e2b983, type: 3}
+    _volume: 1
+    _pitchJitter: 0
+    _rate: 1
+    _track: 2
+  - _id: musicMuster
+    _clips:
+    - {fileID: 8300000, guid: cef9ba868fbf29c029e672c3bcc741cb, type: 3}
+    _volume: 1
+    _pitchJitter: 0
+    _rate: 1
+    _track: 2
+  - _id: ambienceMeadow
+    _clips:
+    - {fileID: 8300000, guid: f08cf0408a8c295eea22359854a4231d, type: 3}
+    _volume: 1
+    _pitchJitter: 0
+    _rate: 1
+    _track: 3
+  - _id: ambienceCoast
+    _clips:
+    - {fileID: 8300000, guid: 39ac0903a5cae141fa322bdf1884d72b, type: 3}
+    _volume: 1
+    _pitchJitter: 0
+    _rate: 1
+    _track: 3
+  - _id: ambienceSnow
+    _clips:
+    - {fileID: 8300000, guid: cdfa70bac95e3a8d4bae5f8cd41f6db8, type: 3}
+    _volume: 1
+    _pitchJitter: 0
+    _rate: 1
+    _track: 3

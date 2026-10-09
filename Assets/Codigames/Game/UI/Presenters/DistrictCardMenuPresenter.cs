@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Codigames.Game.Audio;
 using Codigames.Game.Data.City;
 using Codigames.Game.Data.Economy;
 using Codigames.Game.UI.Data;
@@ -8,6 +9,7 @@ using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Crews;
 using Codigames.Kingdom.Economy;
+using Codigames.Modules.Audio;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Localization;
 using Codigames.Modules.UI;
@@ -32,14 +34,17 @@ namespace Codigames.Game.UI.Presenters
         private readonly Stores _stores;
         private readonly VillagerTraining _training;
         private readonly Workforce _crews;
+        private readonly ISoundService _sounds;
 
         // The second the card was last drawn at: it is redrawn once a second.
         private double _shownSeconds = -1;
 
         public DistrictCardMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, CityState city,
             BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, ICurrencyIcons icons, IClock clock,
-            NumberFormat numbers, Localizer localizer, Stores stores, VillagerTraining training, Workforce crews) : base(views)
+            NumberFormat numbers, Localizer localizer, Stores stores, VillagerTraining training, Workforce crews,
+            ISoundService sounds) : base(views)
         {
+            _sounds = sounds;
             _crews = crews;
             _training = training;
             _stores = stores;
@@ -109,7 +114,8 @@ namespace Codigames.Game.UI.Presenters
 
         private void OnUpgrade()
         {
-            _construction.Upgrade(Data, _clock.NowMs);
+            var refusal = _construction.Upgrade(Data, _clock.NowMs);
+            _sounds.Play(refusal == ConstructionRefusal.None ? SoundIds.UPGRADE_BOUGHT : SoundIds.ERROR);
             Refresh();
         }
 

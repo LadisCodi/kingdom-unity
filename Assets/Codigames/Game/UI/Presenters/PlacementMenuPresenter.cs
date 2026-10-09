@@ -1,4 +1,5 @@
 using System.Linq;
+using Codigames.Game.Audio;
 using Codigames.Game.City;
 using Codigames.Game.Data.City;
 using Codigames.Game.Data.Economy;
@@ -7,6 +8,7 @@ using Codigames.Game.UI.Data;
 using Codigames.Game.UI.Menus;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.Economy;
+using Codigames.Modules.Audio;
 using Codigames.Modules.Cameras;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Localization;
@@ -37,14 +39,17 @@ namespace Codigames.Game.UI.Presenters
         private readonly IClock _clock;
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
+        private readonly ISoundService _sounds;
 
         private ModuleVector2Int? _anchor;
         private ModuleVector2Int _grab;
 
         public PlacementMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, Placement placement,
             ITreasury treasury, BuildingCollection buildings, ICurrencyIcons icons, ProvinceMap map, MapGestures gestures,
-            GhostView ghost, CameraController camera, IClock clock, NumberFormat numbers, Localizer localizer) : base(views)
+            GhostView ghost, CameraController camera, IClock clock, NumberFormat numbers, Localizer localizer, ISoundService sounds)
+            : base(views)
         {
+            _sounds = sounds;
             _ui = ui;
             _construction = construction;
             _placement = placement;
@@ -67,6 +72,7 @@ namespace Codigames.Game.UI.Presenters
         protected override void BindInternal(PlacementMenu view)
         {
             _anchor = _placement.Nearest(Data);
+            _sounds.Play(SoundIds.GHOST_LIFT);
             Refresh();
             CentreOnGhost();
 
@@ -100,12 +106,13 @@ namespace Codigames.Game.UI.Presenters
             if (!_anchor.HasValue || !OnGhost(cell)) return false;
 
             _grab = new ModuleVector2Int(cell.X - _anchor.Value.X, cell.Y - _anchor.Value.Y);
+            _sounds.Play(SoundIds.GHOST_LIFT);
             return true;
         }
 
         public void Drag(ModuleVector2Int cell) => MoveTo(new ModuleVector2Int(cell.X - _grab.X, cell.Y - _grab.Y));
 
-        public void EndDrag() { }
+        public void EndDrag() => _sounds.Play(SoundIds.GHOST_PLANT);
 
         private void OnMapTapped(ModuleVector2Int cell)
         {
@@ -119,6 +126,7 @@ namespace Codigames.Game.UI.Presenters
         {
             if (!_map.Contains(anchor) || anchor == _anchor) return;
             _anchor = anchor;
+            _sounds.Play(SoundIds.GHOST_STEP);
             Refresh();
         }
 
@@ -134,8 +142,16 @@ namespace Codigames.Game.UI.Presenters
             if (!_anchor.HasValue) return;
 
             var refusal = _construction.Build(Data, _anchor.Value, _clock.NowMs);
-            if (refusal == ConstructionRefusal.None) _ = _ui.CloseAll();
-            else Refresh();
+            if (refusal == ConstructionRefusal.None)
+            {
+                _sounds.Play(SoundIds.BUILD_PLACED);
+                _ = _ui.CloseAll();
+            }
+            else
+            {
+                _sounds.Play(SoundIds.ERROR);
+                Refresh();
+            }
         }
 
         private void CentreOnGhost()

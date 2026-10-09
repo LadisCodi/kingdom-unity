@@ -43,6 +43,7 @@ namespace Codigames.Game.Startup
         [Header("App")]
         [SerializeField] private LocalizationCatalog _localization;
         [SerializeField] private SoundCatalog _soundCatalog;
+        [SerializeField] private MusicSettings _music;
         [SerializeField] private MMSoundManager _soundManager;
         [SerializeField] private LoadingScreen _loadingScreen;
         [SerializeField] private AppLifecycleHook _lifecycleHook;
@@ -62,6 +63,7 @@ namespace Codigames.Game.Startup
             builder.Register<NumberFormat>(Lifetime.Singleton);
 
             builder.RegisterInstance(_soundCatalog).As<ISoundCatalog>();
+            builder.RegisterInstance(_music);
             builder.RegisterComponent(_soundManager);
             builder.Register<ISoundPlayer, FeelSoundPlayer>(Lifetime.Singleton);
             builder.Register<ISoundService, SoundService>(Lifetime.Singleton);

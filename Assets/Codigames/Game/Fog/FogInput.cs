@@ -1,9 +1,11 @@
+using Codigames.Game.Audio;
 using Codigames.Game.Data.Economy;
 using Codigames.Game.Harvest;
 using Codigames.Game.Map;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Fog;
+using Codigames.Modules.Audio;
 using Codigames.Modules.Feedback;
 using Codigames.Modules.Localization;
 using ModuleVector2Int = Codigames.Modules.Core.Vector2Int;
@@ -27,11 +29,13 @@ namespace Codigames.Game.Fog
         private readonly ICurrencyIcons _icons;
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
+        private readonly ISoundService _sounds;
 
         public FogInput(FogOfWar fog, CityState city, IConstructionSettings construction, IFogSettings settings, ProvinceMap map,
             IWorldFeedbackService feedback, IQuickInfoMessageService messages, ICurrencyIcons icons, NumberFormat numbers,
-            Localizer localizer)
+            Localizer localizer, ISoundService sounds)
         {
+            _sounds = sounds;
             _fog = fog;
             _city = city;
             _construction = construction;
@@ -48,10 +52,12 @@ namespace Codigames.Game.Fog
         {
             var cost = _fog.IsPayable(cell) ? _fog.TapCost(cell) : 0;
 
-            switch (_fog.Tap(cell))
+            var result = _fog.Tap(cell);
+            switch (result)
             {
                 case RevealResult.Paid:
                 case RevealResult.Revealed:
+                    _sounds.Play(result == RevealResult.Revealed ? SoundIds.REVEAL_DONE : SoundIds.REVEAL_PAID);
                     var centre = _map.CellCentre(cell);
                     var view = _feedback.Spawn<YieldFeedbackView>(new ModuleVector3(centre.x, centre.y + RISE_FROM, 0f));
                     view.Show(_icons.IconOf(FogOfWar.GOLD), "−" + _numbers.Number(cost));
@@ -69,7 +75,11 @@ namespace Codigames.Game.Fog
             }
         }
 
-        private void Say(string message) => _messages.Show(new QuickInfoMessageData(message));
+        private void Say(string message)
+        {
+            _sounds.Play(SoundIds.ERROR);
+            _messages.Show(new QuickInfoMessageData(message));
+        }
 
         // The first Townhall level whose reach holds the cell.
         private int LevelReaching(ModuleVector2Int cell)

@@ -40,6 +40,7 @@ namespace Codigames.Game.UI.Menus
                 if (i == _shown.Count)
                 {
                     var row = Instantiate(_rowPrefab, _rows);
+                    WireClicks(row.gameObject);
                     row.Tapped += () => RowTapped?.Invoke(row.Id);
                     _shown.Add(row);
                 }

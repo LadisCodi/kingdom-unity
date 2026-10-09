@@ -364,6 +364,13 @@ code.
 - **One sound channel**: Feel's `MMSoundManager` (music, SFX and ambience
   tracks); `SoundService` is a thin layer over it, so the settings' volumes
   reach everything.
+- **The sounds are the web's**: `Assets/Audio/{Sfx,Music,Ambience,Voice}`
+  (import settings by folder, `AudioImportRules`), each a `SoundCatalog`
+  entry by the web's name (`SoundIds`) with its takes, level, pitch wobble
+  and base pitch as the web mixes them (`Assets/Audio/sounds.json`, from its
+  `sfx.ts`). `MusicDirector` plays the town's playlist (`Playlist`, in the
+  audio module), `AmbienceDirector` the bed for the ground under the camera,
+  `SoundCues` what the kingdom does by itself; a menu's buttons click.
 - **Haptics** through Nice Vibrations, behind the settings' vibration toggle.
   `.haptic` clips cannot be imported on Linux (no editor plugin there) —
   use its presets, or import clips on macOS/Windows.
