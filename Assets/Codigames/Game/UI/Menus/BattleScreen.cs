@@ -47,6 +47,10 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private TMP_Text _plaqueWord;
         [SerializeField] private CrackGraphic _plaqueCrack;
         [SerializeField] private KitButton _exit;
+        // A skill's name on dyed cloth across the line between the armies.
+        [SerializeField] private RectTransform _ribbon;
+        [SerializeField] private Image _ribbonCloth;
+        [SerializeField] private TMP_Text _ribbonText;
         [SerializeField] private Color _won = new(0.949f, 0.698f, 0.2f);
         [SerializeField] private Color _lost = new(0.831f, 0.333f, 0.243f);
 
@@ -216,6 +220,33 @@ namespace Codigames.Game.UI.Menus
         }
 
         // The verdict comes down: carved gold for a win; a defeat lands cracked, tilted, and the field goes grey under it.
+        // THE RIBBON: one strip of cloth across the line between the armies, naming the skill; a new one replaces it.
+        // It unrolls, holds, and drifts away toward the caster's side.
+        public void Ribbon(string name, Color cloth, bool ours)
+        {
+            if (_ribbon == null) return;
+            _ribbon.DOKill();
+            _ribbonCloth.DOKill();
+            _ribbonText.DOKill();
+            _ribbon.gameObject.SetActive(true);
+            _ribbon.SetAsLastSibling();
+            _ribbonText.text = name;
+            _ribbonCloth.color = cloth;
+            _ribbonText.alpha = 1;
+            var gapY = _gap != null ? ((RectTransform)_ribbon.parent).InverseTransformPoint(_gap.position).y : 0;
+            _ribbon.anchoredPosition = new Vector2(0, gapY);
+            _ribbon.localScale = new Vector3(0, 1, 1);
+            var drift = (ours ? -14 : 14) * PX;
+            DOTween.Sequence().SetTarget(_ribbon).SetUpdate(true)
+                .Append(_ribbon.DOScaleX(1.08f, 0.21f).SetEase(Ease.OutQuad))
+                .Append(_ribbon.DOScaleX(1, 0.1f))
+                .AppendInterval(0.7f)
+                .Append(_ribbon.DOAnchorPosY(gapY + drift, 0.29f))
+                .Join(_ribbonCloth.DOFade(0, 0.29f))
+                .Join(_ribbonText.DOFade(0, 0.29f))
+                .OnComplete(() => _ribbon.gameObject.SetActive(false));
+        }
+
         public void ShowPlaque(bool won, string word)
         {
             _plaque.gameObject.SetActive(true);
