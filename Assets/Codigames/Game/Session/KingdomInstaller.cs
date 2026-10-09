@@ -9,6 +9,7 @@ using Codigames.Kingdom.Harvest;
 using Codigames.Kingdom.Harvest.State;
 using Codigames.Kingdom.Magic;
 using Codigames.Kingdom.Map;
+using Codigames.Kingdom.Quests;
 using Codigames.Kingdom.Research;
 using Codigames.Kingdom.Sites;
 using Codigames.Kingdom.Sites.State;
@@ -76,6 +77,11 @@ namespace Codigames.Game.Session
             builder.Register<Production>(Lifetime.Singleton).As<IProduction>();
             builder.Register<SiteManaSources>(Lifetime.Singleton).As<IManaSources>();
             builder.Register<Sighting>(Lifetime.Singleton);
+            builder.Register<QuestGoals>(Lifetime.Singleton).AsSelf().As<IQuestGoals>();
+            builder.Register(resolver => new QuestChain(resolver.Resolve<KingdomState>().Quests, resolver.Resolve<ICatalog<IQuestDefinition>>(),
+                resolver.Resolve<IQuestGoals>(), resolver.Resolve<ITreasury>(), resolver.Resolve<CityState>(),
+                resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<Stores>(), resolver.Resolve<Harvesting>(),
+                resolver.Resolve<FogOfWar>(), resolver.Resolve<GroundState>(), resolver.Resolve<IBonuses>()), Lifetime.Singleton);
             builder.Register(resolver => new Landmarks(resolver.Resolve<SitesState>(), resolver.Resolve<IProvinceSites>(),
                 resolver.Resolve<FogOfWar>(), resolver.Resolve<ITreasury>(), resolver.Resolve<IKnowledgeSettings>(),
                 ((Data.Fog.FogSettingsAsset)resolver.Resolve<IFogSettings>()).ClaimDiscoverRadius, resolver.Resolve<IBonuses>(),
@@ -110,6 +116,11 @@ namespace Codigames.Game.Session
                 var stores = resolver.Resolve<Stores>();
                 stores.WakeAll(state.LastAdvance);
                 timeline.Register(stores);
+
+                // The chain's own clock: a tutorial quest's rent rush.
+                var quests = resolver.Resolve<QuestChain>();
+                quests.Wake(state.LastAdvance);
+                timeline.Register(quests);
 
                 // The crews last: their steps run between the boundaries the others draw.
                 timeline.Register(resolver.Resolve<Workforce>());

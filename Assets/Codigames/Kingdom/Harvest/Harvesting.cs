@@ -63,6 +63,9 @@ namespace Codigames.Kingdom.Harvest
             _seed = seed;
         }
 
+        // A tap took from a cell: the cell, and what it paid.
+        public event Action<Vector2Int, TapResult> Tapped;
+
         // A cell's depot changed: drawn on, emptied, or full again.
         public event Action<Vector2Int> DepotChanged;
 
@@ -138,7 +141,9 @@ namespace Codigames.Kingdom.Harvest
 
             var paid = Draw(cell, source, wanted, now, out var emptied);
             _treasury.Add(source.Currency, paid);
-            return new TapResult(TapRefusal.None, source.Currency, paid, emptied);
+            var result = new TapResult(TapRefusal.None, source.Currency, paid, emptied);
+            Tapped?.Invoke(cell, result);
+            return result;
         }
 
         // A crew's strike: takes up to `want` units from the cell (all of them from bedrock), the cell emptying as a

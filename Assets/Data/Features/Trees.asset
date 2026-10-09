@@ -15,4 +15,7 @@ MonoBehaviour:
   _id: Trees
   _source: {fileID: 11400000, guid: 00bce11b509fa22a59f78937ecc30412, type: 2}
   _respawnTerrain: Grassland
+  _maxFootprint: 1
+  _displayName: Forest
   _tile: {fileID: 11400000, guid: 3af5b4b97e58aef9893ffb09bc73e585, type: 2}
+  _blockTiles: []

@@ -320,6 +320,7 @@ MonoBehaviour:
   _knowledge: {fileID: 11400000, guid: ebbe0d3c79e33a340bca5aa6ee43679b, type: 2}
   _sites: {fileID: 11400000, guid: f5be6234054baa5ffadf3c9e8842127d, type: 2}
   _treasure: {fileID: 11400000, guid: a997340940dcad53b873379dc3f2321c, type: 2}
+  _quests: {fileID: 11400000, guid: 1f03ac5a3e52845f096bbff9c66a0a09, type: 2}
   _localization: {fileID: 11400000, guid: 4cb132bacd1c8e6019e5b08554960ec9, type: 2}
   _soundCatalog: {fileID: 11400000, guid: 83451c6dc2a68dd0d98655410dd96f32, type: 2}
   _music: {fileID: 11400000, guid: cf05f11578e47cd17bd4eecd9fc6e947, type: 2}

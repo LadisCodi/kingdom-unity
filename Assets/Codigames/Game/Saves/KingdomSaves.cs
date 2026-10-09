@@ -10,7 +10,7 @@ namespace Codigames.Game.Saves
     public static class KingdomSaves
     {
         public const string SLOT = "kingdom";
-        public const int VERSION = 10;
+        public const int VERSION = 11;
 
         private static readonly ISaveMigration<JObject>[] MIGRATIONS =
         {
@@ -32,6 +32,8 @@ namespace Codigames.Game.Saves
             new AdditiveMigration<JObject>(8),
             // 9 → 10: the landmarks claimed.
             new AdditiveMigration<JObject>(9),
+            // 10 → 11: the quest chain.
+            new AdditiveMigration<JObject>(10),
         };
 
         public static SaveSlot<KingdomState, JObject> Slot(ISaveStorage storage)

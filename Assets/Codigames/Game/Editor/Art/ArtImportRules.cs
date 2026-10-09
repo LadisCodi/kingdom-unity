@@ -29,6 +29,8 @@ namespace Codigames.Game.Editor.Art
             ["rb-page"] = new Vector4(56, 56, 56, 56), ["hud-know-tab"] = new Vector4(64, 70, 64, 20), ["know-frame"] = Ends(60),
             ["btn-paint-green"] = SLAB, ["btn-paint-green-down"] = SLAB, ["btn-paint-green-off"] = SLAB,
             ["btn-purple"] = SLAB, ["btn-purple-down"] = SLAB, ["btn-purple-off"] = SLAB,
+            ["scroll-parchment"] = new Vector4(100, 100, 100, 110), ["bar-fill-gold"] = Ends(54),
+            ["btn-green"] = SLAB, ["btn-green-down"] = SLAB, ["btn-green-off"] = SLAB,
             ["btn-wood"] = SLAB, ["btn-wood-down"] = SLAB, ["btn-wood-off"] = SLAB,
         };
 

@@ -20,6 +20,9 @@ namespace Codigames.Kingdom.City
         // The harvest sources its crew works; empty for a building with no crew.
         IReadOnlyList<string> HarvestSources { get; }
 
+        // The Harmony it supplies standing: a decoration's.
+        double HarmonySupply { get; }
+
         // How many villagers may work for it.
         IReadOnlyList<int> MaxWorkersPerLevel { get; }
 

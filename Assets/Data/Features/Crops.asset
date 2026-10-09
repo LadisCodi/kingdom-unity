@@ -15,4 +15,7 @@ MonoBehaviour:
   _id: Crops
   _source: {fileID: 11400000, guid: 6d0fd1d66be5a409c8eacc2e13735807, type: 2}
   _respawnTerrain: Grassland
+  _maxFootprint: 1
+  _displayName: Crop plot
   _tile: {fileID: 0}
+  _blockTiles: []

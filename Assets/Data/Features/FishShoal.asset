@@ -15,4 +15,7 @@ MonoBehaviour:
   _id: FishShoal
   _source: {fileID: 11400000, guid: 7981283bb0fd421e980dc0e654ff6478, type: 2}
   _respawnTerrain: Water
+  _maxFootprint: 1
+  _displayName: Fish shoal
   _tile: {fileID: 11400000, guid: 8708ae44661b53166b49f820bff6d879, type: 2}
+  _blockTiles: []

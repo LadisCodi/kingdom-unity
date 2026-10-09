@@ -14,6 +14,8 @@ namespace Codigames.Game.Data.Harvest
         [SerializeField, Range(1, 3), Tooltip("The largest square its painted cells group into: a mountain is one thing.")]
         private int _maxFootprint = 1;
 
+        [BoxGroup("Presentation")]
+        [SerializeField] private string _displayName;
         [BoxGroup("Presentation"), Tooltip("Drawn on the features layer; empty for what is planted, not painted.")]
         [SerializeField] private TileBase _tile;
         [BoxGroup("Presentation"), Tooltip("A block's drawing, by side from 2 × 2."), ShowIf("@_maxFootprint > 1")]
@@ -22,6 +24,7 @@ namespace Codigames.Game.Data.Harvest
         public string Source => _source != null ? _source.Id : null;
         public string RespawnTerrain => _respawnTerrain;
         public int MaxFootprint => _maxFootprint;
+        public string DisplayName => _displayName;
         public TileBase Tile => _tile;
 
         // What a block of this side is drawn with: the cell's own tile for one, else its block drawing.

@@ -41,10 +41,30 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 0000000000000000000000000000000000000000020000000400000006000000080000000a000000
     _requiredTownhallLevelPerLevel: 
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel: []
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
+    _harvestSources: []
+    _harmonySupply: 6
+    _maxWorkersPerLevel: 
+    _influenceRadiusPerLevel: 
+    _strikeSpeedPerLevel: []
+    _extraUnitsPerDeliveryPerLevel: []
+  _fog:
+    _revealRadius: 0
+    _revealRadiusPerLevel: 
+    _discoverRadius: 0
+  _repair:
+    _seconds: 0
+    _item: 
+    _ruinArt: {fileID: 0}
   _displayName: Well
   _promise: Cobbled stone and a bucket
   _description: Fresh water, and a spot where neighbours stop to chat.
   _buildTab: Decoration
+  _crew: []
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: 7458be22bd56806459f30313c8418438, type: 3}
