@@ -1,4 +1,5 @@
 using System;
+using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
 using TMPro;
 using UnityEngine;
@@ -22,6 +23,12 @@ namespace Codigames.Game.UI.Menus
 
         // An offer's button: its index (0 one for Gold, 1 one for Gems, 2 ten for Gems).
         public event Action<int> OfferTapped;
+
+        // What the tutorial's lines call its controls.
+        protected override void InitializeInternal()
+        {
+            CoachTarget.Tag(_close, "close");
+        }
 
         public void Show(string hint, float fraction, string bar, string note)
         {

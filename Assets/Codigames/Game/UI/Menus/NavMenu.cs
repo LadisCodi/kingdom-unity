@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
 using DG.Tweening;
 using UnityEngine;
@@ -21,6 +22,12 @@ namespace Codigames.Game.UI.Menus
         public event Action<string> TabTapped;
 
         public IReadOnlyList<NavTab> Tabs => _tabs;
+
+        // What the tutorial's lines call its controls.
+        protected override void InitializeInternal()
+        {
+            foreach (var tab in _tabs) CoachTarget.Tag(tab, "nav:" + tab.Id);
+        }
 
         public void SetTucked(bool tucked)
         {

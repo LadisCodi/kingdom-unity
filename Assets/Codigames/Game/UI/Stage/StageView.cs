@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using Codigames.Kingdom.Tutorial;
 using TMPro;
@@ -18,9 +18,19 @@ namespace Codigames.Game.UI.Stage
         private const float BOX_RISE_RPX = 30f;
         private const float QUILL_BOB_RPX = 24f;
         private const float QUILL_BOB_SECONDS = 0.6f;
+        private const float SIDE_MARGIN = 36f;
+        // How far a figure's feet stand down behind the board's top rim.
+        private const float FEET = 78f;
+
+        // Where an `auto` box may sit, in the order tried: a little below the middle, lower, higher with the cast still
+        // under the header, and only then the very top.
+        private static readonly string[] PLACES = { "low", "bottom", "high", "top" };
 
         [SerializeField] private CanvasGroup _stage;
         [SerializeField, Tooltip("Invisible, under the box: takes every tap while a line waits for one.")] private Image _catcher;
+        [SerializeField] private RaycastHole _hole;
+        [SerializeField] private StagePointer _pointer;
+        [SerializeField] private StagePeek _peek;
         [SerializeField] private RectTransform _box;
         [SerializeField] private CanvasGroup _boxGroup;
         [SerializeField] private StageActor _left;
@@ -41,13 +51,21 @@ namespace Codigames.Game.UI.Stage
 
         public bool IsShown => _shown;
 
+        public StagePointer Pointer => _pointer;
+
+        public StagePeek Peek => _peek;
+
+        public string CurrentPlace => _place;
+
         // The safe area the box is placed in.
         private RectTransform Area => (RectTransform)_box.parent;
 
+        // The stage's own group stays at full alpha: a group at 0 stops its whole canvas drawing, the peek with it.
+        // The box, the catcher and the pointer are hidden each on its own.
         private void Awake()
         {
-            _stage.alpha = 0;
-            _stage.blocksRaycasts = false;
+            _stage.alpha = 1;
+            HideBox();
             _catcher.raycastTarget = false;
             _left.Leave();
             _right.Leave();
@@ -68,24 +86,98 @@ namespace Codigames.Game.UI.Stage
             if (_shown) return;
             _shown = true;
             _place = null;
-            _stage.alpha = 1;
-            _stage.blocksRaycasts = true;
             _boxGroup.alpha = 0;
+            _boxGroup.blocksRaycasts = true;
+            _pointer.Hide();
             _boxGroup.DOFade(1, BOX_IN_SECONDS).SetUpdate(true);
+        }
+
+        // Between scenes: only the pointer, for the quest's "show me"; the box and its catcher stay away.
+        public void SetHintOnly(bool on)
+        {
+            if (_shown) return;
+            HideBox();
+            if (!on) _pointer.Hide();
         }
 
         public void Close()
         {
             _shown = false;
-            _stage.alpha = 0;
-            _stage.blocksRaycasts = false;
-            _catcher.raycastTarget = false;
+            HideBox();
+            SetCatching(false);
+            _pointer.Hide();
             _left.Leave();
             _right.Leave();
         }
 
-        // Every tap is the stage's while a line waits for one; the map still pans under it.
-        public void SetCatching(bool catching) => _catcher.raycastTarget = catching;
+        private void HideBox()
+        {
+            _acting?.Kill();
+            _boxGroup.alpha = 0;
+            _boxGroup.blocksRaycasts = false;
+        }
+
+        // Every tap is the stage's while a line waits for one, or while a lock holds; the map still pans under it. A
+        // hole (in screen pixels) lets the one control a line asks for take its tap.
+        public void SetCatching(bool catching, Rect? hole = null)
+        {
+            _catcher.raycastTarget = catching;
+            _hole.Hole = catching ? hole : null;
+        }
+
+        // The first place, in order, where the box and the cast standing on it cover none of `target` (in screen
+        // pixels) and the cast stands below the header; else the first that covers nothing; else the first.
+        public string BestPlace(Rect? target)
+        {
+            string clear = null;
+            foreach (var place in PLACES)
+            {
+                var (covers, castFits) = Judge(place, target);
+                if (!covers && castFits) return place;
+                clear ??= covers ? null : place;
+            }
+
+            return clear ?? PLACES[0];
+        }
+
+        // Does the box at its place now cover `target`?
+        public bool Covers(Rect target) => _place != null && Judge(_place, target).Covers;
+
+        // Is a point on the screen under the box?
+        public bool IsUnderBox(Vector2 screen)
+            => _shown && _boxGroup.alpha > 0.5f && RectTransformUtility.RectangleContainsScreenPoint(_box, screen, null);
+
+        private (bool Covers, bool CastFits) Judge(string place, Rect? target)
+        {
+            var area = Area.rect;
+            var top = area.yMax + Top(place);
+            var box = new Rect(area.xMin + SIDE_MARGIN, top - _box.rect.height, area.width - SIDE_MARGIN * 2f, _box.rect.height);
+            var parts = new List<Rect> { box };
+            var castTop = top;
+            foreach (var (actor, left) in new[] { (_left, true), (_right, false) })
+            {
+                if (!actor.IsOn) continue;
+                var height = actor.StandingHeight - FEET;
+                var width = box.width * 0.44f;
+                parts.Add(new Rect(left ? box.xMin : box.xMax - width, top, width, height));
+                castTop = Mathf.Max(castTop, top + height);
+            }
+
+            var castFits = castTop <= area.yMax - _hudHeight;
+            if (target == null) return (false, castFits);
+
+            var local = ToArea(target.Value);
+            foreach (var part in parts)
+                if (part.Overlaps(local)) return (true, castFits);
+            return (false, castFits);
+        }
+
+        private Rect ToArea(Rect screen)
+        {
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(Area, screen.min, null, out var min);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(Area, screen.max, null, out var max);
+            return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+        }
 
         // A line read and now acted on: the box and its cast step aside.
         public void SetActing(bool acting)
@@ -115,7 +207,11 @@ namespace Codigames.Game.UI.Stage
 
         public void SetMore(bool more) => _quill.gameObject.SetActive(more);
 
-        public void Cast(StageSide side, string speaker, Sprite picture) => Actor(side).Cast(speaker, picture);
+        public void Cast(StageSide side, string speaker, Sprite picture)
+        {
+            Actor(side).Cast(speaker, picture);
+            if (_place != null) Actor(side).SetRoom(Judge(_place, null).CastFits);
+        }
 
         public void Leave(StageSide side) => Actor(side).Leave();
 
@@ -141,6 +237,9 @@ namespace Codigames.Game.UI.Stage
         public void Place(string place)
         {
             if (place == _place) return;
+            var room = Judge(place, null).CastFits;
+            _left.SetRoom(room);
+            _right.SetRoom(room);
             var first = _place == null;
             _place = place;
             var y = Top(place);

@@ -8,6 +8,7 @@ namespace Codigames.Game.UI.Data.Research
     // its requirements while locked, its Knowledge and its price while it can be worked on.
     public class TechSheetData
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public Sprite Icon { get; set; }
         public string Says { get; set; }

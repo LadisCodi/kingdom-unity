@@ -1,5 +1,6 @@
 using System;
 using Codigames.Game.UI.Data.Research;
+using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
 using Codigames.Kingdom.Research;
 using TMPro;
@@ -37,6 +38,7 @@ namespace Codigames.Game.UI.Research
         public void Show(TechCardData card)
         {
             Id = card.Id;
+            CoachTarget.Tag(this, "tech:" + card.Id);
             var rect = (RectTransform)transform;
             rect.anchoredPosition = new Vector2(card.Position.x, -card.Position.y);
 

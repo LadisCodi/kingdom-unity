@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
 using DG.Tweening;
 using TMPro;
@@ -37,8 +38,35 @@ namespace Codigames.Game.UI.Menus
         private readonly List<RewardChip> _chips = new();
         private Tween _bobbing;
         private Tween _roll;
+        private Tween _nudge;
 
         public event Action Tapped;
+
+        // What the tutorial's lines call its controls.
+        protected override void InitializeInternal()
+        {
+            CoachTarget.Tag(_scroll, "quest");
+        }
+
+        // The player has been idle on a quest: the scroll wiggles now and then, a nudge, not an alarm.
+        public void SetNudging(bool nudging)
+        {
+            if (nudging == (_nudge != null)) return;
+            _nudge?.Kill();
+            _nudge = null;
+            _bob.localRotation = Quaternion.identity;
+            if (!nudging) return;
+
+            const float beat = 0.14f;
+            _nudge = DOTween.Sequence()
+                .AppendInterval(beat * 6)
+                .Append(_bob.DOLocalRotate(new Vector3(0, 0, 3), beat))
+                .Append(_bob.DOLocalRotate(new Vector3(0, 0, -3), beat))
+                .Append(_bob.DOLocalRotate(new Vector3(0, 0, 2), beat))
+                .Append(_bob.DOLocalRotate(Vector3.zero, beat))
+                .SetLoops(-1)
+                .SetUpdate(true);
+        }
 
         // Where the scroll is on the screen: what a claim's reward flies from.
         public RectTransform Scroll => (RectTransform)_scroll.transform;

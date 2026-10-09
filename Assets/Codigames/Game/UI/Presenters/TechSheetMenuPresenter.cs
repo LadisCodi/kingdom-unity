@@ -166,6 +166,7 @@ namespace Codigames.Game.UI.Presenters
             var tech = Tech;
             var sheet = new TechSheetData
             {
+                Id = Data,
                 Name = _prose.Name(Data),
                 Icon = _cards.Card(Data)?.Icon,
                 Says = _prose.Line(tech),

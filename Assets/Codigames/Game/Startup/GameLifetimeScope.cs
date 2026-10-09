@@ -116,6 +116,9 @@ namespace Codigames.Game.Startup
         private void RegisterStage(IContainerBuilder builder)
         {
             builder.Register<UiTargets>(Lifetime.Singleton);
+            builder.Register<StageHint>(Lifetime.Singleton);
+            builder.Register<MapTargets>(Lifetime.Singleton);
+            builder.Register<PlotGlow>(Lifetime.Singleton);
             builder.RegisterEntryPoint<TapCount>().AsSelf();
             builder.Register<KingdomConditions>(Lifetime.Singleton);
             builder.Register<ScreenConditions>(Lifetime.Singleton);
@@ -129,7 +132,8 @@ namespace Codigames.Game.Startup
                 resolver.Resolve<IMorning>()), Lifetime.Singleton);
             builder.Register<StageContext>(Lifetime.Singleton).As<IStageContext>();
             builder.RegisterComponent(_stage);
-            builder.RegisterEntryPoint<StagePresenter>();
+            builder.RegisterEntryPoint<StagePresenter>().AsSelf();
+            builder.RegisterEntryPoint<IdleHelp>();
         }
 
         private void RegisterFeedback(IContainerBuilder builder)

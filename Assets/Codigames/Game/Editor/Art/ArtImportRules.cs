@@ -31,7 +31,7 @@ namespace Codigames.Game.Editor.Art
             ["btn-purple"] = SLAB, ["btn-purple-down"] = SLAB, ["btn-purple-off"] = SLAB,
             ["dialogue-frame"] = new Vector4(100, 100, 100, 100),
             ["ribbon-blue"] = Ends(100), ["ribbon-brown"] = Ends(100), ["ribbon-crimson"] = Ends(100), ["ribbon-green"] = Ends(100),
-            ["ribbon-purple"] = Ends(100), ["ribbon-red"] = Ends(100),
+            ["ribbon-purple"] = Ends(100), ["ribbon-red"] = Ends(100), ["stage-halo"] = new Vector4(64, 64, 64, 64),
             ["scroll-parchment"] = new Vector4(100, 100, 100, 110), ["bar-fill-gold"] = Ends(54),
             ["btn-green"] = SLAB, ["btn-green-down"] = SLAB, ["btn-green-off"] = SLAB,
             ["btn-wood"] = SLAB, ["btn-wood-down"] = SLAB, ["btn-wood-off"] = SLAB,

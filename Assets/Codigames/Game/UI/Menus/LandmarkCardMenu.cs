@@ -1,4 +1,5 @@
 using System;
+using Codigames.Game.UI.Stage;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +26,12 @@ namespace Codigames.Game.UI.Menus
 
         public event Action CloseTapped;
         public event Action ClaimTapped;
+
+        // What the tutorial's lines call its controls.
+        protected override void InitializeInternal()
+        {
+            CoachTarget.Tag(_close, "close");
+        }
 
         public void Show(string title, Sprite art, string status, string head, string mana, string uncovered, string note, bool claimable,
             string price, bool affordable)

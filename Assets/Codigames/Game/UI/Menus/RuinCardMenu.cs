@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Codigames.Game.UI.Data;
+using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
 using TMPro;
 using UnityEngine;
@@ -28,6 +29,13 @@ namespace Codigames.Game.UI.Menus
 
         public event Action CloseTapped;
         public event Action RepairTapped;
+
+        // What the tutorial's lines call its controls.
+        protected override void InitializeInternal()
+        {
+            CoachTarget.Tag(_close, "close");
+            CoachTarget.Tag(_repair, "repair");
+        }
 
         public void Show(string title, Sprite art, string promise, string need, IReadOnlyList<CostChipData> price)
         {
