@@ -5,6 +5,8 @@ using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Economy;
 using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Map;
+using Codigames.Kingdom.Research;
+using Codigames.Kingdom.Research.State;
 using Codigames.Modules.Core;
 using Codigames.Modules.Timeline;
 
@@ -16,7 +18,12 @@ namespace Codigames.Kingdom.Tests.Builders
     {
         public const double START_GOLD = 1000;
 
-        public CityFixture(params IBuildingDefinition[] extraBuildings)
+        public CityFixture(params IBuildingDefinition[] extraBuildings) : this(new ITechnology[0], extraBuildings)
+        {
+        }
+
+        // With a tree: its technologies gate and raise what the city does once ResearchState says they are done.
+        public CityFixture(ITechnology[] technologies, params IBuildingDefinition[] extraBuildings)
         {
             Map = new FakeMap(-5, 5);
             Townhall = MakeTownhall();
@@ -35,10 +42,19 @@ namespace Codigames.Kingdom.Tests.Builders
 
             (City, Ground) = NewCity.Create(Map, Settings);
             Placement = new Placement(Map, Buildings, Settings, City, Ground, Revealed);
-            Construction = new Construction(City, Treasury, Placement, Buildings, Settings);
+            Technologies = new Catalog<ITechnology>(technologies);
+            Gates = new ResearchGates(ResearchState, Technologies);
+            Bonuses = new TechBonuses(ResearchState, Technologies);
+            Construction = new Construction(City, Treasury, Placement, Buildings, Settings, Gates, Bonuses);
             Timeline = new Timeline(0);
             Timeline.Register(Construction);
         }
+
+        // Researched by adding to Completed.
+        public ResearchState ResearchState { get; } = new();
+        public Catalog<ITechnology> Technologies { get; }
+        public ResearchGates Gates { get; }
+        public TechBonuses Bonuses { get; }
 
         // Buildings a derived fixture adds of its own.
         protected virtual IBuildingDefinition[] ExtraBuildings() => new IBuildingDefinition[0];

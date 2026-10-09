@@ -16,7 +16,7 @@ namespace Codigames.Kingdom.Tests.Builders
         public static readonly Vector2Int BUSH = new(-3, 3);
         public static readonly Vector2Int ROCK = new(3, -3);
 
-        public HarvestFixture(double grasslandWood = 1)
+        public HarvestFixture(double grasslandWood = 1, params Codigames.Kingdom.Research.ITechnology[] technologies) : base(technologies)
         {
             Yields = new FakeYields { ["Grassland/Wood"] = grasslandWood };
             Sources = new Catalog<IHarvestSource>(new IHarvestSource[]
@@ -38,9 +38,9 @@ namespace Codigames.Kingdom.Tests.Builders
             Ground.Features[BUSH] = "BerryBush";
             Ground.Features[ROCK] = "Mountain";
 
-            Mana = new ManaPool(ManaState, Treasury, new FakeMana());
+            Mana = new ManaPool(ManaState, Treasury, new FakeMana(), Bonuses);
             Harvesting = new Harvesting(HarvestState, Ground, City, Map, Buildings, Features, Sources, Yields,
-                new FakeTap(), Treasury, Mana, 42, Revealed);
+                new FakeTap(), Treasury, Mana, 42, Revealed, Gates, Bonuses);
             Timeline.Register(Mana);
             Timeline.Register(Harvesting);
         }

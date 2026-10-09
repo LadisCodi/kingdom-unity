@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Economy;
+using Codigames.Kingdom.Research;
 using Codigames.Modules.Timeline;
 
 namespace Codigames.Kingdom.City
@@ -19,9 +20,11 @@ namespace Codigames.Kingdom.City
         private readonly ITrainingSettings _settings;
         private readonly ITreasury _treasury;
         private readonly Stores _stores;
+        private readonly IBonuses _bonuses;
 
-        public VillagerTraining(CityState city, ITrainingSettings settings, ITreasury treasury, Stores stores)
+        public VillagerTraining(CityState city, ITrainingSettings settings, ITreasury treasury, Stores stores, IBonuses bonuses = null)
         {
+            _bonuses = bonuses;
             _city = city;
             _settings = settings;
             _treasury = treasury;
@@ -69,7 +72,10 @@ namespace Codigames.Kingdom.City
         }
 
         // How long the villager at a place takes.
-        public double SecondsAt(int place) => Math.Round(_settings.Seconds * Math.Pow(_settings.SecondsGrowth, place), MidpointRounding.AwayFromZero);
+        // The Townhall trains faster with every rank of training speed: the wait is divided by it.
+        public double SecondsAt(int place)
+            => Math.Round(_settings.Seconds * Math.Pow(_settings.SecondsGrowth, place) / Math.Max(1, _bonuses.Multiplier(TechStats.VILLAGER_TRAINING_SPEED)),
+                MidpointRounding.AwayFromZero);
 
         public double? NextBoundary(double after)
         {

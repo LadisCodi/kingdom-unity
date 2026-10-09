@@ -6,8 +6,9 @@ namespace Codigames.Kingdom.City
     public sealed class UpgradeOffer
     {
         public UpgradeOffer(int targetLevel, IReadOnlyDictionary<string, double> price, double seconds,
-            ConstructionRefusal refusal, int requiredTownhallLevel, int requiredPopulation = 0)
+            ConstructionRefusal refusal, int requiredTownhallLevel, int requiredPopulation = 0, string requiredTech = null)
         {
+            RequiredTech = requiredTech;
             RequiredPopulation = requiredPopulation;
             TargetLevel = targetLevel;
             Price = price;
@@ -29,5 +30,8 @@ namespace Codigames.Kingdom.City
 
         // The villagers the next level asks for; 0 when it asks for none.
         public int RequiredPopulation { get; }
+
+        // The technology the next level asks for, while it is not researched; null otherwise.
+        public string RequiredTech { get; }
     }
 }

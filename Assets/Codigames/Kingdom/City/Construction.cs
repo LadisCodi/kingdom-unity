@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Economy;
+using Codigames.Kingdom.Research;
 using Codigames.Modules.Core;
 using Codigames.Modules.Timeline;
 
@@ -21,10 +22,14 @@ namespace Codigames.Kingdom.City
         private readonly Placement _placement;
         private readonly ICatalog<IBuildingDefinition> _buildings;
         private readonly IConstructionSettings _settings;
+        private readonly IResearchGates _gates;
+        private readonly IBonuses _bonuses;
 
         public Construction(CityState city, ITreasury treasury, Placement placement, ICatalog<IBuildingDefinition> buildings,
-            IConstructionSettings settings)
+            IConstructionSettings settings, IResearchGates gates = null, IBonuses bonuses = null)
         {
+            _gates = gates;
+            _bonuses = bonuses;
             _city = city;
             _treasury = treasury;
             _placement = placement;
@@ -62,7 +67,7 @@ namespace Codigames.Kingdom.City
             DistrictPlaced?.Invoke(district);
 
             var rings = CityQueries.DistanceFromTownhall(_city, _buildings, _settings, anchor);
-            Start(district, 1, BuildingDurations.BuildSeconds(building.Duration, ordinal - 1, rings), now);
+            Start(district, 1, BuildSeconds(building, ordinal - 1, rings), now);
             return ConstructionRefusal.None;
         }
 
@@ -71,9 +76,10 @@ namespace Codigames.Kingdom.City
         {
             if (!_buildings.TryGet(definitionId, out var building)) return ConstructionRefusal.NotFound;
             if (!building.Buildable) return ConstructionRefusal.NotBuildable;
+            if (MissingTech(_gates?.DistrictTech(definitionId)) != null) return ConstructionRefusal.NeedsResearch;
 
             var count = CityQueries.Count(_city, definitionId);
-            var cap = CityQueries.MaxCount(building, CityQueries.TownhallLevel(_city, _settings));
+            var cap = MaxCount(building);
             if (cap.HasValue && count >= cap.Value) return ConstructionRefusal.AtCap;
             if (!CityQueries.HasFreeBuilder(_city)) return ConstructionRefusal.NoFreeBuilder;
 
@@ -91,8 +97,8 @@ namespace Codigames.Kingdom.City
             var rings = plot.HasValue ? CityQueries.DistanceFromTownhall(_city, _buildings, _settings, plot.Value) : 0;
 
             return new BuildOffer(definitionId, count + 1, BuildingPricing.Currencies(building, count + 1, 1),
-                BuildingDurations.BuildSeconds(building.Duration, count, rings), count,
-                CityQueries.MaxCount(building, CityQueries.TownhallLevel(_city, _settings)), BuildRefusal(definitionId));
+                BuildSeconds(building, count, rings), count, MaxCount(building), BuildRefusal(definitionId),
+                MissingTech(_gates?.DistrictTech(definitionId)));
         }
 
         public ConstructionRefusal Upgrade(string districtId, double now)
@@ -107,7 +113,7 @@ namespace Codigames.Kingdom.City
             var target = district.Level + 1;
             if (!_treasury.TryPay(BuildingPricing.Currencies(building, district.Ordinal, target))) return ConstructionRefusal.CannotAfford;
 
-            Start(district, target, BuildingDurations.UpgradeSeconds(building.Duration, target, _settings.LateUpgradeFromLevel), now);
+            Start(district, target, UpgradeSeconds(building, target), now);
             return ConstructionRefusal.None;
         }
 
@@ -129,8 +135,8 @@ namespace Codigames.Kingdom.City
             var townhall = At(building.Gates.RequiredTownhallLevelPerLevel, gateIndex);
             var population = At(building.Gates.RequiredPopulationPerLevel, gateIndex);
 
-            return new UpgradeOffer(target, price,
-                BuildingDurations.UpgradeSeconds(building.Duration, target, _settings.LateUpgradeFromLevel), refusal, townhall, population);
+            return new UpgradeOffer(target, price, UpgradeSeconds(building, target), refusal, townhall, population,
+                MissingTech(_gates?.LevelTech(district.DefinitionId, target)));
         }
 
         // What stands between a district and its next level, before the price.
@@ -139,6 +145,7 @@ namespace Codigames.Kingdom.City
             var building = _buildings.Get(district.DefinitionId);
             if (!district.Built || _city.Jobs.Any(j => j.DistrictId == district.Id)) return ConstructionRefusal.AlreadyUnderWay;
             if (district.Level >= building.MaxLevel) return ConstructionRefusal.MaxLevel;
+            if (MissingTech(_gates?.LevelTech(district.DefinitionId, district.Level + 1)) != null) return ConstructionRefusal.NeedsResearch;
 
             var gates = building.Gates.RequiredTownhallLevelPerLevel;
             var gateIndex = district.Level - 1;
@@ -152,9 +159,29 @@ namespace Codigames.Kingdom.City
             return CityQueries.HasFreeBuilder(_city) ? ConstructionRefusal.None : ConstructionRefusal.NoFreeBuilder;
         }
 
-        // Free and instant; an unfinished building moves too, keeping its place in the work and its wait.
+        // How many may stand at the Townhall's level, and one more once the technology that allows it is researched.
+        public int? MaxCount(IBuildingDefinition building)
+        {
+            var cap = CityQueries.MaxCount(building, CityQueries.TownhallLevel(_city, _settings));
+            var extra = _gates?.ExtraCountTech(building.Id);
+            return cap.HasValue && extra != null && _gates.IsOpen(extra) ? cap + 1 : cap;
+        }
+
+        // The builders work faster with every rank of build speed: the wait is divided by it.
+        private double BuildSeconds(IBuildingDefinition building, int count, int rings)
+            => BuildingDurations.BuildSeconds(building.Duration, count, rings) / BuildSpeed;
+
+        private double UpgradeSeconds(IBuildingDefinition building, int target)
+            => BuildingDurations.UpgradeSeconds(building.Duration, target, _settings.LateUpgradeFromLevel) / BuildSpeed;
+
+        private double BuildSpeed => Math.Max(1, _bonuses.Multiplier(TechStats.BUILD_SPEED));
+
+        // The technology still to research, or null when there is none or it is done.
+        private string MissingTech(string tech) => tech != null && !_gates.IsOpen(tech) ? tech : null;
+
         private static int At(System.Collections.Generic.IReadOnlyList<int> list, int index) => index < list.Count ? list[index] : 0;
 
+        // Free and instant; an unfinished building moves too, keeping its place in the work and its wait.
         public ConstructionRefusal Move(string districtId, Vector2Int anchor)
         {
             var district = _city.Districts.FirstOrDefault(d => d.Id == districtId);

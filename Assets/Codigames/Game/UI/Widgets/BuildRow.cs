@@ -22,6 +22,8 @@ namespace Codigames.Game.UI.Widgets
         [SerializeField] private CostChip _chipPrefab;
         [SerializeField] private TMP_Text _wait;
         [SerializeField] private TMP_Text _built;
+        [SerializeField] private GameObject _padlock;
+        [SerializeField, Tooltip("The wait and the count: a row a technology has still to open has neither yet.")] private GameObject _side;
         [SerializeField] private Color _fillColor = new Color32(0xe2, 0xcc, 0xa0, 0xff);
         [SerializeField] private Color _unavailableColor = new Color32(0xcb, 0xba, 0x96, 0xff);
         [SerializeField] private Color _ordinalColor = new Color32(0x7a, 0x5c, 0x3e, 0xff);
@@ -46,6 +48,8 @@ namespace Codigames.Game.UI.Widgets
             _wait.text = row.Wait;
             _built.text = row.Built;
             _fill.color = row.Available ? _fillColor : _unavailableColor;
+            if (_padlock != null) _padlock.SetActive(row.Locked);
+            if (_side != null) _side.SetActive(!row.Locked);
 
             for (var i = 0; i < row.Price.Count; i++)
             {

@@ -31,10 +31,13 @@ namespace Codigames.Game.Fog
         private readonly Localizer _localizer;
         private readonly ISoundService _sounds;
 
+        private readonly UI.Research.TechProse _prose;
+
         public FogInput(FogOfWar fog, CityState city, IConstructionSettings construction, IFogSettings settings, ProvinceMap map,
             IWorldFeedbackService feedback, IQuickInfoMessageService messages, ICurrencyIcons icons, NumberFormat numbers,
-            Localizer localizer, ISoundService sounds)
+            Localizer localizer, ISoundService sounds, UI.Research.TechProse prose)
         {
+            _prose = prose;
             _sounds = sounds;
             _fog = fog;
             _city = city;
@@ -68,6 +71,9 @@ namespace Codigames.Game.Fog
                     break;
                 case RevealResult.OutOfReach:
                     Say(_localizer.Tr("Raise the Townhall to level {n} to explore this far", ("n", _numbers.Number(LevelReaching(cell)))));
+                    break;
+                case RevealResult.NeedsResearch:
+                    Say(_localizer.Tr("Research {tech} to explore this terrain", ("tech", _prose.Name(_fog.TerrainTech(cell)))));
                     break;
                 case RevealResult.NotEnoughGold:
                     Say(_localizer.Tr("Not enough Gold"));

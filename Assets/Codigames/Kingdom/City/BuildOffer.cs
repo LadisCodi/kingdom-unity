@@ -8,8 +8,9 @@ namespace Codigames.Kingdom.City
     public sealed class BuildOffer
     {
         public BuildOffer(string definitionId, int ordinal, IReadOnlyDictionary<string, double> price, double seconds,
-            int count, int? cap, ConstructionRefusal refusal)
+            int count, int? cap, ConstructionRefusal refusal, string requiredTech = null)
         {
+            RequiredTech = requiredTech;
             DefinitionId = definitionId;
             Ordinal = ordinal;
             Price = price;
@@ -29,6 +30,9 @@ namespace Codigames.Kingdom.City
         public int? Cap { get; }
 
         public ConstructionRefusal Refusal { get; }
+
+        // The technology that opens it, while it is not researched; null otherwise.
+        public string RequiredTech { get; }
 
         // Several may stand, so each is called by its number (Housing #3).
         public bool Numbered => !Cap.HasValue || Cap.Value > 1;

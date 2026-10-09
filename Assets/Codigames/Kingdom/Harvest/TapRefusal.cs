@@ -9,5 +9,7 @@ namespace Codigames.Kingdom.Harvest
         // Emptied, and growing back.
         Exhausted,
         NoMana,
+        // A technology opens this source and is not researched yet: refused before any Mana is spent.
+        NeedsResearch,
     }
 }

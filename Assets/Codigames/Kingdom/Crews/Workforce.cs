@@ -7,6 +7,7 @@ using Codigames.Kingdom.Crews.State;
 using Codigames.Kingdom.Economy;
 using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Harvest;
+using Codigames.Kingdom.Research;
 using Codigames.Modules.Core;
 using Codigames.Modules.Grid;
 using Codigames.Modules.Timeline;
@@ -31,10 +32,12 @@ namespace Codigames.Kingdom.Crews
         private readonly Harvesting _harvesting;
         private readonly Stores _stores;
         private readonly IWorkerSettings _settings;
+        private readonly IBonuses _bonuses;
 
         public Workforce(CityState city, ICatalog<IBuildingDefinition> buildings, IRevealedGround revealed, Harvesting harvesting,
-            Stores stores, IWorkerSettings settings)
+            Stores stores, IWorkerSettings settings, IBonuses bonuses = null)
         {
+            _bonuses = bonuses;
             _city = city;
             _buildings = buildings;
             _revealed = revealed;
@@ -56,9 +59,10 @@ namespace Codigames.Kingdom.Crews
 
         public int Assigned(string districtId) => _city.Workers.Count(w => w.BuildingId == districtId);
 
-        public int Limit(DistrictState district) => At(Production(district).MaxWorkersPerLevel, district.Level);
+        // Whole workers and whole tiles: the tree's flat ranks, aimed at the building or not, rounded down.
+        public int Limit(DistrictState district) => Raised(TechStats.CREW_SLOTS, Production(district).MaxWorkersPerLevel, district);
 
-        public int Radius(DistrictState district) => At(Production(district).InfluenceRadiusPerLevel, district.Level);
+        public int Radius(DistrictState district) => Raised(TechStats.INFLUENCE_RADIUS, Production(district).InfluenceRadiusPerLevel, district);
 
         public bool HasCrew(DistrictState district) => Production(district).HarvestSources.Count > 0;
 
@@ -216,7 +220,9 @@ namespace Codigames.Kingdom.Crews
                         break;
                     }
 
-                    var owed = source.UnitsPerStrike + At(Production(building).ExtraUnitsPerDeliveryPerLevel, building.Level) + worker.StrikeCarry;
+                    var delivery = (_harvesting.UnitsPerStrike(source) + At(Production(building).ExtraUnitsPerDeliveryPerLevel, building.Level))
+                                   * _bonuses.Multiplier(TechStats.CREW_YIELD);
+                    var owed = delivery + worker.StrikeCarry;
                     var want = Math.Floor(owed + 1e-9);
                     worker.StrikeCarry = Math.Max(0, owed - want);
                     worker.Carrying = _harvesting.Draw(cell, want, t);
@@ -274,15 +280,17 @@ namespace Codigames.Kingdom.Crews
         private bool Works(IReadOnlyList<string> sources, Vector2Int cell)
         {
             var source = _harvesting.SourceAt(cell);
-            return source != null && sources.Contains(source.Id);
+            return source != null && sources.Contains(source.Id) && _harvesting.MissingTech(source) == null;
         }
 
         private double WalkMs(Vector2Int cell, DistrictState building)
-            => GridMath.Euclidean(cell, building.Anchor) / Math.Max(0.1, _settings.MoveSpeedTilesPerSecond) * 1000;
+            => GridMath.Euclidean(cell, building.Anchor)
+               / Math.Max(0.1, _settings.MoveSpeedTilesPerSecond * _bonuses.Multiplier(TechStats.WORKER_SPEED)) * 1000;
 
         private double StrikeMs(IHarvestSource source, DistrictState building)
         {
-            var speed = Math.Max(0.01, At(Production(building).StrikeSpeedPerLevel, building.Level, 1));
+            var speed = Math.Max(0.01, At(Production(building).StrikeSpeedPerLevel, building.Level, 1))
+                        * Math.Max(1, _bonuses.Multiplier(TechStats.CREW_STRIKE_SPEED, TargetKind.District, building.DefinitionId));
             return Math.Max(MIN_STRIKE_MS, Math.Round(source.SecondsPerStrike * 1000 / speed));
         }
 
@@ -291,6 +299,12 @@ namespace Codigames.Kingdom.Crews
             worker.Activity = activity;
             worker.StateStartedAt = at;
             worker.StateUntil = until;
+        }
+
+        private int Raised(string stat, IReadOnlyList<int> perLevel, DistrictState district)
+        {
+            var level = At(perLevel, district.Level);
+            return level <= 0 ? 0 : (int)Math.Floor(_bonuses.Apply(stat, level, TargetKind.District, district.DefinitionId));
         }
 
         private DistrictState District(string id) => _city.Districts.FirstOrDefault(d => d.Id == id);

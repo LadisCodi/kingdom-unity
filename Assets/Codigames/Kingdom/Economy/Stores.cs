@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
+using Codigames.Kingdom.Research;
 using Codigames.Modules.Core;
 using Codigames.Modules.Timeline;
 
@@ -23,10 +24,12 @@ namespace Codigames.Kingdom.Economy
         private readonly ICatalog<IBuildingDefinition> _buildings;
         private readonly IEconomySettings _settings;
         private readonly ITreasury _treasury;
+        private readonly IBonuses _bonuses;
 
         public Stores(CityState city, ICatalog<IBuildingDefinition> buildings, IEconomySettings settings, ITreasury treasury,
-            Construction construction)
+            Construction construction, IBonuses bonuses = null)
         {
+            _bonuses = bonuses;
             _city = city;
             _buildings = buildings;
             _settings = settings;
@@ -49,13 +52,15 @@ namespace Codigames.Kingdom.Economy
             if (!district.Built) return 0;
 
             var production = _buildings.Get(district.DefinitionId).Production;
-            var own = At(production.GoldPerMinutePerLevel, district.Level);
-            var rent = Residents(district) * _settings.GoldPerPopulationPerMinute * (1 + At(production.TaxBonusPerLevel, district.Level));
+            var own = At(production.GoldPerMinutePerLevel, district.Level) * _bonuses.Multiplier(TechStats.OWN_GOLD);
+            var rate = _bonuses.Apply(TechStats.TAX_RATE, _settings.GoldPerPopulationPerMinute, TargetKind.District, district.DefinitionId);
+            var rent = Residents(district) * rate * (1 + At(production.TaxBonusPerLevel, district.Level));
             return own + rent;
         }
 
         public double Capacity(DistrictState district)
-            => At(_buildings.Get(district.DefinitionId).Production.StorageCapacityPerLevel, district.Level);
+            => At(_buildings.Get(district.DefinitionId).Production.StorageCapacityPerLevel, district.Level)
+               * _bonuses.Multiplier(TechStats.STORAGE_CAPACITY, TargetKind.District, district.DefinitionId);
 
         // How many of the city's villagers live in this house: houses fill in build order.
         public int Residents(DistrictState district)
@@ -211,8 +216,14 @@ namespace Codigames.Kingdom.Economy
             district.Store.Held[GOLD] = held + units;
         }
 
+        // Beds: whole villagers, so the tree's ranks add whole beds to a house that has any.
         private int HousingOf(DistrictState district)
-            => district.Built ? (int)At(_buildings.Get(district.DefinitionId).Production.PopulationCapacityPerLevel, district.Level) : 0;
+        {
+            if (!district.Built) return 0;
+
+            var beds = At(_buildings.Get(district.DefinitionId).Production.PopulationCapacityPerLevel, district.Level);
+            return beds <= 0 ? 0 : (int)Math.Floor(_bonuses.Apply(TechStats.POPULATION_CAPACITY, beds, TargetKind.District, district.DefinitionId));
+        }
 
         private static double At(IReadOnlyList<double> perLevel, int level)
             => perLevel.Count == 0 ? 0 : perLevel[Math.Min(Math.Max(level, 1), perLevel.Count) - 1];

@@ -14,6 +14,8 @@ namespace Codigames.Kingdom.City
         NeedsTownhallLevel,
         // The city has too few villagers for the next level.
         NeedsPopulation,
+        // A technology opens it and is not researched yet.
+        NeedsResearch,
         AlreadyUnderWay,
         NotFound,
     }
