@@ -7,6 +7,7 @@ using Codigames.Game.UI.Buildings;
 using Codigames.Game.UI.Data;
 using Codigames.Game.UI.Kit;
 using Codigames.Game.UI.Menus;
+using Codigames.Kingdom.Bag;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Crews;
@@ -47,6 +48,7 @@ namespace Codigames.Game.UI.Presenters
         private readonly PortraitArt _portraits;
         private readonly ISoundService _sounds;
         private readonly CardFraming _framing;
+        private readonly Speedups _speedups;
 
         // The second the card was last drawn at: it is redrawn once a second.
         private double _shownSeconds = -1;
@@ -58,8 +60,9 @@ namespace Codigames.Game.UI.Presenters
             BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, IClock clock, NumberFormat numbers,
             Localizer localizer, Stores stores, VillagerTraining training, Workforce crews, BuildingStats stats,
             BuildingStatProse prose, GemRush rush, UiIcons icons, PortraitArt portraits, ISoundService sounds,
-            CardFraming framing) : base(views)
+            CardFraming framing, Speedups speedups) : base(views)
         {
+            _speedups = speedups;
             _framing = framing;
             _ui = ui;
             _construction = construction;
@@ -125,6 +128,8 @@ namespace Codigames.Game.UI.Presenters
             view.MoveTapped += OnMove;
             view.UpgradeTapped += OnUpgrade;
             view.FinishWorkTapped += OnFinishWork;
+            view.SpeedUpWorkTapped += OnSpeedUpWork;
+            view.SpeedUpTrainingTapped += OnSpeedUpTraining;
             view.AmountTapped += OnAmount;
             view.TrainTapped += OnTrain;
             view.FinishTrainingTapped += OnFinishTraining;
@@ -138,6 +143,8 @@ namespace Codigames.Game.UI.Presenters
             view.MoveTapped -= OnMove;
             view.UpgradeTapped -= OnUpgrade;
             view.FinishWorkTapped -= OnFinishWork;
+            view.SpeedUpWorkTapped -= OnSpeedUpWork;
+            view.SpeedUpTrainingTapped -= OnSpeedUpTraining;
             view.AmountTapped -= OnAmount;
             view.TrainTapped -= OnTrain;
             view.FinishTrainingTapped -= OnFinishTraining;
@@ -173,6 +180,14 @@ namespace Codigames.Game.UI.Presenters
             _sounds.Play(done ? SoundIds.UPGRADE_BOUGHT : SoundIds.ERROR);
             Refresh();
         }
+
+        // Speed up: the picker, with Finish inside it, last.
+        private void OnSpeedUpWork()
+        {
+            if (JobOf(Data) is { } job) _ = _ui.ShowMenu<SpeedupMenu, SpeedJob>(SpeedJob.Construction(job.Id));
+        }
+
+        private void OnSpeedUpTraining() => _ = _ui.ShowMenu<SpeedupMenu, SpeedJob>(SpeedJob.Training());
 
         private void OnAmount()
         {
@@ -232,6 +247,7 @@ namespace Codigames.Game.UI.Presenters
                 TrainingHead = _localizer.Tr("Villager"),
                 Training = district.DefinitionId == _settings.Townhall.Id && district.Built ? Training(now) : null,
                 CrewHead = _localizer.Tr("Workers"),
+                SpeedUp = "<sprite name=\"hourglass\"> " + _localizer.Tr("Speed up"),
                 Crew = _crews.HasCrew(district) && district.Built ? Crew(district) : null,
             });
         }
@@ -242,7 +258,7 @@ namespace Codigames.Game.UI.Presenters
             var cap = CityQueries.MaxCount(building, CityQueries.TownhallLevel(_city, _settings));
             var numbered = building.Buildable && (!cap.HasValue || cap.Value > 1);
             var name = _localizer.Capitalized(_localizer.Tr(building.DisplayName));
-            var ordinal = numbered ? "<size=75%> #" + _numbers.Number(district.Ordinal) + "</size>" : string.Empty;
+            var ordinal = numbered ? " #" + _numbers.Number(district.Ordinal) : string.Empty;
             return name + ordinal + " <size=72%>" + _localizer.Tr("Lv {n}", ("n", _numbers.Number(district.Level))) + "</size>";
         }
 
@@ -253,7 +269,10 @@ namespace Codigames.Game.UI.Presenters
             var progress = (float)Math.Min(1, (now - job.StartedAt) / (job.Seconds * 1000));
             var gems = _rush.JobCost(job.Id, now);
             return new WorkData(job.TargetLevel == 1 ? _localizer.Tr("Building") : _localizer.Tr("Upgrading"), progress,
-                _numbers.Duration(Math.Ceiling(left)), Gems(gems), _treasury.Get(GemRush.GEMS) >= gems);
+                _numbers.Duration(Math.Ceiling(left)), Gems(gems), _treasury.Get(GemRush.GEMS) >= gems)
+            {
+                SpeedUp = _speedups.For(SpeedJob.Construction(job.Id)).Count > 0,
+            };
         }
 
         // What it is worth now: a producer's output per coin, a house's rent, then its level's figures.
@@ -328,7 +347,10 @@ namespace Codigames.Game.UI.Presenters
             var gems = _rush.LineCost(now);
             return new WorkData(_localizer.Tr("Training"), progress, _numbers.Duration(Math.Ceiling(left)), Gems(gems),
                 _treasury.Get(GemRush.GEMS) >= gems, count > 1 ? "x" + _numbers.Exact(count) : string.Empty,
-                _localizer.Tr("Total time: {time}", ("time", _numbers.Duration(Math.Ceiling(_training.RemainingSeconds(now) ?? 0)))));
+                _localizer.Tr("Total time: {time}", ("time", _numbers.Duration(Math.Ceiling(_training.RemainingSeconds(now) ?? 0)))))
+            {
+                SpeedUp = _speedups.For(SpeedJob.Training()).Count > 0,
+            };
         }
 
         // The crew stepper: who works here against the most it holds.

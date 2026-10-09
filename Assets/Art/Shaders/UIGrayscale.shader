@@ -1,4 +1,5 @@
-// A UI graphic drained of colour: its luminance, kept a touch warm so it still reads as parchment. Unity's
+// A UI graphic drained of colour: its luminance, kept a touch warm so it still reads as parchment, and as much of
+// its own colour as _Saturation keeps (0 drains it all; the web's saturate()). Unity's
 // UI/Default otherwise (stencil and clip rect, so it works under masks and scroll views).
 Shader "Kingdom/UI Grayscale"
 {
@@ -7,6 +8,7 @@ Shader "Kingdom/UI Grayscale"
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
         _Warmth ("Warmth", Range(0, 1)) = 0.15
+        _Saturation ("Colour kept", Range(0, 1)) = 0
 
         _StencilComp ("Stencil Comparison", Float) = 8
         _Stencil ("Stencil ID", Float) = 0
@@ -71,6 +73,7 @@ Shader "Kingdom/UI Grayscale"
             float4 _ClipRect;
             float4 _MainTex_ST;
             float _Warmth;
+            float _Saturation;
 
             v2f vert(appdata_t v)
             {
@@ -88,7 +91,8 @@ Shader "Kingdom/UI Grayscale"
             {
                 half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
                 half grey = dot(color.rgb, half3(0.299, 0.587, 0.114));
-                color.rgb = lerp(grey.xxx, grey * half3(1.06, 1.0, 0.9), _Warmth);
+                half3 drained = lerp(grey.xxx, grey * half3(1.06, 1.0, 0.9), _Warmth);
+                color.rgb = lerp(drained, color.rgb, _Saturation);
 
                 #ifdef UNITY_UI_CLIP_RECT
                 color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);

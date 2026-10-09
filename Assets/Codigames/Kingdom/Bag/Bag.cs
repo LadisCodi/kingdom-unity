@@ -137,6 +137,21 @@ namespace Codigames.Kingdom.Bag
         // Its tile was tapped: no longer new.
         public void MarkSeen(string id) => _state.Fresh.Remove(id);
 
+        // The tab an item is kept under: chests with resources, speed-ups and boosts each their own, the rest Other.
+        public static BagTab TabOf(IItemDefinition item) => item.Kind switch
+        {
+            ItemKind.Chest or ItemKind.Choice => BagTab.Resources,
+            ItemKind.Speedup => BagTab.SpeedUps,
+            ItemKind.Boost => BagTab.Boosts,
+            _ => BagTab.Other,
+        };
+
+        // What a tab holds, in the catalog's order.
+        public IReadOnlyList<IItemDefinition> In(BagTab tab) => Held.Where(i => TabOf(i) == tab).ToList();
+
+        // Whether a tab holds anything not looked at yet.
+        public bool IsFresh(BagTab tab) => Held.Any(i => TabOf(i) == tab && IsFresh(i.Id));
+
         // The Bag was opened: the nav's orb clears.
         public void MarkOpened() => _state.Badge = 0;
     }

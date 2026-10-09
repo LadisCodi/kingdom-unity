@@ -113,6 +113,10 @@ namespace Codigames.Game.Startup
             builder.Register<DistrictCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>().As<IInspectedDistrict>();
             builder.Register<UpgradeSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<CardFraming>(Lifetime.Singleton);
+            builder.Register<Codigames.Game.UI.Bag.ItemProse>(Lifetime.Singleton);
+            builder.Register<Codigames.Game.UI.Bag.ItemTiles>(Lifetime.Singleton);
+            builder.Register<BagMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
+            builder.Register<SpeedupMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<Codigames.Game.UI.Buildings.BuildingStatProse>(Lifetime.Singleton);
             builder.Register<TechProse>(Lifetime.Singleton);
             builder.Register<RuinCardMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();

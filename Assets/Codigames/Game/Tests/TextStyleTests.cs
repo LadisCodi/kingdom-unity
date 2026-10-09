@@ -31,7 +31,7 @@ namespace Codigames.Game.Tests
 
         // Roles whose label keeps its own face and material (a title's band, a slab button, a plank).
         private static readonly HashSet<string> DISPLAY_ROLES = new() { "Title", "Subtitle", "Heading" };
-        private static readonly HashSet<string> MATERIAL_ROLES = new() { "Button", "Button Big", "Quest Button", "Tab", "Nav", "Toast", "Plaque" };
+        private static readonly HashSet<string> MATERIAL_ROLES = new() { "Button", "Button Big", "Quest Button", "Tab", "Nav", "Toast", "Plaque", "Tile Count" };
 
         [Test]
         public void TheSheet_ShouldBeTextMeshProsDefault()

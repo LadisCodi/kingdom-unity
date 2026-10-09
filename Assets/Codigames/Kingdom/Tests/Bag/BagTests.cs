@@ -66,7 +66,7 @@ namespace Codigames.Kingdom.Tests.Bag
                 Boosts = new Boosts(State);
                 Bag = new Codigames.Kingdom.Bag.Bag(State, Items, Treasury, Production, new Settings(), Boosts, Mana);
                 Speedups = new Speedups(Bag, Items, Construction, new VillagerTraining(City, null, Treasury,
-                    new Stores(City, Buildings, new Economy(), Treasury, Construction)));
+                    new Stores(City, Buildings, new Economy(), Treasury, Construction)), City);
             }
 
             public BagState State { get; } = new();
@@ -259,6 +259,34 @@ namespace Codigames.Kingdom.Tests.Bag
             var steppedHouse = stepped.City.Districts.First(d => d.Id == "house");
             Assert.That(once.Stores.Held(house, END), Is.EqualTo(stepped.Stores.Held(steppedHouse, END)).Within(1e-6));
             Assert.That(once.Stores.Held(house, END), Is.GreaterThan(stepped.Stores.GoldPerMinute(steppedHouse) * 120), "the boosted half hour paid more");
+        }
+
+        [Test]
+        public void Tabs_ShouldSortItemsByWhatTheyAre()
+        {
+            var fixture = new Fixture();
+            foreach (var id in new[] { "GoldChest1h", "ChoiceChest1h", "RentBoost8h", "ManaFlaskSmall", "GeneralSpeedup5m" })
+                fixture.Bag.Grant(id, 1);
+
+            Assert.That(fixture.Bag.In(BagTab.Resources).Select(i => i.Id), Is.EqualTo(new[] { "GoldChest1h", "ChoiceChest1h" }));
+            Assert.That(fixture.Bag.In(BagTab.SpeedUps).Select(i => i.Id), Is.EqualTo(new[] { "GeneralSpeedup5m" }));
+            Assert.That(fixture.Bag.In(BagTab.Other).Select(i => i.Id), Is.EqualTo(new[] { "ManaFlaskSmall" }));
+            Assert.That(fixture.Bag.IsFresh(BagTab.Boosts), Is.True);
+
+            fixture.Bag.MarkSeen("RentBoost8h");
+            Assert.That(fixture.Bag.IsFresh(BagTab.Boosts), Is.False);
+        }
+
+        [Test]
+        public void FirstJobFor_ShouldFindARunningTimerTheSpeedupFits()
+        {
+            var fixture = new Fixture();
+            Assert.That(fixture.Speedups.FirstJobFor("GeneralSpeedup5m", 0), Is.Null);
+
+            fixture.Construction.Build("Housing", new Vector2Int(4, 0), 0);
+
+            Assert.That(fixture.Speedups.FirstJobFor("GeneralSpeedup5m", 0)?.JobId, Is.EqualTo(fixture.City.Jobs[0].Id));
+            Assert.That(fixture.Speedups.FirstJobFor("TrainingSpeedup1h", 0), Is.Null);
         }
     }
 }

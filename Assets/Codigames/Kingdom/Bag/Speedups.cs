@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Codigames.Kingdom.City;
+using Codigames.Kingdom.City.State;
 using Codigames.Modules.Core;
 
 namespace Codigames.Kingdom.Bag
@@ -18,8 +19,11 @@ namespace Codigames.Kingdom.Bag
         private readonly Construction _construction;
         private readonly VillagerTraining _training;
 
-        public Speedups(Bag bag, ICatalog<IItemDefinition> items, Construction construction, VillagerTraining training)
+        private readonly CityState _city;
+
+        public Speedups(Bag bag, ICatalog<IItemDefinition> items, Construction construction, VillagerTraining training, CityState city)
         {
+            _city = city;
             _bag = bag;
             _items = items;
             _construction = construction;
@@ -36,6 +40,22 @@ namespace Codigames.Kingdom.Bag
         // Seconds left on the timer at `now`; null when it is not running.
         public double? RemainingSeconds(SpeedJob job, double now)
             => job.Kind == SpeedupKind.Construction ? _construction.RemainingSeconds(job.JobId, now) : _training.RemainingSeconds(now);
+
+        // The timers running at `now`: the builders' jobs, then the Townhall's line.
+        public IEnumerable<SpeedJob> Running(double now)
+        {
+            foreach (var job in _city.Jobs)
+                if (_construction.RemainingSeconds(job.Id, now) > 0) yield return SpeedJob.Construction(job.Id);
+            if (_training.RemainingSeconds(now) > 0) yield return SpeedJob.Training();
+        }
+
+        // The first running timer a speed-up fits — where the Bag sends it; null when nothing of its kind runs.
+        public SpeedJob? FirstJobFor(string id, double now)
+        {
+            foreach (var job in Running(now))
+                if (Fits(id, job)) return job;
+            return null;
+        }
 
         // The speed-ups held that fit: the typed ones, then General, each smallest first.
         public IReadOnlyList<IItemDefinition> For(SpeedJob job)
