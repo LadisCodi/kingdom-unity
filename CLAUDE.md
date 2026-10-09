@@ -257,7 +257,12 @@ Tools/                     outside Unity: PureTests, Codegen, WebData (the web's
 - Fingers on the map go through `MapGestures`: a tap names a province cell,
   and an `IMapDragHandler` (placement's ghost) may claim a finger before the
   camera pans with it. A finger that starts over the UI is never the map's.
-  `MapTaps` says what a tap means while no menu is open: on a building, a
+- The fog (`Kingdom/Fog/FogOfWar`) is drawn by `FogView` on two tilemaps
+  under the province's grid: the bank's floor and the veil between terrain
+  and features, the clouds sorted with the features. `GroundView` draws
+  nothing under the bank; placement and harvest ask `IRevealedGround`.
+  `MapTaps` says what a tap means while no menu is open: on the fog, a share
+  of its price (`FogInput`); on a building, a
   collect when its store is ready (`CollectInput`, free) and its card
   (`DistrictCardMenu`) otherwise; on the ground, a harvest (`HarvestInput`).
 - Play in the editor always starts from `Boot` (`Game/Editor/PlayFromBoot.cs`).

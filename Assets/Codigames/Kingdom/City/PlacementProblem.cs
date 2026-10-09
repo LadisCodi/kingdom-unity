@@ -7,6 +7,8 @@ namespace Codigames.Kingdom.City
         OutsideProvince,
         Occupied,
         NeedsLand,
+        // Not the kingdom's ground yet: the fog still covers it.
+        InFog,
         CountLimit,
     }
 }

@@ -2,11 +2,13 @@ using Codigames.Game.App;
 using Codigames.Game.Audio;
 using Codigames.Game.Data.City;
 using Codigames.Game.Data.Economy;
+using Codigames.Game.Data.Fog;
 using Codigames.Game.Data.Harvest;
 using Codigames.Game.Data.Magic;
 using Codigames.Game.Localization;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.Economy;
+using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Harvest;
 using Codigames.Kingdom.Magic;
 using Codigames.Modules.Audio;
@@ -35,6 +37,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private ManaSettingsAsset _mana;
         [SerializeField] private EconomySettingsAsset _economy;
         [SerializeField] private TrainingSettingsAsset _training;
+        [SerializeField] private FogSettingsAsset _fog;
 
         [Header("App")]
         [SerializeField] private LocalizationCatalog _localization;
@@ -80,6 +83,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_mana).As<IManaSettings>();
             builder.RegisterInstance(_economy).As<IEconomySettings>();
             builder.RegisterInstance(_training).As<ITrainingSettings>();
+            builder.RegisterInstance(_fog).As<IFogSettings>();
         }
     }
 }

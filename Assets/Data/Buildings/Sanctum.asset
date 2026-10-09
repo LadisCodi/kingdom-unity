@@ -125,6 +125,15 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 01000000
     _requiredTownhallLevelPerLevel: 02000000030000000300000004000000060000000700000008000000090000000a000000
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel: []
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
+  _fog:
+    _revealRadius: 0
+    _revealRadiusPerLevel: 
+    _discoverRadius: 2
   _displayName: Sanctum
   _promise: Holds more Mana while you are away
   _description: Stores Mana within its enchanted walls.

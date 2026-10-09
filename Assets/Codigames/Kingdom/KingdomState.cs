@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Codigames.Kingdom.City.State;
+using Codigames.Kingdom.Fog.State;
 using Codigames.Kingdom.Harvest.State;
 using Codigames.Kingdom.Magic.State;
 
@@ -14,6 +15,8 @@ namespace Codigames.Kingdom
         public HarvestState Harvest { get; set; } = new();
 
         public ManaState Mana { get; set; } = new();
+
+        public FogState Fog { get; set; } = new();
 
         // This kingdom's own randomness: every draw hashes it with the parts that name the event.
         public uint Seed { get; set; }

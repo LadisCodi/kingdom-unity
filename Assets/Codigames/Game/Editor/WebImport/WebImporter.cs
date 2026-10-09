@@ -4,6 +4,7 @@ using System.Linq;
 using Codigames.Game.Data;
 using Codigames.Game.Data.City;
 using Codigames.Game.Data.Economy;
+using Codigames.Game.Data.Fog;
 using Codigames.Game.Data.Harvest;
 using Codigames.Game.Data.Magic;
 using Codigames.Game.Editor.Data;
@@ -59,6 +60,7 @@ namespace Codigames.Game.Editor.WebImport
             ImportConstruction(buildings);
             ImportHarvest();
             ImportEconomy();
+            ImportFog();
             ImportMagic();
 
             AssetDatabase.SaveAssets();
@@ -139,6 +141,9 @@ namespace Codigames.Game.Editor.WebImport
                 SetDoubles(so.FindProperty("_production._storageCapacityPerLevel"), row.StorageCapacityPerLevel);
                 SetInts(so.FindProperty("_production._populationCapacityPerLevel"), row.PopulationCapacityPerLevel);
                 SetDoubles(so.FindProperty("_production._taxBonusPerLevel"), row.TaxBonusPerLevel);
+                so.FindProperty("_fog._revealRadius").intValue = (int)row.FogRevealRadius;
+                SetInts(so.FindProperty("_fog._revealRadiusPerLevel"), row.FogRevealRadiusPerLevel);
+                so.FindProperty("_fog._discoverRadius").intValue = (int)row.FogDiscoverRadius;
 
                 so.ApplyModifiedPropertiesWithoutUndo();
                 assets[id] = asset;
@@ -211,6 +216,20 @@ namespace Codigames.Game.Editor.WebImport
             var settings = new SerializedObject(LoadOrCreate<TapSettingsAsset>("Settings", "Tap"));
             settings.FindProperty("_workSeconds").doubleValue = tap.WorkSeconds;
             settings.FindProperty("_manaCost").doubleValue = tap.ManaCost;
+            settings.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void ImportFog()
+        {
+            var fog = Read<ExplorationData>("Game/exploration.json").Fog;
+            var settings = new SerializedObject(LoadOrCreate<FogSettingsAsset>("Settings", "Fog"));
+            SetDoubles(settings.FindProperty("_costPerRing"), fog.Rings.OrderBy(r => r.Distance).Select(r => r.Cost).ToList());
+            settings.FindProperty("_fallbackGrowth").doubleValue = fog.FallbackGrowth;
+            settings.FindProperty("_minCost").doubleValue = fog.MinCost;
+            settings.FindProperty("_countStep").intValue = (int)fog.CountStep;
+            settings.FindProperty("_countGrowth").doubleValue = fog.CountGrowth;
+            settings.FindProperty("_tapsToReveal").intValue = (int)fog.TapsToReveal;
+            SetInts(settings.FindProperty("_reachPerTownhallLevel"), fog.ReachPerTownhallLevel);
             settings.ApplyModifiedPropertiesWithoutUndo();
         }
 

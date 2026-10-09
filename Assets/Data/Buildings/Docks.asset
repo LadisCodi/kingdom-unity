@@ -140,6 +140,10 @@ MonoBehaviour:
     - 170000
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+  _fog:
+    _revealRadius: 0
+    _revealRadiusPerLevel: 
+    _discoverRadius: 2
   _displayName: Docks
   _promise: Boats bring in fish
   _description: Fishing boats set out from here and come home full.

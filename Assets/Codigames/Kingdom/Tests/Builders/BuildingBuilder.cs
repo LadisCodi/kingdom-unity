@@ -26,6 +26,7 @@ namespace Codigames.Kingdom.Tests.Builders
         private double _countGrowth = 1;
         private double _distanceGrowth = 1;
         private readonly Production _production = new();
+        private readonly Fog _fog = new();
 
         public BuildingBuilder WithId(string id) { _id = id; return this; }
         public BuildingBuilder WithMaxLevel(int maxLevel) { _maxLevel = maxLevel; return this; }
@@ -52,6 +53,14 @@ namespace Codigames.Kingdom.Tests.Builders
         public BuildingBuilder WithHousing(params int[] perLevel) { _production.PopulationCapacityPerLevel = perLevel; return this; }
         public BuildingBuilder WithTaxBonus(params double[] perLevel) { _production.TaxBonusPerLevel = perLevel; return this; }
 
+        public BuildingBuilder WithFog(int reveal, int discover, params int[] revealPerLevel)
+        {
+            _fog.RevealRadius = reveal;
+            _fog.DiscoverRadius = discover;
+            _fog.RevealRadiusPerLevel = revealPerLevel;
+            return this;
+        }
+
         public static ILevelCost Price(string currency, double amount)
             => new LevelCost(new Dictionary<string, double> { [currency] = amount }, new Dictionary<string, double>());
 
@@ -71,6 +80,7 @@ namespace Codigames.Kingdom.Tests.Builders
             },
             Gates = new Gates(_maxCount, _townhallGates, _populationGates),
             Production = _production,
+            Fog = _fog,
         };
 
         private sealed class Building : IBuildingDefinition
@@ -84,6 +94,14 @@ namespace Codigames.Kingdom.Tests.Builders
             public IBuildingDuration Duration { get; set; }
             public IBuildingGates Gates { get; set; }
             public IBuildingProduction Production { get; set; }
+            public IBuildingFog Fog { get; set; }
+        }
+
+        private sealed class Fog : IBuildingFog
+        {
+            public int RevealRadius { get; set; }
+            public IReadOnlyList<int> RevealRadiusPerLevel { get; set; } = new int[0];
+            public int DiscoverRadius { get; set; }
         }
 
         private sealed class Production : IBuildingProduction

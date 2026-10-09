@@ -77,6 +77,15 @@ MonoBehaviour:
     _maxCountPerTownhallLevel: 01000000
     _requiredTownhallLevelPerLevel: 02000000030000000400000005000000
     _requiredPopulationPerLevel: 
+  _production:
+    _goldPerMinutePerLevel: []
+    _storageCapacityPerLevel: []
+    _populationCapacityPerLevel: 
+    _taxBonusPerLevel: []
+  _fog:
+    _revealRadius: 0
+    _revealRadiusPerLevel: 
+    _discoverRadius: 2
   _displayName: Tavern
   _promise: Heroes gather here, and learn faster
   _description: Where heroes come for a hot meal and a hard job. The banner hangs

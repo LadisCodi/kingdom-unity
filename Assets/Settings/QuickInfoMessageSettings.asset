@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f16e751c64d24e50c9a8d8f5b053ace1, type: 3}
   m_Name: QuickInfoMessageSettings
   m_EditorClassIdentifier: Kingdom.Game::Kingdom.Game.Feedback.QuickInfoMessageSettings
-  _prefab: {fileID: 0}
+  _prefab: {fileID: 4999500485771616976, guid: bc86dd0582b35de0bb6f807ba94dfc8a, type: 3}

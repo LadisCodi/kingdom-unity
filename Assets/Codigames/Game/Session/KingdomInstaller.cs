@@ -3,6 +3,7 @@ using Codigames.Kingdom;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Economy;
+using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Harvest;
 using Codigames.Kingdom.Harvest.State;
 using Codigames.Kingdom.Magic;
@@ -33,6 +34,9 @@ namespace Codigames.Game.Session
             builder.Register(resolver => resolver.Resolve<KingdomState>().Ground, Lifetime.Singleton);
             builder.Register(resolver => resolver.Resolve<KingdomState>().Harvest, Lifetime.Singleton);
             builder.Register(resolver => resolver.Resolve<KingdomState>().Mana, Lifetime.Singleton);
+            builder.Register(resolver => resolver.Resolve<KingdomState>().Fog, Lifetime.Singleton);
+            builder.Register<FogOfWar>(Lifetime.Singleton).AsSelf().As<IRevealedGround>();
+            builder.Register<BuildingsLiftFog>(Lifetime.Singleton);
             builder.Register<ITreasury>(resolver => new Treasury(
                 resolver.Resolve<ICatalog<ICurrencyDefinition>>(), resolver.Resolve<KingdomState>().Balances), Lifetime.Singleton);
 
@@ -45,13 +49,14 @@ namespace Codigames.Game.Session
                 resolver.Resolve<CityState>(), resolver.Resolve<IProvinceMap>(), resolver.Resolve<ICatalog<IBuildingDefinition>>(),
                 resolver.Resolve<ICatalog<IFeatureDefinition>>(), resolver.Resolve<ICatalog<IHarvestSource>>(),
                 resolver.Resolve<ITerrainYields>(), resolver.Resolve<ITapSettings>(), resolver.Resolve<ITreasury>(),
-                resolver.Resolve<ManaPool>(), resolver.Resolve<KingdomState>().Seed), Lifetime.Singleton);
+                resolver.Resolve<ManaPool>(), resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IRevealedGround>()), Lifetime.Singleton);
 
             builder.Register(resolver =>
             {
                 var state = resolver.Resolve<KingdomState>();
                 var timeline = new Timeline(state.LastAdvance);
                 timeline.Register(resolver.Resolve<Construction>());
+                resolver.Resolve<BuildingsLiftFog>();
                 timeline.Register(resolver.Resolve<VillagerTraining>());
 
                 // A pool left below its cap without a clock (an older save) starts gaining where the kingdom left off.

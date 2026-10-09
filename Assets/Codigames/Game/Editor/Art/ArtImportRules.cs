@@ -8,6 +8,7 @@ namespace Codigames.Game.Editor.Art
     // - Art/Features: standing on their cell, pivot at the bottom centre, as wide as their footprint
     //   (a "_2x2" / "_3x3" suffix says how many cells across).
     // - Art/Buildings: pivot at the bottom centre; the view scales each to its footprint.
+    // - Art/Fog: the clouds and the floor's diamond, centred on their cell, one cell wide (a cloud's tile scales it).
     // - Art/World: things drawn over the map (the collect bubble): pivot at the bottom centre, 100 px a unit.
     // - Art/UI: sprites at 100 px a unit; a sliced piece keeps its border (below). plate-fill and plate-rim are
     //   a white rounded plate and its rim, generated, tinted wherever a card or a chip needs one.
@@ -34,6 +35,7 @@ namespace Codigames.Game.Editor.Art
         private const string BUILDINGS = "Assets/Art/Buildings/";
         private const string UI = "Assets/Art/UI/";
         private const string WORLD = "Assets/Art/World/";
+        private const string FOG = "Assets/Art/Fog/";
 
         private void OnPreprocessTexture()
         {
@@ -42,7 +44,8 @@ namespace Codigames.Game.Editor.Art
             var isBuilding = assetPath.StartsWith(BUILDINGS);
             var isUi = assetPath.StartsWith(UI);
             var isWorld = assetPath.StartsWith(WORLD);
-            if (!isTerrain && !isFeature && !isBuilding && !isUi && !isWorld) return;
+            var isFog = assetPath.StartsWith(FOG);
+            if (!isTerrain && !isFeature && !isBuilding && !isUi && !isWorld && !isFog) return;
 
             var importer = (TextureImporter)assetImporter;
             importer.textureType = TextureImporterType.Sprite;
@@ -58,20 +61,28 @@ namespace Codigames.Game.Editor.Art
             if (isUi)
             {
                 settings.spriteAlignment = (int)SpriteAlignment.Center;
-                importer.spritePixelsPerUnit = 100;
+                settings.spritePixelsPerUnit = 100;
                 var stem = System.IO.Path.GetFileNameWithoutExtension(assetPath);
                 if (SLICED.TryGetValue(stem, out var border)) settings.spriteBorder = border;
+            }
+            else if (isFog)
+            {
+                // Centred on its cell, one cell wide (a cloud's tile scales it): a cloud kept round its own cell
+                // never climbs over the cleared ground behind it.
+                settings.spriteAlignment = (int)SpriteAlignment.Center;
+                importer.GetSourceTextureWidthAndHeight(out var width, out _);
+                settings.spritePixelsPerUnit = width;
             }
             else if (isTerrain)
             {
                 settings.spriteAlignment = (int)SpriteAlignment.Center;
-                importer.spritePixelsPerUnit = 256;
+                settings.spritePixelsPerUnit = 256;
             }
             else
             {
                 settings.spriteAlignment = (int)SpriteAlignment.BottomCenter;
                 importer.GetSourceTextureWidthAndHeight(out var width, out _);
-                importer.spritePixelsPerUnit = isFeature ? width / (float)FootprintCells(assetPath) : 100;
+                settings.spritePixelsPerUnit = isFeature ? width / (float)FootprintCells(assetPath) : 100;
             }
 
             importer.SetTextureSettings(settings);

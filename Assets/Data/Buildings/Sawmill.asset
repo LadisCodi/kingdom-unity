@@ -140,6 +140,10 @@ MonoBehaviour:
     - 290000
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+  _fog:
+    _revealRadius: 0
+    _revealRadiusPerLevel: 
+    _discoverRadius: 2
   _displayName: Sawmill
   _promise: Workers fell the forest around it
   _description: Woodcutters fell the forest nearby and stack the timber.

@@ -172,6 +172,10 @@ MonoBehaviour:
     - 3900000
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+  _fog:
+    _revealRadius: 1
+    _revealRadiusPerLevel: 0100000003000000
+    _discoverRadius: 2
   _displayName: Townhall
   _promise: Trains new villagers
   _description: The heart of the city, where new villagers begin their lives.

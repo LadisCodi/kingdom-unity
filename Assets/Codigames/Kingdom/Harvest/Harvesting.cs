@@ -4,6 +4,7 @@ using System.Linq;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Economy;
+using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Harvest.State;
 using Codigames.Kingdom.Magic;
 using Codigames.Kingdom.Map;
@@ -35,11 +36,13 @@ namespace Codigames.Kingdom.Harvest
         private readonly ITreasury _treasury;
         private readonly ManaPool _mana;
         private readonly uint _seed;
+        private readonly IRevealedGround _revealed;
 
         public Harvesting(HarvestState state, GroundState ground, CityState city, IProvinceMap map,
             ICatalog<IBuildingDefinition> buildings, ICatalog<IFeatureDefinition> features, ICatalog<IHarvestSource> sources,
-            ITerrainYields yields, ITapSettings tap, ITreasury treasury, ManaPool mana, uint seed)
+            ITerrainYields yields, ITapSettings tap, ITreasury treasury, ManaPool mana, uint seed, IRevealedGround revealed)
         {
+            _revealed = revealed;
             _state = state;
             _ground = ground;
             _city = city;
@@ -64,6 +67,7 @@ namespace Codigames.Kingdom.Harvest
         // The source a cell yields; null when nothing can be taken from it.
         public IHarvestSource SourceAt(Vector2Int cell)
         {
+            if (!_revealed.IsRevealed(cell)) return null;
             if (!_ground.Features.TryGetValue(cell, out var featureId)) return null;
             if (CityQueries.At(_city, _buildings, cell) != null) return null;
             if (!_features.TryGet(featureId, out var feature) || feature.Source == null) return null;

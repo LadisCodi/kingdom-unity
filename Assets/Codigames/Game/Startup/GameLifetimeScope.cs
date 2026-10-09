@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Codigames.Game.Cameras;
 using Codigames.Game.City;
 using Codigames.Game.Feedback;
+using Codigames.Game.Fog;
 using Codigames.Game.Harvest;
 using Codigames.Game.Map;
 using Codigames.Game.Session;
@@ -24,6 +25,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private CityView _cityView;
         [SerializeField] private GroundView _groundView;
         [SerializeField] private GhostView _ghostView;
+        [SerializeField] private FogView _fogView;
         [SerializeField] private MenuCatalog _menuCatalog;
         [SerializeField] private WorldFeedbackCatalog _worldFeedbackCatalog;
         [SerializeField] private QuickInfoMessageSettings _quickInfoMessageSettings;
@@ -42,6 +44,8 @@ namespace Codigames.Game.Startup
             builder.RegisterEntryPoint<MapGestures>().AsSelf();
             builder.Register<HarvestInput>(Lifetime.Singleton);
             builder.Register<CollectInput>(Lifetime.Singleton);
+            builder.Register<FogInput>(Lifetime.Singleton);
+            builder.RegisterComponent(_fogView);
             builder.RegisterEntryPoint<MapTaps>();
             RegisterUI(builder);
             RegisterFeedback(builder);

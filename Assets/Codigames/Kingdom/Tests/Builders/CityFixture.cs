@@ -3,6 +3,7 @@ using System.Linq;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Economy;
+using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Map;
 using Codigames.Modules.Core;
 using Codigames.Modules.Timeline;
@@ -33,7 +34,7 @@ namespace Codigames.Kingdom.Tests.Builders
             Treasury = new Treasury(Currencies);
 
             (City, Ground) = NewCity.Create(Map, Settings);
-            Placement = new Placement(Map, Buildings, Settings, City, Ground);
+            Placement = new Placement(Map, Buildings, Settings, City, Ground, Revealed);
             Construction = new Construction(City, Treasury, Placement, Buildings, Settings);
             Timeline = new Timeline(0);
             Timeline.Register(Construction);
@@ -41,6 +42,9 @@ namespace Codigames.Kingdom.Tests.Builders
 
         protected virtual IBuildingDefinition MakeTownhall()
             => new BuildingBuilder().WithId("Townhall").WithMaxLevel(5).WithSize(2, 2).NotBuildable().Build();
+
+        // Everything is the kingdom's ground unless a test fogs it.
+        public FakeRevealed Revealed { get; } = new();
 
         public FakeMap Map { get; }
         public IBuildingDefinition Townhall { get; }
@@ -76,6 +80,12 @@ namespace Codigames.Kingdom.Tests.Builders
 
             public void Paint(Vector2Int cell, string terrain) => _terrain[cell] = terrain;
             public void Place(Vector2Int cell, string feature) => _features[cell] = feature;
+        }
+
+        public sealed class FakeRevealed : IRevealedGround
+        {
+            public HashSet<Vector2Int> Fogged { get; } = new();
+            public bool IsRevealed(Vector2Int cell) => !Fogged.Contains(cell);
         }
 
         public sealed class FakeSettings : IConstructionSettings
