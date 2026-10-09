@@ -111,6 +111,13 @@ namespace Codigames.Kingdom.Crews
             return true;
         }
 
+        // The ground a building's crew reaches: its footprint and every cell within its radius of it.
+        public IReadOnlyList<Vector2Int> Reach(DistrictState district)
+        {
+            var building = _buildings.Get(district.DefinitionId);
+            return GridMath.AroundRect(district.Anchor, building.Width, building.Height, Radius(district)).ToList();
+        }
+
         // The cells a building's crew may work, nearest first: revealed, holding what it works, inside its reach.
         public IReadOnlyList<Vector2Int> Workable(DistrictState district)
         {
