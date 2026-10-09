@@ -431,7 +431,13 @@ Rules the player sees:
 - **Every number the player reads goes through `NumberFormat`**, in the
   viewer's locale. Never `ToString()` a count the player reads.
 - **Every text the player reads goes through `Localizer`** (English source,
-  Spanish translation). No literal strings in views.
+  Spanish translation). No literal strings in views; a label written in a
+  prefab carries `LocalizedText`. The Spanish lives in `Assets/Localization/es`
+  (`LocalizationCatalog`): `web-ui.json` and `web-data.json` converted from
+  the web (its UI lines, and its data overlays as English → Spanish), and
+  `unity.json` for every line this build adds — `LocalizationTests` refuses a
+  `Tr("…")` with no Spanish. Spanish is Spain's, *tú*. The language is the
+  device's, or `PlayerPrefs` `kingdom.language` (`en-US` / `es-ES`).
 - **No emoji glyphs** as icons, anywhere.
 - **Countdowns derive from a timestamp**, never a decremented counter.
 - **A calculated price or reward is rounded to three significant figures**;
