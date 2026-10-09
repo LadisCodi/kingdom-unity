@@ -26,6 +26,7 @@ namespace Codigames.Game.City
 
         private CityState _city;
         private Construction _construction;
+        private Kingdom.Army.Army _army;
         private BuildingCollection _buildings;
         private ProvinceMap _map;
         private IClock _clock;
@@ -38,8 +39,9 @@ namespace Codigames.Game.City
 
         [Inject]
         public void Construct(CityState city, Construction construction, BuildingCollection buildings, ProvinceMap map, IClock clock,
-            NumberFormat numbers, Stores stores, ICurrencyIcons icons, Kingdom.Doors.Doors doors)
+            NumberFormat numbers, Stores stores, ICurrencyIcons icons, Kingdom.Doors.Doors doors, Kingdom.Army.Army army)
         {
+            _army = army;
             _doors = doors;
             _numbers = numbers;
             _stores = stores;
@@ -82,6 +84,15 @@ namespace Codigames.Game.City
 
                 var remaining = System.Math.Max(0, job.StartedAt + job.Seconds * 1000 - now) / 1000;
                 view.SetProgress((float)((now - job.StartedAt) / (job.Seconds * 1000)), _numbers.Duration(System.Math.Ceiling(remaining)));
+            }
+
+            // A hall's line over it while it trains: its head, and the whole line's time.
+            foreach (var district in _city.Districts)
+            {
+                if (!district.Built || !_views.TryGetValue(district.Id, out var hall)) continue;
+                var left = _army.RemainingSeconds(district.Id, now);
+                if (left == null) hall.SetTraining(null, null);
+                else hall.SetTraining((float)_army.HeadProgress(district.Id, now), _numbers.Duration(System.Math.Ceiling(left.Value)));
             }
         }
 

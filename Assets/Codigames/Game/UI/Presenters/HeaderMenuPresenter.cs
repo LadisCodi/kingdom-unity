@@ -25,6 +25,8 @@ namespace Codigames.Game.UI.Presenters
         private const double POOL_MS = 3000;
         private const double NEXT_MS = 3000;
 
+        private readonly Kingdom.Army.Army _army;
+        private readonly Modules.Core.ICatalog<Kingdom.City.IBuildingDefinition> _buildings;
         private readonly ITreasury _treasury;
         private readonly IPlankCurrencies _currencies;
         private readonly ManaPool _mana;
@@ -47,8 +49,10 @@ namespace Codigames.Game.UI.Presenters
 
         public HeaderMenuPresenter(IMenuViewFactory views, ITreasury treasury, IPlankCurrencies currencies, ManaPool mana,
             IClock clock, NumberFormat numbers, Localizer localizer, RewardHold hold, UIManager ui, CityState city,
-            Workforce crews, IInspectedDistrict inspected, UiIcons icons) : base(views)
+            Workforce crews, IInspectedDistrict inspected, UiIcons icons, Kingdom.Army.Army army, Modules.Core.ICatalog<Kingdom.City.IBuildingDefinition> buildings) : base(views)
         {
+            _army = army;
+            _buildings = buildings;
             _ui = ui;
             _city = city;
             _crews = crews;
@@ -82,6 +86,14 @@ namespace Codigames.Game.UI.Presenters
                 max = _city.Builders;
                 value = max - Math.Min(_city.Jobs.Count, max);
             }
+            else if (_inspected.Inspected is string hallId && _city.Districts.FirstOrDefault(d => d.Id == hallId) is { } hall
+                     && _army.IsHall(_buildings.Get(hall.DefinitionId)))
+            {
+                // A hall's card: the army against its cap, what is queued counted in.
+                kind = PlaqueKind.Army;
+                value = _army.Committed;
+                max = _army.Cap;
+            }
             else if (_inspected.Inspected is string id && _city.Districts.FirstOrDefault(d => d.Id == id) is { } district
                      && _crews.HasCrew(district))
             {
@@ -96,6 +108,7 @@ namespace Codigames.Game.UI.Presenters
 
             if (kind == PlaqueKind.None) View.HidePlaque();
             else if (kind == PlaqueKind.Builders) View.ShowPlaque(_icons.Get("builders"), _numbers.Count(value) + "/" + _numbers.Count(max));
+            else if (kind == PlaqueKind.Army) View.ShowPlaque(_icons.Get("army"), _numbers.Count(value) + "/" + _numbers.Count(max));
             else View.ShowPlaque(_icons.Get("workers"), _numbers.Count(value));
         }
 
@@ -105,6 +118,7 @@ namespace Codigames.Game.UI.Presenters
             None,
             Builders,
             Workers,
+            Army,
         }
 
         protected override void BindInternal(HeaderMenu view)

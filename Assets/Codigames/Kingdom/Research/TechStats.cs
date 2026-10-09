@@ -23,6 +23,11 @@ namespace Codigames.Kingdom.Research
         public const string POPULATION_CAPACITY = "populationCapacity";
         public const string DECORATION_HARMONY = "decorationHarmony";
         public const string WORKSHOP_SPEED = "workshopSpeed";
+        public const string ARMY_CAP = "armyCap";
+        public const string RECRUIT_COST = "recruitCost";
+        public const string RECRUIT_SPEED = "recruitSpeed";
+        public const string HEAL_SPEED = "healSpeed";
+        public const string INFIRMARY_BEDS = "infirmaryBeds";
         public const string WORKSHOP_QUEUE_SLOTS = "workshopQueueSlots";
         public const string VILLAGER_TRAINING_SPEED = "villagerTrainingSpeed";
         public const string OWN_GOLD = "ownGold";

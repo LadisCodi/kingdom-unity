@@ -25,10 +25,18 @@ namespace Codigames.Game.UI.Widgets
             Fit();
         }
 
-        // A price longer than its place is drawn smaller, all of it, rather than spilling out of its box.
+        // A price longer than its place rather than spilling out of its box: over a button it breaks between its terms,
+        // as the web's wraps; spaced wide in a buy box it is drawn smaller, all of it.
         private void Fit()
         {
             if (_line == null) return;
+            if (!_wide)
+            {
+                _text.textWrappingMode = TMPro.TextWrappingModes.Normal;
+                _text.text = _line;
+                return;
+            }
+
             var room = ((RectTransform)transform).rect.width;
             var wanted = _text.GetPreferredValues(_line).x;
             if (room <= 0 || wanted <= room)

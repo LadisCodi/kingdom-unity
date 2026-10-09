@@ -67,6 +67,8 @@ namespace Codigames.Kingdom.Tests.Builders
         public BuildingBuilder WithHarmony(double supply) { _production.HarmonySupply = supply; return this; }
         public BuildingBuilder WithHarmonyCost(params double[] perLevel) { _production.HarmonyCostPerLevel = perLevel; return this; }
         public BuildingBuilder Planting(string feature) { _production.Plants = feature; return this; }
+        public BuildingBuilder Training(string unit, params int[] capPerLevel) { _production.Trains = new[] { unit }; _production.ArmyCapPerLevel = capPerLevel; return this; }
+        public BuildingBuilder WithBeds(params int[] perLevel) { _production.BedsPerLevel = perLevel; return this; }
         public BuildingBuilder Producing(string good, params int[] queuePerLevel) { _production.Produces = good; _production.QueueLengthPerLevel = queuePerLevel; return this; }
 
         public BuildingBuilder WithFog(int reveal, int discover, params int[] revealPerLevel)
@@ -145,6 +147,9 @@ namespace Codigames.Kingdom.Tests.Builders
             public IReadOnlyList<double> HarmonyCostPerLevel { get; set; } = new double[0];
             public string Plants { get; set; }
             public string Produces { get; set; }
+            public IReadOnlyList<string> Trains { get; set; } = new string[0];
+            public IReadOnlyList<int> ArmyCapPerLevel { get; set; } = new int[0];
+            public IReadOnlyList<int> BedsPerLevel { get; set; } = new int[0];
             public IReadOnlyList<int> QueueLengthPerLevel { get; set; } = new int[0];
             public IReadOnlyList<double> StorageCapacityPerLevel { get; set; } = new double[0];
             public IReadOnlyList<int> PopulationCapacityPerLevel { get; set; } = new int[0];

@@ -80,6 +80,24 @@ namespace Codigames.Game.City
                 Mathf.Repeat(transform.position.x * 3.7f + transform.position.y * 1.3f, 1f));
         }
 
+        // A hall's training over it; null when its line is empty.
+        public void SetTraining(float? fraction, string remaining)
+        {
+            if (fraction == null)
+            {
+                if (_training) _bar.gameObject.SetActive(false);
+                _training = false;
+                return;
+            }
+
+            _training = true;
+            _bar.gameObject.SetActive(true);
+            _bar.SetFraction(fraction.Value);
+            _bar.SetLabel(remaining);
+        }
+
+        private bool _training;
+
         public void SetProgress(float fraction, string remaining)
         {
             _bar.SetFraction(fraction);

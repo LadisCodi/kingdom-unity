@@ -63,6 +63,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private UnlockCollection _unlocks;
         [SerializeField] private ItemCollection _items;
         [SerializeField] private Data.Goods.GoodCollection _goods;
+        [SerializeField] private Data.Army.UnitCollection _units;
 
         [Header("App")]
         [SerializeField] private LocalizationCatalog _localization;
@@ -108,7 +109,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_terrains).As<ITerrainYields>();
             builder.RegisterInstance(_tap).As<ITapSettings>();
             builder.RegisterInstance(_mana).As<IManaSettings>();
-            builder.RegisterInstance(_economy).As<IEconomySettings>().As<IWorkerSettings>().As<IBagSettings>().As<IRushSettings>().As<INoticeSettings>().As<IHarmonySettings>().As<IAdjacencyRules>();
+            builder.RegisterInstance(_economy).As<IEconomySettings>().As<IWorkerSettings>().As<IBagSettings>().As<IRushSettings>().As<INoticeSettings>().As<IHarmonySettings>().As<IAdjacencyRules>().As<Kingdom.Army.IArmySettings>();
             builder.RegisterInstance(_training).As<ITrainingSettings>();
             builder.RegisterInstance(_fog).As<IFogSettings>().As<ISightSettings>();
             builder.RegisterInstance(_technologies).As<ICatalog<ITechnology>>().As<ITechnologyCards>();
@@ -123,6 +124,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_unlocks).As<ICatalog<IUnlock>>();
             builder.RegisterInstance(_items).AsSelf().As<ICatalog<IItemDefinition>>();
             builder.RegisterInstance(_goods).AsSelf().As<ICatalog<Kingdom.Goods.IGoodDefinition>>();
+            builder.RegisterInstance(_units).AsSelf().As<ICatalog<Kingdom.Army.IUnitDefinition>>();
         }
     }
 }

@@ -17,6 +17,9 @@ namespace Codigames.Kingdom.Notices
         // Sighted: the landmark or abandoned building.
         public string Site { get; set; }
 
+        // Trained: the last troop a hall trained before its line ran dry.
+        public string Troop { get; set; }
+
         // Goods: the good, and how many came off the bench together.
         public string Good { get; set; }
         public int Count { get; set; }
@@ -29,6 +32,9 @@ namespace Codigames.Kingdom.Notices
 
         public static News Goods(string district, string good, double at)
             => new() { Group = NewsGroup.Goods, Key = $"goods:{district}:{at}", At = at, District = district, Good = good, Count = 1 };
+
+        public static News Trained(string district, string troop, double at)
+            => new() { Group = NewsGroup.Trained, Key = $"trained:{district}:{at}", At = at, District = district, Troop = troop };
 
         public static News ChainDone(double at) => new() { Group = NewsGroup.ChainDone, Key = "chainDone", At = at };
     }

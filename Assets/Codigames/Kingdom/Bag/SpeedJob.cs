@@ -19,6 +19,9 @@ namespace Codigames.Kingdom.Bag
 
         public static SpeedJob Training() => new(SpeedupKind.Training, null);
 
+        // A military hall's line, or the Infirmary's.
+        public static SpeedJob Hall(string districtId) => new(SpeedupKind.Training, districtId);
+
         // The item at the front of a workshop's queue.
         public static SpeedJob Workshop(string districtId) => new(SpeedupKind.Workshop, districtId);
     }

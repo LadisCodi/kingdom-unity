@@ -24,6 +24,8 @@ namespace Codigames.Game.Tests
             "CurrencySlot/Amount",
             "HeaderMenu/KnowledgeTab/",
             "Bar/Label",
+            // The rank struck on its coin: sized to the coin, whatever the portrait.
+            "RankCoin/Numeral",
             "Research/ChapterBar/",
             "Research/TechCard/",
             "/Glyph",

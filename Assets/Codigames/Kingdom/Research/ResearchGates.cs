@@ -30,6 +30,8 @@ namespace Codigames.Kingdom.Research
 
         public string UnitTech(string unit) => Gate(UnlockKind.Unit, unit);
 
+        public string EvolutionTech(string unit, int rank) => rank <= 1 ? null : Gate(UnlockKind.Evolution, unit, rank);
+
         public string HarvestTech(string source) => Gate(UnlockKind.Harvest, source);
 
         public string TerrainTech(string terrain) => Gate(UnlockKind.Terrain, terrain);

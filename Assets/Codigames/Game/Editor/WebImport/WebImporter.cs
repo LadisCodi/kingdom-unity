@@ -74,9 +74,69 @@ namespace Codigames.Game.Editor.WebImport
             ImportStage();
             ImportItems();
             ImportGoods();
+            ImportUnits();
 
             AssetDatabase.SaveAssets();
             Debug.Log($"#Data# Imported {currencies} currencies, {buildings.Count} buildings and {technologies} technologies from the web prototype.");
+        }
+
+        // What a unit is, beside its numbers: the web keeps it in code (definitions.ts UNIT_CONTENT).
+        private static readonly Dictionary<string, (string Name, string Description, string[] Tags)> UNIT_CONTENT = new()
+        {
+            ["Warrior"] = ("Warrior", "Sturdy front line: the most armour and health per Gold.", new[] { "Melee" }),
+            ["Lancer"] = ("Lancer", "Long reach that keeps the line safe.", new[] { "Melee" }),
+            ["Archer"] = ("Archer", "Ranged support: the most attack per Gold, and the least of everything else.", new[] { "Distance" }),
+            ["Cavalry"] = ("Cavalry", "Fast and hard-hitting.", new[] { "Mounted", "Melee" }),
+        };
+
+        private static void ImportUnits()
+        {
+            var web = Read<Dictionary<string, UnitData>>("Game/units.json");
+            var assets = new List<Codigames.Game.Data.Army.UnitAsset>();
+            foreach (var (id, row) in web)
+            {
+                var asset = LoadOrCreate<Codigames.Game.Data.Army.UnitAsset>("Units", id);
+                var so = new SerializedObject(asset);
+                var content = UNIT_CONTENT.TryGetValue(id, out var c) ? c : (Name: id, Description: "", Tags: new string[0]);
+                so.FindProperty("_id").stringValue = id;
+                so.FindProperty("_name").stringValue = content.Name;
+                so.FindProperty("_description").stringValue = content.Description;
+                SetStrings(so.FindProperty("_tags"), content.Tags.ToList());
+                so.FindProperty("_squadSize").intValue = (int)row.SquadSize;
+                so.FindProperty("_frontage").intValue = (int)row.Frontage;
+                so.FindProperty("_cooldown").intValue = (int)row.Cooldown;
+                so.FindProperty("_speed").intValue = (int)row.Speed;
+                so.FindProperty("_range").intValue = (int)row.Range;
+                var ranks = so.FindProperty("_ranks");
+                var evolutions = row.Evolutions ?? new List<UnitDataEvolutionsEntry>();
+                ranks.arraySize = 1 + evolutions.Count;
+                void Rank(int i, double atk, double dmg, double def, double hp, double power, Dictionary<string, double> cost, double seconds, double hall)
+                {
+                    var rank = ranks.GetArrayElementAtIndex(i);
+                    var file = i == 0 ? $"unit_{id.ToLowerInvariant()}_avatar" : $"unit_{id.ToLowerInvariant()}_e{i + 1}_avatar";
+                    rank.FindPropertyRelative("Portrait").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/UI/Portraits/{file}.png");
+                    rank.FindPropertyRelative("Atk").intValue = (int)atk;
+                    rank.FindPropertyRelative("Dmg").intValue = (int)dmg;
+                    rank.FindPropertyRelative("Def").intValue = (int)def;
+                    rank.FindPropertyRelative("Hp").intValue = (int)hp;
+                    rank.FindPropertyRelative("Power").intValue = (int)power;
+                    SetAmounts(rank.FindPropertyRelative("Cost"), cost ?? new Dictionary<string, double>());
+                    rank.FindPropertyRelative("TrainSeconds").doubleValue = seconds;
+                    rank.FindPropertyRelative("MinHallLevel").intValue = System.Math.Max(1, (int)hall);
+                }
+
+                Rank(0, row.Atk, row.Dmg, row.Def, row.Hp, row.Power, row.RecruitCost, row.TrainDurationSeconds, 1);
+                for (var i = 0; i < evolutions.Count; i++)
+                {
+                    var e = evolutions[i];
+                    Rank(i + 1, e.Atk, e.Dmg, e.Def, e.Hp, e.Power, e.RecruitCost, e.TrainDurationSeconds, e.MinBuildingLevel);
+                }
+
+                so.ApplyModifiedPropertiesWithoutUndo();
+                assets.Add(asset);
+            }
+
+            SetEntries(LoadOrCreate<Codigames.Game.Data.Army.UnitCollection>(null, "Units"), assets);
         }
 
         private static void ImportGoods()
@@ -183,6 +243,9 @@ namespace Codigames.Game.Editor.WebImport
                 SetDoubles(so.FindProperty("_production._harmonyCostPerLevel"), row.HarmonyCostPerLevel);
                 so.FindProperty("_production._plants").stringValue = row.Plants ?? "";
                 so.FindProperty("_production._produces").stringValue = row.Produces ?? "";
+                SetStrings(so.FindProperty("_production._trains"), row.Trains);
+                SetInts(so.FindProperty("_production._armyCapPerLevel"), row.ArmyCapPerLevel);
+                SetInts(so.FindProperty("_production._bedsPerLevel"), row.BedsPerLevel);
                 SetInts(so.FindProperty("_production._queueLengthPerLevel"), row.QueueLengthPerLevel);
                 SetInts(so.FindProperty("_production._maxWorkersPerLevel"), row.MaxWorkersPerLevel);
                 SetInts(so.FindProperty("_production._influenceRadiusPerLevel"), row.InfluenceRadiusPerLevel);
@@ -312,6 +375,11 @@ namespace Codigames.Game.Editor.WebImport
                 tiers.GetArrayElementAtIndex(i).FindPropertyRelative("At").doubleValue = economy.Harmony.SurplusTiers[i].At;
                 tiers.GetArrayElementAtIndex(i).FindPropertyRelative("Bonus").doubleValue = economy.Harmony.SurplusTiers[i].Bonus;
             }
+
+            var combat = Read<CombatData>("Game/combat.json");
+            settings.FindProperty("_woundedShare").doubleValue = combat.Army.WoundedShare;
+            settings.FindProperty("_healCostShare").doubleValue = combat.Army.HealCostShare;
+            settings.FindProperty("_healTimeShare").doubleValue = combat.Army.HealTimeShare;
 
             var adjacency = Read<List<AdjacencyRuleData>>("Game/adjacency.json");
             var rules = settings.FindProperty("_adjacency");

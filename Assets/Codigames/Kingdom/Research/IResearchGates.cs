@@ -14,6 +14,9 @@ namespace Codigames.Kingdom.Research
 
         string UnitTech(string unit);
 
+        // What opens a unit's rank (II to V).
+        string EvolutionTech(string unit, int rank);
+
         string HarvestTech(string source);
 
         string TerrainTech(string terrain);
