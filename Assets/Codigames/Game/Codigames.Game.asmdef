@@ -25,7 +25,8 @@
         "LeanCommon",
         "CW.Common",
         "Codigames.Modules.Wallet",
-        "Codigames.Modules.Timeline"
+        "Codigames.Modules.Timeline",
+        "Codigames.Modules.Saves"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
