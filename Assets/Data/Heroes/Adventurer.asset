@@ -19,7 +19,7 @@ MonoBehaviour:
   _portrait: {fileID: 21300000, guid: 20b89e0653738bb2bb9182a6dc188988, type: 3}
   _fragment: {fileID: 21300000, guid: 74ab504ad603eee4a8915246aea6ff82, type: 3}
   _rarity: 0
-  _bagRank: 1
+  _bagRank: 0
   _unitType: Lancer
   _skill: Seasoned
   _skillValue: 20

@@ -16,8 +16,8 @@ namespace Codigames.Kingdom.Heroes
         string Name { get; }
         string Title { get; }
         HeroRarity Rarity { get; }
-        // Its place in its rarity's bag order: the order new heroes arrive in.
-        int BagRank { get; }
+        // Its place in its rarity's bag order, the order new heroes arrive in; null for the rest, shuffled per kingdom.
+        int? BagRank { get; }
         string UnitType { get; }
         string Skill { get; }
         // The skill's rank-1 value (a percent, a flat, seconds) and how often it fires, in seconds.

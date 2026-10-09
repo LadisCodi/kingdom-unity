@@ -19,7 +19,7 @@ MonoBehaviour:
   _portrait: {fileID: 21300000, guid: c5c3e1fde0b00dc60a446283aea6f4fc, type: 3}
   _fragment: {fileID: 21300000, guid: 3835d91e5ccb9fd0e98f2f700fade53b, type: 3}
   _rarity: 1
-  _bagRank: 1
+  _bagRank: 0
   _unitType: Cavalry
   _skill: Cleave
   _skillValue: 80

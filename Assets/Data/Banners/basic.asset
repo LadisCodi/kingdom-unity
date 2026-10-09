@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 224aac8a15298cd88a314adca7bfe09f, type: 3}
+  m_Name: basic
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Heroes.BannerAsset
+  _id: basic
+  _key: SilverKey
+  _keyGemCost: 500
+  _freePerDay: 5
+  _freeCooldownSeconds: 300
+  _heroChanceByOwned:
+  - 0.3
+  - 0.265
+  - 0.23
+  - 0.195
+  - 0.16
+  - 0.125
+  - 0.09
+  - 0.055
+  - 0.02
+  _softPityAt: 40
+  _hardPityAt: 60
+  _legendaryPityAt: 0
+  _weightCommon: 55
+  _weightRare: 45
+  _weightLegendary: 0
+  _duplicateFragments: 10
+  _extraHeroSlotChance: 0.2
+  _loot:
+  - Reward: 0
+    Rarity: 1
+    Item: 
+    Amount: 1
+    Weight: 25
+  - Reward: 0
+    Rarity: 2
+    Item: 
+    Amount: 1
+    Weight: 20.16
+  - Reward: 1
+    Rarity: 0
+    Item: 
+    Amount: 10
+    Weight: 10
+  - Reward: 1
+    Rarity: 0
+    Item: 
+    Amount: 25
+    Weight: 9
+  - Reward: 1
+    Rarity: 0
+    Item: 
+    Amount: 100
+    Weight: 2
+  - Reward: 2
+    Rarity: 0
+    Item: 
+    Amount: 50
+    Weight: 10.01
+  - Reward: 2
+    Rarity: 0
+    Item: 
+    Amount: 200
+    Weight: 10
+  - Reward: 3
+    Rarity: 0
+    Item: ConstructionSpeedup5m
+    Amount: 1
+    Weight: 1.33
+  - Reward: 3
+    Rarity: 0
+    Item: TrainingSpeedup5m
+    Amount: 1
+    Weight: 1.33
+  - Reward: 3
+    Rarity: 0
+    Item: WorkshopSpeedup5m
+    Amount: 1
+    Weight: 1.33
+  - Reward: 3
+    Rarity: 0
+    Item: FoodChest10m
+    Amount: 1
+    Weight: 2
+  - Reward: 3
+    Rarity: 0
+    Item: WoodChest10m
+    Amount: 1
+    Weight: 2
+  - Reward: 3
+    Rarity: 0
+    Item: StoneChest10m
+    Amount: 1
+    Weight: 2
+  - Reward: 3
+    Rarity: 0
+    Item: GoldChest10m
+    Amount: 1
+    Weight: 2
+  _showsHero: 0
+  _featuredHero: 

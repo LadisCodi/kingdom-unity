@@ -19,7 +19,7 @@ MonoBehaviour:
   _portrait: {fileID: 21300000, guid: 31276636791ceb6d0bc8ad9bebb1268d, type: 3}
   _fragment: {fileID: 21300000, guid: b4c14c88db6c658ab846085ce6827fd0, type: 3}
   _rarity: 1
-  _bagRank: 1
+  _bagRank: 0
   _unitType: Archer
   _skill: Ambush
   _skillValue: 120

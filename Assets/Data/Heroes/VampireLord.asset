@@ -19,7 +19,7 @@ MonoBehaviour:
   _portrait: {fileID: 21300000, guid: ce528dccf3888802a9326925f7dab564, type: 3}
   _fragment: {fileID: 21300000, guid: d1711ab4627ac0f2eabd56cc807aec75, type: 3}
   _rarity: 2
-  _bagRank: 1
+  _bagRank: 0
   _unitType: Cavalry
   _skill: Crush
   _skillValue: 180

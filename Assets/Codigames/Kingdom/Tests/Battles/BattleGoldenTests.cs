@@ -86,7 +86,7 @@ namespace Codigames.Kingdom.Tests.Battles
             public string Name => Id;
             public string Title => "";
             public Codigames.Kingdom.Heroes.HeroRarity Rarity { get; set; }
-            public int BagRank => 1;
+            public int? BagRank { get; set; }
             public string UnitType { get; set; }
             public string Skill { get; set; }
             public double SkillValue { get; set; }
@@ -134,6 +134,11 @@ namespace Codigames.Kingdom.Tests.Battles
             public double HeroSlotGemCostBase => 2500;
             public double HeroSlotGemCostGrowth => 2;
             public double HeroRecoverHours => 8;
+            public int BagOpen(Codigames.Kingdom.Heroes.HeroRarity rarity) => rarity switch
+            {
+                Codigames.Kingdom.Heroes.HeroRarity.Common => 3, Codigames.Kingdom.Heroes.HeroRarity.Rare => 2, _ => 1,
+            };
+            public int FirstCallsNewHero => 2;
         }
 
         private static FakeHero H(string id, Codigames.Kingdom.Heroes.HeroRarity rarity, string type, string skill, double value, double every,

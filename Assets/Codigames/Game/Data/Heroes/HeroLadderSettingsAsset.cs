@@ -37,6 +37,11 @@ namespace Codigames.Game.Data.Heroes
         [BoxGroup("Party"), SerializeField] private double _heroSlotGemCostGrowth = 2;
         [BoxGroup("Party"), SerializeField, SuffixLabel("h a whole bar")] private double _heroRecoverHours = 8;
 
+        [BoxGroup("The bag"), SerializeField, MinValue(1), SuffixLabel("open")] private int _bagOpenCommon = 3;
+        [BoxGroup("The bag"), SerializeField, MinValue(1), SuffixLabel("open")] private int _bagOpenRare = 2;
+        [BoxGroup("The bag"), SerializeField, MinValue(1), SuffixLabel("open")] private int _bagOpenLegendary = 1;
+        [BoxGroup("The bag"), SerializeField, MinValue(0), Tooltip("The first calls across every banner that bring a hero not owned yet.")] private int _firstCallsNewHero = 2;
+
         public int AscensionStars => _ascensionStars;
         public int AscensionStepsPerStar => _ascensionStepsPerStar;
         public int RecruitFragments(HeroRarity rarity) => rarity switch
@@ -63,5 +68,12 @@ namespace Codigames.Game.Data.Heroes
         public double HeroSlotGemCostBase => _heroSlotGemCostBase;
         public double HeroSlotGemCostGrowth => _heroSlotGemCostGrowth;
         public double HeroRecoverHours => _heroRecoverHours;
+        public int BagOpen(HeroRarity rarity) => rarity switch
+        {
+            HeroRarity.Common => _bagOpenCommon,
+            HeroRarity.Rare => _bagOpenRare,
+            _ => _bagOpenLegendary,
+        };
+        public int FirstCallsNewHero => _firstCallsNewHero;
     }
 }

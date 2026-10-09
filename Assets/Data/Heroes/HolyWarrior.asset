@@ -19,7 +19,7 @@ MonoBehaviour:
   _portrait: {fileID: 21300000, guid: be3b5d80b84bf59caa7cfaaf79cc7a05, type: 3}
   _fragment: {fileID: 21300000, guid: 3876845fd4e6781c08775954198c83b2, type: 3}
   _rarity: 1
-  _bagRank: 1
+  _bagRank: 0
   _unitType: Cavalry
   _skill: WarCry
   _skillValue: 8

@@ -19,7 +19,7 @@ MonoBehaviour:
   _portrait: {fileID: 21300000, guid: 7e6b318e800b0f23685ede30aa569428, type: 3}
   _fragment: {fileID: 21300000, guid: a8f5897f181cf50499bd4fc281f8955e, type: 3}
   _rarity: 0
-  _bagRank: 1
+  _bagRank: 0
   _unitType: Warrior
   _skill: FieldMedic
   _skillValue: 10

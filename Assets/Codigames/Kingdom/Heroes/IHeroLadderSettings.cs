@@ -29,5 +29,9 @@ namespace Codigames.Kingdom.Heroes
         double HeroSlotGemCostGrowth { get; }
         // A whole bar of HP comes back in this many hours.
         double HeroRecoverHours { get; }
+        // How many heroes of a rarity the player does not own a call can reach (Docs/features/10-heroes.md §6.6).
+        int BagOpen(HeroRarity rarity);
+        // The first calls across every banner that bring a hero not owned yet.
+        int FirstCallsNewHero { get; }
     }
 }

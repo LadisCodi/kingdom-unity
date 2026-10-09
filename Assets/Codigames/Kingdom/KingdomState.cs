@@ -46,6 +46,8 @@ namespace Codigames.Kingdom
 
         public Heroes.State.HeroesState Heroes { get; set; } = new();
 
+        public Heroes.State.GachaState Gacha { get; set; } = new();
+
         // This kingdom's own randomness: every draw hashes it with the parts that name the event.
         public uint Seed { get; set; }
 

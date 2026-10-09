@@ -19,7 +19,7 @@ MonoBehaviour:
   _portrait: {fileID: 21300000, guid: 84b002f248a1c21e89d43abe7b076b58, type: 3}
   _fragment: {fileID: 21300000, guid: 20153eaa0e68a9b2683c6aadde323ace, type: 3}
   _rarity: 1
-  _bagRank: 1
+  _bagRank: 0
   _unitType: Lancer
   _skill: Daze
   _skillValue: 2

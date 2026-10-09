@@ -19,7 +19,7 @@ MonoBehaviour:
   _portrait: {fileID: 21300000, guid: 27f927623cbbc04d2b0f2986fa1ad0e6, type: 3}
   _fragment: {fileID: 21300000, guid: 31a263cd5f0455d6d8a3db29ca1feb19, type: 3}
   _rarity: 0
-  _bagRank: 1
+  _bagRank: 0
   _unitType: Archer
   _skill: Daze
   _skillValue: 1

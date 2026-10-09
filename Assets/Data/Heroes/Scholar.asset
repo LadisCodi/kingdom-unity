@@ -19,7 +19,7 @@ MonoBehaviour:
   _portrait: {fileID: 21300000, guid: 19a8991b0fd92e1929fb21007d08872b, type: 3}
   _fragment: {fileID: 21300000, guid: b0958cfcf10504a4aae9d3fd223c539a, type: 3}
   _rarity: 1
-  _bagRank: 1
+  _bagRank: 0
   _unitType: Archer
   _skill: Lore
   _skillValue: 25
