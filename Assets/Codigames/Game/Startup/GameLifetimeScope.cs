@@ -57,6 +57,7 @@ namespace Codigames.Game.Startup
             builder.RegisterEntryPoint<TreasuresView>();
             builder.RegisterInstance(_sightArt);
             builder.RegisterEntryPoint<SilhouettesView>();
+            builder.RegisterEntryPoint<ReachBorderView>();
             builder.RegisterComponent(_fogView);
             builder.RegisterComponent(_crewsView);
             builder.RegisterEntryPoint<MapTaps>();
