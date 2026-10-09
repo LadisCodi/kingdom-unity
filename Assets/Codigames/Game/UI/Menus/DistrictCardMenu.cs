@@ -32,12 +32,23 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private RectTransform _price;
         [SerializeField] private CostChip _chipPrefab;
         [SerializeField] private Button _upgrade;
+        [Header("Training")]
+        [SerializeField] private RectTransform _window;
+        [SerializeField] private float _windowHeight = 470;
+        [SerializeField] private float _trainingHeight = 190;
+        [SerializeField] private GameObject _trainingRow;
+        [SerializeField] private TMP_Text _villagers;
+        [SerializeField] private TMP_Text _onTheWay;
+        [SerializeField] private RectTransform _trainPrice;
+        [SerializeField] private Button _train;
         [SerializeField] private Color _ordinalColor = new Color32(0xf4, 0xe4, 0xc1, 0xcc);
 
         private readonly List<CostChip> _chips = new();
+        private readonly List<CostChip> _trainChips = new();
 
         public event Action CloseTapped;
         public event Action UpgradeTapped;
+        public event Action TrainTapped;
 
         public void Show(DistrictCardData card)
         {
@@ -65,29 +76,47 @@ namespace Codigames.Game.UI.Menus
             _upgrade.gameObject.SetActive(card.Price.Count > 0);
             _upgrade.interactable = card.CanUpgrade;
 
-            for (var i = 0; i < card.Price.Count; i++)
+            ShowChips(_chips, _price, card.Price);
+
+            var training = card.Training;
+            _trainingRow.SetActive(training != null);
+            _window.sizeDelta = new Vector2(_window.sizeDelta.x, _windowHeight + (training != null ? _trainingHeight : 0));
+            if (training == null) return;
+
+            _villagers.text = training.Villagers;
+            _onTheWay.text = string.IsNullOrEmpty(training.OnTheWay) ? training.Reason : training.OnTheWay;
+            _train.interactable = training.CanTrain;
+            ShowChips(_trainChips, _trainPrice, training.Price);
+        }
+
+        private void ShowChips(List<CostChip> chips, RectTransform parent, IReadOnlyList<CostChipData> price)
+        {
+            for (var i = 0; i < price.Count; i++)
             {
-                if (i == _chips.Count) _chips.Add(Instantiate(_chipPrefab, _price));
-                _chips[i].gameObject.SetActive(true);
-                _chips[i].Show(card.Price[i]);
+                if (i == chips.Count) chips.Add(Instantiate(_chipPrefab, parent));
+                chips[i].gameObject.SetActive(true);
+                chips[i].Show(price[i]);
             }
 
-            for (var i = card.Price.Count; i < _chips.Count; i++) _chips[i].gameObject.SetActive(false);
+            for (var i = price.Count; i < chips.Count; i++) chips[i].gameObject.SetActive(false);
         }
 
         protected override void SubscribeToEventsInternal()
         {
             _close.onClick.AddListener(OnClose);
             _upgrade.onClick.AddListener(OnUpgrade);
+            _train.onClick.AddListener(OnTrain);
         }
 
         protected override void UnsubscribeFromEventsInternal()
         {
             _close.onClick.RemoveListener(OnClose);
             _upgrade.onClick.RemoveListener(OnUpgrade);
+            _train.onClick.RemoveListener(OnTrain);
         }
 
         private void OnClose() => CloseTapped?.Invoke();
         private void OnUpgrade() => UpgradeTapped?.Invoke();
+        private void OnTrain() => TrainTapped?.Invoke();
     }
 }

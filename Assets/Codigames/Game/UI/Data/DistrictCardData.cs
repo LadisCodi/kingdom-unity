@@ -7,8 +7,9 @@ namespace Codigames.Game.UI.Data
     public sealed class DistrictCardData
     {
         public DistrictCardData(string name, string ordinal, string level, Sprite art, string promise, bool working,
-            string work, float progress, string next, IReadOnlyList<CostChipData> price, bool canUpgrade, string reason, string store, bool storeFull)
+            string work, float progress, string next, IReadOnlyList<CostChipData> price, bool canUpgrade, string reason, string store, bool storeFull, TrainingStripData training = null)
         {
+            Training = training;
             Store = store;
             StoreFull = storeFull;
             Name = name;
@@ -51,5 +52,8 @@ namespace Codigames.Game.UI.Data
         // What its store holds against its capacity ("Storage 120/600"); empty for a building with none.
         public string Store { get; }
         public bool StoreFull { get; }
+
+        // The villager line, on the building that trains them; null elsewhere.
+        public TrainingStripData Training { get; }
     }
 }

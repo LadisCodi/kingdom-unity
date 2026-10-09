@@ -29,14 +29,16 @@ namespace Codigames.Game.UI.Presenters
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
         private readonly Stores _stores;
+        private readonly VillagerTraining _training;
 
         // The second the card was last drawn at: it is redrawn once a second.
         private double _shownSeconds = -1;
 
         public DistrictCardMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, CityState city,
             BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, ICurrencyIcons icons, IClock clock,
-            NumberFormat numbers, Localizer localizer, Stores stores) : base(views)
+            NumberFormat numbers, Localizer localizer, Stores stores, VillagerTraining training) : base(views)
         {
+            _training = training;
             _stores = stores;
             _ui = ui;
             _construction = construction;
@@ -69,6 +71,7 @@ namespace Codigames.Game.UI.Presenters
             _treasury.Changed += OnTreasuryChanged;
             _construction.JobStarted += OnJob;
             _construction.JobCompleted += OnJobCompleted;
+            _training.Arrived += Refresh;
         }
 
         protected override void UnbindInternal(DistrictCardMenu view)
@@ -76,18 +79,21 @@ namespace Codigames.Game.UI.Presenters
             _treasury.Changed -= OnTreasuryChanged;
             _construction.JobStarted -= OnJob;
             _construction.JobCompleted -= OnJobCompleted;
+            _training.Arrived -= Refresh;
         }
 
         protected override void SubscribeToViewEventsInternal(DistrictCardMenu view)
         {
             view.CloseTapped += RequestClose;
             view.UpgradeTapped += OnUpgrade;
+            view.TrainTapped += OnTrain;
         }
 
         protected override void UnsubscribeFromViewEventsInternal(DistrictCardMenu view)
         {
             view.CloseTapped -= RequestClose;
             view.UpgradeTapped -= OnUpgrade;
+            view.TrainTapped -= OnTrain;
         }
 
         private void OnTreasuryChanged(string currency, double amount) => Refresh();
@@ -98,6 +104,31 @@ namespace Codigames.Game.UI.Presenters
         {
             _construction.Upgrade(Data, _clock.NowMs);
             Refresh();
+        }
+
+        private void OnTrain()
+        {
+            _training.Train(_clock.NowMs);
+            Refresh();
+        }
+
+        // The villager line, on the Townhall only.
+        private TrainingStripData Training(DistrictState district, double now)
+        {
+            if (district.DefinitionId != _settings.Townhall.Id) return null;
+
+            var villagers = _localizer.Tr("Villagers {n}/{cap}", ("n", _numbers.Number(_city.Population)), ("cap", _numbers.Number(_stores.Housing)));
+            var arrivesAt = _training.Current?.ArrivesAt;
+            var onTheWay = arrivesAt == null
+                ? string.Empty
+                : _localizer.Tr("{n} on the way · next in {time}", ("n", _numbers.Number(_city.Trainees.Count)),
+                    ("time", _numbers.Duration(Math.Ceiling(Math.Max(0, arrivesAt.Value - now) / 1000))));
+            var cost = _training.NextCost;
+            var price = new[] { new CostChipData(_icons.IconOf(VillagerTraining.FOOD), _numbers.Exact(cost), _treasury.Get(VillagerTraining.FOOD) < cost) };
+            var refusal = _training.Refusal;
+            var reason = refusal == TrainRefusal.NoRoom ? _localizer.Tr("Build houses for more villagers") : string.Empty;
+
+            return new TrainingStripData(villagers, onTheWay, price, refusal == TrainRefusal.None, reason);
         }
 
         private ConstructionJob JobOf(string districtId) => _city.Jobs.FirstOrDefault(j => j.DistrictId == districtId);
@@ -133,7 +164,7 @@ namespace Codigames.Game.UI.Presenters
 
                 View.Show(new DistrictCardData(name, ordinal, level, building.ArtFor(district.Level), promise, true,
                     doing + " · " + _numbers.Duration(Math.Ceiling(remaining)), progress, string.Empty,
-                    Array.Empty<CostChipData>(), false, string.Empty, store, storeFull));
+                    Array.Empty<CostChipData>(), false, string.Empty, store, storeFull, Training(district, now)));
                 return;
             }
 
@@ -147,7 +178,7 @@ namespace Codigames.Game.UI.Presenters
                 : _localizer.Tr("Lv {n}", ("n", _numbers.Number(offer.TargetLevel))) + " · " + _numbers.Duration(offer.Seconds);
 
             View.Show(new DistrictCardData(name, ordinal, level, building.ArtFor(district.Level), promise, false,
-                string.Empty, 0, next, price, offer.Refusal == ConstructionRefusal.None, Reason(offer), store, storeFull));
+                string.Empty, 0, next, price, offer.Refusal == ConstructionRefusal.None, Reason(offer), store, storeFull, Training(district, now)));
         }
 
         private string Reason(UpgradeOffer offer) => offer.Refusal switch
@@ -155,6 +186,7 @@ namespace Codigames.Game.UI.Presenters
             ConstructionRefusal.MaxLevel => _localizer.Tr("Highest level"),
             ConstructionRefusal.NeedsTownhallLevel => _localizer.Tr("Needs Townhall {n}", ("n", _numbers.Number(offer.RequiredTownhallLevel))),
             ConstructionRefusal.NoFreeBuilder => _localizer.Tr("Every builder is busy"),
+            ConstructionRefusal.NeedsPopulation => _localizer.Tr("Needs {n} villagers", ("n", _numbers.Number(offer.RequiredPopulation))),
             _ => string.Empty,
         };
     }

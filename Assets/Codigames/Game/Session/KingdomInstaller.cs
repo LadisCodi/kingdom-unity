@@ -40,6 +40,7 @@ namespace Codigames.Game.Session
             builder.Register<Construction>(Lifetime.Singleton);
             builder.Register<ManaPool>(Lifetime.Singleton);
             builder.Register<Stores>(Lifetime.Singleton);
+            builder.Register<VillagerTraining>(Lifetime.Singleton);
             builder.Register(resolver => new Harvesting(resolver.Resolve<HarvestState>(), resolver.Resolve<GroundState>(),
                 resolver.Resolve<CityState>(), resolver.Resolve<IProvinceMap>(), resolver.Resolve<ICatalog<IBuildingDefinition>>(),
                 resolver.Resolve<ICatalog<IFeatureDefinition>>(), resolver.Resolve<ICatalog<IHarvestSource>>(),
@@ -51,6 +52,7 @@ namespace Codigames.Game.Session
                 var state = resolver.Resolve<KingdomState>();
                 var timeline = new Timeline(state.LastAdvance);
                 timeline.Register(resolver.Resolve<Construction>());
+                timeline.Register(resolver.Resolve<VillagerTraining>());
 
                 // A pool left below its cap without a clock (an older save) starts gaining where the kingdom left off.
                 var mana = resolver.Resolve<ManaPool>();

@@ -221,6 +221,13 @@ namespace Codigames.Game.Editor.WebImport
             settings.FindProperty("_goldPerPopulationPerMinute").doubleValue = economy.Taxes.GoldPerPopulationPerMinute;
             settings.FindProperty("_collectSeconds").doubleValue = economy.Storage.CollectSeconds;
             settings.ApplyModifiedPropertiesWithoutUndo();
+
+            var training = new SerializedObject(LoadOrCreate<TrainingSettingsAsset>("Settings", "Training"));
+            SetDoubles(training.FindProperty("_costFirst"), economy.City.PopulationCostFirst);
+            training.FindProperty("_costGrowth").doubleValue = economy.City.PopulationCostGrowth;
+            training.FindProperty("_seconds").doubleValue = economy.Training.Seconds;
+            training.FindProperty("_secondsGrowth").doubleValue = economy.Training.VillagerSecondsGrowth;
+            training.ApplyModifiedPropertiesWithoutUndo();
         }
 
         // The pool's base, and a new kingdom's Mana: a full pool.

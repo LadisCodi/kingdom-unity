@@ -33,6 +33,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private TapSettingsAsset _tap;
         [SerializeField] private ManaSettingsAsset _mana;
         [SerializeField] private EconomySettingsAsset _economy;
+        [SerializeField] private TrainingSettingsAsset _training;
 
         [Header("App")]
         [SerializeField] private SoundCatalog _soundCatalog;
@@ -70,6 +71,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_tap).As<ITapSettings>();
             builder.RegisterInstance(_mana).As<IManaSettings>();
             builder.RegisterInstance(_economy).As<IEconomySettings>();
+            builder.RegisterInstance(_training).As<ITrainingSettings>();
         }
     }
 }

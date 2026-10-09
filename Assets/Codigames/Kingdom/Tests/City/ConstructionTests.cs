@@ -225,5 +225,24 @@ namespace Codigames.Kingdom.Tests.City
             house.Level = level;
             return house;
         }
+    
+
+        [Test]
+        public void Upgrade_ShouldWaitForTheVillagersItAsksFor()
+        {
+            var hall = new BuildingBuilder().WithId("Hall").WithMaxLevel(3).WithLevelPrices(BuildingBuilder.Price("Gold", 10),
+                BuildingBuilder.Price("Gold", 10), BuildingBuilder.Price("Gold", 10)).WithBuildSeconds(1).WithPopulationGates(4).Build();
+            var fixture = new CityFixture(hall);
+            fixture.Construction.Build("Hall", SPOT, 0);
+            fixture.Timeline.Advance(1000);
+            var district = fixture.District("Hall");
+
+            var offer = fixture.Construction.UpgradeOffer(district.Id);
+            Assert.That(offer.Refusal, Is.EqualTo(ConstructionRefusal.NeedsPopulation));
+            Assert.That(offer.RequiredPopulation, Is.EqualTo(4));
+
+            fixture.City.Population = 4;
+            Assert.That(fixture.Construction.Upgrade(district.Id, 1000), Is.EqualTo(ConstructionRefusal.None));
+        }
     }
 }
