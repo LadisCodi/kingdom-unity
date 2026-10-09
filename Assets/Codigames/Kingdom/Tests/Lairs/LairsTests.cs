@@ -59,7 +59,8 @@ namespace Codigames.Kingdom.Tests.Lairs
             public string Threat => "Warrior";
             public int Power { get; set; } = 60;
             public double WarningMinutes { get; set; } = 30;
-            public IReadOnlyDictionary<string, double> Mix { get; } = new Dictionary<string, double>();
+            public IReadOnlyDictionary<string, double> Mix { get; set; } = new Dictionary<string, double>();
+            public string RollKey { get; set; }
         }
 
         private sealed class Sites : IProvinceSites

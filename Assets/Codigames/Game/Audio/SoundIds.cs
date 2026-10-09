@@ -27,6 +27,22 @@ namespace Codigames.Game.Audio
         public const string SCROLL_CLOSE = "scrollClose";
         public const string UNLOCK = "unlock";
         public const string RAID_ALARM = "raidAlarm";
+        public const string BATTLE_START = "battleStart";
+        public const string SWORD_HIT = "swordHit";
+        public const string ARROW_HIT = "arrowHit";
+        public const string LANCE_HIT = "lanceHit";
+        public const string CAVALRY_HIT = "cavalryHit";
+        public const string CAVALRY_CHARGE = "cavalryCharge";
+        public const string ARROW_LOOSE = "arrowLoose";
+        public const string BOLT_CAST = "boltCast";
+        public const string SKILL_CHARGE = "skillCharge";
+        public const string HEAL = "heal";
+        public const string DAZE = "daze";
+        public const string SQUAD_DOWN = "squadDown";
+        public const string SKULL_STAMP = "skullStamp";
+        public const string FINAL_BLOW = "finalBlow";
+        public const string VICTORY = "victory";
+        public const string DEFEAT = "defeat";
 
         // What a tap on each kind of ground sounds like (and a crew's strike, quieter).
         public static string TapOn(string harvestSource) => harvestSource switch

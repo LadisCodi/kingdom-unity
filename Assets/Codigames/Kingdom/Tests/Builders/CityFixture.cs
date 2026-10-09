@@ -36,6 +36,7 @@ namespace Codigames.Kingdom.Tests.Builders
                 new FakeCurrency("Food", CurrencyScope.City, 0),
                 new FakeCurrency("Mana", CurrencyScope.City, 100),
                 new FakeCurrency("Knowledge", CurrencyScope.Kingdom, 0),
+                new FakeCurrency("HeroXp", CurrencyScope.Kingdom, 0),
                 new FakeCurrency("Gems", CurrencyScope.Player, 500),
             });
             Treasury = new Treasury(Currencies);

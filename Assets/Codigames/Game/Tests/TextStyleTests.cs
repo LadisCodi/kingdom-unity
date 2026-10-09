@@ -26,6 +26,8 @@ namespace Codigames.Game.Tests
             "Bar/Label",
             // The rank struck on its coin: sized to the coin, whatever the portrait.
             "RankCoin/Numeral",
+            // A fight's floating number: its size says the blow — larger on an advantage, smaller against the chart.
+            "Floats/Float",
             "Research/ChapterBar/",
             "Research/TechCard/",
             "/Glyph",

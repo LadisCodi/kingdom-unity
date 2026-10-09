@@ -93,6 +93,7 @@ MonoBehaviour:
     _threat: Warrior
     _power: 60
     _warningMinutes: 30
+    _rollKey: HollowBarrow
     _mix:
     - _id: Warrior
       _value: 4
@@ -115,6 +116,7 @@ MonoBehaviour:
     _threat: Archer
     _power: 300
     _warningMinutes: 90
+    _rollKey: SunkenChapel
     _mix:
     - _id: Archer
       _value: 7
@@ -137,6 +139,7 @@ MonoBehaviour:
     _threat: Lancer
     _power: 440
     _warningMinutes: 120
+    _rollKey: DrownedIronworks
     _mix: []
     _model: {fileID: 21300000, guid: c10bc7a38ee5186cfbce5145b3cb2a45, type: 3}
     _painting: {fileID: 21300000, guid: b57ee0160125becb4be42261a17e8ab9, type: 3}
@@ -156,6 +159,7 @@ MonoBehaviour:
     _threat: Cavalry
     _power: 700
     _warningMinutes: 180
+    _rollKey: CountingHouse
     _mix: []
     _model: {fileID: 21300000, guid: 241ea87ec1e09edc18a2cf76fb9457ab, type: 3}
     _painting: {fileID: 21300000, guid: 97713ec70079b0d36863bd59679afa17, type: 3}
@@ -174,6 +178,7 @@ MonoBehaviour:
     _threat: Any
     _power: 1000
     _warningMinutes: 240
+    _rollKey: StarObservatory
     _mix: []
     _model: {fileID: 21300000, guid: 2868db303507387eba4f5adbba5ba15d, type: 3}
     _painting: {fileID: 21300000, guid: 59cd9fe3be9d7f36190e365b68c93e19, type: 3}
@@ -186,3 +191,12 @@ MonoBehaviour:
   - _kind: Leyspring
     _name: Leyspring
     _art: {fileID: 21300000, guid: 52fbd2fc6eb69d5da918a9f62a0b9224, type: 3}
+  _creatureFaces:
+  - Unit: Warrior
+    Face: {fileID: 21300000, guid: e7babfd22cbc5fdadaf57779b22d5e88, type: 3}
+  - Unit: Lancer
+    Face: {fileID: 21300000, guid: f79bb579e2345f8a5b76127b09ca5e54, type: 3}
+  - Unit: Archer
+    Face: {fileID: 21300000, guid: 2157f3f08eba1dd08a97171bab2c899d, type: 3}
+  - Unit: Cavalry
+    Face: {fileID: 21300000, guid: 21835b87d174d1b74a3fcb652570e60f, type: 3}

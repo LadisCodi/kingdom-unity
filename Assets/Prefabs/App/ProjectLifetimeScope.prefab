@@ -321,6 +321,7 @@ MonoBehaviour:
   _sites: {fileID: 11400000, guid: f5be6234054baa5ffadf3c9e8842127d, type: 2}
   _treasure: {fileID: 11400000, guid: a997340940dcad53b873379dc3f2321c, type: 2}
   _lairs: {fileID: 11400000, guid: 37b360646212a837ab141eba404126a2, type: 2}
+  _combat: {fileID: 11400000, guid: 6579304261aaea2659220cd0f24204fc, type: 2}
   _quests: {fileID: 11400000, guid: 1f03ac5a3e52845f096bbff9c66a0a09, type: 2}
   _scenes: {fileID: 11400000, guid: 819b3b5d8c77007a7bd24e1b72a312ff, type: 2}
   _speakers: {fileID: 11400000, guid: 83cf10aef51d5cad78bb05a4a3e5ab29, type: 2}

@@ -26,6 +26,8 @@ namespace Codigames.Game.Data.Sites
         [BoxGroup("Guard"), SerializeField, Tooltip("The unit it fields most; Any for a drake.")] private string _threat = "Warrior";
         [BoxGroup("Guard"), SerializeField, MinValue(1)] private int _power = 60;
         [BoxGroup("Guard"), SerializeField, MinValue(0), SuffixLabel("min to the first raid")] private double _warningMinutes = 30;
+        [BoxGroup("Guard"), SerializeField, Tooltip("What its garrison is rolled under. Never change it once players have seen the lair.")]
+        private string _rollKey;
         [BoxGroup("Guard"), SerializeField, Tooltip("What it fields, as weights by unit; empty = the threat takes the lion's share.")]
         private List<Amount> _mix = new();
 
@@ -48,6 +50,7 @@ namespace Codigames.Game.Data.Sites
         public int Power => _power;
         public double WarningMinutes => _warningMinutes;
         public IReadOnlyDictionary<string, double> Mix => _mix.ToDictionary(a => a.Id, a => a.Value);
+        public string RollKey => string.IsNullOrEmpty(_rollKey) ? _id : _rollKey;
         public Sprite Model => _model;
         public Sprite Painting => _painting;
         public Sprite Creature => _creature;

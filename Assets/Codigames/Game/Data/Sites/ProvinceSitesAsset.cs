@@ -23,6 +23,16 @@ namespace Codigames.Game.Data.Sites
         [BoxGroup("Presentation"), ListDrawerSettings(ShowFoldout = false)]
         [SerializeField] private List<LandmarkKindData> _landmarkKinds = new();
 
+        [System.Serializable]
+        public class CreatureFace
+        {
+            public string Unit;
+            [PreviewField(48)] public Sprite Face;
+        }
+
+        [BoxGroup("Presentation"), ListDrawerSettings(ShowFoldout = false), Tooltip("The creature an enemy squad of each unit is, wherever a lair fields it.")]
+        [SerializeField] private List<CreatureFace> _creatureFaces = new();
+
         private List<IAbandonedSite> _sites;
         private List<ILandmarkSite> _landmarkSites;
         private List<Kingdom.Lairs.ILairSite> _lairSites;
@@ -34,6 +44,8 @@ namespace Codigames.Game.Data.Sites
         public IReadOnlyList<Kingdom.Lairs.ILairSite> Lairs => _lairSites ??= _lairs.ToList<Kingdom.Lairs.ILairSite>();
 
         public LairSiteData LairOf(string id) => _lairs.FirstOrDefault(l => l.Id == id);
+
+        public Sprite CreatureOf(string unit) => _creatureFaces.FirstOrDefault(c => c.Unit == unit)?.Face;
 
         public LandmarkKindData KindOf(string kind) => _landmarkKinds.FirstOrDefault(k => k.Kind == kind);
 
