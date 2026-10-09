@@ -82,5 +82,20 @@ namespace Codigames.Game.Audio
         public const string HERO_POP = "heroPop";
         public const string HERO_RISER = "heroRiser";
         public const string HERO_RISER_SHORT = "heroRiserShort";
+    
+
+        // A fight's skills.
+        public const string RIBBON = "ribbon";
+        public const string VOLLEY = "volley";
+        public const string AMBUSH = "ambush";
+        public const string SHARPSHOT = "sharpshot";
+        public const string CLEAVE = "cleave";
+        public const string CRUSH = "crush";
+        public const string WAR_CRY = "warCry";
+        public const string BULWARK = "bulwark";
+        public const string VIGOUR = "vigour";
+        public const string SHIELD_SOAK = "shieldSoak";
+        public const string SHIELD_BREAK = "shieldBreak";
+        public const string SHIELD_UP = "shieldUp";
     }
 }

@@ -44,6 +44,10 @@ namespace Codigames.Game.UI.Presenters
         private const float BAR_SHAKE = 0.04f;
         private const float CHARGE_MS = 320;
         private const float CARE_FLIGHT = 260;
+        // A skill is cast this long before it lands: the arrows of a Volley in the air, an Ambush on its way across.
+        private const float SKILL_LUNGE = 180;
+        // The rallies are named after the armies have marched on, this far apart (real ms).
+        private const float RALLY_GAP_MS = 520;
 
         private static readonly Color FLOAT = BattleFx.Hex(0xfff6dc);
         private static readonly Color FLOAT_ADV = BattleFx.Hex(0xffb13b);
@@ -61,6 +65,8 @@ namespace Codigames.Game.UI.Presenters
             public int Troops;
             public double Pool;
             public double Max;
+            // What its shield has left.
+            public double Shield;
             public Vector2 Home;
             public Vector2 Pos;
             public readonly List<(int Tick, Vector2 At)> Track = new();
@@ -71,6 +77,7 @@ namespace Codigames.Game.UI.Presenters
         private readonly Combat _combat;
         private readonly PortraitArt _portraits;
         private readonly Codigames.Game.Data.Heroes.HeroCollection _heroes;
+        private readonly Codigames.Game.Heroes.HeroWords _words;
         private readonly ProvinceSitesAsset _sites;
         private readonly IClock _clock;
         private readonly NumberFormat _numbers;
@@ -102,12 +109,14 @@ namespace Codigames.Game.UI.Presenters
         private bool _plaqueUp;
         private bool _exitUp;
         private bool _rewardsUp;
+        private int _rallies;
 
         public BattleScreenPresenter(IMenuViewFactory views, UIManager ui, Combat combat, PortraitArt portraits, ProvinceSitesAsset sites,
             IClock clock, NumberFormat numbers, Localizer localizer, ISoundService sounds, MusicDirector music, PlaybackPreferences preferences,
-            Codigames.Game.Data.Heroes.HeroCollection heroes) : base(views)
+            Codigames.Game.Data.Heroes.HeroCollection heroes, Codigames.Game.Heroes.HeroWords words) : base(views)
         {
             _heroes = heroes;
+            _words = words;
             _preferences = preferences;
             _ui = ui;
             _combat = combat;
@@ -143,6 +152,7 @@ namespace Codigames.Game.UI.Presenters
             _plaqueUp = false;
             _exitUp = false;
             _rewardsUp = false;
+            _rallies = 0;
             _ui.MenuHidden += OnMenuHidden;
             _finalBlow = _log.Events[_log.Events.Count - 1].Kind == BattleEventKind.End && _log.Reason == EndReason.Wiped;
 
@@ -275,7 +285,7 @@ namespace Codigames.Game.UI.Presenters
                         var ev = e;
                         var targets = TargetsOf(_cue);
                         _moments.Add((at - CHARGE_MS, () => Charge(ev)));
-                        _moments.Add((at - CARE_FLIGHT, () => Cast(ev, targets)));
+                        _moments.Add((at - CastLead(ev.Skill), () => Cast(ev, targets)));
                     }
 
                     _cue++;
@@ -522,7 +532,44 @@ namespace Codigames.Game.UI.Presenters
             var tint = Tint(e.Skill);
             from.View.Glow(tint, (CHARGE_MS + 220) / 1000f / Pace);
             View.Fx.Motes(At(from), e.Tick * Data.TickMs - CHARGE_MS, 5, tint);
+            Announce(e.From.Side, e.Skill);
             Play(SoundIds.SKILL_CHARGE, "skill");
+        }
+
+        // The skill's name on its cloth across the line between the armies.
+        private void Announce(Side side, string skill)
+        {
+            View.Ribbon(_words.SkillName(skill), Cloth(skill), side == Side.Ours);
+            Play(SoundIds.RIBBON, "ribbon");
+        }
+
+        private static float CastLead(string skill) => skill switch
+        {
+            "Volley" => 260,
+            "Cleave" or "Crush" => SKILL_LUNGE,
+            "Ambush" => 240,
+            "Sharpshot" => 40,
+            _ => CARE_FLIGHT,
+        };
+
+        // THE RALLIES, named one by one after the armies march on: the ribbon, its call, then every slot on that side
+        // flares in its colour.
+        private void Rally(BattleEvent e, int index)
+        {
+            DOVirtual.DelayedCall((INTRO_MS + 120 + index * RALLY_GAP_MS) / 1000f, () =>
+            {
+                if (View == null || Data == null || Data.Phase != PlaybackPhase.Playing) return;
+                Announce(e.From.Side, e.Skill);
+                var call = e.Skill switch { "WarCry" => SoundIds.WAR_CRY, "Bulwark" => SoundIds.BULWARK, "Vigour" => SoundIds.VIGOUR, _ => null };
+                if (call != null) Play(call, "rally");
+                var tint = Tint(e.Skill);
+                if (_slots.TryGetValue(e.From, out var caster)) caster.View.Glow(tint, 0.6f);
+                foreach (var s in _slots.Values.Where(s => s.Ref.Side == e.From.Side && !s.View.IsDead))
+                {
+                    s.View.Glow(tint, 0.7f);
+                    View.Fx.Motes(At(s), _fxT, 3, tint);
+                }
+            }, true);
         }
 
         // …then is cast, timed to land on its tick: a bolt of its light to each of them, or the caster on its way.
@@ -530,17 +577,106 @@ namespace Codigames.Game.UI.Presenters
         {
             if (!_slots.TryGetValue(e.From, out var from) || targets.Count == 0) return;
             var t = e.Tick * Data.TickMs;
-            if (Skills.KindOf(e.Skill) == SkillKind.Strike)
+            var tint = Tint(e.Skill);
+            var unit = BattleScreen.PX;
+            switch (e.Skill)
             {
-                var mid = targets.Aggregate(Vector2.zero, (sum, s) => sum + At(s)) / targets.Count;
-                var d = mid - At(from);
-                Lunge(from, d.normalized, Mathf.Min(d.magnitude * 0.45f, 40 * BattleScreen.PX), 6 * BattleScreen.PX, 180, 0);
-                return;
+                case "Volley":
+                    Play(SoundIds.VOLLEY, "skillCast");
+                    // Arrows fall out of the sky onto every one of them.
+                    for (var i = 0; i < targets.Count; i++)
+                    {
+                        var to = At(targets[i]);
+                        for (var k = 0; k < 2; k++)
+                        {
+                            var off = (k == 0 ? -8 : 9) * unit;
+                            View.Fx.Shoot(false, to + new Vector2(off * 1.5f, 150 * unit), to + new Vector2(off, 0), t - 220 - k * 40 - i * 10, t - k * 30, 0);
+                        }
+                    }
+
+                    return;
+                case "Cleave":
+                case "Crush":
+                {
+                    var mid = targets.Aggregate(Vector2.zero, (sum, s) => sum + At(s)) / targets.Count;
+                    var d = mid - At(from);
+                    Lunge(from, d.normalized, Mathf.Min(d.magnitude * 0.45f, 40 * unit), 6 * unit, SKILL_LUNGE, 0);
+                    return;
+                }
+                case "Ambush":
+                {
+                    // The caster crosses the board to the back rank and comes home.
+                    var d = At(targets[0]) - At(from);
+                    from.View.transform.SetAsLastSibling();
+                    from.Lunge?.Kill();
+                    Lunge(from, d.normalized, d.magnitude * 0.8f, 4 * unit, CastLead("Ambush"), 0);
+                    View.Fx.Dust(At(from), t - CastLead("Ambush"));
+                    Play(SoundIds.AMBUSH, "skillCast");
+                    return;
+                }
+                case "Sharpshot":
+                    View.Fx.Beam(At(from), At(targets[0]), t - CastLead("Sharpshot"), tint);
+                    Play(SoundIds.SHARPSHOT, "skillCast");
+                    return;
+                default:
+                    // A heal, a shield, a daze: a bolt of its light to each of them.
+                    if (e.Skill == "Wave") View.Fx.Shock(At(from), t - CARE_FLIGHT, 46, tint);
+                    Play(SoundIds.BOLT_CAST, "loose");
+                    foreach (var to in targets) View.Fx.Shoot(true, At(from), At(to), t - CARE_FLIGHT, t, 16, tint);
+                    return;
+            }
+        }
+
+        // A skill's strike landing: weightier than a swing, and its own.
+        private void SkillImpact(BattleEvent e, Slot from, Slot to, float t)
+        {
+            var d = At(to) - At(from);
+            var angle = Mathf.Atan2(d.y, d.x);
+            Flinch(to, d.normalized, e.Skill == "Crush" ? 1 : 0.6f);
+            switch (e.Skill)
+            {
+                case "Volley":
+                    View.Fx.Sparks(At(to), Mathf.PI / 2, t, 4);
+                    break;
+                case "Cleave":
+                    View.Fx.Strike(false, At(to), angle, t, 1.5f);
+                    View.Fx.Sparks(At(to), angle, t, 5);
+                    break;
+                case "Crush":
+                    View.Fx.Strike(false, At(to), angle, t, 1.7f);
+                    View.Fx.Shock(At(to), t, 50);
+                    View.Fx.Sparks(At(to), angle, t, 14);
+                    View.ShakeBoard();
+                    Hold(t, HOLD_WIPE_MS);
+                    break;
+                case "Ambush":
+                    View.Fx.Strike(false, At(to), angle, t, 1.4f);
+                    View.Fx.Sparks(At(to), angle, t, 8);
+                    break;
+                default:
+                    View.Fx.Sparks(At(to), angle, t, 8);
+                    View.Fx.Shock(At(to), t, 24, Tint(e.Skill));
+                    break;
             }
 
-            Play(SoundIds.BOLT_CAST, "loose");
-            foreach (var to in targets) View.Fx.Shoot(true, At(from), At(to), t - CARE_FLIGHT, t, 16, Tint(e.Skill));
+            if (e.Edge > 0 && e.Dealt >= to.Max * HEAVY) Hold(t, HOLD_MS);
         }
+
+        // The cloth a skill's ribbon is dyed: by kind, except the rallies that say what they raise.
+        private static Color Cloth(string skill) => skill switch
+        {
+            "Bulwark" => BattleFx.Hex(0x56606c),
+            "Vigour" => BattleFx.Hex(0x4b7f36),
+            _ => Skills.KindOf(skill) switch
+            {
+                SkillKind.Strike => BattleFx.Hex(0xa8452a),
+                SkillKind.Heal => BattleFx.Hex(0x4b7f36),
+                SkillKind.Shield => BattleFx.Hex(0x3d6a96),
+                SkillKind.Daze => BattleFx.Hex(0x64458f),
+                SkillKind.Rally => BattleFx.Hex(0x93321f),
+                _ => BattleFx.Hex(0x8a6420),
+            },
+        };
 
         private static Color Tint(string skill) => skill switch
         {
@@ -560,6 +696,13 @@ namespace Codigames.Game.UI.Presenters
         // One event on the board. `quiet` is a board catching up: the state lands, nothing flies.
         private void Apply(BattleEvent e, bool quiet, float t)
         {
+            if (e.Kind == BattleEventKind.Skill)
+            {
+                // A rally is named once the armies have marched on; a timed skill was charged and cast ahead of its tick.
+                if (e.Tick == 0 && !quiet) Rally(e, _rallies++);
+                return;
+            }
+
             if (!_slots.TryGetValue(e.At, out var slot)) return;
             switch (e.Kind)
             {
@@ -595,11 +738,19 @@ namespace Codigames.Game.UI.Presenters
                         View.Float(slot.View, At(slot), e.Edge > 0 ? "adv" : e.Edge < 0 ? "dis" : "hit", e.Dealt, color, size * BattleScreen.PX);
                     }
 
-                    if (e.Absorbed > 0) View.Float(slot.View, At(slot), "shield", e.Absorbed, FLOAT_SHIELD, 15 * BattleScreen.PX);
+                    if (e.Absorbed > 0)
+                    {
+                        View.Float(slot.View, At(slot), "shield", e.Absorbed, FLOAT_SHIELD, 15 * BattleScreen.PX);
+                        Soak(slot, e.Absorbed, t);
+                    }
+
                     if (from == null) return;
-                    Impact(e, from, slot, t);
+                    if (e.Skill != null) SkillImpact(e, from, slot, t);
+                    else Impact(e, from, slot, t);
                     var heavy = Mathf.Min(1, (float)(e.Dealt / slot.Max) / (HEAVY * 2));
-                    Play(HitSound(from), "battle", 0.8f + 0.4f * heavy);
+                    var skilled = e.Skill switch { "Cleave" => SoundIds.CLEAVE, "Crush" => SoundIds.CRUSH, _ => null };
+                    if (skilled != null) Play(skilled, "skillHit");
+                    else Play(HitSound(from), "battle", 0.8f + 0.4f * heavy);
                     return;
                 }
                 case BattleEventKind.TroopsLost:
@@ -637,10 +788,37 @@ namespace Codigames.Game.UI.Presenters
                     Play(SoundIds.SQUAD_DOWN, "death");
                     DOVirtual.DelayedCall(0.14f, () => Play(SoundIds.SKULL_STAMP, "stamp"), true);
                     return;
+                case BattleEventKind.Shielded:
+                    slot.Shield = e.Amount;
+                    if (quiet) return;
+                    Play(SoundIds.SHIELD_UP, "shieldUp");
+                    slot.View.ShowShield();
+                    return;
                 case BattleEventKind.Dazed:
-                    if (!quiet) Play(SoundIds.DAZE, "daze");
+                    if (quiet) return;
+                    Play(SoundIds.DAZE, "daze");
+                    // The fight's ticks, at the playback's speed, in real time.
+                    slot.View.Daze(e.Amount * Data.TickMs / 1000f / Pace);
                     return;
             }
+        }
+
+        // A shield takes a blow: it wobbles, or — spent — shatters.
+        private void Soak(Slot slot, int absorbed, float t)
+        {
+            slot.Shield = Math.Max(0, slot.Shield - absorbed);
+            if (!slot.View.Shielded) return;
+            if (slot.Shield > 0)
+            {
+                Play(SoundIds.SHIELD_SOAK, "soak");
+                slot.View.WobbleShield();
+                return;
+            }
+
+            slot.View.HideShield();
+            Play(SoundIds.SHIELD_BREAK, "shieldBreak");
+            View.Fx.Chip(At(slot), t, 10, BattleFx.Chips.Sky);
+            View.Fx.Shock(At(slot), t, 38, BattleFx.Hex(0x8fc8ff));
         }
 
         private void ShakeBar(Side side, int lost)

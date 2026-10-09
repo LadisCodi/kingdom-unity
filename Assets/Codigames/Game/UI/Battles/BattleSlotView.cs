@@ -37,15 +37,69 @@ namespace Codigames.Game.UI.Battles
         [SerializeField] private RectTransform _skull;
         [SerializeField] private CrackGraphic _crack;
         [SerializeField] private Material _drained;
+        // A shield's glass bubble round the slot, and a daze's stars circling over it.
+        [SerializeField] private Image _bubble;
+        [SerializeField] private RectTransform _stars;
 
         private Tween _walk;
         private Tween _ghostTween;
         private Tween _crackTween;
         private Tween _flash;
         private float _share = 1;
+        private Tween _daze;
+        private Tween _orbit;
 
         public RectTransform Body => _body;
         public bool IsDead { get; private set; }
+
+        public bool Shielded => _bubble != null && _bubble.gameObject.activeSelf;
+
+        // A shield goes up: the bubble pops into place round the slot.
+        public void ShowShield()
+        {
+            if (_bubble == null || Shielded) return;
+            _bubble.gameObject.SetActive(true);
+            _bubble.rectTransform.localScale = Vector3.one * 0.4f;
+            _bubble.color = new Color(1, 1, 1, 0);
+            _bubble.rectTransform.DOScale(1, 0.28f).SetEase(Ease.OutBack).SetUpdate(true);
+            _bubble.DOFade(1, 0.2f).SetUpdate(true);
+        }
+
+        // The shield takes a blow: it wobbles.
+        public void WobbleShield()
+        {
+            if (!Shielded) return;
+            _bubble.rectTransform.DOKill(true);
+            DOTween.Sequence().SetUpdate(true)
+                .Append(_bubble.rectTransform.DOScale(0.9f, 0.1f)).Join(_bubble.DOFade(0.5f, 0.1f))
+                .Append(_bubble.rectTransform.DOScale(1, 0.1f)).Join(_bubble.DOFade(1, 0.1f));
+        }
+
+        public void HideShield()
+        {
+            if (_bubble == null) return;
+            _bubble.DOKill();
+            _bubble.rectTransform.DOKill();
+            _bubble.gameObject.SetActive(false);
+        }
+
+        // Dazed for `seconds`: the portrait dims and three stars circle over its head.
+        public void Daze(float seconds)
+        {
+            if (_stars == null || IsDead) return;
+            _daze?.Kill();
+            _stars.gameObject.SetActive(true);
+            _portrait.color = new Color(0.72f, 0.72f, 0.72f, 1);
+            _orbit ??= _stars.GetChild(0).DOLocalRotate(new Vector3(0, 0, -360), 0.9f, RotateMode.FastBeyond360)
+                .SetEase(Ease.Linear).SetLoops(-1).SetUpdate(true);
+            _daze = DOVirtual.DelayedCall(seconds, EndDaze, true);
+        }
+
+        private void EndDaze()
+        {
+            if (_stars != null) _stars.gameObject.SetActive(false);
+            if (!IsDead) _portrait.color = Color.white;
+        }
 
         public void Show(Sprite bust, Vector2 shift, float scale, bool ours, bool hero, string count, int rank, bool back)
         {
@@ -130,6 +184,9 @@ namespace Codigames.Game.UI.Battles
         public void Die(int seed, bool quiet)
         {
             IsDead = true;
+            HideShield();
+            _daze?.Kill();
+            if (_stars != null) _stars.gameObject.SetActive(false);
             SetWalking(false);
             SetLife(0, true);
             SetCount(string.Empty);
@@ -151,6 +208,8 @@ namespace Codigames.Game.UI.Battles
         private void OnDestroy()
         {
             _walk?.Kill();
+            _daze?.Kill();
+            _orbit?.Kill();
             _ghostTween?.Kill();
             _crackTween?.Kill();
             _flash?.Kill();
