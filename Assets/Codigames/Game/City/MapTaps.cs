@@ -6,6 +6,7 @@ using Codigames.Game.UI.Menus;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Fog;
+using Codigames.Kingdom.Sites;
 using Codigames.Modules.Core;
 using Codigames.Modules.UI;
 using VContainer.Unity;
@@ -13,7 +14,7 @@ using VContainer.Unity;
 namespace Codigames.Game.City
 {
     // What a tap on the map means while no menu is open: on the fog, a share of its price; on a building, a
-    // collect when its store is ready and its card otherwise; on the ground, a harvest.
+    // collect when its store is ready and its card otherwise; on a ruin, its card; on the ground, a harvest.
     public class MapTaps : IStartable, IDisposable
     {
         private readonly MapGestures _gestures;
@@ -24,10 +25,12 @@ namespace Codigames.Game.City
         private readonly CollectInput _collect;
         private readonly FogOfWar _fog;
         private readonly FogInput _fogInput;
+        private readonly Ruins _ruins;
 
         public MapTaps(MapGestures gestures, UIManager ui, CityState city, ICatalog<IBuildingDefinition> buildings, HarvestInput harvest,
-            CollectInput collect, FogOfWar fog, FogInput fogInput)
+            CollectInput collect, FogOfWar fog, FogInput fogInput, Ruins ruins)
         {
+            _ruins = ruins;
             _fog = fog;
             _fogInput = fogInput;
             _collect = collect;
@@ -49,6 +52,13 @@ namespace Codigames.Game.City
             if (!_fog.IsRevealed(cell))
             {
                 _fogInput.Tap(cell);
+                return;
+            }
+
+            var ruin = _ruins.At(cell);
+            if (ruin != null)
+            {
+                _ = _ui.ShowMenu<RuinCardMenu, string>(ruin.Id);
                 return;
             }
 

@@ -6,6 +6,7 @@ using Codigames.Game.Data.Fog;
 using Codigames.Game.Data.Harvest;
 using Codigames.Game.Data.Magic;
 using Codigames.Game.Data.Research;
+using Codigames.Game.Data.Sites;
 using Codigames.Game.Localization;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.Crews;
@@ -14,6 +15,7 @@ using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Harvest;
 using Codigames.Kingdom.Magic;
 using Codigames.Kingdom.Research;
+using Codigames.Kingdom.Sites;
 using Codigames.Modules.Audio;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Core;
@@ -44,6 +46,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private TechnologyCollection _technologies;
         [SerializeField] private TechTreeAsset _techTree;
         [SerializeField] private KnowledgeSettingsAsset _knowledge;
+        [SerializeField] private ProvinceSitesAsset _sites;
 
         [Header("App")]
         [SerializeField] private LocalizationCatalog _localization;
@@ -95,6 +98,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_technologies).As<ICatalog<ITechnology>>().As<ITechnologyCards>();
             builder.RegisterInstance(_techTree).AsSelf().As<ITechTree>();
             builder.RegisterInstance(_knowledge).As<IKnowledgeSettings>();
+            builder.RegisterInstance(_sites).As<IProvinceSites>();
         }
     }
 }

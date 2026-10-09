@@ -4,6 +4,7 @@ using Codigames.Kingdom.Fog.State;
 using Codigames.Kingdom.Harvest.State;
 using Codigames.Kingdom.Magic.State;
 using Codigames.Kingdom.Research.State;
+using Codigames.Kingdom.Sites.State;
 
 namespace Codigames.Kingdom
 {
@@ -22,6 +23,8 @@ namespace Codigames.Kingdom
         public ResearchState Research { get; set; } = new();
 
         public KnowledgeState Knowledge { get; set; } = new();
+
+        public SitesState Sites { get; set; } = new();
 
         // This kingdom's own randomness: every draw hashes it with the parts that name the event.
         public uint Seed { get; set; }

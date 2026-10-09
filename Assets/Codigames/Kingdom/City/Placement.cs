@@ -18,10 +18,12 @@ namespace Codigames.Kingdom.City
         private readonly CityState _city;
         private readonly GroundState _ground;
         private readonly IRevealedGround _revealed;
+        private readonly ISiteGround _sites;
 
         public Placement(IProvinceMap map, ICatalog<IBuildingDefinition> buildings, IConstructionSettings settings,
-            CityState city, GroundState ground, IRevealedGround revealed)
+            CityState city, GroundState ground, IRevealedGround revealed, ISiteGround sites = null)
         {
+            _sites = sites;
             _revealed = revealed;
             _map = map;
             _buildings = buildings;
@@ -73,7 +75,7 @@ namespace Codigames.Kingdom.City
             {
                 if (!_map.Contains(cell)) return PlacementProblem.OutsideProvince;
                 if (!_revealed.IsRevealed(cell)) return PlacementProblem.InFog;
-                if (_ground.Features.ContainsKey(cell)) return PlacementProblem.Occupied;
+                if (_ground.Features.ContainsKey(cell) || (_sites?.Holds(cell) ?? false)) return PlacementProblem.Occupied;
 
                 var standing = CityQueries.At(_city, _buildings, cell);
                 if (standing != null && standing.Id != movingId) return PlacementProblem.Occupied;

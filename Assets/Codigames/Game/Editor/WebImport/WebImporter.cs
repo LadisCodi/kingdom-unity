@@ -8,6 +8,7 @@ using Codigames.Game.Data.Fog;
 using Codigames.Game.Data.Harvest;
 using Codigames.Game.Data.Magic;
 using Codigames.Game.Data.Research;
+using Codigames.Game.Data.Sites;
 using Codigames.Game.Editor.Data;
 using Codigames.Kingdom.Economy;
 using Codigames.Kingdom.Research;
@@ -65,6 +66,7 @@ namespace Codigames.Game.Editor.WebImport
             ImportFog();
             ImportMagic();
             var technologies = ImportResearch();
+            ImportSites();
 
             AssetDatabase.SaveAssets();
             Debug.Log($"#Data# Imported {currencies} currencies, {buildings.Count} buildings and {technologies} technologies from the web prototype.");
@@ -153,6 +155,9 @@ namespace Codigames.Game.Editor.WebImport
                 so.FindProperty("_fog._revealRadius").intValue = (int)row.FogRevealRadius;
                 SetInts(so.FindProperty("_fog._revealRadiusPerLevel"), row.FogRevealRadiusPerLevel);
                 so.FindProperty("_fog._discoverRadius").intValue = (int)row.FogDiscoverRadius;
+                so.FindProperty("_repair._seconds").doubleValue = row.RepairDurationSeconds;
+                so.FindProperty("_repair._item").stringValue = row.RepairItem ?? "";
+                so.FindProperty("_repair._ruinArt").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/Buildings/{row.Sprite}_ruin.png");
 
                 so.ApplyModifiedPropertiesWithoutUndo();
                 assets[id] = asset;
@@ -388,6 +393,27 @@ namespace Codigames.Game.Editor.WebImport
             settings.ApplyModifiedPropertiesWithoutUndo();
 
             return assets.Count;
+        }
+
+        // The abandoned buildings, as region-map.json places them.
+        private static void ImportSites()
+        {
+            var map = Read<RegionMapDoc>("region-map.json");
+            var asset = new SerializedObject(LoadOrCreate<ProvinceSitesAsset>("Settings", "ProvinceSites"));
+            var list = asset.FindProperty("_abandoned");
+            var abandoned = map.Abandoned ?? new List<AbandonedDoc>();
+            list.arraySize = abandoned.Count;
+            for (var i = 0; i < abandoned.Count; i++)
+            {
+                var site = list.GetArrayElementAtIndex(i);
+                site.FindPropertyRelative("_id").stringValue = abandoned[i].Id;
+                site.FindPropertyRelative("_district").stringValue = abandoned[i].District;
+                site.FindPropertyRelative("_anchor").vector2IntValue = new Vector2Int(abandoned[i].X, abandoned[i].Y);
+                site.FindPropertyRelative("_sight").intValue = (int)abandoned[i].Sight;
+                site.FindPropertyRelative("_name").stringValue = abandoned[i].Name;
+            }
+
+            asset.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static Kingdom.Research.TechUnlock ToUnlock(TechUnlock doc)

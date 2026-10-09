@@ -27,6 +27,7 @@ namespace Codigames.Kingdom.Tests.Builders
         private double _distanceGrowth = 1;
         private readonly Production _production = new();
         private readonly Fog _fog = new();
+        private readonly Repair _repair = new();
 
         public BuildingBuilder WithId(string id) { _id = id; return this; }
         public BuildingBuilder WithMaxLevel(int maxLevel) { _maxLevel = maxLevel; return this; }
@@ -71,6 +72,13 @@ namespace Codigames.Kingdom.Tests.Builders
             return this;
         }
 
+        public BuildingBuilder WithRepair(double seconds, string item = "")
+        {
+            _repair.Seconds = seconds;
+            _repair.Item = item;
+            return this;
+        }
+
         public static ILevelCost Price(string currency, double amount)
             => new LevelCost(new Dictionary<string, double> { [currency] = amount }, new Dictionary<string, double>());
 
@@ -91,6 +99,7 @@ namespace Codigames.Kingdom.Tests.Builders
             Gates = new Gates(_maxCount, _townhallGates, _populationGates),
             Production = _production,
             Fog = _fog,
+            Repair = _repair,
         };
 
         private sealed class Building : IBuildingDefinition
@@ -105,6 +114,13 @@ namespace Codigames.Kingdom.Tests.Builders
             public IBuildingGates Gates { get; set; }
             public IBuildingProduction Production { get; set; }
             public IBuildingFog Fog { get; set; }
+            public IBuildingRepair Repair { get; set; }
+        }
+
+        private sealed class Repair : IBuildingRepair
+        {
+            public double Seconds { get; set; }
+            public string Item { get; set; } = "";
         }
 
         private sealed class Fog : IBuildingFog
