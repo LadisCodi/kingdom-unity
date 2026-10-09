@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a410d1757598423e9bae90992f260ff6, type: 3}
+  m_Name: advisor
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.SpeakerAsset
+  _id: advisor
+  _name: Isolde
+  _title: Royal Advisor
+  _portrait: {fileID: 21300000, guid: 2f9009b6284175630a691d9a6f5a2899, type: 3}
+  _expressions:
+  - _expression: happy
+    _art: {fileID: 21300000, guid: da0f6b27d790bccf290ee89d0834fa55, type: 3}
+  - _expression: worried
+    _art: {fileID: 21300000, guid: 0cfcd89bd64342c60a72865e1c0f879b, type: 3}
+  - _expression: surprised
+    _art: {fileID: 21300000, guid: 8e535daec00fcf2329b4b935b0fd4baf, type: 3}
+  - _expression: idea
+    _art: {fileID: 21300000, guid: 002e95097919d743abb6f5a92b883c5b, type: 3}
+  _ribbon: {fileID: 21300000, guid: 4bfec7ef3164e6937a9a0950c09c15f4, type: 3}

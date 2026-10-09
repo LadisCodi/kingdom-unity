@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: sawmillCrew
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: sawmillCrew
+  _trigger:
+    _kind: 3
+    _target: Crewed
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 5
+    _target: Crewed
+    _amount: 0
+  _lines:
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: "The Sawmill is still going up. When it stands, it\u2019ll need hands."
+    _box: auto
+    _point: district:Sawmill
+    _lock: 0
+    _until:
+      _kind: 14
+      _target: Sawmill
+      _amount: 1
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: "Sawmill\u2019s up and nobody on the saws. Open it."
+    _box: auto
+    _point: district:Sawmill
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: card:workers
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: "Send it woodcutters. Young ones. The townsfolk want three at work \u2014
+      the Farm\u2019s count too."
+    _box: auto
+    _point: ui:card:workers
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: Crewed
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: "Food and Wood come in by themselves now, even while you\u2019re away.
+      A real town, Your Majesty! I\u2014 I\u2019m a little proud."
+    _box: auto
+    _point: district:Sawmill
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: happy
+    _text: "Hmph. \u2026Me too."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: Crewed
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: Crewed
+      _amount: 0
+    _exit: 0
+    _stocks: 

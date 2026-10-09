@@ -1,0 +1,146 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: twoSaws
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: twoSaws
+  _trigger:
+    _kind: 3
+    _target: TwoSaws
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 4
+    _target: TwoSaws
+    _amount: 0
+  _lines:
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: "One sawmill. One old man\u2019s worth of wood. Build another \u2014 in
+      the thick of the trees, mind."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: "Oh \u2014 let\u2019s set this aside first, and step back out to the kingdom."
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: Build menu.
+    _box: auto
+    _point: ui:nav:build
+    _lock: 2
+    _until:
+      _kind: 15
+      _target: build
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: mason
+    _side: 1
+    _expression: happy
+    _text: "Short again? The guild covers it. We\u2019ll call it an investment in
+      Oakville."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: Sawmill
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: Sawmill.
+    _box: auto
+    _point: ui:build:Sawmill
+    _lock: 2
+    _until:
+      _kind: 9
+      _target: Sawmill
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: It starts where the trees are thickest. Leave it there. Confirm.
+    _box: auto
+    _point: ui:place-confirm
+    _lock: 1
+    _until:
+      _kind: 13
+      _target: Sawmill
+      _amount: 2
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: TwoSaws
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: TwoSaws
+      _amount: 0
+    _exit: 0
+    _stocks: 

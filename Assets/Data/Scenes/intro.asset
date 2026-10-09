@@ -1,0 +1,180 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: intro
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: intro
+  _trigger:
+    _kind: 3
+    _target: FirstSteps
+    _amount: 0
+  _anywhere: 0
+  _skippable: 0
+  _where: 0
+  _doneWhen:
+    _kind: 0
+    _target: 
+    _amount: 0
+  _lines:
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: "Oh! Your Majesty \u2014 you came! Welcome home to Oakville. Well\u2026
+      to what the fog has left of it."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: "I\u2019m Isolde. I kept the royal library \u2014 but most of the court
+      fled the fog, so\u2026 I\u2019m your Royal Advisor now!"
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: happy
+    _text: Advisor. Ha! Last time she advised anyone, it was the old king. To read
+      more.
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: worried
+    _text: "This is Hob, our woodcutter. He\u2019s the only one who never left. He
+      says the fog doesn\u2019t scare him."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: "Scare me? It\u2019s greedy, that\u2019s all. Loves a shine. Toss it a
+      coin and it gives a bit of ground back."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: idea
+    _text: "Then let\u2019s feed it! Those trees in the fog are ours \u2014 tap it,
+      Your Majesty. Five coins, Hob says."
+    _box: auto
+    _point: feature:TreesFog
+    _lock: 2
+    _until:
+      _kind: 6
+      _target: FirstSteps
+      _amount: 1
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: surprised
+    _text: "Timber! It worked! And look \u2014 right beside it. Something glinting
+      in the fog. Clear that one too!"
+    _box: auto
+    _point: treasure
+    _lock: 2
+    _until:
+      _kind: 37
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: "That\u2019s Widow Pell\u2019s purse. Dropped it running, she did. Well
+      \u2014 the fog owes us. Tap it."
+    _box: auto
+    _point: treasure
+    _lock: 2
+    _until:
+      _kind: 38
+      _target: 
+      _amount: 1
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: "The fog kept more of what they left, I\u2019m sure of it. Three more
+      stands, and the axes will have work again."
+    _box: auto
+    _point: feature:TreesFog
+    _lock: 1
+    _until:
+      _kind: 5
+      _target: FirstSteps
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: "The folk sheltering in the Townhall saw it all \u2014 they\u2019ve gathered
+      you a gift! Go on, accept it."
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: FirstSteps
+      _amount: 0
+    _exit: 0
+    _stocks: 

@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: claim
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: claim
+  _trigger:
+    _kind: 47
+    _target: 
+    _amount: 1
+  _anywhere: 0
+  _skippable: 1
+  _where: 1
+  _doneWhen:
+    _kind: 56
+    _target: 
+    _amount: 0
+  _lines:
+  - _speaker: scout
+    _side: 1
+    _expression: 
+    _text: "Look at all that ground \u2014 and nobody\u2019s! Build on a hex beside
+      the city, and it\u2019s ours."
+    _box: auto
+    _point: hex:claim
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: hex-build
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: scout
+    _side: 1
+    _expression: 
+    _text: "Its feature says what we\u2019ll build: woods make a logging camp, a
+      field a farm. Build!"
+    _box: auto
+    _point: ui:hex-build
+    _lock: 0
+    _until:
+      _kind: 56
+      _target: 
+      _amount: 1
+    _exit: 0
+    _stocks: 
+  - _speaker: scout
+    _side: 1
+    _expression: 
+    _text: "Each hex fills its own store \u2014 tap it to send it home. And each
+      one we hold costs a little more than the last."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 

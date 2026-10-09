@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: farm
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: farm
+  _trigger:
+    _kind: 3
+    _target: Farmhand
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 41
+    _target: OldFarm
+    _amount: 0
+  _lines:
+  - _speaker: advisor
+    _side: 0
+    _expression: worried
+    _text: "Reaping every plot by hand will wear us out \u2014 and drain the well.
+      A Farm sends villagers to do it, day and night."
+    _box: auto
+    _point: feature:Crops
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: villager
+    _side: 1
+    _expression: 
+    _text: "Dad\u2019s old farm is still out there, past the berry bushes. Clear
+      the way, Your Majesty \u2014 I\u2019ll know it when I see it."
+    _box: auto
+    _point: abandoned:OldFarmFog
+    _lock: 2
+    _until:
+      _kind: 39
+      _target: OldFarm
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: villager
+    _side: 1
+    _expression: surprised
+    _text: "That\u2019s her! Roof\u2019s sagging, but she\u2019s sound. Open it!"
+    _box: auto
+    _point: abandoned:OldFarm
+    _lock: 2
+    _until:
+      _kind: 40
+      _target: OldFarm
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: "Farm wants wood too, does it. \u2026Take it. I\u2019ll chop more."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: Farm
+  - _speaker: advisor
+    _side: 0
+    _expression: idea
+    _text: "Hammers, sawdust and one cheerful racket \u2014 repair it!"
+    _box: auto
+    _point: ui:repair
+    _lock: 2
+    _until:
+      _kind: 41
+      _target: OldFarm
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: Farmhand
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: Farmhand
+      _amount: 0
+    _exit: 0
+    _stocks: 

@@ -1,0 +1,225 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: corner
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: corner
+  _trigger:
+    _kind: 3
+    _target: PrettyCorner
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 4
+    _target: PrettyCorner
+    _amount: 0
+  _lines:
+  - _speaker: florist
+    _side: 1
+    _expression: happy
+    _text: 'Now the fun part: something pretty, anywhere you like! But beside a house
+      is best.'
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: idea
+    _text: "It\u2019s true \u2014 a house beside a decoration collects a little more
+      Gold. Folk pay for a nice view. I checked twice."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: florist
+    _side: 1
+    _expression: 
+    _text: "Oh \u2014 let\u2019s set this aside first, and step back out to the kingdom."
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: florist
+    _side: 1
+    _expression: 
+    _text: The Build menu!
+    _box: auto
+    _point: ui:nav:build
+    _lock: 2
+    _until:
+      _kind: 15
+      _target: build
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: florist
+    _side: 1
+    _expression: 
+    _text: Decorations live in here.
+    _box: auto
+    _point: ui:build-tab:Decoration
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: build:Flowerbed
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: florist
+    _side: 1
+    _expression: 
+    _text: A flower patch!
+    _box: auto
+    _point: ui:build:Flowerbed
+    _lock: 2
+    _until:
+      _kind: 9
+      _target: Flowerbed
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: florist
+    _side: 1
+    _expression: 
+    _text: Next to a house. Then confirm!
+    _box: auto
+    _point: ui:place-confirm
+    _lock: 1
+    _until:
+      _kind: 6
+      _target: PrettyCorner
+      _amount: 1
+    _exit: 0
+    _stocks: 
+  - _speaker: florist
+    _side: 1
+    _expression: 
+    _text: "Oh \u2014 let\u2019s set this aside first, and step back out to the kingdom."
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: florist
+    _side: 1
+    _expression: happy
+    _text: "Lovely! Now one more \u2014 back to the Build menu."
+    _box: auto
+    _point: ui:nav:build
+    _lock: 2
+    _until:
+      _kind: 15
+      _target: build
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: florist
+    _side: 1
+    _expression: 
+    _text: "Decorations again\u2026"
+    _box: auto
+    _point: ui:build-tab:Decoration
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: build:Bench
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: florist
+    _side: 1
+    _expression: happy
+    _text: "\u2026and this one\u2019s yours to choose. Then put it somewhere lovely."
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: PrettyCorner
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: florist
+    _side: 1
+    _expression: 
+    _text: "Psst \u2014 anything you build can be moved, any time, for free. Hold
+      it and drag. Make the town yours!"
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: PrettyCorner
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: PrettyCorner
+      _amount: 0
+    _exit: 0
+    _stocks: 

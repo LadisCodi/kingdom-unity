@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Codigames.Modules.UI
@@ -13,6 +14,9 @@ namespace Codigames.Modules.UI
         protected TData Data { get; private set; }
 
         private bool HasData { get; set; }
+
+        // Is the menu up, showing this?
+        public bool Shows(TData data) => IsShown && HasData && EqualityComparer<TData>.Default.Equals(Data, data);
 
         public async Task Show(TData data)
         {

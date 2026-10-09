@@ -8,6 +8,7 @@ using Codigames.Game.Data.Magic;
 using Codigames.Game.Data.Quests;
 using Codigames.Game.Data.Research;
 using Codigames.Game.Data.Sites;
+using Codigames.Game.Data.Tutorial;
 using Codigames.Game.Localization;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.Crews;
@@ -18,6 +19,7 @@ using Codigames.Kingdom.Magic;
 using Codigames.Kingdom.Quests;
 using Codigames.Kingdom.Research;
 using Codigames.Kingdom.Sites;
+using Codigames.Kingdom.Tutorial;
 using Codigames.Modules.Audio;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Core;
@@ -51,6 +53,9 @@ namespace Codigames.Game.Startup
         [SerializeField] private ProvinceSitesAsset _sites;
         [SerializeField] private TreasureSettingsAsset _treasure;
         [SerializeField] private QuestCollection _quests;
+        [SerializeField] private SceneCollection _scenes;
+        [SerializeField] private SpeakerCollection _speakers;
+        [SerializeField] private StageSettingsAsset _stage;
 
         [Header("App")]
         [SerializeField] private LocalizationCatalog _localization;
@@ -105,6 +110,9 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_sites).AsSelf().As<IProvinceSites>();
             builder.RegisterInstance(_treasure).As<ITreasureSettings>();
             builder.RegisterInstance(_quests).As<ICatalog<IQuestDefinition>>();
+            builder.RegisterInstance(_scenes).As<ICatalog<ISceneDefinition>>();
+            builder.RegisterInstance(_speakers).As<ICatalog<ISpeaker>>();
+            builder.RegisterInstance(_stage).As<IStageSettings>();
         }
     }
 }

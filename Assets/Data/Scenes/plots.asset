@@ -1,0 +1,242 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: plots
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: plots
+  _trigger:
+    _kind: 3
+    _target: FirstPlot
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 5
+    _target: FirstPlot
+    _amount: 0
+  _lines:
+  - _speaker: villager
+    _side: 1
+    _expression: happy
+    _text: Your Majesty! Before the fog, Dad kept two crop plots just past the Townhall.
+      Best turnips in Oakville, he swore.
+    _box: auto
+    _point: abandoned:OldPlotSouth
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: "Turnips. Hmph. Fog\u2019s had them a year. Nothing left in there but
+      weeds and a scarecrow."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: idea
+    _text: "Weeds we can pull! First we buy the ground back from the fog \u2014 follow
+      my finger, Your Majesty."
+    _box: auto
+    _point: abandoned:OldPlotSouthFog
+    _lock: 2
+    _until:
+      _kind: 39
+      _target: OldPlotSouth
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: villager
+    _side: 1
+    _expression: surprised
+    _text: "There it is! The fence is down, but the soil\u2019s still good. Open
+      it, Your Majesty."
+    _box: auto
+    _point: abandoned:OldPlotSouth
+    _lock: 2
+    _until:
+      _kind: 40
+      _target: OldPlotSouth
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: "A fence wants wood. Here \u2014 off my pile. Don\u2019t make a fuss."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: FarmLands
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: "Fresh seed, a new fence, and no builders needed \u2014 a field mends
+      itself once it\u2019s sown. Repair it!"
+    _box: auto
+    _point: ui:repair
+    _lock: 2
+    _until:
+      _kind: 41
+      _target: OldPlotSouth
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: "Sprouting already. Soil\u2019s been waiting for somebody, that\u2019s
+      all."
+    _box: auto
+    _point: abandoned:OldPlotSouth
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: villager
+    _side: 1
+    _expression: happy
+    _text: And the other one, right beside it! Dad always planted them in pairs.
+    _box: auto
+    _point: abandoned:OldPlotNorthFog
+    _lock: 2
+    _until:
+      _kind: 39
+      _target: OldPlotNorth
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: "There \u2014 open it\u2026"
+    _box: auto
+    _point: abandoned:OldPlotNorth
+    _lock: 2
+    _until:
+      _kind: 40
+      _target: OldPlotNorth
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: worried
+    _text: "More wood? \u2026Fine. Last of the pile. Again."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: FarmLands
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: "\u2026and repair it!"
+    _box: auto
+    _point: ui:repair
+    _lock: 2
+    _until:
+      _kind: 41
+      _target: OldPlotNorth
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: villager
+    _side: 1
+    _expression: happy
+    _text: "Two plots, just like Dad\u2019s! When they\u2019ve grown, tap them and
+      bring the harvest in."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: Every sickle swing asks the well, same as an axe. Mind the blue.
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: FirstPlot
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: FirstPlot
+      _amount: 0
+    _exit: 0
+    _stocks: 

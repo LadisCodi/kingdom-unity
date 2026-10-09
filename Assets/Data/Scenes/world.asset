@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: world
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: world
+  _trigger:
+    _kind: 26
+    _target: world
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 2
+  _doneWhen:
+    _kind: 44
+    _target: 
+    _amount: 0
+  _lines:
+  - _speaker: advisor
+    _side: 0
+    _expression: surprised
+    _text: "The tower stands, and the lens is clear! Look, Your Majesty \u2014 come
+      and see what lies past the hills."
+    _box: auto
+    _point: ui:world
+    _lock: 2
+    _until:
+      _kind: 43
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: surprised
+    _text: "Other kingdoms. Other banners! And all that mist between us\u2026 we\u2019ll
+      need someone with good boots."
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 

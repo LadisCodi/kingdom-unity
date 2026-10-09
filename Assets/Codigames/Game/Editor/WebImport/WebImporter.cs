@@ -23,7 +23,7 @@ namespace Codigames.Game.Editor.WebImport
     // One-off: brings the web prototype's balance (Tools/WebData) into the data assets. Each collection is
     // imported when its system is rebuilt; once imported, the assets are the source of truth and are edited
     // in the data window. Re-running it overwrites the imported collections with the web's numbers.
-    public static class WebImporter
+    public static partial class WebImporter
     {
         private static string WebData => Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Tools", "WebData"));
 
@@ -71,6 +71,7 @@ namespace Codigames.Game.Editor.WebImport
             ImportSites();
             ImportTreasure();
             ImportQuests();
+            ImportStage();
 
             AssetDatabase.SaveAssets();
             Debug.Log($"#Data# Imported {currencies} currencies, {buildings.Count} buildings and {technologies} technologies from the web prototype.");

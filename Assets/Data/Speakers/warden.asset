@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a410d1757598423e9bae90992f260ff6, type: 3}
+  m_Name: warden
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.SpeakerAsset
+  _id: warden
+  _name: The Warden
+  _title: Captain of the Guard
+  _portrait: {fileID: 21300000, guid: 3e1aabef88acecb25b536be29ad0e004, type: 3}
+  _expressions: []
+  _ribbon: {fileID: 21300000, guid: 831d33c1f40e80f4ebc84bbe92b769e9, type: 3}

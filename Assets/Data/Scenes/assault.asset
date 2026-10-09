@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: assault
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: assault
+  _trigger:
+    _kind: 3
+    _target: DriveThemOut
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 4
+    _target: DriveThemOut
+    _amount: 0
+  _lines:
+  - _speaker: warden
+    _side: 1
+    _expression: 
+    _text: "Thirty strong. It\u2019s time. Tap their camp, Your Majesty."
+    _box: auto
+    _point: 'lair:'
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: lair-card
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: warden
+    _side: 1
+    _expression: 
+    _text: "Attack \u2014 and we choose who goes."
+    _box: auto
+    _point: ui:lair-attack
+    _lock: 2
+    _until:
+      _kind: 15
+      _target: lair
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: warden
+    _side: 1
+    _expression: 
+    _text: Quick deploy sends the best we have. Or set each squad where you want
+      it.
+    _box: auto
+    _point: ui:battle-deploy
+    _lock: 0
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: warden
+    _side: 1
+    _expression: 
+    _text: "The numbers say how it goes before we march \u2014 and how many won\u2019t
+      come home. Ready? Attack!"
+    _box: auto
+    _point: ui:battle-go
+    _lock: 0
+    _until:
+      _kind: 21
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: DriveThemOut
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: DriveThemOut
+      _amount: 0
+    _exit: 0
+    _stocks: 

@@ -15,7 +15,7 @@ namespace Codigames.Kingdom.Doors
     // What opens each door: a fact about the kingdom, mostly how far along the quest chain it is. A door once open
     // is remembered open for good. Doors for systems not in the game yet (heroes, relics, the store, the world, the
     // Bag, friends) stay shut until their facts can happen.
-    public class Doors
+    public class Doors : IMorning
     {
         private const string TAVERN = "Tavern";
         private const string WATCHTOWER = "Watchtower";

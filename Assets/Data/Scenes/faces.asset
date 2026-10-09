@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: faces
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: faces
+  _trigger:
+    _kind: 3
+    _target: NewFaces
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 4
+    _target: NewFaces
+    _amount: 0
+  _lines:
+  - _speaker: villager
+    _side: 1
+    _expression: 
+    _text: "Three roofs, room for six \u2014 and the roads are full of folk who\u2019d
+      come home, Your Majesty."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: Then ring the bell again! Open the Townhall.
+    _box: auto
+    _point: district:Townhall
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: card:train
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: "Ring for each of them \u2014 they wait their turn at the door, and each
+      wants a little Food for the walk home."
+    _box: auto
+    _point: ui:card:train
+    _lock: 0
+    _until:
+      _kind: 33
+      _target: 
+      _amount: 5
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 32
+      _target: 
+      _amount: 5
+    _exit: 0
+    _stocks: 
+  - _speaker: villager
+    _side: 1
+    _expression: happy
+    _text: "That\u2019s my cousins \u2014 and the goat. Welcome home, all of you!"
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: NewFaces
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: NewFaces
+      _amount: 0
+    _exit: 0
+    _stocks: 
