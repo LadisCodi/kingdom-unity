@@ -18,21 +18,20 @@ namespace Codigames.Game.Tests
         private const string DISPLAY = "Alegreya-Black SDF";
 
         // Labels that size themselves: the header's coins and the bars set their size from code, the research
-        // page is drawn in the web's pixels and scaled as a whole, and the crew's ± are glyphs on a button.
+        // page is drawn in the web's pixels and scaled as a whole, and a knob's glyph is carved at its knob's size.
         private static readonly string[] EXEMPT =
         {
             "CurrencySlot/Amount",
             "HeaderMenu/KnowledgeTab/",
-            "ProgressBar/Label",
+            "Bar/Label",
             "Research/ChapterBar/",
             "Research/TechCard/",
-            "Crew/Minus/Glyph",
-            "Crew/Plus/Glyph",
+            "/Glyph",
         };
 
         // Roles whose label keeps its own face and material (a title's band, a slab button, a plank).
         private static readonly HashSet<string> DISPLAY_ROLES = new() { "Title", "Subtitle", "Heading" };
-        private static readonly HashSet<string> MATERIAL_ROLES = new() { "Button", "Button Big", "Quest Button", "Tab", "Nav", "Toast" };
+        private static readonly HashSet<string> MATERIAL_ROLES = new() { "Button", "Button Big", "Quest Button", "Tab", "Nav", "Toast", "Plaque" };
 
         [Test]
         public void TheSheet_ShouldBeTextMeshProsDefault()

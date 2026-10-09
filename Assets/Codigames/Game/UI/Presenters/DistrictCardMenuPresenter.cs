@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Codigames.Game.Audio;
 using Codigames.Game.Data.City;
+using Codigames.Game.UI.Buildings;
 using Codigames.Game.UI.Data;
+using Codigames.Game.UI.Kit;
 using Codigames.Game.UI.Menus;
-using Codigames.Game.UI.Research;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Crews;
@@ -13,14 +15,18 @@ using Codigames.Modules.Audio;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Localization;
 using Codigames.Modules.UI;
+using UnityEngine;
 using VContainer.Unity;
 
 namespace Codigames.Game.UI.Presenters
 {
-    // One district's card: its name, number and level, what it does, and either the builder's work with its
-    // countdown or the next level's price and wait; Upgrade pays and starts the work.
+    // One building's card (the web's districtCard): its name, number and level; what it is; Upgrade — which opens the
+    // upgrade sheet — or, while it is being built, the gem Finish; the band of what it is worth now; the Townhall's
+    // training panel and a producer's crew. Redrawn once a second and whenever the purse, a job or the line moves.
     public class DistrictCardMenuPresenter : AbstractDataMenuPresenter<DistrictCardMenu, string>, IClosableMenuPresenter, ITickable
     {
+        private const string VILLAGER = "Villager";
+
         private readonly UIManager _ui;
         private readonly Construction _construction;
         private readonly CityState _city;
@@ -33,22 +39,24 @@ namespace Codigames.Game.UI.Presenters
         private readonly Stores _stores;
         private readonly VillagerTraining _training;
         private readonly Workforce _crews;
+        private readonly BuildingStats _stats;
+        private readonly BuildingStatProse _prose;
+        private readonly GemRush _rush;
+        private readonly UiIcons _icons;
+        private readonly PortraitArt _portraits;
         private readonly ISoundService _sounds;
-        private readonly TechProse _prose;
 
         // The second the card was last drawn at: it is redrawn once a second.
         private double _shownSeconds = -1;
 
+        // How many one press of Train orders: the knob turns through them, and it is not saved.
+        private TrainAmount _amount = TrainAmount.One;
+
         public DistrictCardMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, CityState city,
-            BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, IClock clock,
-            NumberFormat numbers, Localizer localizer, Stores stores, VillagerTraining training, Workforce crews,
-            ISoundService sounds, TechProse prose) : base(views)
+            BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, IClock clock, NumberFormat numbers,
+            Localizer localizer, Stores stores, VillagerTraining training, Workforce crews, BuildingStats stats,
+            BuildingStatProse prose, GemRush rush, UiIcons icons, PortraitArt portraits, ISoundService sounds) : base(views)
         {
-            _prose = prose;
-            _sounds = sounds;
-            _crews = crews;
-            _training = training;
-            _stores = stores;
             _ui = ui;
             _construction = construction;
             _city = city;
@@ -58,6 +66,15 @@ namespace Codigames.Game.UI.Presenters
             _clock = clock;
             _numbers = numbers;
             _localizer = localizer;
+            _stores = stores;
+            _training = training;
+            _crews = crews;
+            _stats = stats;
+            _prose = prose;
+            _rush = rush;
+            _icons = icons;
+            _portraits = portraits;
+            _sounds = sounds;
         }
 
         private DistrictState District => _city.Districts.FirstOrDefault(d => d.Id == Data);
@@ -68,7 +85,7 @@ namespace Codigames.Game.UI.Presenters
         {
             if (!IsShown) return;
 
-            // Once a second: the countdown, and the store filling.
+            // Once a second: the countdowns, and the store filling.
             var second = Math.Floor(_clock.NowMs / 1000.0);
             if (second != _shownSeconds) Refresh();
         }
@@ -95,7 +112,10 @@ namespace Codigames.Game.UI.Presenters
             view.CloseTapped += RequestClose;
             view.MoveTapped += OnMove;
             view.UpgradeTapped += OnUpgrade;
+            view.FinishWorkTapped += OnFinishWork;
+            view.AmountTapped += OnAmount;
             view.TrainTapped += OnTrain;
+            view.FinishTrainingTapped += OnFinishTraining;
             view.CrewMinusTapped += OnCrewMinus;
             view.CrewPlusTapped += OnCrewPlus;
         }
@@ -105,7 +125,10 @@ namespace Codigames.Game.UI.Presenters
             view.CloseTapped -= RequestClose;
             view.MoveTapped -= OnMove;
             view.UpgradeTapped -= OnUpgrade;
+            view.FinishWorkTapped -= OnFinishWork;
+            view.AmountTapped -= OnAmount;
             view.TrainTapped -= OnTrain;
+            view.FinishTrainingTapped -= OnFinishTraining;
             view.CrewMinusTapped -= OnCrewMinus;
             view.CrewPlusTapped -= OnCrewPlus;
         }
@@ -123,16 +146,38 @@ namespace Codigames.Game.UI.Presenters
         private void OnJob(ConstructionJob job) => Refresh();
         private void OnJobCompleted(ConstructionJob job, DistrictState district) => Refresh();
 
-        private void OnUpgrade()
+        // Everything buying a level says lives behind the button: the sheet, in the card's place until it is closed.
+        private async void OnUpgrade()
         {
-            var refusal = _construction.Upgrade(Data, _clock.NowMs);
-            _sounds.Play(refusal == ConstructionRefusal.None ? SoundIds.UPGRADE_BOUGHT : SoundIds.ERROR);
+            var district = Data;
+            await _ui.HideMenu<DistrictCardMenu>();
+            _ = _ui.ShowMenu<UpgradeSheetMenu, string>(district);
+        }
+
+        private void OnFinishWork()
+        {
+            var job = JobOf(Data);
+            var done = job != null && _rush.FinishJob(job.Id, _clock.NowMs);
+            _sounds.Play(done ? SoundIds.UPGRADE_BOUGHT : SoundIds.ERROR);
+            Refresh();
+        }
+
+        private void OnAmount()
+        {
+            _amount = (TrainAmount)(((int)_amount + 1) % 4);
             Refresh();
         }
 
         private void OnTrain()
         {
-            _training.Train(_clock.NowMs);
+            var refusal = _training.Train(_training.Plan(_amount).Count, _clock.NowMs);
+            if (refusal != TrainRefusal.None) _sounds.Play(SoundIds.ERROR);
+            Refresh();
+        }
+
+        private void OnFinishTraining()
+        {
+            if (!_rush.FinishLine(_clock.NowMs)) _sounds.Play(SoundIds.ERROR);
             Refresh();
         }
 
@@ -148,98 +193,141 @@ namespace Codigames.Game.UI.Presenters
             Refresh();
         }
 
-        // The crew line, on a building that works the ground.
-        private CrewStripData Crew(DistrictState district)
-        {
-            if (!_crews.HasCrew(district)) return null;
-
-            var assigned = _crews.Assigned(district.Id);
-            var limit = _crews.Limit(district);
-            var note = _crews.FreeVillagers > 0 || assigned >= limit
-                ? _localizer.Tr("{n} free villagers", ("n", _numbers.Number(_crews.FreeVillagers)))
-                : _localizer.Tr("Train villagers at the Townhall");
-
-            return new CrewStripData(_numbers.Number(assigned) + " / " + _numbers.Number(limit), assigned > 0,
-                _crews.CanAssign(district), note);
-        }
-
-        // The villager line, on the Townhall only.
-        private TrainingStripData Training(DistrictState district, double now)
-        {
-            if (district.DefinitionId != _settings.Townhall.Id) return null;
-
-            var villagers = _localizer.Tr("Villagers {n}/{cap}", ("n", _numbers.Number(_city.Population)), ("cap", _numbers.Number(_stores.Housing)));
-            var arrivesAt = _training.Current?.ArrivesAt;
-            var onTheWay = arrivesAt == null
-                ? string.Empty
-                : _localizer.Tr("{n} on the way · next in {time}", ("n", _numbers.Number(_city.Trainees.Count)),
-                    ("time", _numbers.Duration(Math.Ceiling(Math.Max(0, arrivesAt.Value - now) / 1000))));
-            var cost = _training.NextCost;
-            var price = new[] { new PriceTerm(VillagerTraining.FOOD, _numbers.Exact(cost), _treasury.Get(VillagerTraining.FOOD) < cost) };
-            var refusal = _training.Refusal;
-            var reason = refusal == TrainRefusal.NoRoom ? _localizer.Tr("Build houses for more villagers") : string.Empty;
-
-            return new TrainingStripData(villagers, onTheWay, price, refusal == TrainRefusal.None, reason);
-        }
-
         private ConstructionJob JobOf(string districtId) => _city.Jobs.FirstOrDefault(j => j.DistrictId == districtId);
 
         private void Refresh()
         {
             var district = District;
             if (district == null) return;
-            _shownSeconds = Math.Floor(_clock.NowMs / 1000.0);
+            var now = _clock.NowMs;
+            _shownSeconds = Math.Floor(now / 1000.0);
 
             var building = _buildings.Get<BuildingAsset>(district.DefinitionId);
-            var cap = CityQueries.MaxCount(building, CityQueries.TownhallLevel(_city, _settings));
-            var numbered = building.Buildable && (!cap.HasValue || cap.Value > 1);
             var job = JobOf(district.Id);
-            var name = _localizer.Capitalized(_localizer.Tr(building.DisplayName));
-            var ordinal = numbered ? "#" + _numbers.Number(district.Ordinal) : string.Empty;
-            var level = _localizer.Tr("Lv {n}", ("n", _numbers.Number(district.Level)));
-            var promise = _localizer.Tr(building.Promise);
-            var now = _clock.NowMs;
-            var capacity = _stores.Capacity(district);
-            var store = capacity > 0
-                ? _localizer.Tr("Storage {held}/{cap}", ("held", _numbers.Short(_stores.Held(district, now))), ("cap", _numbers.Short(capacity)))
-                : string.Empty;
-            var storeFull = _stores.IsFull(district, now);
+            var offer = job == null && district.Built ? _construction.UpgradeOffer(district.Id) : null;
 
-            if (job != null)
+            View.Show(new DistrictCardData
             {
-                var remaining = Math.Max(0, job.CompletesAt - now) / 1000;
-                var doing = job.TargetLevel == 1
-                    ? _localizer.Tr("Building")
-                    : _localizer.Tr("Upgrading to Lv {n}", ("n", _numbers.Number(job.TargetLevel)));
-                var progress = (float)Math.Min(1, (_clock.NowMs - job.StartedAt) / (job.Seconds * 1000));
-
-                View.Show(new DistrictCardData(name, ordinal, level, building.ArtFor(district.Level), promise, true,
-                    doing + " · " + _numbers.Duration(Math.Ceiling(remaining)), progress, string.Empty,
-                    Array.Empty<PriceTerm>(), false, string.Empty, store, storeFull, Training(district, now), Crew(district)) { Movable = building.Buildable });
-                return;
-            }
-
-            var offer = _construction.UpgradeOffer(district.Id);
-            var atTop = offer.Refusal == ConstructionRefusal.MaxLevel;
-            var price = offer.Price
-                .Select(p => new PriceTerm(p.Key, _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
-                .ToList();
-            var next = atTop
-                ? string.Empty
-                : _localizer.Tr("Lv {n}", ("n", _numbers.Number(offer.TargetLevel))) + " · " + _numbers.Duration(offer.Seconds);
-
-            View.Show(new DistrictCardData(name, ordinal, level, building.ArtFor(district.Level), promise, false,
-                string.Empty, 0, next, price, offer.Refusal == ConstructionRefusal.None, Reason(offer), store, storeFull, Training(district, now), Crew(district)) { Movable = building.Buildable });
+                Title = Title(building, district),
+                Art = building.ArtFor(district.Level),
+                What = _localizer.Tr(building.Description),
+                Movable = building.Buildable,
+                Upgradable = offer != null && offer.Refusal != ConstructionRefusal.MaxLevel,
+                UpgradeReady = offer != null && offer.Refusal == ConstructionRefusal.None,
+                Work = job == null ? null : Work(job, now),
+                Stats = Stats(building, district, now),
+                TrainingHead = _localizer.Tr("Villager"),
+                Training = district.DefinitionId == _settings.Townhall.Id && district.Built ? Training(now) : null,
+                CrewHead = _localizer.Tr("Workers"),
+                Crew = _crews.HasCrew(district) && district.Built ? Crew(district) : null,
+            });
         }
 
-        private string Reason(UpgradeOffer offer) => offer.Refusal switch
+        // The name, its number when there can be more than one, and the level a size down: *Housing #3 Lv 2*.
+        private string Title(BuildingAsset building, DistrictState district)
         {
-            ConstructionRefusal.MaxLevel => _localizer.Tr("Highest level"),
-            ConstructionRefusal.NeedsTownhallLevel => _localizer.Tr("Needs Townhall level {n}", ("n", _numbers.Number(offer.RequiredTownhallLevel))),
-            ConstructionRefusal.NoFreeBuilder => _localizer.Tr("Every builder is busy"),
-            ConstructionRefusal.NeedsPopulation => _localizer.Tr("Needs {n} villagers", ("n", _numbers.Number(offer.RequiredPopulation))),
-            ConstructionRefusal.NeedsResearch => _localizer.Tr("Research {tech}", ("tech", _prose.Name(offer.RequiredTech))),
-            _ => string.Empty,
-        };
+            var cap = CityQueries.MaxCount(building, CityQueries.TownhallLevel(_city, _settings));
+            var numbered = building.Buildable && (!cap.HasValue || cap.Value > 1);
+            var name = _localizer.Capitalized(_localizer.Tr(building.DisplayName));
+            var ordinal = numbered ? "<size=75%> #" + _numbers.Number(district.Ordinal) + "</size>" : string.Empty;
+            return name + ordinal + " <size=72%>" + _localizer.Tr("Lv {n}", ("n", _numbers.Number(district.Level))) + "</size>";
+        }
+
+        // The construction: what is being done, the bar under the portrait, and the Gems that finish it.
+        private WorkData Work(ConstructionJob job, double now)
+        {
+            var left = Math.Max(0, job.CompletesAt - now) / 1000;
+            var progress = (float)Math.Min(1, (now - job.StartedAt) / (job.Seconds * 1000));
+            var gems = _rush.JobCost(job.Id, now);
+            return new WorkData(job.TargetLevel == 1 ? _localizer.Tr("Building") : _localizer.Tr("Upgrading"), progress,
+                _numbers.Duration(Math.Ceiling(left)), Gems(gems), _treasury.Get(GemRush.GEMS) >= gems);
+        }
+
+        // What it is worth now: a producer's output per coin, a house's rent, then its level's figures.
+        private IReadOnlyList<StatTileData> Stats(BuildingAsset building, DistrictState district, double now)
+        {
+            var tiles = new List<StatTileData>();
+            if (district.Built && _crews.HasCrew(district))
+                foreach (var currency in _crews.Currencies(district))
+                    tiles.Add(new StatTileData(_icons.Get(currency), _localizer.Tr(currency),
+                        "+" + _numbers.Short(_crews.GatherPerSecond(district, currency) * 3600) + "/h"));
+
+            if (district.Built && building.Production.PopulationCapacityPerLevel.Count > 0)
+                tiles.Add(new StatTileData(_icons.Get("Gold"), _localizer.Tr("Gold"),
+                    "+" + _numbers.Short(_stores.GoldPerMinute(district) * 60) + "/h"));
+
+            foreach (var stat in _stats.At(district, district.Level).Where(s => s.OnCard))
+            {
+                var value = _prose.Value(stat);
+                var bad = false;
+                if (stat.Kind == StatKind.Storage && district.Built)
+                {
+                    value = _numbers.Short(_stores.Held(district, now)) + "/" + _numbers.Short(stat.Value);
+                    bad = _stores.IsFull(district, now);
+                }
+                else if (stat.Kind == StatKind.Beds && district.Built)
+                {
+                    value = _numbers.Short(_stores.Residents(district)) + "/" + _numbers.Short(stat.Value);
+                }
+
+                tiles.Add(new StatTileData(_prose.Icon(stat), _prose.Short(stat.Kind), value, bad));
+            }
+
+            return tiles;
+        }
+
+        // The Townhall's villagers: who, how many the town has, Train priced for the knob's amount or gated, the batch.
+        private TrainingPanelData Training(double now)
+        {
+            var bust = _portraits.Of(VILLAGER);
+            var plan = _training.Plan(_amount);
+            var room = _training.Room;
+            var gate = room == 0 ? _localizer.Tr("No house to live in")
+                : room < plan.Count ? _localizer.Tr("Room for {n}", ("n", _numbers.Exact(room)))
+                : null;
+            var food = _treasury.Get(VillagerTraining.FOOD);
+
+            return new TrainingPanelData
+            {
+                Bust = bust?.Sprite,
+                BustShift = bust?.Shift ?? Vector2.zero,
+                BustScale = bust?.Scale ?? 1,
+                Owned = "x" + _numbers.Exact(_city.Population),
+                Tag = _localizer.Tr("Worker"),
+                Description = _localizer.Tr("A hardworking settler who tends the fields and pays rent."),
+                Amount = _amount == TrainAmount.All ? _localizer.Tr("All") : "x" + _numbers.Exact(plan.Count),
+                Price = new[] { new PriceTerm(VillagerTraining.FOOD, _numbers.Exact(plan.Cost), food < plan.Cost) },
+                Gate = gate,
+                CanTrain = gate == null && food >= plan.Cost,
+                Batch = Batch(now),
+                Empty = _localizer.Tr("Nothing in training"),
+            };
+        }
+
+        private WorkData Batch(double now)
+        {
+            var head = _training.Current;
+            if (head == null) return null;
+
+            var count = _city.Trainees.Count;
+            var left = head.ArrivesAt is double at ? Math.Max(0, at - now) / 1000 : head.Seconds;
+            var progress = head.StartedAt is double started ? (float)Math.Min(1, (now - started) / (head.Seconds * 1000)) : 0;
+            var gems = _rush.LineCost(now);
+            return new WorkData(_localizer.Tr("Training"), progress, _numbers.Duration(Math.Ceiling(left)), Gems(gems),
+                _treasury.Get(GemRush.GEMS) >= gems, count > 1 ? "x" + _numbers.Exact(count) : string.Empty,
+                _localizer.Tr("Total time: {time}", ("time", _numbers.Duration(Math.Ceiling(_training.RemainingSeconds(now) ?? 0)))));
+        }
+
+        // The crew stepper: who works here against the most it holds.
+        private CrewPanelData Crew(DistrictState district)
+        {
+            var bust = _portraits.Of(VILLAGER);
+            var assigned = _crews.Assigned(district.Id);
+            return new CrewPanelData(bust?.Sprite, bust?.Shift ?? Vector2.zero, bust?.Scale ?? 1, _numbers.Exact(assigned),
+                " / " + _numbers.Exact(_crews.Limit(district)), assigned > 0, _crews.CanAssign(district));
+        }
+
+        private PriceTerm[] Gems(double gems)
+            => new[] { new PriceTerm(GemRush.GEMS, _numbers.Exact(gems), _treasury.Get(GemRush.GEMS) < gems) };
     }
 }

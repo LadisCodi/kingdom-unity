@@ -74,6 +74,8 @@ namespace Codigames.Game.Session
             builder.Register<Stores>(Lifetime.Singleton);
             builder.Register<VillagerTraining>(Lifetime.Singleton);
             builder.Register<Workforce>(Lifetime.Singleton);
+            builder.Register<BuildingStats>(Lifetime.Singleton);
+            builder.Register<GemRush>(Lifetime.Singleton);
             builder.Register(resolver => new Harvesting(resolver.Resolve<HarvestState>(), resolver.Resolve<GroundState>(),
                 resolver.Resolve<CityState>(), resolver.Resolve<IProvinceMap>(), resolver.Resolve<ICatalog<IBuildingDefinition>>(),
                 resolver.Resolve<ICatalog<IFeatureDefinition>>(), resolver.Resolve<ICatalog<IHarvestSource>>(),

@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e249b1944adbac021aeb213e4ada88ec, type: 3}
+  m_Name: Button Skins
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.UI.Kit.ButtonSkins
+  _skins:
+  - _material: 0
+    _slab: {fileID: 21300000, guid: 16cc0cecfc3af8df88f949235880af34, type: 3}
+    _slabDown: {fileID: 21300000, guid: 8414ffb1731363407a7eef339a431381, type: 3}
+    _slabOff: {fileID: 21300000, guid: 6e3c529fc7aef2c418ff82881560d291, type: 3}
+    _knob: {fileID: 21300000, guid: 5d343f80d603f0a1c9faa6eb982db745, type: 3}
+    _knobDown: {fileID: 21300000, guid: 40a7cbf03384052489eda9b5716aed44, type: 3}
+    _knobOff: {fileID: 21300000, guid: 2d89e58aa3c4f886da53865e989d7345, type: 3}
+    _label: {fileID: 2100000, guid: 8c4f674658b3936e886b922ae29d2c9a, type: 2}
+  - _material: 1
+    _slab: {fileID: 21300000, guid: a648a68ab57e84ebb9c0fe84b653d971, type: 3}
+    _slabDown: {fileID: 21300000, guid: 97f59e40f585bc2b4aaa3e434a79a1d8, type: 3}
+    _slabOff: {fileID: 21300000, guid: 9e30643ce72b7ab24ad8e3200bd90cb5, type: 3}
+    _knob: {fileID: 21300000, guid: 51e77b51e97d8e5e9b86b6ead0474612, type: 3}
+    _knobDown: {fileID: 21300000, guid: 9166a5c13158b64158c7989347f40610, type: 3}
+    _knobOff: {fileID: 21300000, guid: feb85cec93ccec681b3e7d4f0f90fc7f, type: 3}
+    _label: {fileID: 2100000, guid: 3d595c600e4782f04ad43e41adadf7cd, type: 2}
+  - _material: 2
+    _slab: {fileID: 21300000, guid: 36b10de02aae9715fa6a22a6b031f229, type: 3}
+    _slabDown: {fileID: 21300000, guid: 0792532a8fd6e3c7bba2242dff4cd2ce, type: 3}
+    _slabOff: {fileID: 21300000, guid: 3ae0857ed1ee6886486025bade52ad92, type: 3}
+    _knob: {fileID: 21300000, guid: c8da971e4304372f2a33498b1672f66c, type: 3}
+    _knobDown: {fileID: 21300000, guid: 2e1ed8f8aa38a7c2cb801a9d91bc76bd, type: 3}
+    _knobOff: {fileID: 21300000, guid: 663a50b3f701a93c8900ba2179e3177f, type: 3}
+    _label: {fileID: 2100000, guid: fd0cde74bab7d2b61a9605d0307e0a4c, type: 2}
+  - _material: 3
+    _slab: {fileID: 21300000, guid: ee3dd125146d8bc93a09d3c4d05ef907, type: 3}
+    _slabDown: {fileID: 21300000, guid: f7741fe5019145d579bb34fd24e403e9, type: 3}
+    _slabOff: {fileID: 21300000, guid: 4482e2a48842f47b5b8a4157b8aba496, type: 3}
+    _knob: {fileID: 21300000, guid: f31e146dc87ae7babaf876d44936c6fa, type: 3}
+    _knobDown: {fileID: 21300000, guid: dc586f13a1c1f9b3f96946a6830a012b, type: 3}
+    _knobOff: {fileID: 21300000, guid: a538d47356631f4fa829b6abf94fd4d8, type: 3}
+    _label: {fileID: 2100000, guid: c5a7d2c8514acc3f4a1a380590e4b4ad, type: 2}
+  - _material: 4
+    _slab: {fileID: 21300000, guid: c13d34542317fdd9cbc73f6f964be00c, type: 3}
+    _slabDown: {fileID: 21300000, guid: 35ac1acc85701f69da72be630bb13d9b, type: 3}
+    _slabOff: {fileID: 21300000, guid: b8da2eb786ea7356ca93c8a061da3ab2, type: 3}
+    _knob: {fileID: 21300000, guid: 5950f3a772e8d90398cff0c51a6b0d88, type: 3}
+    _knobDown: {fileID: 21300000, guid: f572df67bcca1e82ba46a895dccd6359, type: 3}
+    _knobOff: {fileID: 21300000, guid: be6de6a0994accf27b2396523225a960, type: 3}
+    _label: {fileID: 2100000, guid: 333f9f79ea556df8eac9bacd50a27071, type: 2}
+  - _material: 5
+    _slab: {fileID: 21300000, guid: 35538dabb4ddf302e9a608da9adec39d, type: 3}
+    _slabDown: {fileID: 21300000, guid: 7444e8b95e0eebdf2b575c09ff63dd52, type: 3}
+    _slabOff: {fileID: 21300000, guid: f72e89cc1ca8b26c3991efd7d12b851b, type: 3}
+    _knob: {fileID: 21300000, guid: b2813b5de22c18e48a4778710e5aa81b, type: 3}
+    _knobDown: {fileID: 21300000, guid: 389114a0a524176d9a10fb5f1c4c7d8f, type: 3}
+    _knobOff: {fileID: 21300000, guid: 957585afad9b766a6b05edba048796de, type: 3}
+    _label: {fileID: 2100000, guid: 7ff31bf99fa1b2451bbefdbd386fa472, type: 2}
+  - _material: 6
+    _slab: {fileID: 21300000, guid: 61691d8969cf03563baa5898600329e3, type: 3}
+    _slabDown: {fileID: 21300000, guid: 2606dda4b96c4d1a0818d194749db67c, type: 3}
+    _slabOff: {fileID: 21300000, guid: 8bf64166ffd93f160830544ceab5d7d5, type: 3}
+    _knob: {fileID: 21300000, guid: e3d9e76851453c0119fa0d4dcf773134, type: 3}
+    _knobDown: {fileID: 21300000, guid: 8798278542988ad84a76f86d43366e94, type: 3}
+    _knobOff: {fileID: 21300000, guid: 93a131586124b3c42beb421e1ae91ab9, type: 3}
+    _label: {fileID: 2100000, guid: 5e42997c29b2aed4a8275f926c50cd38, type: 2}
+  - _material: 7
+    _slab: {fileID: 21300000, guid: 5d1e2424b9a28d78597c5013e77b50fc, type: 3}
+    _slabDown: {fileID: 21300000, guid: e290aac13ecd8128197027dff74ef271, type: 3}
+    _slabOff: {fileID: 21300000, guid: dcc708b5a9c4b3f13ae881273409c7a1, type: 3}
+    _knob: {fileID: 21300000, guid: 2a18478725203b5dcad2ab8c4588913d, type: 3}
+    _knobDown: {fileID: 21300000, guid: 36b754a6b2333120183f72583623496a, type: 3}
+    _knobOff: {fileID: 21300000, guid: 1bbdb47e8162a5c79a96b56cb6c5b51c, type: 3}
+    _label: {fileID: 2100000, guid: 85c057d4ec012f4f898fd72e0616b83a, type: 2}
+  - _material: 8
+    _slab: {fileID: 21300000, guid: 6a5a14ab09dd99a47acd80b281bad0fe, type: 3}
+    _slabDown: {fileID: 21300000, guid: 13e1a6b0b80cf9e5b8c3a1c45fa8aa78, type: 3}
+    _slabOff: {fileID: 21300000, guid: 7a79a6cd93f815c7c981031edebde123, type: 3}
+    _knob: {fileID: 21300000, guid: 94d9f31d7cc29805c8cf045e1fcfae39, type: 3}
+    _knobDown: {fileID: 21300000, guid: 381979e5ffbfa143fbc97f37c9c79413, type: 3}
+    _knobOff: {fileID: 21300000, guid: fb8e0b3d53436903cb6494ff5586e958, type: 3}
+    _label: {fileID: 2100000, guid: 6446d802e19b450308b0005a73dc6556, type: 2}
+  - _material: 9
+    _slab: {fileID: 21300000, guid: 7c35d7b6243ecb4e194b33f1124d39fd, type: 3}
+    _slabDown: {fileID: 21300000, guid: acf46d85d1c672cda9a73a1bd1254733, type: 3}
+    _slabOff: {fileID: 21300000, guid: 6a3e639d91b369e3bb7ed44951ba8350, type: 3}
+    _knob: {fileID: 21300000, guid: d7a180a1654bda8b6b331e259a0a3f20, type: 3}
+    _knobDown: {fileID: 21300000, guid: 01ee21eb10204e7adac20a54c9d59618, type: 3}
+    _knobOff: {fileID: 21300000, guid: fc14228a0caa15f238e20db689b1e90a, type: 3}
+    _label: {fileID: 2100000, guid: 0350937834c3dc1139243aec29aa5be1, type: 2}
+  - _material: 10
+    _slab: {fileID: 21300000, guid: eebdf0f35ad8bb3cfb1d67180413e6a5, type: 3}
+    _slabDown: {fileID: 21300000, guid: 15d4fb8012302728b8e0045294feb103, type: 3}
+    _slabOff: {fileID: 21300000, guid: ed9fc32c3b18540d6abf655f26328da1, type: 3}
+    _knob: {fileID: 21300000, guid: 6e9b85f4b73a5254b9bafeaf7097850e, type: 3}
+    _knobDown: {fileID: 21300000, guid: ab185bcf0bcb56cb0a9bf60986bae247, type: 3}
+    _knobOff: {fileID: 21300000, guid: 60c46c42214f7d5b1bdfc9851a868e95, type: 3}
+    _label: {fileID: 2100000, guid: fee19f111c98909d1b87f4c33e118bd0, type: 2}
+  _offLabel: {fileID: 2100000, guid: 98be17b4dd71a7d8f84a9527c3f18954, type: 2}
+  _labelColor: {r: 1, g: 0.9647059, b: 0.8784314, a: 1}
+  _offLabelColor: {r: 0.8901961, g: 0.9019608, b: 0.9254902, a: 1}
+  _woodGlyph: {r: 0.15686275, g: 0.078431375, b: 0.03137255, a: 0.61960787}
+  _paintGlyph: {r: 0.039215688, g: 0.023529412, b: 0.11764706, a: 0.5019608}
+  _offGlyph: {r: 0.15686275, g: 0.18039216, b: 0.23529412, a: 0.54901963}

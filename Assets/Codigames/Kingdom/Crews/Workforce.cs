@@ -67,21 +67,23 @@ namespace Codigames.Kingdom.Crews
         // What the crews bring home of a currency a second, nominally: each worker's walk out and back across its
         // building's reach and its swing, a building with several sources splitting its crew between them.
         public double GatherPerSecond(string currency)
+            => _city.Districts.Where(d => d.Built).Sum(d => GatherPerSecond(d, currency));
+
+        // What one building's crew brings home of a currency a second (its card's output tile).
+        public double GatherPerSecond(DistrictState district, string currency)
         {
-            var total = 0.0;
-            foreach (var district in _city.Districts.Where(d => d.Built))
-            {
-                var crew = Assigned(district.Id);
-                var sources = Production(district).HarvestSources;
-                var source = sources.Select(_harvesting.Source).FirstOrDefault(s => s != null && s.Currency == currency);
-                if (crew == 0 || source == null) continue;
+            var crew = Assigned(district.Id);
+            var sources = Production(district).HarvestSources;
+            var source = sources.Select(_harvesting.Source).FirstOrDefault(s => s != null && s.Currency == currency);
+            if (!district.Built || crew == 0 || source == null) return 0;
 
-                var cycleSeconds = 2 * Radius(district) / WalkSpeed + StrikeMs(source, district) / 1000;
-                if (cycleSeconds > 0) total += (double)crew / sources.Count * Delivery(source, district) / cycleSeconds;
-            }
-
-            return total;
+            var cycleSeconds = 2 * Radius(district) / WalkSpeed + StrikeMs(source, district) / 1000;
+            return cycleSeconds > 0 ? (double)crew / sources.Count * Delivery(source, district) / cycleSeconds : 0;
         }
+
+        // The currencies a building's crew brings home, in the order its sources name them.
+        public IReadOnlyList<string> Currencies(DistrictState district)
+            => Production(district).HarvestSources.Select(_harvesting.Source).Where(s => s != null).Select(s => s.Currency).Distinct().ToList();
 
         public bool HasCrew(DistrictState district) => Production(district).HarvestSources.Count > 0;
 

@@ -455,6 +455,17 @@ to 400. A label on a material of its own (a slab button, a plank, a title
 band) keeps its face and takes a size-only role. Colour stays out of the
 sheet. `TextStyleTests` refuses a menu label with no role.
 
+**Screens are built from the kit** (`Assets/Prefabs/UI/Kit`, `Game/UI/Kit`), the
+web's kit.css and material.css as prefabs, never drawn again per screen:
+`Button` and `Knob` (`KitButton` — a material from `Button Skins`: wood, the
+paints, the gems; it draws its own rest, pressed and off states), `CostButton`
+(the price — or the padlock and why — above the slab, on a section),
+`SectionHead`, `StatTile` and `StatBand`, `BuildingPortrait`, `UnitPortrait`,
+`Tag`, `CtaBadge`. A section (a group inside a menu) is `plate-fill` +
+`plate-rim` tinted `#f0d9ae` / `#cfa874`. UI icons are asked for by id from
+`UiIcons` (*Kingdom › UI › Rebuild icon catalog*), a unit's bust from
+`PortraitArt`. A new kind of piece is added to the kit first, then used.
+
 **An icon in a text is a sprite in the text**: `<sprite name="Gold">`, from
 TextMeshPro's default sprite asset (`Art/UI/InlineIcons`), which packs every
 currency's icon by id and the UI's own glyphs (`hourglass`, `padlock`,

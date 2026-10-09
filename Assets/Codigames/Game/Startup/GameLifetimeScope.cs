@@ -47,6 +47,8 @@ namespace Codigames.Game.Startup
         [SerializeField] private UnlockSplash _unlockSplash;
         [SerializeField] private SownPlot _sownPlot;
         [SerializeField] private SpriteArt _spriteArt;
+        [SerializeField] private Codigames.Game.UI.Kit.UiIcons _uiIcons;
+        [SerializeField] private Codigames.Game.UI.Kit.PortraitArt _portraitArt;
         [SerializeField] private HoldRing _holdRing;
         [SerializeField] private CinemachineCameraRig _cameraRig;
         [SerializeField] private CameraInputHook _cameraInput;
@@ -69,6 +71,8 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_sownPlot);
             builder.RegisterEntryPoint<SownPlotsView>();
             builder.RegisterInstance(_spriteArt);
+            builder.RegisterInstance(_uiIcons);
+            builder.RegisterInstance(_portraitArt);
             builder.RegisterEntryPoint<CellBarsView>();
             builder.RegisterInstance(_sightArt);
             builder.RegisterEntryPoint<SilhouettesView>();
@@ -107,6 +111,8 @@ namespace Codigames.Game.Startup
             builder.Register<BuildMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
             builder.Register<PlacementMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
             builder.Register<DistrictCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
+            builder.Register<UpgradeSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<Codigames.Game.UI.Buildings.BuildingStatProse>(Lifetime.Singleton);
             builder.Register<TechProse>(Lifetime.Singleton);
             builder.Register<RuinCardMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
             builder.Register<Codigames.Game.UI.Quests.QuestProse>(Lifetime.Singleton);

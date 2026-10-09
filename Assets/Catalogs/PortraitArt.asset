@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 423548f8c0a3dbc32a821263f946314d, type: 3}
+  m_Name: PortraitArt
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.UI.Kit.PortraitArt
+  _busts:
+  - _unit: Villager
+    _sprite: {fileID: 21300000, guid: c49d1de9398bc2c26a5b91ef333fc2dd, type: 3}
+    _shift: {x: -13, y: 2}
+    _scale: 1.18

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Codigames.Game.Data.Economy
 {
     [CreateAssetMenu(fileName = "Economy", menuName = "Kingdom/Data/Economy Settings")]
-    public class EconomySettingsAsset : DataSettings, IEconomySettings, IWorkerSettings, IBagSettings
+    public class EconomySettingsAsset : DataSettings, IEconomySettings, IWorkerSettings, IBagSettings, IRushSettings
     {
         [SerializeField, MinValue(0), SuffixLabel("Gold / villager / min"), Tooltip("The rent every housed villager pays.")]
         private double _goldPerPopulationPerMinute = 30;
@@ -20,7 +20,11 @@ namespace Codigames.Game.Data.Economy
         [SerializeField, MinValue(0), SuffixLabel("units / h"), Tooltip("What a chest pays an hour of a coin the city barely makes yet.")]
         private double _chestFloorPerHour = 60;
 
+        [SerializeField, MinValue(1), SuffixLabel("s / Gem"), Tooltip("Skipping a wait costs a Gem this many seconds, never less than one.")]
+        private double _secondsPerGem = 5;
+
         public double GoldPerPopulationPerMinute => _goldPerPopulationPerMinute;
+        public double SecondsPerGem => _secondsPerGem;
         public double ChestFloorPerHour => _chestFloorPerHour;
         public double MoveSpeedTilesPerSecond => _moveSpeedTilesPerSecond;
         public double CollectSeconds => _collectSeconds;

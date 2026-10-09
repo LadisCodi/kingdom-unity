@@ -123,5 +123,50 @@ namespace Codigames.Kingdom.Tests.City
 
             Assert.That(fixture.Stores.Held(house, 81_000), Is.EqualTo(30));
         }
+
+        [Test]
+        public void Plan_ShouldPriceAnOrderWholeAndStopAllAtTheBedsOrTheFood()
+        {
+            var fixture = new Fixture();
+            var room = fixture.Training.Room;
+
+            Assert.That(fixture.Training.Plan(TrainAmount.Ten).Cost, Is.EqualTo(fixture.Training.BatchCost(10)));
+            Assert.That(fixture.Training.Plan(TrainAmount.All).Count, Is.EqualTo(room));
+
+            fixture.Treasury.TryPay(new Dictionary<string, double> { ["Food"] = 1000 - 15 });
+            Assert.That(fixture.Training.Plan(TrainAmount.All).Count, Is.EqualTo(2), "5 + 10 Food, and not 20 more");
+        }
+
+        [Test]
+        public void TrainCount_ShouldQueueAllOrNone()
+        {
+            var fixture = new Fixture();
+            var room = fixture.Training.Room;
+
+            Assert.That(fixture.Training.Train(room + 1, 0), Is.EqualTo(TrainRefusal.NoRoom));
+            Assert.That(fixture.City.Trainees, Is.Empty);
+
+            Assert.That(fixture.Training.Train(room, 0), Is.EqualTo(TrainRefusal.None));
+            Assert.That(fixture.City.Trainees, Has.Count.EqualTo(room));
+        }
+
+        [Test]
+        public void FinishLine_ShouldPayGemsAndBringTheWholeLineIn()
+        {
+            var fixture = new Fixture();
+            fixture.Training.Train(2, 0);
+            var gems = fixture.Treasury.Get("Gems");
+            var rush = new GemRush(fixture.Construction, fixture.Training, fixture.Treasury, new Rush());
+            var cost = rush.LineCost(0);
+
+            Assert.That(rush.FinishLine(0), Is.True);
+            Assert.That(fixture.City.Trainees, Is.Empty);
+            Assert.That(fixture.Treasury.Get("Gems"), Is.EqualTo(gems - cost));
+        }
+
+        private sealed class Rush : IRushSettings
+        {
+            public double SecondsPerGem => 5;
+        }
     }
 }

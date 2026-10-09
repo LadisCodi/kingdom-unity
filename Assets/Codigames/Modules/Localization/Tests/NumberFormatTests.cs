@@ -43,6 +43,16 @@ namespace Codigames.Modules.Localization.Tests
             Assert.That(_format.Usd(499), Is.EqualTo("$4,99"));
         }
 
+        [Test]
+        public void Spanish_ShouldGroupOnlyFromFiveFigures()
+        {
+            _localizer.SetCulture("es-ES");
+
+            Assert.That(_format.Exact(4100), Is.EqualTo("4100"));
+            Assert.That(_format.Exact(-9999.5), Is.EqualTo("-9999,5"));
+            Assert.That(_format.Exact(10000), Is.EqualTo("10.000"));
+        }
+
         [TestCase(0, "instant")]
         [TestCase(45, "45s")]
         [TestCase(125, "2m 5s")]

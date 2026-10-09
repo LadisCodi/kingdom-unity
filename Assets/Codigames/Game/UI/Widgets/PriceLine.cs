@@ -26,6 +26,10 @@ namespace Codigames.Game.UI.Widgets
             return line.ToString();
         }
 
+        // A buy box's line with something after the price — its wait, an hourglass and a muted time.
+        public static string Of(IReadOnlyList<PriceTerm> terms, bool wide, string trailing)
+            => string.IsNullOrEmpty(trailing) ? Of(terms, wide) : Of(terms, wide) + (terms.Count > 0 ? wide ? WIDE_GAP : GAP : "") + trailing;
+
         public static string Of(PriceTerm term) => Append(new StringBuilder(), term, false).ToString();
 
         private static StringBuilder Append(StringBuilder line, PriceTerm term, bool wide)

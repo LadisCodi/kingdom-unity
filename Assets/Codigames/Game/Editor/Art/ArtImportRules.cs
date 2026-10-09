@@ -12,7 +12,8 @@ namespace Codigames.Game.Editor.Art
     // - Art/Fog: the clouds and the floor's diamond, centred on their cell, one cell wide (a cloud's tile scales it).
     // - Art/World: things drawn over the map (the collect bubble): pivot at the bottom centre, 100 px a unit.
     // - Art/UI: sprites at 100 px a unit; a sliced piece keeps its border (below). plate-fill and plate-rim are
-    //   a white rounded plate and its rim, generated, tinted wherever a card or a chip needs one.
+    //   a white rounded plate and its rim, generated, tinted wherever a card or a chip needs one; disc-fill and
+    //   disc-rim the same in the round (a portrait), sliced so the rim keeps its width at any size.
     public class ArtImportRules : AssetPostprocessor
     {
         // Every label button's slab: one 557 × 188 canvas, its rounded ends and lip in the slices.
@@ -26,18 +27,20 @@ namespace Codigames.Game.Editor.Art
             ["nav-tab"] = new Vector4(30, 50, 30, 30), ["nav-tab-down"] = new Vector4(30, 50, 30, 30),
             ["window-frame"] = new Vector4(64, 64, 64, 64), ["window-header"] = Ends(60),
             ["plate-fill"] = new Vector4(26, 26, 26, 26), ["plate-rim"] = new Vector4(26, 26, 26, 26),
+            ["disc-fill"] = new Vector4(63, 63, 63, 63), ["disc-rim"] = new Vector4(63, 63, 63, 63),
             ["rb-page"] = new Vector4(56, 56, 56, 56), ["hud-know-tab"] = new Vector4(64, 70, 64, 20), ["know-frame"] = Ends(60),
-            ["btn-paint-green"] = SLAB, ["btn-paint-green-down"] = SLAB, ["btn-paint-green-off"] = SLAB,
-            ["btn-purple"] = SLAB, ["btn-purple-down"] = SLAB, ["btn-purple-off"] = SLAB,
             ["dialogue-frame"] = new Vector4(100, 100, 100, 100),
             ["ribbon-blue"] = Ends(100), ["ribbon-brown"] = Ends(100), ["ribbon-crimson"] = Ends(100), ["ribbon-green"] = Ends(100),
             ["ribbon-purple"] = Ends(100), ["ribbon-red"] = Ends(100), ["stage-halo"] = new Vector4(64, 64, 64, 64),
             ["scroll-parchment"] = new Vector4(100, 100, 100, 110), ["bar-fill-gold"] = Ends(54),
-            ["btn-green"] = SLAB, ["btn-green-down"] = SLAB, ["btn-green-off"] = SLAB,
-            ["btn-wood"] = SLAB, ["btn-wood-down"] = SLAB, ["btn-wood-off"] = SLAB,
+            // A level's enamel plaque (the upgrade sheet), 60 px caps and 70 px ends.
+            ["plaque-blue"] = new Vector4(70, 60, 70, 60), ["plaque-green"] = new Vector4(70, 60, 70, 60),
         };
 
         private static Vector4 Ends(int width) => new(width, 0, width, 0);
+
+        // A label button's slab, any material or state: btn-<material>[-down|-off]. The round close and move are not slabs.
+        private static bool IsSlab(string stem) => stem.StartsWith("btn-") && !stem.StartsWith("btn-close") && !stem.StartsWith("btn-move");
 
         private const string TERRAIN = "Assets/Art/Terrain/";
         private const string FEATURES = "Assets/Art/Features/";
@@ -81,6 +84,7 @@ namespace Codigames.Game.Editor.Art
                 settings.spritePixelsPerUnit = 100;
                 var stem = System.IO.Path.GetFileNameWithoutExtension(assetPath);
                 if (SLICED.TryGetValue(stem, out var border)) settings.spriteBorder = border;
+                else if (IsSlab(stem)) settings.spriteBorder = SLAB;
             }
             else if (isCharacter)
             {

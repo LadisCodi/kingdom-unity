@@ -1,0 +1,755 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d2a87db8378758caae3e8859a7ce624, type: 3}
+  m_Name: UiIcons
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.UI.Kit.UiIcons
+  _icons:
+  - _id: anvil
+    _sprite: {fileID: 21300000, guid: 59f7dfee5252381809f60bd26665f864, type: 3}
+  - _id: anvil-locked
+    _sprite: {fileID: 21300000, guid: 4db0ebcf93e90eb6085c1b228a82112e, type: 3}
+  - _id: Archer
+    _sprite: {fileID: 21300000, guid: 17aac065b536a9447965119cddb510a7, type: 3}
+  - _id: Archer-locked
+    _sprite: {fileID: 21300000, guid: 5f88b834ca729bbd4ab1fd57f9f4fd94, type: 3}
+  - _id: army
+    _sprite: {fileID: 21300000, guid: 911523dcfb9ee93c891c02ca20224c8c, type: 3}
+  - _id: army-locked
+    _sprite: {fileID: 21300000, guid: ec92d69430b1a7ed5b94e9d9826313de, type: 3}
+  - _id: arrowUp
+    _sprite: {fileID: 21300000, guid: 435250f7c42e01ae48d57d4fba3c31ce, type: 3}
+  - _id: arrowUp-locked
+    _sprite: {fileID: 21300000, guid: a98112790d8c6c3a1b3f24909641f70e, type: 3}
+  - _id: ascension
+    _sprite: {fileID: 21300000, guid: fcfb25c0d2e4fcdb3918a709060ad866, type: 3}
+  - _id: ascension-locked
+    _sprite: {fileID: 21300000, guid: 897796abb10e607d288b7799c9e3b0be, type: 3}
+  - _id: ascension-sm
+    _sprite: {fileID: 21300000, guid: 2d14f2a14bc79caf7887e5ede42431c6, type: 3}
+  - _id: atk
+    _sprite: {fileID: 21300000, guid: 1598ece45ab2f3c71a52f69b08d629e5, type: 3}
+  - _id: atk-sm
+    _sprite: {fileID: 21300000, guid: 9b7c8bff54041c8379c27fc790d02777, type: 3}
+  - _id: bag
+    _sprite: {fileID: 21300000, guid: e62bf4fe023984252a3738c2a86a4930, type: 3}
+  - _id: bag-locked
+    _sprite: {fileID: 21300000, guid: 203ec24612e8bc1e49ffb412018687ce, type: 3}
+  - _id: Banner
+    _sprite: {fileID: 21300000, guid: e45cc6257dc9f5a3597e05e3cb90ecea, type: 3}
+  - _id: Banner-locked
+    _sprite: {fileID: 21300000, guid: 458bad19cd8ed178eb78630b4c7c0361, type: 3}
+  - _id: Barracks
+    _sprite: {fileID: 21300000, guid: 7a1e0f642f29d710aa077766a2ab2a43, type: 3}
+  - _id: Barracks-locked
+    _sprite: {fileID: 21300000, guid: e9fecba9a3163cc58bf4015ef493d4b3, type: 3}
+  - _id: bed
+    _sprite: {fileID: 21300000, guid: 8e0efb5eaa761863d825fb65ae30d638, type: 3}
+  - _id: bed-locked
+    _sprite: {fileID: 21300000, guid: 0c89e95f38e69981a9db4b5cc2c36e4e, type: 3}
+  - _id: Bench
+    _sprite: {fileID: 21300000, guid: 3ee462207005322dea93c16a002ed90f, type: 3}
+  - _id: Bench-locked
+    _sprite: {fileID: 21300000, guid: fcb0fc99b639e44a5909fc80530b653e, type: 3}
+  - _id: Berries
+    _sprite: {fileID: 21300000, guid: f0f58248a4f4739f1a959b78d8023800, type: 3}
+  - _id: Berries-locked
+    _sprite: {fileID: 21300000, guid: 6abfcf0c6d8279803a3b30f4165d1905, type: 3}
+  - _id: Berries-sm
+    _sprite: {fileID: 21300000, guid: e15379772a277f6c4b95d349f8ca9da4, type: 3}
+  - _id: Birdbath
+    _sprite: {fileID: 21300000, guid: dc73879bddf5350e286af6d15f6349f0, type: 3}
+  - _id: Birdbath-locked
+    _sprite: {fileID: 21300000, guid: 5b7d596c23d9b9581bca6a8c02a7831d, type: 3}
+  - _id: boat
+    _sprite: {fileID: 21300000, guid: 832a331ee69fef10a9173de7075d632c, type: 3}
+  - _id: boat-locked
+    _sprite: {fileID: 21300000, guid: 59eaa277a1abdfd019252cd62c2ef43c, type: 3}
+  - _id: boostHarvest
+    _sprite: {fileID: 21300000, guid: 159f10321627982398f7031147696b80, type: 3}
+  - _id: boostHarvest-locked
+    _sprite: {fileID: 21300000, guid: c6d886eb6462ba848a1d11dafec08f9d, type: 3}
+  - _id: boostMana
+    _sprite: {fileID: 21300000, guid: 129914edbef22f11dbc7afba7568b646, type: 3}
+  - _id: boostMana-locked
+    _sprite: {fileID: 21300000, guid: 24d215423d9423d5b8bbe6fc42197d37, type: 3}
+  - _id: boostRent
+    _sprite: {fileID: 21300000, guid: 21bfaac4848cab993a416e80fb0bd9aa, type: 3}
+  - _id: boostRent-locked
+    _sprite: {fileID: 21300000, guid: a639136b03f7c363e92fb5e4c7c9a367, type: 3}
+  - _id: boot
+    _sprite: {fileID: 21300000, guid: 196d36594d6d315709a5977716000b8c, type: 3}
+  - _id: boot-locked
+    _sprite: {fileID: 21300000, guid: 59cb4f1bb6ad34efc8a8836cc32c7618, type: 3}
+  - _id: build
+    _sprite: {fileID: 21300000, guid: 7a2a70a73f72440c3a52b3442e344e55, type: 3}
+  - _id: builders
+    _sprite: {fileID: 21300000, guid: 7aab36ec0c5b6b94889e118599262d46, type: 3}
+  - _id: builders-locked
+    _sprite: {fileID: 21300000, guid: 361c1b219770b23f28634ae676398291, type: 3}
+  - _id: builders-sm
+    _sprite: {fileID: 21300000, guid: 8f3fe058fec35be2d9b0ee16cef100c3, type: 3}
+  - _id: build-locked
+    _sprite: {fileID: 21300000, guid: 8b09ce3476b42a8a9b922b516e0994d5, type: 3}
+  - _id: cards
+    _sprite: {fileID: 21300000, guid: 7f667866b4dfd02bc8d9766c1500dbec, type: 3}
+  - _id: cards-locked
+    _sprite: {fileID: 21300000, guid: 62a57b7b5a1e35b4ea81ddc96c76ceb6, type: 3}
+  - _id: Carpenter
+    _sprite: {fileID: 21300000, guid: dbd8b7286a1b73d93b9b683dbdadb427, type: 3}
+  - _id: Carpenter-locked
+    _sprite: {fileID: 21300000, guid: fa770539b272a6e479c5f14bd4d76829, type: 3}
+  - _id: Cavalry
+    _sprite: {fileID: 21300000, guid: e54af87f3bd19173ca837fa6be9cc179, type: 3}
+  - _id: Cavalry-locked
+    _sprite: {fileID: 21300000, guid: a47a30c2de9999c0ca0f63ae3327786c, type: 3}
+  - _id: chest
+    _sprite: {fileID: 21300000, guid: 2022b3d13905032e1a027d131a4e5f04, type: 3}
+  - _id: chestFood
+    _sprite: {fileID: 21300000, guid: fa76c40d0d858d0498b697f923b3f765, type: 3}
+  - _id: chestFood-locked
+    _sprite: {fileID: 21300000, guid: f85fa1487599ec4e78d769c68dc49a38, type: 3}
+  - _id: chestGold
+    _sprite: {fileID: 21300000, guid: eb7e1139b3ee478f6a3beef48ad35cf1, type: 3}
+  - _id: chestGold-locked
+    _sprite: {fileID: 21300000, guid: d4f5db5e2f581276cbf80533f44895c9, type: 3}
+  - _id: chestStone
+    _sprite: {fileID: 21300000, guid: 85b8b8bf5c9e5bed6b27a6e96c627aa1, type: 3}
+  - _id: chestStone-locked
+    _sprite: {fileID: 21300000, guid: 9f505f30a863fac5abfc4e663769af05, type: 3}
+  - _id: chestWood
+    _sprite: {fileID: 21300000, guid: 099a0c21d9b0a120ea4598e7d96e025b, type: 3}
+  - _id: chestWood-locked
+    _sprite: {fileID: 21300000, guid: 18fb1ddbf329b5cc080bf610df73dd22, type: 3}
+  - _id: choiceChest
+    _sprite: {fileID: 21300000, guid: 4faa8fe8e2d1df183afc02a4af889430, type: 3}
+  - _id: ChoiceChest1h
+    _sprite: {fileID: 21300000, guid: 79b03630547b9f0a096a0c3e3bda525e, type: 3}
+  - _id: ChoiceChest1h-locked
+    _sprite: {fileID: 21300000, guid: d6d2da84b3d50d125b7d5cd6fec84822, type: 3}
+  - _id: ChoiceChest8h
+    _sprite: {fileID: 21300000, guid: ab510aa41747296a5b654ca21a7004d6, type: 3}
+  - _id: ChoiceChest8h-locked
+    _sprite: {fileID: 21300000, guid: 33d310ef92eff239abc3f357b9f4fbdb, type: 3}
+  - _id: choiceChest-locked
+    _sprite: {fileID: 21300000, guid: 0855bb2a9a4ef2076a4e13443f6f796f, type: 3}
+  - _id: clock
+    _sprite: {fileID: 21300000, guid: 85d956e6c5814346e8a40bab415e54a8, type: 3}
+  - _id: clock-locked
+    _sprite: {fileID: 21300000, guid: 672c7072b1b03021094887a11b5f8677, type: 3}
+  - _id: close
+    _sprite: {fileID: 21300000, guid: 9562888cce13abc0f8ee6643210cea19, type: 3}
+  - _id: compass
+    _sprite: {fileID: 21300000, guid: 4f23275d575446fb7adf90a40c0b1b71, type: 3}
+  - _id: compass-locked
+    _sprite: {fileID: 21300000, guid: 0968d981e31e575c98f7666c7499f212, type: 3}
+  - _id: ConstructionSpeedup15m
+    _sprite: {fileID: 21300000, guid: 0e8b7648bfa35195a995f48baf54ebfa, type: 3}
+  - _id: ConstructionSpeedup15m-locked
+    _sprite: {fileID: 21300000, guid: 055c0135aad62cec093552bc4cdc8815, type: 3}
+  - _id: ConstructionSpeedup1h
+    _sprite: {fileID: 21300000, guid: a7473d552f51f5816968eef895469a52, type: 3}
+  - _id: ConstructionSpeedup1h-locked
+    _sprite: {fileID: 21300000, guid: 55847a6189a6596e99e76d42cee7a197, type: 3}
+  - _id: ConstructionSpeedup1m
+    _sprite: {fileID: 21300000, guid: 81f8528cfd496fdf98d1e9c02b11b9ab, type: 3}
+  - _id: ConstructionSpeedup1m-locked
+    _sprite: {fileID: 21300000, guid: 234b71be72cd70b07a73020f6de05ce9, type: 3}
+  - _id: ConstructionSpeedup24h
+    _sprite: {fileID: 21300000, guid: 558be07ce5ea5e9088dc42a71c4250fc, type: 3}
+  - _id: ConstructionSpeedup24h-locked
+    _sprite: {fileID: 21300000, guid: 6b4122e51c32b371ab003bbef7a87c98, type: 3}
+  - _id: ConstructionSpeedup3h
+    _sprite: {fileID: 21300000, guid: 76b4bc14aeac52958a3045bbd46d4579, type: 3}
+  - _id: ConstructionSpeedup3h-locked
+    _sprite: {fileID: 21300000, guid: 461eb7d7bc728c957b9ecd501a6e913e, type: 3}
+  - _id: ConstructionSpeedup5m
+    _sprite: {fileID: 21300000, guid: dcecec4a21cebc98ea69bbf1a6a50b20, type: 3}
+  - _id: ConstructionSpeedup5m-locked
+    _sprite: {fileID: 21300000, guid: 3b72fdc885edadbf88dce80eae98951d, type: 3}
+  - _id: ConstructionSpeedup8h
+    _sprite: {fileID: 21300000, guid: 96c13774c3367ad77aa965be6350156e, type: 3}
+  - _id: ConstructionSpeedup8h-locked
+    _sprite: {fileID: 21300000, guid: 7544ad0d22987a60eb16a65c37019854, type: 3}
+  - _id: crest
+    _sprite: {fileID: 21300000, guid: 1fc2311818fe789ccb8660f3c3245011, type: 3}
+  - _id: crest-locked
+    _sprite: {fileID: 21300000, guid: 1cdde193d57e6ef74a9ca3020200c2e4, type: 3}
+  - _id: cross
+    _sprite: {fileID: 21300000, guid: 0f9d8ad8ad95f76548d233fe87651501, type: 3}
+  - _id: cross-locked
+    _sprite: {fileID: 21300000, guid: 9409969020d846ffa9b5923f163f608c, type: 3}
+  - _id: CutStone
+    _sprite: {fileID: 21300000, guid: acf6e2ba9a424fed4bb78d7b79b33778, type: 3}
+  - _id: CutStone-locked
+    _sprite: {fileID: 21300000, guid: bda6dfbd7f940e772811dc105d565bb9, type: 3}
+  - _id: daily
+    _sprite: {fileID: 21300000, guid: c844bff56b2f550239e22245388039a4, type: 3}
+  - _id: def
+    _sprite: {fileID: 21300000, guid: 9587e075d0e30f42790468dadccd038d, type: 3}
+  - _id: def-sm
+    _sprite: {fileID: 21300000, guid: 97af9cfc4716680418d819500ea4497d, type: 3}
+  - _id: dmg
+    _sprite: {fileID: 21300000, guid: 3c242d1a9fe5e871bb0a135c9cbceca0, type: 3}
+  - _id: dmg-sm
+    _sprite: {fileID: 21300000, guid: 22bb8dcf2e2fd7952a18266c75bfae89, type: 3}
+  - _id: Docks
+    _sprite: {fileID: 21300000, guid: 40469db9a840f6aec85653109326116f, type: 3}
+  - _id: Docks-locked
+    _sprite: {fileID: 21300000, guid: 9045939314cb52c568dff54170ce3b86, type: 3}
+  - _id: dowserMap
+    _sprite: {fileID: 21300000, guid: 96bd8738ee5a679bd9f9921ad50e1592, type: 3}
+  - _id: dowserMap-locked
+    _sprite: {fileID: 21300000, guid: bb1c8b6a2bac16437b2d0de9ebb6da3e, type: 3}
+  - _id: dungeon
+    _sprite: {fileID: 21300000, guid: d85d7bc602452e0669cfcdd88f6b92b2, type: 3}
+  - _id: Farm
+    _sprite: {fileID: 21300000, guid: 448abce7d4ca6fd72a69d47a0aeea0cd, type: 3}
+  - _id: FarmLands
+    _sprite: {fileID: 21300000, guid: aced2cf8994d03d59a7a76fe2367d927, type: 3}
+  - _id: FarmLands-locked
+    _sprite: {fileID: 21300000, guid: de4f0aff09bbcf73b85c9ccfc5b4d377, type: 3}
+  - _id: Farm-locked
+    _sprite: {fileID: 21300000, guid: da510e9f5ed11db858c7781eb788f778, type: 3}
+  - _id: Fish
+    _sprite: {fileID: 21300000, guid: 95abdeaa00a588c7a866de4ae049871f, type: 3}
+  - _id: Fish-locked
+    _sprite: {fileID: 21300000, guid: 522c03be6c75f703f80e3f2e586364b7, type: 3}
+  - _id: Fish-sm
+    _sprite: {fileID: 21300000, guid: 222fa061246510cd5962f81affed73be, type: 3}
+  - _id: flask
+    _sprite: {fileID: 21300000, guid: a2e3392cb3f175cfab2888a807856c0a, type: 3}
+  - _id: flask-locked
+    _sprite: {fileID: 21300000, guid: a07c0863083c6e800ab26f7c4ff0b12f, type: 3}
+  - _id: Flowerbed
+    _sprite: {fileID: 21300000, guid: 399f822e73b0e94f186dbe28aadd9b8d, type: 3}
+  - _id: Flowerbed-locked
+    _sprite: {fileID: 21300000, guid: c204ffbffa6351fb5a8e04175eb37d3e, type: 3}
+  - _id: Food
+    _sprite: {fileID: 21300000, guid: a3487edb04a45efcc9b76fabffe27fbb, type: 3}
+  - _id: FoodChest10m
+    _sprite: {fileID: 21300000, guid: dc7951b65dc37b6a6beb57f48d00246b, type: 3}
+  - _id: FoodChest10m-locked
+    _sprite: {fileID: 21300000, guid: feba0ba33b152efd88df7c6d971b544d, type: 3}
+  - _id: FoodChest1h
+    _sprite: {fileID: 21300000, guid: 603f8d922c568934d90875ff6996461f, type: 3}
+  - _id: FoodChest1h-locked
+    _sprite: {fileID: 21300000, guid: 2224e217649806e62be060c8a2b94ea2, type: 3}
+  - _id: FoodChest8h
+    _sprite: {fileID: 21300000, guid: 8529736431b74183ea5b5a48d2abdbd3, type: 3}
+  - _id: FoodChest8h-locked
+    _sprite: {fileID: 21300000, guid: f74facf11343cff9bbc1cecd9e6f61e0, type: 3}
+  - _id: Food-locked
+    _sprite: {fileID: 21300000, guid: f4348fd74783b397c82bcb5ac1f7ef3b, type: 3}
+  - _id: Food-sm
+    _sprite: {fileID: 21300000, guid: 710b3ac0f61dbfcaeae339cefbab5dca, type: 3}
+  - _id: fragment
+    _sprite: {fileID: 21300000, guid: 39169c0fb8bb76707b5d8f74d854ce23, type: 3}
+  - _id: fragment-sm
+    _sprite: {fileID: 21300000, guid: 09a42e7cc9d75bc51a9b615fc791aa52, type: 3}
+  - _id: friends
+    _sprite: {fileID: 21300000, guid: fbd30287d60aea25ab561a84ff746b58, type: 3}
+  - _id: friends-locked
+    _sprite: {fileID: 21300000, guid: abf729980e63313b89a15c230e1f5526, type: 3}
+  - _id: Garden
+    _sprite: {fileID: 21300000, guid: b690ee145d434dbd286080b63e3d68d1, type: 3}
+  - _id: Garden-locked
+    _sprite: {fileID: 21300000, guid: 33f520cf615288bd8a5054890602bffa, type: 3}
+  - _id: Gems
+    _sprite: {fileID: 21300000, guid: a0a8bd6be47b74b699f5ce5b0609eefc, type: 3}
+  - _id: Gems-locked
+    _sprite: {fileID: 21300000, guid: 964221c22afca1655bdef0d7c303d365, type: 3}
+  - _id: Gems-sm
+    _sprite: {fileID: 21300000, guid: ef761bbe5f2c65b6fa8e63965a98536d, type: 3}
+  - _id: GeneralSpeedup15m
+    _sprite: {fileID: 21300000, guid: 82af1a4470b32609187b64fb68a337c9, type: 3}
+  - _id: GeneralSpeedup15m-locked
+    _sprite: {fileID: 21300000, guid: d48df05a566f4a3ff9d6164232497bf9, type: 3}
+  - _id: GeneralSpeedup1h
+    _sprite: {fileID: 21300000, guid: 657c76945f64bd58cbc006158b899d59, type: 3}
+  - _id: GeneralSpeedup1h-locked
+    _sprite: {fileID: 21300000, guid: a93e847d7704376578d010cdbcbb3a9d, type: 3}
+  - _id: GeneralSpeedup1m
+    _sprite: {fileID: 21300000, guid: 5cd4cdacf7167d27287c98c3f9faa210, type: 3}
+  - _id: GeneralSpeedup1m-locked
+    _sprite: {fileID: 21300000, guid: 220a3f2e76eb04dbf90441cedf91155b, type: 3}
+  - _id: GeneralSpeedup24h
+    _sprite: {fileID: 21300000, guid: 1f19ebc64c79415a7bfe2c5096e2ec1e, type: 3}
+  - _id: GeneralSpeedup24h-locked
+    _sprite: {fileID: 21300000, guid: a1870b92ac835a0eb8246629f815466c, type: 3}
+  - _id: GeneralSpeedup3h
+    _sprite: {fileID: 21300000, guid: 6b849bbb614ea23a4b0c656f43fbb4d5, type: 3}
+  - _id: GeneralSpeedup3h-locked
+    _sprite: {fileID: 21300000, guid: 8ba176977e80cc87e99e76a6d9f3a4af, type: 3}
+  - _id: GeneralSpeedup5m
+    _sprite: {fileID: 21300000, guid: c1600c18e85dfbe9090ec4850b0496b0, type: 3}
+  - _id: GeneralSpeedup5m-locked
+    _sprite: {fileID: 21300000, guid: 3d0b6cc290be838da93cb2894fd79989, type: 3}
+  - _id: GeneralSpeedup8h
+    _sprite: {fileID: 21300000, guid: fefa8dcd3b5d48964aeb48a5e2663354, type: 3}
+  - _id: GeneralSpeedup8h-locked
+    _sprite: {fileID: 21300000, guid: 727581a8f40fb6ae2b5cc15d12371349, type: 3}
+  - _id: Gold
+    _sprite: {fileID: 21300000, guid: ad1918df2cd5d97daa9efa69e4faffbf, type: 3}
+  - _id: GoldChest10m
+    _sprite: {fileID: 21300000, guid: a58923dd07e2f34988cd56e4be53aa88, type: 3}
+  - _id: GoldChest10m-locked
+    _sprite: {fileID: 21300000, guid: aaef10a0561cf473f98904ed649d3c8d, type: 3}
+  - _id: GoldChest1h
+    _sprite: {fileID: 21300000, guid: f2516a84dc8fb97728f2b602eb735fd4, type: 3}
+  - _id: GoldChest1h-locked
+    _sprite: {fileID: 21300000, guid: cec9311c016623ca28e63dcce9f1f051, type: 3}
+  - _id: GoldChest8h
+    _sprite: {fileID: 21300000, guid: e1110f720a03b1601921e4f333748a68, type: 3}
+  - _id: GoldChest8h-locked
+    _sprite: {fileID: 21300000, guid: 24c52853fa7977d9cbeab14e60d37b00, type: 3}
+  - _id: GoldKey
+    _sprite: {fileID: 21300000, guid: 321d85049d81bb677a79d18730a8768c, type: 3}
+  - _id: GoldKey-locked
+    _sprite: {fileID: 21300000, guid: 91ec77127a4663efaa931a1b2f164f57, type: 3}
+  - _id: GoldKey-sm
+    _sprite: {fileID: 21300000, guid: 35e6c6ae5ec3237a08922ef1fb02fc9c, type: 3}
+  - _id: Gold-locked
+    _sprite: {fileID: 21300000, guid: 0be1d8c5fd17be3189891ec6cb18d32b, type: 3}
+  - _id: Gold-sm
+    _sprite: {fileID: 21300000, guid: 5d171768d4d8c5ec68ded1ea8d9a370f, type: 3}
+  - _id: harmony
+    _sprite: {fileID: 21300000, guid: 1bd47ba42b1a4d3bcbb7f2e45f6d6aa5, type: 3}
+  - _id: harmony-locked
+    _sprite: {fileID: 21300000, guid: 5eb803e4a2f23e0eeba31d475f192108, type: 3}
+  - _id: HarvestBoost1h
+    _sprite: {fileID: 21300000, guid: 351dda9266863bc8b93e1973f115cbb0, type: 3}
+  - _id: HarvestBoost1h-locked
+    _sprite: {fileID: 21300000, guid: 5d2cc8aa70f334cb8a34689835d3bf5e, type: 3}
+  - _id: Heartwood
+    _sprite: {fileID: 21300000, guid: 1c72557abd1d7102fad4b92946d21c52, type: 3}
+  - _id: Heartwood-locked
+    _sprite: {fileID: 21300000, guid: 27e3cdc47df9b3b50962a03e747a7da0, type: 3}
+  - _id: helmet
+    _sprite: {fileID: 21300000, guid: ccdbc59db2991937c9805f7758138ca6, type: 3}
+  - _id: helmet-locked
+    _sprite: {fileID: 21300000, guid: 23d64ab2498f3a5babf2f1df0379991d, type: 3}
+  - _id: HeroXp
+    _sprite: {fileID: 21300000, guid: 098568724ff88926ea3a78e1917030c2, type: 3}
+  - _id: HeroXp-locked
+    _sprite: {fileID: 21300000, guid: dc356465fe0c1e9a7aa89867a29d6ed5, type: 3}
+  - _id: HeroXp-sm
+    _sprite: {fileID: 21300000, guid: 0613a593c186b1e9a831bf4a631afbfc, type: 3}
+  - _id: hex
+    _sprite: {fileID: 21300000, guid: 96f7ea51ba6873025a4aa2ce091796b6, type: 3}
+  - _id: hex-locked
+    _sprite: {fileID: 21300000, guid: 1d894593027551f9fbf0eacbcbce1a88, type: 3}
+  - _id: hourglass
+    _sprite: {fileID: 21300000, guid: 0bbe5c5de550da2659ad6f8d3153bea6, type: 3}
+  - _id: hourglass-locked
+    _sprite: {fileID: 21300000, guid: 3ae1a5d0d73c4c19ca25278230347b80, type: 3}
+  - _id: Housing
+    _sprite: {fileID: 21300000, guid: e60b53914bd37d6a88bb8652cb492921, type: 3}
+  - _id: Housing-locked
+    _sprite: {fileID: 21300000, guid: 59bc9809f2ba40a988eee44ff7e1e37c, type: 3}
+  - _id: hp
+    _sprite: {fileID: 21300000, guid: 04a236e7cb6885d629e47bcbd1292216, type: 3}
+  - _id: hp-sm
+    _sprite: {fileID: 21300000, guid: 040e096abb355b9bebb0169da1350df5, type: 3}
+  - _id: Infirmary
+    _sprite: {fileID: 21300000, guid: ce70a4e74dc73a557be74e070a0c5ce1, type: 3}
+  - _id: Infirmary-locked
+    _sprite: {fileID: 21300000, guid: 3558476074e80bfadb28179a43f56bcd, type: 3}
+  - _id: Iron
+    _sprite: {fileID: 21300000, guid: ae30742d4f6974cd5975357dfc2c4091, type: 3}
+  - _id: Iron-locked
+    _sprite: {fileID: 21300000, guid: 3f1de9038ee459e7b8091dd2155912d1, type: 3}
+  - _id: Iron-sm
+    _sprite: {fileID: 21300000, guid: f4ec6fbd7d930cf0ca5a43ea6e62eafb, type: 3}
+  - _id: Knowledge
+    _sprite: {fileID: 21300000, guid: c891d90226a21e7e7986ce1a85422052, type: 3}
+  - _id: Knowledge-locked
+    _sprite: {fileID: 21300000, guid: 65ac6b3f2e216a31cb2060e5901ab216, type: 3}
+  - _id: Knowledge-sm
+    _sprite: {fileID: 21300000, guid: 0033a84217408970c95f5e960023af55, type: 3}
+  - _id: KnowledgeTome
+    _sprite: {fileID: 21300000, guid: a4a9150cb07064ff1908b6163d0742d6, type: 3}
+  - _id: KnowledgeTome-locked
+    _sprite: {fileID: 21300000, guid: d080b9de6ed97c30993eba1c09f3fb5f, type: 3}
+  - _id: KnowledgeTomeSmall
+    _sprite: {fileID: 21300000, guid: 11ae2d5e4d1ca3bd6b59cfb561f3877f, type: 3}
+  - _id: KnowledgeTomeSmall-locked
+    _sprite: {fileID: 21300000, guid: 7f43be12e911a5eec896a03d6d936ed9, type: 3}
+  - _id: Lancer
+    _sprite: {fileID: 21300000, guid: fd9faa2c0f08b36c18254ae2809f0404, type: 3}
+  - _id: Lancer-locked
+    _sprite: {fileID: 21300000, guid: a81c8858e8481b88b85eb5739fcede10, type: 3}
+  - _id: landmark
+    _sprite: {fileID: 21300000, guid: 3cf8e2ddc85ef5fab9b346216ea70e19, type: 3}
+  - _id: landmark-locked
+    _sprite: {fileID: 21300000, guid: ed491b5d892b79fc1b5cfa3c5fce0648, type: 3}
+  - _id: Lantern
+    _sprite: {fileID: 21300000, guid: 2d9d08c38be64f6898c71d570a5ce5f3, type: 3}
+  - _id: Lantern-locked
+    _sprite: {fileID: 21300000, guid: e8fa918348e5a386bbc05bb51aa7019c, type: 3}
+  - _id: Mana
+    _sprite: {fileID: 21300000, guid: be8df4b1a8d9f590b9fb2dfaeb3df39f, type: 3}
+  - _id: ManaBoost8h
+    _sprite: {fileID: 21300000, guid: e2dcade5b0acbc29692d076c299da19b, type: 3}
+  - _id: ManaBoost8h-locked
+    _sprite: {fileID: 21300000, guid: 2f4c2dc9f29a49961ade0835c0665245, type: 3}
+  - _id: ManaFlask
+    _sprite: {fileID: 21300000, guid: bd2327dedd21336a6aa2879b5db6a650, type: 3}
+  - _id: ManaFlask-locked
+    _sprite: {fileID: 21300000, guid: 220c1213f9fc67df58054ddb468dd62d, type: 3}
+  - _id: ManaFlaskSmall
+    _sprite: {fileID: 21300000, guid: f740a6387f267ad868b24126882e30cc, type: 3}
+  - _id: ManaFlaskSmall-locked
+    _sprite: {fileID: 21300000, guid: 94562f970553967418c0a3f303cf8596, type: 3}
+  - _id: Mana-locked
+    _sprite: {fileID: 21300000, guid: 0d5ca25036aee802f8de74ed2204df71, type: 3}
+  - _id: Mana-sm
+    _sprite: {fileID: 21300000, guid: 8430aa44c44202312b89ae2fd1a2bef0, type: 3}
+  - _id: MasonsYard
+    _sprite: {fileID: 21300000, guid: 43538ec63721d1c32b7bfc5f9d4fceac, type: 3}
+  - _id: MasonsYard-locked
+    _sprite: {fileID: 21300000, guid: b8e499f15572f99abb1641a6399d0d9b, type: 3}
+  - _id: Meat
+    _sprite: {fileID: 21300000, guid: c3453b63898981aec8874c8f292a7ce5, type: 3}
+  - _id: Meat-locked
+    _sprite: {fileID: 21300000, guid: 5293087ec212ad33282702bb34317c61, type: 3}
+  - _id: Meat-sm
+    _sprite: {fileID: 21300000, guid: fa94860ffc5c95214a3175aa62054248, type: 3}
+  - _id: minus
+    _sprite: {fileID: 21300000, guid: 2cf0972fd459b8cd8849257024572e46, type: 3}
+  - _id: Moonglass
+    _sprite: {fileID: 21300000, guid: 1c6025f95be24b4bb8f21450b07212a3, type: 3}
+  - _id: Moonglass-locked
+    _sprite: {fileID: 21300000, guid: 3016fde5866be7edbbb8f1d4fffa02a3, type: 3}
+  - _id: Orchard
+    _sprite: {fileID: 21300000, guid: ea578f870776ee8a1bb383ed0273bb8c, type: 3}
+  - _id: Orchard-locked
+    _sprite: {fileID: 21300000, guid: 08a4a453a1b0e9025b14bac2492218f1, type: 3}
+  - _id: pack
+    _sprite: {fileID: 21300000, guid: f1b09ce7de603fc089ef6e3a7d427748, type: 3}
+  - _id: pack-locked
+    _sprite: {fileID: 21300000, guid: c9e755371624b58a8a303a7bbc020b6a, type: 3}
+  - _id: padlock
+    _sprite: {fileID: 21300000, guid: 7379b3fb639d9ce93aaeb5a3c2af625c, type: 3}
+  - _id: padlock-sm
+    _sprite: {fileID: 21300000, guid: 5b650d2bc6ae0862a96c202b19d1e6f8, type: 3}
+  - _id: Planks
+    _sprite: {fileID: 21300000, guid: de1c8ddfbc3d0923bbbfd17748712bbe, type: 3}
+  - _id: Planks-locked
+    _sprite: {fileID: 21300000, guid: 09f47c6a71237167486caf39d89bff16, type: 3}
+  - _id: Plaza
+    _sprite: {fileID: 21300000, guid: 6d90514aaa5ade7e6aaca6bd810eb753, type: 3}
+  - _id: Plaza-locked
+    _sprite: {fileID: 21300000, guid: 6b47e50ddfbe4e469b008bcfd562dc78, type: 3}
+  - _id: plus
+    _sprite: {fileID: 21300000, guid: 8d40c2932a63663b297e6de303bb744d, type: 3}
+  - _id: population
+    _sprite: {fileID: 21300000, guid: ba8ca03d1242f31c99a68b21a9d2a3c3, type: 3}
+  - _id: population-locked
+    _sprite: {fileID: 21300000, guid: 4af641d828b854f0f8514268000a35f6, type: 3}
+  - _id: population-sm
+    _sprite: {fileID: 21300000, guid: 10b84114a310e226d9ae204cdf103a63, type: 3}
+  - _id: power
+    _sprite: {fileID: 21300000, guid: 692dcfaad58ab7ab599e54b0a39106d2, type: 3}
+  - _id: power-locked
+    _sprite: {fileID: 21300000, guid: 625f0f9b510d6d1849c89e05e2d225db, type: 3}
+  - _id: power-sm
+    _sprite: {fileID: 21300000, guid: 766a5338c689454be9923c8a5fa54d48, type: 3}
+  - _id: Quarry
+    _sprite: {fileID: 21300000, guid: 7a9b30e4beb66db9cb800203ce319759, type: 3}
+  - _id: Quarry-locked
+    _sprite: {fileID: 21300000, guid: 266144167536a16008d2132253945bf0, type: 3}
+  - _id: quest
+    _sprite: {fileID: 21300000, guid: 6571cd76829db36a28a819bd6a973772, type: 3}
+  - _id: quest-locked
+    _sprite: {fileID: 21300000, guid: 56e44e6c16ce54eedb8741ed026ffa38, type: 3}
+  - _id: relics
+    _sprite: {fileID: 21300000, guid: 9bcb290aa13c818d1838e8f8f956c833, type: 3}
+  - _id: RentBoost8h
+    _sprite: {fileID: 21300000, guid: 4a9e3f6c265572d5499d9f575822d0c8, type: 3}
+  - _id: RentBoost8h-locked
+    _sprite: {fileID: 21300000, guid: 3206ec603f370d813a969b3e6984943b, type: 3}
+  - _id: research
+    _sprite: {fileID: 21300000, guid: bc10b3b605dbb35d29949a29efe3750d, type: 3}
+  - _id: research-locked
+    _sprite: {fileID: 21300000, guid: 9644ae5d3f79102be9bc9890029d57ce, type: 3}
+  - _id: RuneCarver
+    _sprite: {fileID: 21300000, guid: c8611833dab74ed1d80f4023fcdbdcf3, type: 3}
+  - _id: RuneCarver-locked
+    _sprite: {fileID: 21300000, guid: 66841d36178a80b6b9f9333bdc7eafad, type: 3}
+  - _id: Runestone
+    _sprite: {fileID: 21300000, guid: 6f6b4366952637a768fb6ebc869f0c7a, type: 3}
+  - _id: Runestone-locked
+    _sprite: {fileID: 21300000, guid: cc9f3c40ae3d4ca37aec35f270d222d7, type: 3}
+  - _id: Sanctum
+    _sprite: {fileID: 21300000, guid: 6e32fecbfcbf71c39931cf64ae76ca1c, type: 3}
+  - _id: Sanctum-locked
+    _sprite: {fileID: 21300000, guid: 0686084630fa0058aae20eb77839b4bd, type: 3}
+  - _id: sapling
+    _sprite: {fileID: 21300000, guid: 0bd709b494e6de2588aa898f0a514fd7, type: 3}
+  - _id: sapling-locked
+    _sprite: {fileID: 21300000, guid: a2c999405f6d3d78d8971112239d0238, type: 3}
+  - _id: Sawmill
+    _sprite: {fileID: 21300000, guid: e76cab5d8c204406abb40417d92bbef9, type: 3}
+  - _id: Sawmill-locked
+    _sprite: {fileID: 21300000, guid: 35a9145b49537ec8aa00411bdba509c6, type: 3}
+  - _id: settings
+    _sprite: {fileID: 21300000, guid: 76374a9f01b9a7db6bd102eff4fbd669, type: 3}
+  - _id: settings-locked
+    _sprite: {fileID: 21300000, guid: 82e116c9e2d137cd1808d1fa5a0b0ad6, type: 3}
+  - _id: shard
+    _sprite: {fileID: 21300000, guid: 56ea35a22d867641ca3402f472b2dcd8, type: 3}
+  - _id: shard-locked
+    _sprite: {fileID: 21300000, guid: ea9d88c44396345278d007bd1664c102, type: 3}
+  - _id: ShootingGrounds
+    _sprite: {fileID: 21300000, guid: aca01025436e2f5e7abad5f8d56f3858, type: 3}
+  - _id: ShootingGrounds-locked
+    _sprite: {fileID: 21300000, guid: d7c9a5a3c12445519bc56285940d65cb, type: 3}
+  - _id: shop
+    _sprite: {fileID: 21300000, guid: 5cf1d8dff051b4ba69b6dabbdcf76986, type: 3}
+  - _id: shop-locked
+    _sprite: {fileID: 21300000, guid: d7bee8fdef57f3dada5fb5fc503c0f55, type: 3}
+  - _id: showme
+    _sprite: {fileID: 21300000, guid: d26307df1e7a06e00aa874ed2bee4f50, type: 3}
+  - _id: Shrine
+    _sprite: {fileID: 21300000, guid: f08be300e5b9dce96a63b1660fcad332, type: 3}
+  - _id: Shrine-locked
+    _sprite: {fileID: 21300000, guid: f717949781e8d1271b81de090a5fec23, type: 3}
+  - _id: SilverKey
+    _sprite: {fileID: 21300000, guid: f7b038164de91753cb39346a0bfd1f83, type: 3}
+  - _id: SilverKey-locked
+    _sprite: {fileID: 21300000, guid: 8569636dba0f3d4219a54cb95ff30555, type: 3}
+  - _id: SilverKey-sm
+    _sprite: {fileID: 21300000, guid: 157e6b734af1b5c8caac4f53074ff81e, type: 3}
+  - _id: skull
+    _sprite: {fileID: 21300000, guid: 91999b23ef4ba48b1aee4dd98ccf94cd, type: 3}
+  - _id: skull-locked
+    _sprite: {fileID: 21300000, guid: 223f05142e24e68f0a6fc024e4da6b4f, type: 3}
+  - _id: Smelter
+    _sprite: {fileID: 21300000, guid: 1864982790be4ee879387028fbd45cdf, type: 3}
+  - _id: Smelter-locked
+    _sprite: {fileID: 21300000, guid: 907c6c22bea66cfc4963f55fbcb33666, type: 3}
+  - _id: sparkle
+    _sprite: {fileID: 21300000, guid: 8c1a045cac6a55c6cad86f2d87a89850, type: 3}
+  - _id: SpearHall
+    _sprite: {fileID: 21300000, guid: cee4b17db3af4defa9afdda779ec17b2, type: 3}
+  - _id: SpearHall-locked
+    _sprite: {fileID: 21300000, guid: 0e52705cc78a5a409aadc5260564fcb2, type: 3}
+  - _id: speedup
+    _sprite: {fileID: 21300000, guid: 64fed8dedb34c87fdb0c709a16b2ff15, type: 3}
+  - _id: speedup-locked
+    _sprite: {fileID: 21300000, guid: b39801620eaac4f79b086dae2cee67f4, type: 3}
+  - _id: spyglass
+    _sprite: {fileID: 21300000, guid: 19a665af25f92adcfafdfe4ff8ae9810, type: 3}
+  - _id: spyglass-locked
+    _sprite: {fileID: 21300000, guid: 7c90a83d0a92e8644ad0d11d54091197, type: 3}
+  - _id: Stables
+    _sprite: {fileID: 21300000, guid: 881468d04a3bae680a448625e252ec25, type: 3}
+  - _id: Stables-locked
+    _sprite: {fileID: 21300000, guid: dca02c84884534198a1f9db1e8dba455, type: 3}
+  - _id: star
+    _sprite: {fileID: 21300000, guid: ef4ab7d666d4fdeb997568ea270f24d8, type: 3}
+  - _id: Stardust
+    _sprite: {fileID: 21300000, guid: d82d6dab459ffb73fba0ddf3c5ff3ae7, type: 3}
+  - _id: Stardust-locked
+    _sprite: {fileID: 21300000, guid: 079eead3ed72e5973bf8af5ee1231af7, type: 3}
+  - _id: Stardust-sm
+    _sprite: {fileID: 21300000, guid: 3f1be053b5006edb387805c8515671af, type: 3}
+  - _id: Starmetal
+    _sprite: {fileID: 21300000, guid: 30353861e640fbd20b0089a033c3b7e8, type: 3}
+  - _id: Starmetal-locked
+    _sprite: {fileID: 21300000, guid: fb80de27fea205ab8a1490d6aca013c0, type: 3}
+  - _id: Statue
+    _sprite: {fileID: 21300000, guid: 078fddb257a6ca05fbbb6494498263e6, type: 3}
+  - _id: Statue-locked
+    _sprite: {fileID: 21300000, guid: 4bd7c6283e5852757b0907d9e4dbdbac, type: 3}
+  - _id: Stone
+    _sprite: {fileID: 21300000, guid: 304cabbadc04e9e70a776d3bb8a93249, type: 3}
+  - _id: StoneChest10m
+    _sprite: {fileID: 21300000, guid: 87dafb2292a6194cea71f0a4dc20055b, type: 3}
+  - _id: StoneChest10m-locked
+    _sprite: {fileID: 21300000, guid: 0dec4c9ed0360d560a57db56e5c42cde, type: 3}
+  - _id: StoneChest1h
+    _sprite: {fileID: 21300000, guid: 7c2b6a59397b4e21396d99197f0e94eb, type: 3}
+  - _id: StoneChest1h-locked
+    _sprite: {fileID: 21300000, guid: 27dab5a623244d5218592571ccbb1222, type: 3}
+  - _id: StoneChest8h
+    _sprite: {fileID: 21300000, guid: 1823f135f6fd9fbca88469f853b0c82c, type: 3}
+  - _id: StoneChest8h-locked
+    _sprite: {fileID: 21300000, guid: 37d49de141936b92fbd56c678c549778, type: 3}
+  - _id: Stone-locked
+    _sprite: {fileID: 21300000, guid: a534ceaa0bb602998a4a3c5ec424e6a3, type: 3}
+  - _id: Stone-sm
+    _sprite: {fileID: 21300000, guid: 8c02052f9d8a7b86385aba098b9ef98d, type: 3}
+  - _id: Tavern
+    _sprite: {fileID: 21300000, guid: 8fa4887f114bf4acc904d1499c0a5c3d, type: 3}
+  - _id: Tavern-locked
+    _sprite: {fileID: 21300000, guid: fd2ada8620a0aad65a9c1405b35b632f, type: 3}
+  - _id: tick
+    _sprite: {fileID: 21300000, guid: 3cfefa66b3037f1d9b7949faa69a9a15, type: 3}
+  - _id: tile
+    _sprite: {fileID: 21300000, guid: 7efeda37499bf9ba2bb700b61a67a774, type: 3}
+  - _id: tile-locked
+    _sprite: {fileID: 21300000, guid: b65816844b21f702d906d5b25ae73a73, type: 3}
+  - _id: tome
+    _sprite: {fileID: 21300000, guid: b4e4cc905e83d2d83bf3708ea71c4d4c, type: 3}
+  - _id: tome-locked
+    _sprite: {fileID: 21300000, guid: e7b74bb558a31bd0aa900056594bb51f, type: 3}
+  - _id: Topiary
+    _sprite: {fileID: 21300000, guid: 58f13bc55603e7b67bf70b7c674d6a7e, type: 3}
+  - _id: Topiary-locked
+    _sprite: {fileID: 21300000, guid: db1710fa8ae9f0b4d98c62a92b51b98f, type: 3}
+  - _id: Townhall
+    _sprite: {fileID: 21300000, guid: 95b25726e25fd5980b08e9a62466e0bf, type: 3}
+  - _id: Townhall-locked
+    _sprite: {fileID: 21300000, guid: 030bd2328215a49b1bcc34dfbc2b79c2, type: 3}
+  - _id: TrainingSpeedup15m
+    _sprite: {fileID: 21300000, guid: 6173ee52e30e715bb96e2d7b6d6401f9, type: 3}
+  - _id: TrainingSpeedup15m-locked
+    _sprite: {fileID: 21300000, guid: 995bae03f22c87650975978cbe40dc04, type: 3}
+  - _id: TrainingSpeedup1h
+    _sprite: {fileID: 21300000, guid: 3e31b93aaa50ff61ba72f45b1ce4765d, type: 3}
+  - _id: TrainingSpeedup1h-locked
+    _sprite: {fileID: 21300000, guid: 5a4821bc9eb9e01cdab58c1e47793fcf, type: 3}
+  - _id: TrainingSpeedup1m
+    _sprite: {fileID: 21300000, guid: 76538cf062c57c967b80463108b74147, type: 3}
+  - _id: TrainingSpeedup1m-locked
+    _sprite: {fileID: 21300000, guid: 58b581ea9b9c42049a8ce9c8dfe80636, type: 3}
+  - _id: TrainingSpeedup24h
+    _sprite: {fileID: 21300000, guid: 0acd75f715253a47a94f308ed43a35e5, type: 3}
+  - _id: TrainingSpeedup24h-locked
+    _sprite: {fileID: 21300000, guid: 86b193a35665c496b8cc85a5b34774d8, type: 3}
+  - _id: TrainingSpeedup3h
+    _sprite: {fileID: 21300000, guid: 752392c58dc2aa4518886ef386325a3c, type: 3}
+  - _id: TrainingSpeedup3h-locked
+    _sprite: {fileID: 21300000, guid: bf6c02f949e3f71f581ad26060327a5c, type: 3}
+  - _id: TrainingSpeedup5m
+    _sprite: {fileID: 21300000, guid: fc79cecb6f35d6e769514cef311d5423, type: 3}
+  - _id: TrainingSpeedup5m-locked
+    _sprite: {fileID: 21300000, guid: 1ca0b06d43032c3dd880b68db4ecf323, type: 3}
+  - _id: TrainingSpeedup8h
+    _sprite: {fileID: 21300000, guid: 849174da90acae81da86e05e43ec9a88, type: 3}
+  - _id: TrainingSpeedup8h-locked
+    _sprite: {fileID: 21300000, guid: b7a6fcae736692ef180bb9028003a4c3, type: 3}
+  - _id: tree
+    _sprite: {fileID: 21300000, guid: aaeb9f69021364ce399165afdecbc1fd, type: 3}
+  - _id: tree-locked
+    _sprite: {fileID: 21300000, guid: 03b01bd1d00354358837a95c16dd4830, type: 3}
+  - _id: typeArcher
+    _sprite: {fileID: 21300000, guid: 7a0a9783b3c167d5bb6d4a201b359829, type: 3}
+  - _id: typeArcher-locked
+    _sprite: {fileID: 21300000, guid: a454b4482dba9595bafbd8313229c492, type: 3}
+  - _id: typeArcher-sm
+    _sprite: {fileID: 21300000, guid: 553e3f7f241c06362ac586d16a808f05, type: 3}
+  - _id: typeCavalry
+    _sprite: {fileID: 21300000, guid: b14b0a9a6c5dc102e983e27b3603f8eb, type: 3}
+  - _id: typeCavalry-locked
+    _sprite: {fileID: 21300000, guid: fd5a00760cafa7a8ab2f94ea95825867, type: 3}
+  - _id: typeCavalry-sm
+    _sprite: {fileID: 21300000, guid: b0559c418a108394794f708aee6cf97f, type: 3}
+  - _id: typeLancer
+    _sprite: {fileID: 21300000, guid: dd2ff7acdea23063b9a7ded0d9a96704, type: 3}
+  - _id: typeLancer-locked
+    _sprite: {fileID: 21300000, guid: 5cb432212ae1754deb429721a3202b5d, type: 3}
+  - _id: typeLancer-sm
+    _sprite: {fileID: 21300000, guid: a2607cdde31b901b5bb2a8a6c475c6f2, type: 3}
+  - _id: typeWarrior
+    _sprite: {fileID: 21300000, guid: ba5794154d65a0cfca7e1694bf4c898d, type: 3}
+  - _id: typeWarrior-locked
+    _sprite: {fileID: 21300000, guid: 4516aa57e4971da5dafe88c33983ed8c, type: 3}
+  - _id: typeWarrior-sm
+    _sprite: {fileID: 21300000, guid: d10485ee19f429f39883e1449ba8d3d7, type: 3}
+  - _id: unknown
+    _sprite: {fileID: 21300000, guid: e661662c004447c65a69a6a2f803bc43, type: 3}
+  - _id: vault
+    _sprite: {fileID: 21300000, guid: a125799ba1ae1350798034ce8cc76287, type: 3}
+  - _id: vault-locked
+    _sprite: {fileID: 21300000, guid: e158ce6c78d86780299e3d67f00e1fb1, type: 3}
+  - _id: video
+    _sprite: {fileID: 21300000, guid: 9ca3f4222b5ca2e908ddd9b5330d75a8, type: 3}
+  - _id: video-locked
+    _sprite: {fileID: 21300000, guid: 456f22b7012a9c1fe8908350d15f3be4, type: 3}
+  - _id: WarCamp
+    _sprite: {fileID: 21300000, guid: ebaa1c0eb66214a21852ee04d1d5cda0, type: 3}
+  - _id: WarCamp-locked
+    _sprite: {fileID: 21300000, guid: 2ca2591d7126a5911abc89ca9404a789, type: 3}
+  - _id: Warrior
+    _sprite: {fileID: 21300000, guid: 22d5626df3b30a6b1aa42c8442fd88ab, type: 3}
+  - _id: Warrior-locked
+    _sprite: {fileID: 21300000, guid: 2a295a7e34284f4c1b37105f9bceddd1, type: 3}
+  - _id: Watchtower
+    _sprite: {fileID: 21300000, guid: 63bca9b0c1518ad8688e52f320ba07d1, type: 3}
+  - _id: WatchtowerLens
+    _sprite: {fileID: 21300000, guid: 9b43b353ecca26720b86018aba50e4b3, type: 3}
+  - _id: WatchtowerLens-locked
+    _sprite: {fileID: 21300000, guid: 1e01e60c50df3ad0fa542dd1ce5d2658, type: 3}
+  - _id: Watchtower-locked
+    _sprite: {fileID: 21300000, guid: a1a43ae523bfd69ecb330a3b35bad2f4, type: 3}
+  - _id: wateringCan
+    _sprite: {fileID: 21300000, guid: 7865251bdeb6bf1008a4dff72f290eb0, type: 3}
+  - _id: wateringCan-locked
+    _sprite: {fileID: 21300000, guid: 7806c37d272aa05eb81067ec3f62e558, type: 3}
+  - _id: Well
+    _sprite: {fileID: 21300000, guid: 79be7e867d0af57429df54a21f4832b8, type: 3}
+  - _id: Well-locked
+    _sprite: {fileID: 21300000, guid: 76b15282d89bb52fc82416760db39186, type: 3}
+  - _id: Wood
+    _sprite: {fileID: 21300000, guid: 8e2cf5199b3afb4ca94ce6a0a10e4569, type: 3}
+  - _id: WoodChest10m
+    _sprite: {fileID: 21300000, guid: 100996de439c47a6ba875a30447c6907, type: 3}
+  - _id: WoodChest10m-locked
+    _sprite: {fileID: 21300000, guid: ab83379f64ee8e0c59caadcb4efdfbd8, type: 3}
+  - _id: WoodChest1h
+    _sprite: {fileID: 21300000, guid: 66a3537d7940dc5b0a07e0d95b63b512, type: 3}
+  - _id: WoodChest1h-locked
+    _sprite: {fileID: 21300000, guid: fc8bed1d9a6ff2d1781b365380cf903f, type: 3}
+  - _id: WoodChest8h
+    _sprite: {fileID: 21300000, guid: a3e71f5dd2a193be6bbd90417cb4980a, type: 3}
+  - _id: WoodChest8h-locked
+    _sprite: {fileID: 21300000, guid: 2fed3cf512087f28fab629c661614849, type: 3}
+  - _id: Wood-locked
+    _sprite: {fileID: 21300000, guid: 15d7fccd7072c266dbde28360f9e114f, type: 3}
+  - _id: Wood-sm
+    _sprite: {fileID: 21300000, guid: 6d723935cb620845490cd102ec3f83b5, type: 3}
+  - _id: workers
+    _sprite: {fileID: 21300000, guid: 5dea307b50c28ac02b579c6823db2eaf, type: 3}
+  - _id: workers-locked
+    _sprite: {fileID: 21300000, guid: 241f7def7c47c1dd9b2d0978fb66dad6, type: 3}
+  - _id: workers-sm
+    _sprite: {fileID: 21300000, guid: 9a7d1bc24b42532119b3333165f3da51, type: 3}
+  - _id: WorkshopSpeedup15m
+    _sprite: {fileID: 21300000, guid: cb32ff187f9f72c51a020c022a62de29, type: 3}
+  - _id: WorkshopSpeedup15m-locked
+    _sprite: {fileID: 21300000, guid: db1dd305bb718bd1b919510d6cda1ff3, type: 3}
+  - _id: WorkshopSpeedup1h
+    _sprite: {fileID: 21300000, guid: be060b104c6fb2d608237b7134540398, type: 3}
+  - _id: WorkshopSpeedup1h-locked
+    _sprite: {fileID: 21300000, guid: 085177ae871acf98e8f5a18a914a9335, type: 3}
+  - _id: WorkshopSpeedup1m
+    _sprite: {fileID: 21300000, guid: 2a079c9bee2f084d0a8763f67eedfb55, type: 3}
+  - _id: WorkshopSpeedup1m-locked
+    _sprite: {fileID: 21300000, guid: 6bbd50b04c19aa93385852799f0d43c9, type: 3}
+  - _id: WorkshopSpeedup24h
+    _sprite: {fileID: 21300000, guid: 998e66ba2697434f4b173cb1bd409b24, type: 3}
+  - _id: WorkshopSpeedup24h-locked
+    _sprite: {fileID: 21300000, guid: 298f107ae1975c47e9ef8e8a2054b030, type: 3}
+  - _id: WorkshopSpeedup3h
+    _sprite: {fileID: 21300000, guid: 83d8665e91253201c83be21898e47803, type: 3}
+  - _id: WorkshopSpeedup3h-locked
+    _sprite: {fileID: 21300000, guid: 53e070edef38fa98eaf03e985dd56f30, type: 3}
+  - _id: WorkshopSpeedup5m
+    _sprite: {fileID: 21300000, guid: 133d87c35e1d886d8ad081bf200b7031, type: 3}
+  - _id: WorkshopSpeedup5m-locked
+    _sprite: {fileID: 21300000, guid: cea0951e44f30ebe7a346af1c15bf551, type: 3}
+  - _id: WorkshopSpeedup8h
+    _sprite: {fileID: 21300000, guid: 45eed35679369c34d89a78f0b1348742, type: 3}
+  - _id: WorkshopSpeedup8h-locked
+    _sprite: {fileID: 21300000, guid: 8080c19e73beb8973a8d1c24997f86c6, type: 3}

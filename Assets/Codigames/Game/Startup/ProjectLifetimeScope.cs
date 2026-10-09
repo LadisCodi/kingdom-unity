@@ -106,7 +106,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_terrains).As<ITerrainYields>();
             builder.RegisterInstance(_tap).As<ITapSettings>();
             builder.RegisterInstance(_mana).As<IManaSettings>();
-            builder.RegisterInstance(_economy).As<IEconomySettings>().As<IWorkerSettings>().As<IBagSettings>();
+            builder.RegisterInstance(_economy).As<IEconomySettings>().As<IWorkerSettings>().As<IBagSettings>().As<IRushSettings>();
             builder.RegisterInstance(_training).As<ITrainingSettings>();
             builder.RegisterInstance(_fog).As<IFogSettings>().As<ISightSettings>();
             builder.RegisterInstance(_technologies).As<ICatalog<ITechnology>>().As<ITechnologyCards>();
