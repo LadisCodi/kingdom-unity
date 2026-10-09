@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Codigames.Game.UI.Kit;
+using Codigames.Kingdom.Crews;
+using Codigames.Kingdom.City.State;
 using Codigames.Game.Data.Economy;
 using Codigames.Game.UI.Hud;
 using Codigames.Game.UI.Menus;
@@ -29,13 +32,28 @@ namespace Codigames.Game.UI.Presenters
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
         private readonly RewardHold _hold;
+        private readonly UIManager _ui;
+        private readonly CityState _city;
+        private readonly Workforce _crews;
+        private readonly IInspectedDistrict _inspected;
+        private readonly UiIcons _icons;
+
+        private PlaqueKind _plaqueKind = PlaqueKind.Unset;
+        private int _plaqueValue;
+        private int _plaqueMax;
 
         private string _shown;
         private string _manaText;
 
         public HeaderMenuPresenter(IMenuViewFactory views, ITreasury treasury, IPlankCurrencies currencies, ManaPool mana,
-            IClock clock, NumberFormat numbers, Localizer localizer, RewardHold hold) : base(views)
+            IClock clock, NumberFormat numbers, Localizer localizer, RewardHold hold, UIManager ui, CityState city,
+            Workforce crews, IInspectedDistrict inspected, UiIcons icons) : base(views)
         {
+            _ui = ui;
+            _city = city;
+            _crews = crews;
+            _inspected = inspected;
+            _icons = icons;
             _hold = hold;
             _treasury = treasury;
             _currencies = currencies;
@@ -47,12 +65,52 @@ namespace Codigames.Game.UI.Presenters
 
         public void Tick()
         {
-            if (IsShown) ShowMana();
+            if (!IsShown) return;
+            ShowMana();
+            ShowPlaque();
+        }
+
+        // THE PLAQUE: one reading, whichever the player can act on now (the web's hudSlot) — builders free while
+        // something is being chosen or placed, villagers free while a crew's card is open; nothing otherwise.
+        private void ShowPlaque()
+        {
+            var kind = PlaqueKind.None;
+            int value = 0, max = 0;
+            if (_ui.IsShown<BuildMenu>() || _ui.IsShown<PlacementMenu>())
+            {
+                kind = PlaqueKind.Builders;
+                max = _city.Builders;
+                value = max - Math.Min(_city.Jobs.Count, max);
+            }
+            else if (_inspected.Inspected is string id && _city.Districts.FirstOrDefault(d => d.Id == id) is { } district
+                     && _crews.HasCrew(district))
+            {
+                kind = PlaqueKind.Workers;
+                value = _crews.FreeVillagers;
+            }
+
+            if (kind == _plaqueKind && value == _plaqueValue && max == _plaqueMax) return;
+            _plaqueKind = kind;
+            _plaqueValue = value;
+            _plaqueMax = max;
+
+            if (kind == PlaqueKind.None) View.HidePlaque();
+            else if (kind == PlaqueKind.Builders) View.ShowPlaque(_icons.Get("builders"), _numbers.Count(value) + "/" + _numbers.Count(max));
+            else View.ShowPlaque(_icons.Get("workers"), _numbers.Count(value));
+        }
+
+        private enum PlaqueKind
+        {
+            Unset,
+            None,
+            Builders,
+            Workers,
         }
 
         protected override void BindInternal(HeaderMenu view)
         {
             _shown = null;
+            _plaqueKind = PlaqueKind.Unset;
             Refresh();
             _treasury.Changed += OnChanged;
             _hold.Changed += Refresh;

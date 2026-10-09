@@ -64,4 +64,6 @@ MonoBehaviour:
   _description: A field of golden wheat, ripe for the reaping.
   _buildTab: Economy
   _crew: []
-  _art: []
+  _art:
+  - _fromLevel: 1
+    _sprite: {fileID: 21300000, guid: 0d0c7744c1226ad1ab2846046503a3c5, type: 3}

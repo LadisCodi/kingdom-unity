@@ -197,9 +197,16 @@ MonoBehaviour:
   _built: {fileID: 490193441100072589}
   _padlock: {fileID: 6801751901637806747}
   _side: {fileID: 4709783620826629645}
+  _waitParts:
+  - {fileID: 2164127444241897908}
+  - {fileID: 7854879484563468830}
+  _drained: {fileID: 2100000, guid: cd70497047b40d34cb2b3afc047df4c0, type: 2}
   _fillColor: {r: 0.8862745, g: 0.8, b: 0.627451, a: 1}
-  _unavailableColor: {r: 0.79607844, g: 0.7294118, b: 0.5882353, a: 1}
+  _lockedColor: {r: 0.79607844, g: 0.7294118, b: 0.5882353, a: 1}
+  _drainedTint: {r: 1, g: 0.9098039, b: 0.7529412, a: 0.8}
   _ordinalColor: {r: 0.47843137, g: 0.36078432, b: 0.24313726, a: 1}
+  _promiseColor: {r: 0.47843137, g: 0.36078432, b: 0.24313726, a: 1}
+  _whyColor: {r: 0.83137256, g: 0.33333334, b: 0.24313726, a: 1}
 --- !u!1 &1320619057038924201
 GameObject:
   m_ObjectHideFlags: 0
@@ -1343,7 +1350,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 84, y: 84}
+  m_SizeDelta: {x: 95, y: 95}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8012606889684898220
 CanvasRenderer:

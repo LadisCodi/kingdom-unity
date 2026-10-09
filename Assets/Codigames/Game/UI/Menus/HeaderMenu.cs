@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Codigames.Game.UI.Hud;
 using Codigames.Game.UI.Stage;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Codigames.Game.UI.Menus
 {
@@ -15,6 +17,10 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private RectTransform _right;
         [SerializeField] private CurrencySlot _slotPrefab;
         [SerializeField] private KnowledgeTab _knowledge;
+        [Header("Plaque")]
+        [SerializeField, Tooltip("The one city reading the player can act on now: builders free, villagers free.")] private GameObject _plaque;
+        [SerializeField] private Image _plaqueIcon;
+        [SerializeField] private TMP_Text _plaqueValue;
         [Header("Slot widths")]
         [SerializeField] private float _coinWidth = 152;
         [SerializeField] private float _rightWidth = 204;
@@ -54,6 +60,15 @@ namespace Codigames.Game.UI.Menus
         public RectTransform SlotIcon(string currency) => _slots.FirstOrDefault(s => s != null && s.CurrencyId == currency)?.Icon;
 
         // The slot swells a little when something lands in it.
+        public void ShowPlaque(Sprite icon, string value)
+        {
+            _plaque.SetActive(true);
+            _plaqueIcon.sprite = icon;
+            _plaqueValue.text = value;
+        }
+
+        public void HidePlaque() => _plaque.SetActive(false);
+
         public void Pulse(string currency) => _slots.FirstOrDefault(s => s != null && s.CurrencyId == currency)?.Pulse();
 
         protected override void DisposeInternal() => ClearSlots();

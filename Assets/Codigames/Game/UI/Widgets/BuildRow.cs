@@ -25,9 +25,14 @@ namespace Codigames.Game.UI.Widgets
         [SerializeField] private TMP_Text _built;
         [SerializeField] private GameObject _padlock;
         [SerializeField, Tooltip("The wait and the count: a row a technology has still to open has neither yet.")] private GameObject _side;
+        [SerializeField, Tooltip("The wait and its divider: a shut row has no wait to show.")] private GameObject[] _waitParts;
+        [SerializeField, Tooltip("Drains a shut row's art.")] private Material _drained;
         [SerializeField] private Color _fillColor = new Color32(0xe2, 0xcc, 0xa0, 0xff);
-        [SerializeField] private Color _unavailableColor = new Color32(0xcb, 0xba, 0x96, 0xff);
+        [SerializeField] private Color _lockedColor = new Color32(0xcb, 0xba, 0x96, 0xff);
+        [SerializeField] private Color _drainedTint = new Color32(0xff, 0xe8, 0xc0, 0xcc);
         [SerializeField] private Color _ordinalColor = new Color32(0x7a, 0x5c, 0x3e, 0xff);
+        [SerializeField] private Color _promiseColor = new Color32(0x7a, 0x5c, 0x3e, 0xff);
+        [SerializeField] private Color _whyColor = new Color32(0xd4, 0x55, 0x3e, 0xff);
 
         private readonly List<CostChip> _chips = new();
         private Tween _shake;
@@ -45,13 +50,18 @@ namespace Codigames.Game.UI.Widgets
             if (row.Art != null) _artFit.aspectRatio = row.Art.rect.width / row.Art.rect.height;
             _name.text = string.IsNullOrEmpty(row.Ordinal)
                 ? row.Name
-                : $"{row.Name}<size=75%><color=#{ColorUtility.ToHtmlStringRGB(_ordinalColor)}> {row.Ordinal}</color></size>";
-            _promise.text = row.Promise;
+                : $"{row.Name} <size=75%><font-weight=400><color=#{ColorUtility.ToHtmlStringRGB(_ordinalColor)}>{row.Ordinal}</color></font-weight></size>";
+            _promise.text = row.Blocked ? "<font-weight=700>" + row.Why + "</font-weight>" : row.Promise;
+            _promise.color = row.Blocked ? _whyColor : _promiseColor;
             _wait.text = row.Wait;
             _built.text = row.Built;
-            _fill.color = row.Available ? _fillColor : _unavailableColor;
-            if (_padlock != null) _padlock.SetActive(row.Locked);
-            if (_side != null) _side.SetActive(!row.Locked);
+            _fill.color = row.Blocked ? _lockedColor : _fillColor;
+            _art.material = row.Blocked ? _drained : null;
+            _art.color = row.Blocked ? _drainedTint : Color.white;
+            if (_padlock != null) _padlock.SetActive(row.Blocked);
+            if (_side != null) _side.SetActive(row.Known);
+            foreach (var part in _waitParts) part.SetActive(!row.Blocked);
+            _price.gameObject.SetActive(!row.Blocked);
 
             for (var i = 0; i < row.Price.Count; i++)
             {

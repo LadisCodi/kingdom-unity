@@ -608,7 +608,8 @@ namespace Codigames.Game.Editor.WebImport
             => AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/UI/Icons/{id}-sm.png")
                ?? AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/UI/Icons/{id}.png");
 
-        // A building's tiers, from its sprite stem: <stem>_l<n>.png from level n, or <stem>.png alone.
+        // A building's tiers, from its sprite stem: <stem>_l<n>.png from level n, or <stem>.png alone; a plantable,
+        // which stands no building, shows what it plants (the web's cardArt), its feature's <stem>.png.
         private static void SetArt(SerializedProperty list, string stem)
         {
             var tiers = new List<(int Level, Sprite Sprite)>();
@@ -618,7 +619,8 @@ namespace Codigames.Game.Editor.WebImport
                 if (sprite != null) tiers.Add((level, sprite));
             }
 
-            var single = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/Buildings/{stem}.png");
+            var single = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/Buildings/{stem}.png")
+                         ?? AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/Features/{stem}.png");
             if (tiers.Count == 0 && single != null) tiers.Add((1, single));
 
             list.arraySize = tiers.Count;
