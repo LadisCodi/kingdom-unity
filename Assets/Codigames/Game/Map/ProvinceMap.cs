@@ -26,6 +26,13 @@ namespace Codigames.Game.Map
         private Dictionary<ModuleVector2Int, string> TerrainByCell => _terrainByCell ??= Read(_terrain);
         private Dictionary<ModuleVector2Int, string> FeatureByCell => _featureByCell ??= Read(_features);
 
+        // Read as painted, before anything draws over the layers.
+        private void Awake()
+        {
+            _ = TerrainByCell;
+            _ = FeatureByCell;
+        }
+
         public bool Contains(ModuleVector2Int cell) => TerrainByCell.ContainsKey(cell);
 
         public string TerrainAt(ModuleVector2Int cell) => TerrainByCell.TryGetValue(cell, out var id) ? id : null;

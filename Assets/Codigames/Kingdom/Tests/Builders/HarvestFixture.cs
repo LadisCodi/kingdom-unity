@@ -74,6 +74,7 @@ namespace Codigames.Kingdom.Tests.Builders
             public string Id { get; set; }
             public string Source { get; set; }
             public string RespawnTerrain { get; set; }
+            public int MaxFootprint { get; set; } = 1;
         }
 
         private sealed class FakeTap : ITapSettings
