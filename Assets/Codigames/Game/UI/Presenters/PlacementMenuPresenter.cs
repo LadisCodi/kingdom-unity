@@ -37,6 +37,10 @@ namespace Codigames.Game.UI.Presenters
         private readonly UIManager _ui;
         private readonly Construction _construction;
         private readonly Adjacency _adjacency;
+        private readonly WorkAreaView _workArea;
+        private readonly Kingdom.Crews.Workforce _crews;
+        private readonly Harvesting _harvesting;
+        private readonly Kingdom.Map.IProvinceMap _province;
         // A pill's height, in tile widths: the web's labels, a fifth of a tile with their padding.
         private const float PILL_HEIGHT = 0.29f;
         private readonly Placement _placement;
@@ -67,9 +71,13 @@ namespace Codigames.Game.UI.Presenters
             Transplanting transplanting, ITreasury treasury, BuildingCollection buildings, FeatureCollection features, CityState city,
             GroundState ground, ProvinceMap map, MapGestures gestures, GhostView ghost, CityView cityView,
             GroundView groundView, CameraController camera, IClock clock, NumberFormat numbers, Localizer localizer, ISoundService sounds,
-            Adjacency adjacency)
+            Adjacency adjacency, WorkAreaView workArea, Kingdom.Crews.Workforce crews, Harvesting harvesting, Kingdom.Map.IProvinceMap province)
             : base(views)
         {
+            _province = province;
+            _workArea = workArea;
+            _crews = crews;
+            _harvesting = harvesting;
             _adjacency = adjacency;
             _sounds = sounds;
             _ui = ui;
@@ -131,6 +139,7 @@ namespace Codigames.Game.UI.Presenters
             _gestures.Tapped -= OnMapTapped;
             _treasury.Changed -= OnTreasuryChanged;
             _ghost.Hide();
+            _workArea.Hide();
             Lift(null, null);
         }
 
@@ -291,11 +300,14 @@ namespace Codigames.Game.UI.Presenters
 
         // What the plot would do: on each standing neighbour what it would gain, rule by rule, and on the plot what it
         // would receive. Gold as a signed figure; a time as a percentage, good when it falls.
+        // A producer shows its work area instead: the ground its crew would reach, the features it would work rimmed,
+        // and what each of them holds. A crop plot is the resource, so what it would hold goes on the ghost.
         private void ShowNeighbours(string exclude)
         {
             if (!_anchor.HasValue)
             {
                 _ghost.Pills.Hide();
+                _workArea.Hide();
                 return;
             }
 
@@ -303,7 +315,46 @@ namespace Codigames.Game.UI.Presenters
             var labels = new List<(Vector3, string, MapPills.Tone)>();
             foreach (var (district, stat, magnitude) in preview.Given) labels.Add(Pill(district.Anchor, stat, magnitude));
             foreach (var (stat, total) in preview.Received) labels.Add(Pill(_anchor.Value, stat, total));
+
+            var building = Building;
+            if (building.Production.Plants != null && Held(_anchor.Value, building.Production.Plants) is { } provided) labels.Add(provided);
+
+            var reaching = building.Production.HarvestSources.Count > 0 && building.Production.InfluenceRadiusPerLevel.Count > 0;
+            if (reaching)
+            {
+                var plot = new DistrictState { Id = exclude, DefinitionId = Data.DefinitionId, Anchor = _anchor.Value, Level = District?.Level ?? 1 };
+                var worked = _crews.Workable(plot);
+                _workArea.Show(_crews.Reach(plot).Where(_province.Contains).ToList(), worked);
+                labels = worked.Select(Holding).Where(l => l.HasValue).Select(l => l.Value).ToList();
+            }
+            else
+            {
+                _workArea.Hide();
+            }
+
             _ghost.Pills.Show(labels, _map.Grid.cellSize.x * PILL_HEIGHT);
+        }
+
+        // What a cell holds when full, toned against the authored stock: richer ground green, poorer red.
+        private (Vector3, string, MapPills.Tone)? Holding(ModuleVector2Int cell)
+        {
+            var source = _harvesting.SourceAt(cell);
+            if (source == null) return null;
+            return Label(cell, source, _harvesting.FullStock(cell, source));
+        }
+
+        private (Vector3, string, MapPills.Tone)? Held(ModuleVector2Int cell, string feature)
+        {
+            if (!_features.TryGet(feature, out var definition) || definition.Source == null) return null;
+            var source = _harvesting.Source(definition.Source);
+            return source == null ? null : Label(cell, source, _harvesting.FullStock(cell, source));
+        }
+
+        private (Vector3, string, MapPills.Tone) Label(ModuleVector2Int cell, Kingdom.Harvest.IHarvestSource source, double held)
+        {
+            var at = _map.CellCentre(cell) - new Vector3(0, _map.Grid.cellSize.y * 0.4f, 0);
+            var tone = held > source.Stock ? MapPills.Tone.Good : held < source.Stock ? MapPills.Tone.Bad : MapPills.Tone.Plain;
+            return (at, "<sprite name=\"" + source.Currency + "\"> " + _numbers.Count(held), tone);
         }
 
         private (Vector3, string, MapPills.Tone) Pill(ModuleVector2Int cell, AdjacencyStat stat, double value)

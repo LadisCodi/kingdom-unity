@@ -78,6 +78,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_sightArt);
             builder.RegisterEntryPoint<SilhouettesView>();
             builder.RegisterEntryPoint<ReachBorderView>();
+            builder.Register<Codigames.Game.City.WorkAreaView>(Lifetime.Singleton).AsSelf().As<ITickable>();
             builder.RegisterComponent(_fogView);
             builder.RegisterComponent(_crewsView);
             builder.RegisterEntryPoint<MapTaps>();

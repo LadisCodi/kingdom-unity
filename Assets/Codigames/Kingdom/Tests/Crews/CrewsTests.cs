@@ -47,6 +47,18 @@ namespace Codigames.Kingdom.Tests.Crews
         }
 
         [Test]
+        public void Reach_ShouldBeItsFootprintAndEveryCellWithinItsRadius_AndWorkableTheTreesInIt()
+        {
+            var fixture = new Fixture();
+
+            var reach = fixture.Crews.Reach(fixture.Mill);
+
+            Assert.That(reach.Count, Is.EqualTo(25));
+            Assert.That(reach, Does.Contain(Fixture.MILL).And.Contain(HarvestFixture.TREE));
+            Assert.That(fixture.Crews.Workable(fixture.Mill), Is.EqualTo(new[] { HarvestFixture.TREE }));
+        }
+
+        [Test]
         public void Assign_ShouldTakeAFreeVillagerUpToTheLimit()
         {
             var fixture = new Fixture();

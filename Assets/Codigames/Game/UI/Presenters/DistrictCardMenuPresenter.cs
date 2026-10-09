@@ -52,6 +52,7 @@ namespace Codigames.Game.UI.Presenters
         private readonly Harmony _harmony;
         private readonly IHarmonySettings _harmonySettings;
         private readonly Adjacency _adjacency;
+        private readonly City.WorkAreaView _workArea;
 
         // The second the card was last drawn at: it is redrawn once a second.
         private double _shownSeconds = -1;
@@ -63,8 +64,9 @@ namespace Codigames.Game.UI.Presenters
             BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, IClock clock, NumberFormat numbers,
             Localizer localizer, Stores stores, VillagerTraining training, Workforce crews, BuildingStats stats,
             BuildingStatProse prose, GemRush rush, UiIcons icons, PortraitArt portraits, ISoundService sounds,
-            CardFraming framing, Speedups speedups, Harmony harmony, IHarmonySettings harmonySettings, Adjacency adjacency) : base(views)
+            CardFraming framing, Speedups speedups, Harmony harmony, IHarmonySettings harmonySettings, Adjacency adjacency, City.WorkAreaView workArea) : base(views)
         {
+            _workArea = workArea;
             _harmony = harmony;
             _harmonySettings = harmonySettings;
             _adjacency = adjacency;
@@ -122,6 +124,7 @@ namespace Codigames.Game.UI.Presenters
 
         protected override void UnbindInternal(DistrictCardMenu view)
         {
+            _workArea.Hide();
             _treasury.Changed -= OnTreasuryChanged;
             _construction.JobStarted -= OnJob;
             _construction.JobCompleted -= OnJobCompleted;
@@ -257,6 +260,9 @@ namespace Codigames.Game.UI.Presenters
                 Crew = _crews.HasCrew(district) && district.Built ? Crew(district) : null,
             };
             HarmonyOf(card, building, district);
+            // Its work area on the map, and who its crew works, rimmed.
+            if (district.Built && _crews.HasCrew(district) && _crews.Radius(district) > 0) _workArea.Show(_crews.Reach(district), _crews.Workable(district));
+            else _workArea.Hide();
             NeighboursOf(card, building, district);
             View.Show(card);
         }
