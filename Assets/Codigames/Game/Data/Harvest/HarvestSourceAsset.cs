@@ -20,6 +20,8 @@ namespace Codigames.Game.Data.Harvest
         [SerializeField, MinValue(0)] private double _recoverySeconds;
         [BoxGroup("The depot"), SuffixLabel("s"), Tooltip("Finite: comes back next to where it stood after this; 0 = never.")]
         [SerializeField, MinValue(0)] private double _respawnSeconds;
+        [BoxGroup("The depot"), SuffixLabel("s"), Tooltip("Planted or moved, it grows this long before it can be taken from; 0 = none.")]
+        [SerializeField, MinValue(0)] private double _growSeconds;
 
         public string Currency => _currency;
         public double UnitsPerStrike => _unitsPerStrike;
@@ -27,5 +29,6 @@ namespace Codigames.Game.Data.Harvest
         public double Stock => _stock;
         public double RecoverySeconds => _recoverySeconds;
         public double RespawnSeconds => _respawnSeconds;
+        public double GrowSeconds => _growSeconds;
     }
 }

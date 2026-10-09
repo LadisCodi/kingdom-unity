@@ -62,6 +62,7 @@ namespace Codigames.Kingdom.Fog
 
             _fog.PaidReveal += OnPaidReveal;
             construction.DistrictPlaced += OnDistrictPlaced;
+            construction.Planted += OnPlanted;
         }
 
         // A treasure was set down on a cell.
@@ -125,6 +126,12 @@ namespace Codigames.Kingdom.Fog
         }
 
         // Building over a treasure picks it up rather than burying it.
+        // A crop plot planted over one picks it up, as a building does: it is never buried.
+        private void OnPlanted(string definitionId, Vector2Int cell)
+        {
+            if (At(cell) != null) PickUp(cell);
+        }
+
         private void OnDistrictPlaced(DistrictState district)
         {
             var building = _buildings.Get(district.DefinitionId);

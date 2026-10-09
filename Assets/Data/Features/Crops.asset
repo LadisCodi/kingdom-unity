@@ -17,5 +17,5 @@ MonoBehaviour:
   _respawnTerrain: Grassland
   _maxFootprint: 1
   _displayName: Crop plot
-  _tile: {fileID: 0}
+  _tile: {fileID: 11400000, guid: 7a7e0da8be42d6dab8df2527a510328e, type: 2}
   _blockTiles: []

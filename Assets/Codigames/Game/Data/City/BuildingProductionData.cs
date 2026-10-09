@@ -26,6 +26,7 @@ namespace Codigames.Game.Data.City
         [Tooltip("The harvest sources its crew works; empty for a building with no crew.")]
         [SerializeField] private List<string> _harvestSources = new();
         [SerializeField, MinValue(0), Tooltip("The Harmony it supplies standing: a decoration's.")] private double _harmonySupply;
+        [SerializeField, Tooltip("The feature it plants instead of standing (Crops); empty for a building.")] private string _plants;
         [Tooltip("How many villagers may work for it, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
         [SerializeField] private List<int> _maxWorkersPerLevel = new();
         [Tooltip("How far round its footprint its crew reaches, in rings, by level from 1."), ListDrawerSettings(ShowIndexLabels = true)]
@@ -38,6 +39,7 @@ namespace Codigames.Game.Data.City
         public IReadOnlyList<double> GoldPerMinutePerLevel => _goldPerMinutePerLevel;
         public IReadOnlyList<string> HarvestSources => _harvestSources;
         public double HarmonySupply => _harmonySupply;
+        public string Plants => string.IsNullOrEmpty(_plants) ? null : _plants;
         public IReadOnlyList<int> MaxWorkersPerLevel => _maxWorkersPerLevel;
         public IReadOnlyList<int> InfluenceRadiusPerLevel => _influenceRadiusPerLevel;
         public IReadOnlyList<double> StrikeSpeedPerLevel => _strikeSpeedPerLevel;

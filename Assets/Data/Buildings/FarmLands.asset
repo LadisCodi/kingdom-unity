@@ -45,6 +45,8 @@ MonoBehaviour:
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
     _harvestSources: []
+    _harmonySupply: 0
+    _plants: Crops
     _maxWorkersPerLevel: 
     _influenceRadiusPerLevel: 
     _strikeSpeedPerLevel: []

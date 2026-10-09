@@ -23,6 +23,9 @@ namespace Codigames.Kingdom.City
         // The Harmony it supplies standing: a decoration's.
         double HarmonySupply { get; }
 
+        // The feature it puts on the ground instead of standing (a crop plot plants Crops); null for a building.
+        string Plants { get; }
+
         // How many villagers may work for it.
         IReadOnlyList<int> MaxWorkersPerLevel { get; }
 

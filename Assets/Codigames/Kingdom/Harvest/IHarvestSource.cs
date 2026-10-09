@@ -22,5 +22,8 @@ namespace Codigames.Kingdom.Harvest
 
         // Finite sources: seconds until it appears again next to where it was; 0 = never.
         double RespawnSeconds { get; }
+
+        // Seconds one planted or moved grows before it can be taken from, flat; 0 = none.
+        double GrowSeconds { get; }
     }
 }

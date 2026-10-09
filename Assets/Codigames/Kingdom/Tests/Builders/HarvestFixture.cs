@@ -28,7 +28,7 @@ namespace Codigames.Kingdom.Tests.Builders
             Sources = new Catalog<IHarvestSource>(new IHarvestSource[]
             {
                 new FakeSource { Id = "Forest", Currency = "Wood", UnitsPerStrike = 1, SecondsPerStrike = 10, Stock = 10, RecoverySeconds = 180 },
-                new FakeSource { Id = "Crops", Currency = "Food", UnitsPerStrike = 1, SecondsPerStrike = 8, Stock = 10, RecoverySeconds = 60 },
+                new FakeSource { Id = "Crops", Currency = "Food", UnitsPerStrike = 1, SecondsPerStrike = 8, Stock = 10, RecoverySeconds = 60, GrowSeconds = 5 },
                 new FakeSource { Id = "Berries", Currency = "Food", UnitsPerStrike = 1, SecondsPerStrike = 10, Stock = 10, RespawnSeconds = 120 },
                 new FakeSource { Id = "Stone", Currency = "Stone", UnitsPerStrike = 1, SecondsPerStrike = 26 },
             });
@@ -73,6 +73,7 @@ namespace Codigames.Kingdom.Tests.Builders
             public double Stock { get; set; }
             public double RecoverySeconds { get; set; }
             public double RespawnSeconds { get; set; }
+            public double GrowSeconds { get; set; }
         }
 
         private sealed class FakeFeature : IFeatureDefinition

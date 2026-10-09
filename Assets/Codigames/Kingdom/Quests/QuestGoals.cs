@@ -24,10 +24,12 @@ namespace Codigames.Kingdom.Quests
         private readonly Workforce _crews;
         private readonly Landmarks _landmarks;
         private readonly FogOfWar _fog;
+        private readonly IPlanting _planting;
 
         public QuestGoals(CityState city, ICatalog<IBuildingDefinition> buildings, ITreasury treasury, Researching research, Workforce crews,
-            Landmarks landmarks, FogOfWar fog)
+            Landmarks landmarks, FogOfWar fog, IPlanting planting)
         {
+            _planting = planting;
             _city = city;
             _buildings = buildings;
             _treasury = treasury;
@@ -44,7 +46,7 @@ namespace Codigames.Kingdom.Quests
             {
                 case GoalType.BuildDistrict:
                 case GoalType.RepairDistrict:
-                    return _city.Districts.Count(d => Names(target, d.DefinitionId));
+                    return _city.Districts.Count(d => Names(target, d.DefinitionId)) + Planted(target);
                 case GoalType.UpgradeDistrict:
                     return _city.Districts.Count(d => Names(target, d.DefinitionId) && d.Built && d.Level >= System.Math.Max(1, quest.GoalLevel));
                 case GoalType.HoldResource:
@@ -67,6 +69,13 @@ namespace Codigames.Kingdom.Quests
                 default:
                     return 0;
             }
+        }
+
+        // A plantable stands as its feature on the ground, never as a district.
+        private int Planted(string target)
+        {
+            if (target == null || !_buildings.TryGet(target, out var building) || building.Production.Plants == null) return 0;
+            return _planting.Count(building.Production.Plants);
         }
 
         // A goal names one kind of building, or a group of them by its token.
