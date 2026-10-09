@@ -54,21 +54,43 @@ namespace Codigames.Kingdom.City
             var ordinal = CityQueries.Count(_city, definitionId) + 1;
             if (!_treasury.TryPay(BuildingPricing.Currencies(building, ordinal, 1))) return ConstructionRefusal.CannotAfford;
 
-            var district = new DistrictState
-            {
-                Id = _city.NewId(DISTRICT_PREFIX),
-                DefinitionId = definitionId,
-                Ordinal = ordinal,
-                Level = 1,
-                Anchor = anchor,
-                Built = false,
-            };
-            _city.Districts.Add(district);
-            DistrictPlaced?.Invoke(district);
+            var district = Place(definitionId, ordinal, anchor);
 
             var rings = CityQueries.DistanceFromTownhall(_city, _buildings, _settings, anchor);
             Start(district, 1, BuildSeconds(building, ordinal - 1, rings), now);
             return ConstructionRefusal.None;
+        }
+
+        // Repairs an abandoned one where it stands: a build at level 1 at the next ordinal's price, with no
+        // technology asked and its own wait when it has one (0: a build's).
+        public ConstructionRefusal Repair(string definitionId, Vector2Int anchor, double seconds, double now)
+        {
+            var refusal = RepairRefusal(definitionId);
+            if (refusal != ConstructionRefusal.None) return refusal;
+
+            var building = _buildings.Get(definitionId);
+            var ordinal = CityQueries.Count(_city, definitionId) + 1;
+            if (!_treasury.TryPay(BuildingPricing.Currencies(building, ordinal, 1))) return ConstructionRefusal.CannotAfford;
+
+            var district = Place(definitionId, ordinal, anchor);
+            var rings = CityQueries.DistanceFromTownhall(_city, _buildings, _settings, anchor);
+            Start(district, 1, seconds > 0 ? seconds / BuildSpeed : BuildSeconds(building, ordinal - 1, rings), now);
+            return ConstructionRefusal.None;
+        }
+
+        // A repair's build refusal: a builder and room under the cap, and the price.
+        public ConstructionRefusal RepairRefusal(string definitionId)
+        {
+            if (!_buildings.TryGet(definitionId, out var building)) return ConstructionRefusal.NotFound;
+
+            var count = CityQueries.Count(_city, definitionId);
+            var cap = MaxCount(building);
+            if (cap.HasValue && count >= cap.Value) return ConstructionRefusal.AtCap;
+            if (!CityQueries.HasFreeBuilder(_city)) return ConstructionRefusal.NoFreeBuilder;
+
+            return _treasury.CanAfford(BuildingPricing.Currencies(building, count + 1, 1))
+                ? ConstructionRefusal.None
+                : ConstructionRefusal.CannotAfford;
         }
 
         // What stands between the city and one more of a kind, wherever it goes.
@@ -222,6 +244,22 @@ namespace Codigames.Kingdom.City
 
         public void RunUntil(double time)
         {
+        }
+
+        private DistrictState Place(string definitionId, int ordinal, Vector2Int anchor)
+        {
+            var district = new DistrictState
+            {
+                Id = _city.NewId(DISTRICT_PREFIX),
+                DefinitionId = definitionId,
+                Ordinal = ordinal,
+                Level = 1,
+                Anchor = anchor,
+                Built = false,
+            };
+            _city.Districts.Add(district);
+            DistrictPlaced?.Invoke(district);
+            return district;
         }
 
         private void Start(DistrictState district, int targetLevel, double seconds, double now)

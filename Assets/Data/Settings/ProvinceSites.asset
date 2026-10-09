@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ebdb86a9bb2fbe4da79389ae1d71af6, type: 3}
+  m_Name: ProvinceSites
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Sites.ProvinceSitesAsset
+  _abandoned:
+  - _id: OldHouse
+    _district: Housing
+    _anchor: {x: 4, y: -1}
+    _sight: 3
+    _name: The Millers' house
+  - _id: OldFarm
+    _district: Farm
+    _anchor: {x: -1, y: 4}
+    _sight: 3
+    _name: The old farm
+  - _id: OldPlotNorth
+    _district: FarmLands
+    _anchor: {x: -3, y: 0}
+    _sight: 3
+    _name: An old crop plot
+  - _id: OldPlotSouth
+    _district: FarmLands
+    _anchor: {x: -3, y: 2}
+    _sight: 3
+    _name: An old crop plot
+  - _id: OldSawmill
+    _district: Sawmill
+    _anchor: {x: 1, y: 4}
+    _sight: 3
+    _name: The old sawmill
+  - _id: ThornedShrine
+    _district: Shrine
+    _anchor: {x: 5, y: 5}
+    _sight: 3
+    _name: The thorned shrine
+  - _id: NorthWatch
+    _district: Watchtower
+    _anchor: {x: -3, y: -5}
+    _sight: 4
+    _name: The old watchtower

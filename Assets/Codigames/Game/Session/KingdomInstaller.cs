@@ -10,6 +10,8 @@ using Codigames.Kingdom.Harvest.State;
 using Codigames.Kingdom.Magic;
 using Codigames.Kingdom.Map;
 using Codigames.Kingdom.Research;
+using Codigames.Kingdom.Sites;
+using Codigames.Kingdom.Sites.State;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Core;
 using Codigames.Modules.Saves;
@@ -37,8 +39,14 @@ namespace Codigames.Game.Session
             builder.Register(resolver => resolver.Resolve<KingdomState>().Harvest, Lifetime.Singleton);
             builder.Register(resolver => resolver.Resolve<KingdomState>().Mana, Lifetime.Singleton);
             builder.Register(resolver => resolver.Resolve<KingdomState>().Fog, Lifetime.Singleton);
-            builder.Register(resolver => new Footprints(resolver.Resolve<IProvinceMap>(), resolver.Resolve<ICatalog<IFeatureDefinition>>()),
+            builder.Register(resolver => resolver.Resolve<KingdomState>().Sites, Lifetime.Singleton);
+            builder.Register<SiteGround>(Lifetime.Singleton).AsSelf().As<ISiteGround>();
+            // No Bag yet: a ruin missing a piece waits for it.
+            builder.Register(resolver => new Ruins(resolver.Resolve<SitesState>(), resolver.Resolve<SiteGround>(),
+                resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<Construction>(), resolver.Resolve<IRevealedGround>()),
                 Lifetime.Singleton);
+            builder.Register(resolver => new Footprints(resolver.Resolve<IProvinceMap>(), resolver.Resolve<ICatalog<IFeatureDefinition>>(),
+                resolver.Resolve<SiteGround>().Blocks()), Lifetime.Singleton);
             builder.Register<FogOfWar>(Lifetime.Singleton).AsSelf().As<IRevealedGround>().As<IExploredGround>();
             builder.Register(resolver => resolver.Resolve<KingdomState>().Research, Lifetime.Singleton);
             builder.Register(resolver => resolver.Resolve<KingdomState>().Knowledge, Lifetime.Singleton);

@@ -44,15 +44,25 @@ MonoBehaviour:
     _storageCapacityPerLevel: []
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
+    _harvestSources: []
+    _maxWorkersPerLevel: 
+    _influenceRadiusPerLevel: 
+    _strikeSpeedPerLevel: []
+    _extraUnitsPerDeliveryPerLevel: []
   _fog:
     _revealRadius: 0
     _revealRadiusPerLevel: 
     _discoverRadius: 8
+  _repair:
+    _seconds: 0
+    _item: WatchtowerLens
+    _ruinArt: {fileID: 21300000, guid: f366d0a42a37a17b29d812b789726f30, type: 3}
   _displayName: Watchtower
   _promise: Sees past the province, to the world
   _description: "The old tower on the northern hills. Repaired, its lens looks past
     the mountains \u2014 to the world and the kingdoms in it."
   _buildTab: Decoration
+  _crew: []
   _art:
   - _fromLevel: 1
     _sprite: {fileID: 21300000, guid: 9452a121a26abd02c8f7b07942a2ef98, type: 3}

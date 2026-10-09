@@ -34,6 +34,9 @@ namespace Codigames.Game.Data.City
         [TabGroup("Fog"), HideLabel, InlineProperty]
         [SerializeField] private BuildingFogData _fog = new();
 
+        [TabGroup("Repair"), HideLabel, InlineProperty]
+        [SerializeField] private BuildingRepairData _repair = new();
+
         [TabGroup("Presentation")]
         [SerializeField] private string _displayName;
         [TabGroup("Presentation"), Tooltip("The build card's one line.")]
@@ -57,6 +60,8 @@ namespace Codigames.Game.Data.City
         public IBuildingGates Gates => _gates;
         public IBuildingProduction Production => _production;
         public IBuildingFog Fog => _fog;
+        public IBuildingRepair Repair => _repair;
+        public Sprite RuinArt => _repair.RuinArt;
 
         public string DisplayName => _displayName;
         public string Promise => _promise;
