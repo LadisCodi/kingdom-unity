@@ -126,6 +126,7 @@ namespace Codigames.Game.Startup
         // The tutorial stage: the kingdom's conditions and the screen's, the director, and the stage itself.
         private void RegisterStage(IContainerBuilder builder)
         {
+            builder.Register<Dev.DevSwitches>(Lifetime.Singleton);
             builder.Register<UiTargets>(Lifetime.Singleton);
             builder.Register<StageHint>(Lifetime.Singleton);
             builder.Register<MapTargets>(Lifetime.Singleton);

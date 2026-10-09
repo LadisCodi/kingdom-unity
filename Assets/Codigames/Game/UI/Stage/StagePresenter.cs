@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Codigames.Game.Data.Tutorial;
+using Codigames.Game.Dev;
 using Codigames.Game.Map;
 using Codigames.Game.UI.Hud;
 using Codigames.Kingdom.Tutorial;
@@ -62,6 +63,7 @@ namespace Codigames.Game.UI.Stage
         private readonly ISoundService _sounds;
         private readonly RewardFlight _flight;
         private readonly RewardFragments _fragments;
+        private readonly DevSwitches _dev;
 
         private ScenePlay _playing;
         private float _typed;
@@ -84,8 +86,9 @@ namespace Codigames.Game.UI.Stage
         public StagePresenter(StageView view, SceneDirector director, IConditions conditions, IScenePurse purse, IStageContext context,
             ICatalog<ISpeaker> speakers, IStageSettings settings, TapCount taps, MapGestures gestures, MapTargets mapTargets, UiTargets uiTargets,
             StageHint hint, PlotGlow glow, ProvinceMap map, CameraController camera, IClock clock, Localizer localizer,
-            ISoundService sounds, RewardFlight flight, RewardFragments fragments)
+            ISoundService sounds, RewardFlight flight, RewardFragments fragments, DevSwitches dev)
         {
+            _dev = dev;
             _view = view;
             _director = director;
             _conditions = conditions;
@@ -143,6 +146,13 @@ namespace Codigames.Game.UI.Stage
 
         public void Tick()
         {
+            // The dev switch: the stage stands aside, the scene playing left unplayed for later.
+            if (_dev.TutorialsOff)
+            {
+                StandAside();
+                return;
+            }
+
             var now = Time.unscaledTime;
             // Back on the map is where a scene expects the player: the last sheet closing ends the breath.
             var sheetOpen = _context.HasOpenSheet;
@@ -414,6 +424,19 @@ namespace Codigames.Game.UI.Stage
             if (line != null && line.Exit) _view.Leave(line.Side);
             _playing.Next();
             if (_playing.Finished) End();
+        }
+
+        // Off the screen without a trace: the scene is not marked played, so it plays again once tutorials are back.
+        private void StandAside()
+        {
+            StopHint();
+            if (_playing == null) return;
+            _playing.LineBegan -= OnLineBegan;
+            _playing.Stocked -= OnStocked;
+            _playing = null;
+            _target = null;
+            _glow.Show(null);
+            _view.Close();
         }
 
         private void End()
