@@ -26,7 +26,10 @@ namespace Codigames.Game.Editor.Art
             ["nav-tab"] = new Vector4(30, 50, 30, 30), ["nav-tab-down"] = new Vector4(30, 50, 30, 30),
             ["window-frame"] = new Vector4(64, 64, 64, 64), ["window-header"] = Ends(60),
             ["plate-fill"] = new Vector4(26, 26, 26, 26), ["plate-rim"] = new Vector4(26, 26, 26, 26),
+            ["rb-page"] = new Vector4(56, 56, 56, 56), ["hud-know-tab"] = new Vector4(64, 70, 64, 20), ["know-frame"] = Ends(60),
             ["btn-paint-green"] = SLAB, ["btn-paint-green-down"] = SLAB, ["btn-paint-green-off"] = SLAB,
+            ["btn-purple"] = SLAB, ["btn-purple-down"] = SLAB, ["btn-purple-off"] = SLAB,
+            ["btn-wood"] = SLAB, ["btn-wood-down"] = SLAB, ["btn-wood-off"] = SLAB,
         };
 
         private static Vector4 Ends(int width) => new(width, 0, width, 0);

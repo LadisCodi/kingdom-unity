@@ -93,15 +93,6 @@ namespace Codigames.Kingdom.Research
             return PourResult.Poured;
         }
 
-        // Pours what is missing straight in, as Knowledge just bought — not from the bar.
-        public void PourBought(string id, double amount)
-        {
-            if (amount <= 0 || Refusal(id) != ResearchRefusal.None) return;
-
-            _state.Poured[id] = Math.Min(_technologies.Get(id).Knowledge, PouredInto(id) + amount);
-            Poured?.Invoke(id, amount);
-        }
-
         public bool CanAfford(string id) => _treasury.CanAfford(_technologies.Get(id).Price);
 
         // Could it be completed this second?

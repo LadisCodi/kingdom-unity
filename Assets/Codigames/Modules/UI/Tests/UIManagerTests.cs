@@ -49,6 +49,22 @@ namespace Codigames.Modules.UI.Tests
             public void RequestClose() => Manager.HideMenu<TView>().Wait();
         }
 
+        private sealed class Popup<TView> : AbstractMenuPresenter<TView>, IPopupMenuPresenter where TView : class, IMenuView
+        {
+            public Popup(IMenuViewFactory views) : base(views) { }
+            public UIManager Manager { get; set; }
+            public void RequestClose() => Manager.HideMenu<TView>().Wait();
+        }
+
+        private sealed class SheetView : IMenuView
+        {
+            public Task Show() => Task.CompletedTask;
+            public Task Hide() => Task.CompletedTask;
+            public void OnFocusGained() { }
+            public void OnFocusLost() { }
+        }
+
+        private Popup<SheetView> _sheet;
         private Closable<ShopView> _shop;
         private Closable<BagView> _bag;
         private Closable<HeroesView> _heroes;
@@ -61,8 +77,9 @@ namespace Codigames.Modules.UI.Tests
             _shop = new Closable<ShopView>(views);
             _bag = new Closable<BagView>(views);
             _heroes = new Closable<HeroesView>(views);
-            _ui = new UIManager(() => new IMenuPresenter[] { _shop, _bag, _heroes }, new Groups());
-            _shop.Manager = _bag.Manager = _heroes.Manager = _ui;
+            _sheet = new Popup<SheetView>(views);
+            _ui = new UIManager(() => new IMenuPresenter[] { _shop, _bag, _heroes, _sheet }, new Groups());
+            _shop.Manager = _bag.Manager = _heroes.Manager = _sheet.Manager = _ui;
         }
 
         [Test]
@@ -120,6 +137,36 @@ namespace Codigames.Modules.UI.Tests
         public void CloseTopMost_ShouldDoNothingWithNoOverlay()
         {
             Assert.DoesNotThrow(() => _ui.CloseTopMost());
+            Assert.That(_ui.HasOverlayOpen, Is.False);
+        }
+
+        [Test]
+        public async Task APopup_ShouldOpenOverTheTopWithoutCoveringIt()
+        {
+            await _ui.ShowMenu<HeroesView>();
+            await _ui.ShowMenu<SheetView>();
+
+            Assert.That(_heroes.IsShown, Is.True);
+            Assert.That(_heroes.HasFocus, Is.False);
+            Assert.That(_sheet.HasFocus, Is.True);
+
+            _ui.CloseTopMost();
+
+            Assert.That(_sheet.IsShown, Is.False);
+            Assert.That(_heroes.IsShown, Is.True);
+            Assert.That(_heroes.HasFocus, Is.True);
+        }
+
+        [Test]
+        public async Task CloseAll_ShouldAlsoCloseWhatAPopupLeftShowing()
+        {
+            await _ui.ShowMenu<HeroesView>();
+            await _ui.ShowMenu<SheetView>();
+
+            await _ui.CloseAll();
+
+            Assert.That(_heroes.IsShown, Is.False);
+            Assert.That(_sheet.IsShown, Is.False);
             Assert.That(_ui.HasOverlayOpen, Is.False);
         }
     }

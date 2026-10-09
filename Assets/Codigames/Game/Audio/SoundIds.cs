@@ -17,6 +17,9 @@ namespace Codigames.Game.Audio
         public const string GHOST_LIFT = "ghostLift";
         public const string GHOST_STEP = "ghostStep";
         public const string GHOST_PLANT = "ghostPlant";
+        public const string RESEARCH = "research";
+        public const string RESEARCH_COMPLETE = "researchComplete";
+        public const string GEM_SPEND = "gemSpend";
 
         // What a tap on each kind of ground sounds like (and a crew's strike, quieter).
         public static string TapOn(string harvestSource) => harvestSource switch

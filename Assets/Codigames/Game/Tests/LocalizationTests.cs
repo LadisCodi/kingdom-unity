@@ -31,5 +31,18 @@ namespace Codigames.Game.Tests
             Assert.That(lines, Has.Count.GreaterThan(10), "the scan found the game's lines");
             Assert.That(missing, Is.Empty, "Add these to Assets/Localization/es/unity.json:\n" + string.Join("\n", missing));
         }
+
+        // What a card says about each number the tree moves is a table, not literals: every sentence has its Spanish.
+        [Test]
+        public void EveryStatSentence_ShouldHaveItsSpanish()
+        {
+            var spanish = new HashSet<string>();
+            foreach (var file in Directory.GetFiles(Path.Combine(Application.dataPath, "Localization", "es"), "*.json"))
+                spanish.UnionWith(JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(file)).Keys);
+
+            var missing = Codigames.Game.UI.Research.TechStatSentences.All.Where(line => !spanish.Contains(line)).ToList();
+
+            Assert.That(missing, Is.Empty, string.Join("\n", missing));
+        }
     }
 }

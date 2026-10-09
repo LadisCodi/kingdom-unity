@@ -81,9 +81,12 @@ namespace Codigames.Modules.UI
             var top = Top;
             if (top == null) return;
 
+            // The top, and any menu a popup left showing under it.
+            var shown = _stack.Where(p => p.IsShown && p != top).ToList();
             _stack.Clear();
             top.OnFocusLost();
             await Close(top);
+            foreach (var below in shown) await Close(below);
         }
 
         public async Task HideAllMenus()
@@ -123,7 +126,7 @@ namespace Codigames.Modules.UI
                     _stack.Remove(previous);
                     covered = Close(previous);
                 }
-                else
+                else if (entering is not IPopupMenuPresenter)
                 {
                     covered = previous.Hide();
                 }
@@ -149,7 +152,10 @@ namespace Codigames.Modules.UI
             if (revealed != null)
             {
                 revealed.OnFocusGained();
-                await Task.WhenAll(closing, revealed.Show());
+
+                // A popup's menu below never left.
+                if (revealed.IsShown) await closing;
+                else await Task.WhenAll(closing, revealed.Show());
             }
             else
             {

@@ -11,6 +11,7 @@ using Codigames.Game.Session;
 using Codigames.Game.UI;
 using Codigames.Game.UI.Hud;
 using Codigames.Game.UI.Presenters;
+using Codigames.Game.UI.Research;
 using Codigames.Kingdom.Map;
 using Codigames.Modules.Cameras;
 using Codigames.Modules.Feedback;
@@ -81,6 +82,11 @@ namespace Codigames.Game.Startup
             builder.Register<BuildMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
             builder.Register<PlacementMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<DistrictCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
+            builder.Register<TechProse>(Lifetime.Singleton);
+            builder.Register<ResearchMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<TechSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<KnowledgeSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
+            builder.RegisterEntryPoint<KnowledgeTabPresenter>();
             builder.RegisterEntryPoint<BuildPlacementFlow>();
         }
 

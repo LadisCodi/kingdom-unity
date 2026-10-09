@@ -13,6 +13,7 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private RectTransform _coins;
         [SerializeField] private RectTransform _right;
         [SerializeField] private CurrencySlot _slotPrefab;
+        [SerializeField] private KnowledgeTab _knowledge;
         [Header("Slot widths")]
         [SerializeField] private float _coinWidth = 152;
         [SerializeField] private float _rightWidth = 204;
@@ -24,6 +25,8 @@ namespace Codigames.Game.UI.Menus
         public event Action<string> CurrencyTapped;
 
         public IReadOnlyList<CurrencySlot> Slots => _slots;
+
+        public KnowledgeTab Knowledge => _knowledge;
 
         // Rebuilds the slots: the coins on the left, the rest on the right, each in the order given.
         public void SetSlots(IEnumerable<(string Id, Sprite Icon, bool Sold, bool OnRight)> slots)
