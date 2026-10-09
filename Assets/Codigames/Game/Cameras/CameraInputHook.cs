@@ -82,6 +82,15 @@ namespace Codigames.Game.Cameras
         private void OnFingerUpdate(LeanFinger finger)
         {
             if (_camera == null || finger != _dragFinger) return;
+
+            // A long press picked something up: from here on the finger carries it, not the camera.
+            if (_gestures.Owns(finger))
+            {
+                _dragFinger = null;
+                _camera.EndDrag();
+                return;
+            }
+
             _camera.Drag(ToModule(finger.ScreenPosition), Time.deltaTime);
         }
 

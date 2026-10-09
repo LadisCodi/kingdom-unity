@@ -36,6 +36,8 @@ namespace Codigames.Game.City
         private Footprints _footprints;
         private HarvestState _harvest;
         private float _nextGrowthCheck;
+        private ModuleVector2Int? _lifted;
+        private const float LIFTED_ALPHA = 0.28f;
 
         [Inject]
         public void Construct(GroundState ground, ProvinceMap map, Harvesting harvesting, FeatureCollection features, IClock clock,
@@ -155,12 +157,22 @@ namespace Codigames.Game.City
             return size <= 1 ? cell : new ModuleVector2Int(anchor.X + size - 1, anchor.Y + size - 1);
         }
 
+        // A tree or a crop plot picked up to be moved: faint where it stands until it is put down.
+        public void SetLifted(ModuleVector2Int? cell)
+        {
+            var was = _lifted;
+            _lifted = cell;
+            if (was.HasValue) Tint(was.Value);
+            if (cell.HasValue) Tint(cell.Value);
+        }
+
         private void Tint(ModuleVector2Int cell)
         {
             var position = ProvinceCoordinates.ToTilemap(DrawnAt(cell));
             _map.Features.SetTileFlags(position, TileFlags.None);
             var colour = DrawnDim(cell) ? _exhausted : Color.white;
             if (_fog.VisibilityAt(cell) == Visibility.Discovered) colour *= _discovered;
+            if (_lifted == cell) colour.a *= LIFTED_ALPHA;
             _map.Features.SetColor(position, colour);
         }
     }

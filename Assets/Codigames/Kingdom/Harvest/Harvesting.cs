@@ -157,19 +157,31 @@ namespace Codigames.Kingdom.Harvest
 
         public int Count(string feature) => _ground.Features.Values.Count(f => f == feature);
 
+        // How long one of a feature grows once planted or moved, in seconds.
+        public double GrowSecondsOf(string feature)
+            => _features.TryGet(feature, out var definition) && definition.Source != null ? Source(definition.Source)?.GrowSeconds ?? 0 : 0;
+
         // A planted feature lands growing for its source's growth, flat: an emptied cell whose wait is its growth,
         // which cannot be tapped or worked and comes back full. With no growth it is full at once.
         public void Plant(string feature, Vector2Int cell, double now)
         {
             _ground.Features[cell] = feature;
-            var source = _features.TryGet(feature, out var definition) && definition.Source != null
-                ? Source(definition.Source)
-                : null;
-            var growMs = (source?.GrowSeconds ?? 0) * 1000;
+            var growMs = GrowSecondsOf(feature) * 1000;
             if (growMs <= 0) _state.Depots.Remove(cell);
             else _state.Depots[cell] = new CellDepot { Units = 0, ExhaustedUntil = now + growMs, WaitMs = growMs, Growing = true };
             FeatureAppeared?.Invoke(cell, feature);
             DepotChanged?.Invoke(cell);
+        }
+
+        // Takes the feature off a cell, all it held with it: the cell is bare ground. Returns what stood there.
+        public string Lift(Vector2Int cell)
+        {
+            if (!_ground.Features.TryGetValue(cell, out var feature)) return null;
+            _ground.Features.Remove(cell);
+            _state.Depots.Remove(cell);
+            FeatureRemoved?.Invoke(cell);
+            DepotChanged?.Invoke(cell);
+            return feature;
         }
 
         // Planted or moved and still coming up.

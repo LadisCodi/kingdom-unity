@@ -68,6 +68,17 @@ namespace Codigames.Kingdom.City
             return best;
         }
 
+        // Where a lifted tree or crop plot may be put down: any revealed dry cell a building could stand on; the cell it
+        // leaves counts as bare.
+        public PlacementProblem FeatureProblem(Vector2Int to, Vector2Int leaving)
+        {
+            if (!_map.Contains(to)) return PlacementProblem.OutsideProvince;
+            if (!_revealed.IsRevealed(to)) return PlacementProblem.InFog;
+            if ((_ground.Features.ContainsKey(to) && to != leaving) || (_sites?.Holds(to) ?? false)) return PlacementProblem.Occupied;
+            if (CityQueries.At(_city, _buildings, to) != null) return PlacementProblem.Occupied;
+            return _map.TerrainAt(to) == WATER ? PlacementProblem.NeedsLand : PlacementProblem.None;
+        }
+
         // What the ground says: the footprint on the province, on dry land, with nothing on it.
         private PlacementProblem GroundProblem(IBuildingDefinition building, Vector2Int anchor, string movingId)
         {

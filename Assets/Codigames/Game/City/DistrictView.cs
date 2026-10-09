@@ -6,6 +6,8 @@ namespace Codigames.Game.City
     public class DistrictView : MonoBehaviour
     {
         private const float UNDER_CONSTRUCTION_ALPHA = 0.55f;
+        // Faint at its old address while its ghost is out.
+        private const float LIFTED_ALPHA = 0.28f;
         private const float BAR_HEIGHT = 0.2f;
         private const float BUBBLE_HEIGHT = 0.6f;
         // The hammer's frame: at most this many cells wide, its top this far up the art.
@@ -14,6 +16,8 @@ namespace Codigames.Game.City
 
         private float _plotWidth = 1f;
         private Vector3 _artScale = Vector3.one;
+        private float _alpha = 1f;
+        private bool _lifted;
 
         [SerializeField] private SpriteRenderer _art;
         [SerializeField] private ProgressBarView _bar;
@@ -33,7 +37,8 @@ namespace Codigames.Game.City
                 _art.transform.localScale = _artScale;
             }
 
-            _art.color = new Color(1f, 1f, 1f, built ? 1f : UNDER_CONSTRUCTION_ALPHA);
+            _alpha = built ? 1f : UNDER_CONSTRUCTION_ALPHA;
+            Fade();
 
             // A builder at work hammers over the art's upper half.
             var tall = sprite != null ? sprite.rect.height / sprite.pixelsPerUnit * _artScale.y : plotWidth;
@@ -45,6 +50,15 @@ namespace Codigames.Game.City
             _bar.SetSize(Mathf.Max(BAR_HEIGHT * 4f, plotWidth * 0.6f), BAR_HEIGHT);
             _bar.gameObject.SetActive(!built);
         }
+
+        // Picked up to be moved: faint where it stands until it is put down.
+        public void SetLifted(bool lifted)
+        {
+            _lifted = lifted;
+            Fade();
+        }
+
+        private void Fade() => _art.color = new Color(1f, 1f, 1f, _alpha * (_lifted ? LIFTED_ALPHA : 1f));
 
         // A builder is at work on it: a build or an upgrade.
         public void SetWorking(bool working) => _hammer.gameObject.SetActive(working);

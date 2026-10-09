@@ -48,6 +48,8 @@ namespace Codigames.Game.UI.Menus
             if (panel.Art != null) _artFit.aspectRatio = panel.Art.rect.width / panel.Art.rect.height;
             _promise.text = panel.Promise;
             _wait.text = panel.Wait;
+            _wait.transform.parent.gameObject.SetActive(!string.IsNullOrEmpty(panel.Wait));
+            _build.GetComponentInChildren<TMP_Text>().text = panel.Verb;
             _reason.text = panel.Reason;
             _reason.gameObject.SetActive(!string.IsNullOrEmpty(panel.Reason));
             _build.interactable = panel.CanBuild;

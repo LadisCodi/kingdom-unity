@@ -47,6 +47,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private UnlockSplash _unlockSplash;
         [SerializeField] private SownPlot _sownPlot;
         [SerializeField] private SpriteArt _spriteArt;
+        [SerializeField] private HoldRing _holdRing;
         [SerializeField] private CinemachineCameraRig _cameraRig;
         [SerializeField] private CameraInputHook _cameraInput;
         [SerializeField] private CameraSettings _cameraSettings;
@@ -117,6 +118,8 @@ namespace Codigames.Game.Startup
             builder.Register<KnowledgeSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.RegisterEntryPoint<KnowledgeTabPresenter>();
             builder.RegisterEntryPoint<BuildPlacementFlow>();
+            builder.RegisterEntryPoint<MoveStarter>();
+            builder.RegisterComponent(_holdRing);
             RegisterStage(builder);
         }
 
