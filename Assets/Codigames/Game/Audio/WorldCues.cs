@@ -12,11 +12,13 @@ using ModuleVector2Int = Codigames.Modules.Core.Vector2Int;
 
 namespace Codigames.Game.Audio
 {
-    // What the kingdom does by itself makes its noise: a building finished, a villager moving in, a crew's swing
-    // (the tap's own foley, at half volume, only on screen and never more than a few at once).
-    public class SoundCues : IStartable, IDisposable
+    // What the kingdom does by itself shows and sounds: a building finished, a villager moving in, a crew's swing
+    // (the tap's own punch, weaker and without the flash, and its foley at half volume — only on screen, never
+    // more than a few at once).
+    public class WorldCues : IStartable, IDisposable
     {
         private const float STRIKE_VOLUME = 0.5f;
+        private const float STRIKE_PUNCH = 0.55f;
         private const int STRIKE_VOICES = 3;
         private const float STRIKE_VOICE_SECONDS = 0.35f;
 
@@ -28,10 +30,12 @@ namespace Codigames.Game.Audio
         private readonly ICameraRig _camera;
         private readonly ProvinceMap _map;
         private readonly float[] _voices = new float[STRIKE_VOICES];
+        private readonly Feedback.TapPunch _punch;
 
-        public SoundCues(ISoundService sounds, Construction construction, VillagerTraining training, Workforce crews,
-            Kingdom.Harvest.Harvesting harvesting, ICameraRig camera, ProvinceMap map)
+        public WorldCues(ISoundService sounds, Construction construction, VillagerTraining training, Workforce crews,
+            Kingdom.Harvest.Harvesting harvesting, ICameraRig camera, ProvinceMap map, Feedback.TapPunch punch)
         {
+            _punch = punch;
             _sounds = sounds;
             _construction = construction;
             _training = training;
@@ -61,7 +65,10 @@ namespace Codigames.Game.Audio
 
         private void OnStruck(WorkerState worker, ModuleVector2Int cell)
         {
-            if (!OnScreen(cell) || !TakeVoice()) return;
+            if (!OnScreen(cell)) return;
+
+            _punch.Cell(cell, STRIKE_PUNCH);
+            if (!TakeVoice()) return;
 
             var source = _harvesting.SourceAt(cell);
             _sounds.Play(SoundIds.TapOn(source?.Id), STRIKE_VOLUME);

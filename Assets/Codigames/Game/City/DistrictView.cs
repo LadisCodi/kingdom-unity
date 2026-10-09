@@ -10,6 +10,7 @@ namespace Codigames.Game.City
         private const float BUBBLE_HEIGHT = 0.6f;
 
         private float _plotWidth = 1f;
+        private Vector3 _artScale = Vector3.one;
 
         [SerializeField] private SpriteRenderer _art;
         [SerializeField] private ProgressBarView _bar;
@@ -24,7 +25,8 @@ namespace Codigames.Game.City
             if (sprite != null)
             {
                 var spriteWidth = sprite.rect.width / sprite.pixelsPerUnit;
-                _art.transform.localScale = Vector3.one * (plotWidth / spriteWidth);
+                _artScale = Vector3.one * (plotWidth / spriteWidth);
+                _art.transform.localScale = _artScale;
             }
 
             _art.color = new Color(1f, 1f, 1f, built ? 1f : UNDER_CONSTRUCTION_ALPHA);
@@ -34,6 +36,9 @@ namespace Codigames.Game.City
             _bar.SetSize(Mathf.Max(BAR_HEIGHT * 4f, plotWidth * 0.6f), BAR_HEIGHT);
             _bar.gameObject.SetActive(!built);
         }
+
+        // A tap's squash and stretch, about the building's feet.
+        public void SetPunch(Vector2 scale) => _art.transform.localScale = new Vector3(_artScale.x * scale.x, _artScale.y * scale.y, 1f);
 
         // Over the roof while the store is ready to collect.
         public void SetStore(bool ready, Sprite icon, bool full)

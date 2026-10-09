@@ -27,10 +27,17 @@ namespace Codigames.Game.City
         private readonly ICurrencyIcons _icons;
         private readonly NumberFormat _numbers;
         private readonly ISoundService _sounds;
+        private readonly Feedback.TapPunch _punch;
+        private readonly UI.Hud.RewardFlight _flight;
+        private readonly UI.Hud.RewardFragments _fragments;
 
         public CollectInput(Stores stores, ICatalog<IBuildingDefinition> buildings, ProvinceMap map, IClock clock,
-            IWorldFeedbackService feedback, ICurrencyIcons icons, NumberFormat numbers, ISoundService sounds)
+            IWorldFeedbackService feedback, ICurrencyIcons icons, NumberFormat numbers, ISoundService sounds,
+            Feedback.TapPunch punch, UI.Hud.RewardFlight flight, UI.Hud.RewardFragments fragments)
         {
+            _punch = punch;
+            _flight = flight;
+            _fragments = fragments;
             _sounds = sounds;
             _stores = stores;
             _buildings = buildings;
@@ -50,6 +57,7 @@ namespace Codigames.Game.City
             var houses = _stores.Residents(district) > 0;
             var moved = _stores.Collect(district, now);
             _sounds.Play(houses ? SoundIds.TAP_HOUSE : SoundIds.POP);
+            _punch.District(district.Id);
             var building = _buildings.Get(district.DefinitionId);
             var (basePosition, width) = ProvinceGeometry.Footprint(_map, district.Anchor, building.Width, building.Height);
 
@@ -62,6 +70,8 @@ namespace Codigames.Game.City
                 _ = view.Play();
             }
 
+            var screen = UnityEngine.Camera.main.WorldToScreenPoint(new UnityEngine.Vector3(basePosition.x, basePosition.y + width / 4f, 0f));
+            _flight.Fly(moved, screen, (c, a) => _fragments.For(c, a, true));
             return true;
         }
     }

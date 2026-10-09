@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Codigames.Game.UI.Hud;
 using UnityEngine;
 
@@ -38,6 +39,12 @@ namespace Codigames.Game.UI.Menus
                 _slots.Add(slot);
             }
         }
+
+        // Where a currency's icon is on the plank; null when it is not on it.
+        public RectTransform SlotIcon(string currency) => _slots.FirstOrDefault(s => s != null && s.CurrencyId == currency)?.Icon;
+
+        // The slot swells a little when something lands in it.
+        public void Pulse(string currency) => _slots.FirstOrDefault(s => s != null && s.CurrencyId == currency)?.Pulse();
 
         protected override void DisposeInternal() => ClearSlots();
 
