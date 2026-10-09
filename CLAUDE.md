@@ -295,6 +295,14 @@ new building, unit, hero, quest or technology is a data entry, not a class.
   from a newer build is refused, never downgraded.
 - Where the save is written is a port; Game writes it on pause, on focus
   loss, on quit and after every command.
+- The machinery is `Modules/Saves` (`SaveSlot`: storage and codec ports,
+  migrations on the raw document, a newer save refused and never written
+  over, an unreadable one set aside). Kingdom's is `Game/Saves`:
+  `KingdomSaves.VERSION` and its `MIGRATIONS`, JSON through
+  `KingdomSaveCodec`, a file in the persistent folder (`FileSaveStorage`).
+  `KingdomLoader` starts the saved kingdom, else a new one; `KingdomSaver`
+  writes a few seconds after a change and at once on `Suspending`.
+  *Kingdom › Save › Delete save* starts the editor over.
 
 ## Code conventions
 

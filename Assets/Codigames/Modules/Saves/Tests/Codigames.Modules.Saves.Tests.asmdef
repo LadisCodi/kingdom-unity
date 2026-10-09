@@ -1,14 +1,10 @@
 {
-    "name": "Codigames.Game.Tests",
-    "rootNamespace": "Codigames.Game.Tests",
+    "name": "Codigames.Modules.Saves.Tests",
+    "rootNamespace": "Codigames.Modules.Saves.Tests",
     "references": [
-        "Codigames.Game",
-        "Codigames.Game.Editor",
-        "Codigames.Kingdom",
+        "Codigames.Modules.Saves",
         "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner",
-        "Codigames.Modules.Core",
-        "Codigames.Modules.Saves"
+        "UnityEditor.TestRunner"
     ],
     "includePlatforms": [
         "Editor"
@@ -17,9 +13,7 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll",
-        "Sirenix.OdinInspector.Attributes.dll",
-        "Newtonsoft.Json.dll"
+        "nunit.framework.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [
