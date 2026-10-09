@@ -4,14 +4,17 @@ using ModuleVector2 = Codigames.Modules.Core.Vector2;
 
 namespace Codigames.Game.Cameras
 {
-    // How the province camera feels, tuned in the editor.
+    // How the province camera feels, tuned in the editor. Zoom is said as the web says it: how many cells fit
+    // across the screen's width (at the web's zoom 1 a cell is 128 of a phone's 375 points: 2.93 across; its zoom
+    // runs 0.4 to 2.5), so every screen shape sees the same width of ground.
     [CreateAssetMenu(fileName = "CameraSettings", menuName = "Kingdom/Camera Settings")]
-    public class CameraSettings : ScriptableObject, ICameraSettings
+    public class CameraSettings : ScriptableObject
     {
-        [Header("Zoom (orthographic size)")]
+        [Header("Zoom (cells across the screen's width)")]
         [SerializeField, Range(0.1f, 10f)] private float _zoomSensitivity = 1f;
-        [SerializeField] private float _minZoom = 1.27f;
-        [SerializeField] private float _maxZoom = 7.93f;
+        [SerializeField, Tooltip("Where a game starts.")] private float _startCellsAcross = 2.93f;
+        [SerializeField, Tooltip("Most zoomed in.")] private float _fewestCellsAcross = 1.17f;
+        [SerializeField, Tooltip("Most zoomed out.")] private float _mostCellsAcross = 7.32f;
         [SerializeField, Range(0f, 1f)] private float _zoomElasticFactor = 0.2f;
 
         [Header("Inertia")]
@@ -26,8 +29,9 @@ namespace Codigames.Game.Cameras
         [SerializeField] private float _snapBackSpeed = 10f;
 
         public float ZoomSensitivity => _zoomSensitivity;
-        public float MinZoom => _minZoom;
-        public float MaxZoom => _maxZoom;
+        public float StartCellsAcross => _startCellsAcross;
+        public float FewestCellsAcross => _fewestCellsAcross;
+        public float MostCellsAcross => _mostCellsAcross;
         public float ZoomElasticFactor => _zoomElasticFactor;
         public bool UseInertia => _useInertia;
         public float Damping => _damping;

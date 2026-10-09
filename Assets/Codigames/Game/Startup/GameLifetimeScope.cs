@@ -84,7 +84,8 @@ namespace Codigames.Game.Startup
         {
             builder.RegisterComponent(_cameraRig).As<ICameraRig>();
             // Tuned in its asset, bounded by the province.
-            builder.Register<ICameraSettings>(resolver => new ProvinceCameraSettings(_cameraSettings, _province), Lifetime.Singleton);
+            builder.Register(resolver => new ProvinceCameraSettings(_cameraSettings, _province, resolver.Resolve<ICameraRig>()), Lifetime.Singleton)
+                .AsSelf().As<ICameraSettings>();
             builder.Register<CameraController>(Lifetime.Singleton);
             builder.RegisterComponent(_cameraInput);
             builder.RegisterEntryPoint<CameraTicker>();
