@@ -17,6 +17,8 @@ namespace Codigames.Game.City
     public class GroundView : MonoBehaviour
     {
         [SerializeField] private Color _exhausted = new(0.55f, 0.5f, 0.45f, 1f);
+        [SerializeField, Tooltip("What stands on ground seen but not yet the kingdom's: drained of colour under the veil.")]
+        private Color _discovered = new(0.8f, 0.8f, 0.88f, 1f);
 
         private GroundState _ground;
         private ProvinceMap _map;
@@ -100,7 +102,9 @@ namespace Codigames.Game.City
         {
             var position = ProvinceCoordinates.ToTilemap(cell);
             _map.Features.SetTileFlags(position, TileFlags.None);
-            _map.Features.SetColor(position, _harvesting.IsExhausted(cell, _clock.NowMs) ? _exhausted : Color.white);
+            var colour = _harvesting.IsExhausted(cell, _clock.NowMs) ? _exhausted : Color.white;
+            if (_fog.VisibilityAt(cell) == Visibility.Discovered) colour *= _discovered;
+            _map.Features.SetColor(position, colour);
         }
     }
 }

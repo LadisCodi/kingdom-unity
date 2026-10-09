@@ -5,8 +5,8 @@ namespace Codigames.Game.Editor.Art
 {
     // Import settings by folder, so a sprite dropped in its folder needs no hand-tuning:
     // - Art/Terrain: one cell's diamond, 256 px wide = one world unit, pivot at the centre.
-    // - Art/Features: standing on their cell, pivot at the bottom centre, as wide as their footprint
-    //   (a "_2x2" / "_3x3" suffix says how many cells across).
+    // - Art/Features: standing on their cell's bottom corner (pivot at the bottom centre), their canvas two
+    //   plots across their footprint (a "_2x2" / "_3x3" suffix says how many cells), one for a crop plot.
     // - Art/Buildings: pivot at the bottom centre; the view scales each to its footprint.
     // - Art/Fog: the clouds and the floor's diamond, centred on their cell, one cell wide (a cloud's tile scales it).
     // - Art/World: things drawn over the map (the collect bubble): pivot at the bottom centre, 100 px a unit.
@@ -35,6 +35,7 @@ namespace Codigames.Game.Editor.Art
         private const string BUILDINGS = "Assets/Art/Buildings/";
         private const string UI = "Assets/Art/UI/";
         private const string WORLD = "Assets/Art/World/";
+        private const string ONE_PLOT_FEATURE = "farmlands";
         private const string FOG = "Assets/Art/Fog/";
 
         private void OnPreprocessTexture()
@@ -82,11 +83,17 @@ namespace Codigames.Game.Editor.Art
             {
                 settings.spriteAlignment = (int)SpriteAlignment.BottomCenter;
                 importer.GetSourceTextureWidthAndHeight(out var width, out _);
-                settings.spritePixelsPerUnit = isFeature ? width / (float)FootprintCells(assetPath) : 100;
+                settings.spritePixelsPerUnit = isFeature ? width / (float)(FeatureCanvasPlots(assetPath) * FootprintCells(assetPath)) : 100;
             }
 
             importer.SetTextureSettings(settings);
         }
+
+        // A feature's canvas is two plots across, the thing somewhere inside it (a stand of trees spreads past its
+        // own ground, a boar covers a fraction of it), as the web authors them. A crop plot's art is a building's:
+        // one plot across.
+        private static int FeatureCanvasPlots(string path)
+            => System.IO.Path.GetFileNameWithoutExtension(path).StartsWith(ONE_PLOT_FEATURE) ? 1 : 2;
 
         private static int FootprintCells(string path)
         {
