@@ -240,8 +240,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Research Forestry
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f355ac51e825a449586cdba4b76c5982, type: 2}
-  m_sharedMaterial: {fileID: -7815540732891211191, guid: f355ac51e825a449586cdba4b76c5982, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a8e06052c2573a8c1835887a3f25216d, type: 2}
+  m_sharedMaterial: {fileID: 2269003093291254354, guid: a8e06052c2573a8c1835887a3f25216d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -260,7 +260,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -986781645
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2

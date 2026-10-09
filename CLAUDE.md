@@ -212,7 +212,7 @@ Tools/                     outside Unity: PureTests, Codegen, WebData (the web's
 - **No `Resources/` folder.** Prefabs, sprites and sounds reach code through
   **catalogs** registered in a `LifetimeScope`, keyed by ids. The one
   exception is a package that loads its own settings from there
-  (`Assets/Resources/DOTweenSettings.asset`).
+  (`Assets/Resources/DOTweenSettings.asset`, `Assets/TextMesh Pro/Resources/TMP Settings.asset`).
 - **File names come from ids** (`Farm_l1.png`, `Farm_l3.png` — a level draws
   the highest `_l<n>` at or below it), so an editor script fills catalogs and
   a test catches a missing sprite.
@@ -443,6 +443,19 @@ bar that bleeds under the notch or the home bar uses `SafeAreaBleed`. Text is
 TextMeshPro on the web's two families (`Assets/Art/Fonts`): **Nunito** for
 everything (Regular 400, SemiBold 600, Bold 700, ExtraBold 800 for a number
 that leads its row) and **Alegreya Black** for titles.
+
+**A label names a role, never a size.** The roles are TextMeshPro styles in
+`Assets/Settings/UI/Text Styles.asset` (TMP's default sheet): `Title`,
+`Heading`, `Body`, `Strong`, `Lead`, `Desc`, `Helper`, `Price`, `Button`… —
+the web's `--text-*` and `--weight-*` tokens in rpx. Set it with the label's
+*Text Style*; retune a role in the sheet and every label follows. A role that
+sets a weight (`<font-weight=…>`) sits on **Nunito Regular**: the fonts'
+weight tables swap the face, and Regular is the only base that can go down
+to 400. A label on a material of its own (a slab button, a plank, a title
+band) keeps its face and takes a size-only role. Colour stays out of the
+sheet. `TextStyleTests` refuses a menu label with no role. A price over a
+button is `Cost.prefab` (the header coin's 76 rpx); a price in a list row is
+`CostChip.prefab`.
 
 Rules the player sees:
 

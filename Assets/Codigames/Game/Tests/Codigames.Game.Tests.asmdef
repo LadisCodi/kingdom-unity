@@ -8,7 +8,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Codigames.Modules.Core",
-        "Codigames.Modules.Saves"
+        "Codigames.Modules.Saves",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [
         "Editor"
