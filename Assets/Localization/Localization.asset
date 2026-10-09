@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0f9576c8e6a383369dfb5c0845a4d10, type: 3}
+  m_Name: Localization
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Localization.LocalizationCatalog
+  _languages:
+  - _code: es
+    _files:
+    - {fileID: 4900000, guid: 00456642ab2609896be3568d76727652, type: 3}
+    - {fileID: 4900000, guid: c7e79c50e48080cf4aad66670adf21a6, type: 3}
+    - {fileID: 4900000, guid: 52cb30415c66e0a8289382bc949022c0, type: 3}

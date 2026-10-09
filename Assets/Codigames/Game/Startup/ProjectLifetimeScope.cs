@@ -4,6 +4,7 @@ using Codigames.Game.Data.City;
 using Codigames.Game.Data.Economy;
 using Codigames.Game.Data.Harvest;
 using Codigames.Game.Data.Magic;
+using Codigames.Game.Localization;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.Economy;
 using Codigames.Kingdom.Harvest;
@@ -36,6 +37,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private TrainingSettingsAsset _training;
 
         [Header("App")]
+        [SerializeField] private LocalizationCatalog _localization;
         [SerializeField] private SoundCatalog _soundCatalog;
         [SerializeField] private MMSoundManager _soundManager;
         [SerializeField] private LoadingScreen _loadingScreen;
@@ -46,7 +48,13 @@ namespace Codigames.Game.Startup
             RegisterBalance(builder);
 
             builder.Register<IClock, SystemClock>(Lifetime.Singleton);
-            builder.Register<Localizer>(Lifetime.Singleton).WithParameter("sourceCulture", "en-US");
+            builder.Register(_ =>
+            {
+                var localizer = new Localizer("en-US");
+                _localization.Fill(localizer);
+                localizer.SetCulture(DeviceLanguage.Culture());
+                return localizer;
+            }, Lifetime.Singleton);
             builder.Register<NumberFormat>(Lifetime.Singleton);
 
             builder.RegisterInstance(_soundCatalog).As<ISoundCatalog>();

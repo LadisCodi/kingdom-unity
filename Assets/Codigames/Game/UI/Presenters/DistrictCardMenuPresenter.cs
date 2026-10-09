@@ -184,7 +184,7 @@ namespace Codigames.Game.UI.Presenters
         private string Reason(UpgradeOffer offer) => offer.Refusal switch
         {
             ConstructionRefusal.MaxLevel => _localizer.Tr("Highest level"),
-            ConstructionRefusal.NeedsTownhallLevel => _localizer.Tr("Needs Townhall {n}", ("n", _numbers.Number(offer.RequiredTownhallLevel))),
+            ConstructionRefusal.NeedsTownhallLevel => _localizer.Tr("Needs Townhall level {n}", ("n", _numbers.Number(offer.RequiredTownhallLevel))),
             ConstructionRefusal.NoFreeBuilder => _localizer.Tr("Every builder is busy"),
             ConstructionRefusal.NeedsPopulation => _localizer.Tr("Needs {n} villagers", ("n", _numbers.Number(offer.RequiredPopulation))),
             _ => string.Empty,

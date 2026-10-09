@@ -128,8 +128,8 @@ namespace Codigames.Game.UI.Presenters
                 .ToList();
 
             var built = offer.Cap.HasValue
-                ? _localizer.Tr("Built {count}/{cap}", ("count", _numbers.Number(offer.Count)), ("cap", _numbers.Number(offer.Cap.Value)))
-                : _localizer.Tr("Built {count}", ("count", _numbers.Number(offer.Count)));
+                ? _localizer.Tr("Built {n}/{max}", ("n", _numbers.Number(offer.Count)), ("max", _numbers.Number(offer.Cap.Value)))
+                : _localizer.Tr("Built {n}", ("n", _numbers.Number(offer.Count)));
 
             var atCap = offer.Refusal == ConstructionRefusal.AtCap;
 
