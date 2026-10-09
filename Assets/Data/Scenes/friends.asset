@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: friends
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: friends
+  _trigger:
+    _kind: 26
+    _target: friends
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 0
+    _target: 
+    _amount: 0
+  _lines:
+  - _speaker: courier
+    _side: 1
+    _expression: surprised
+    _text: "Idris, royal courier! Letters, Your Majesty \u2014 from other kingdoms.
+      Friends!"
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: courier
+    _side: 1
+    _expression: happy
+    _text: "Write back, and they\u2019ll lend a hand each day. Pin a wish on the
+      board, and a friend can fill it."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: "And we can fill theirs. That\u2019s what neighbours are for \u2014 the
+      good ones, anyway."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: courier
+    _side: 1
+    _expression: 
+    _text: "The letters are here. I\u2019ll keep them coming!"
+    _box: auto
+    _point: ui:friends
+    _lock: 0
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 

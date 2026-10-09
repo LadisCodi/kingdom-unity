@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: morningRent
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: morningRent
+  _trigger:
+    _kind: 3
+    _target: TaxDay
+    _amount: 0
+  _anywhere: 0
+  _skippable: 0
+  _where: 0
+  _doneWhen:
+    _kind: 0
+    _target: 
+    _amount: 0
+  _lines:
+  - _speaker: advisor
+    _side: 0
+    _expression: idea
+    _text: "Tom pays his rent into the House. When the purse shows, gather it \u2014
+      it\u2019s his to give, and it costs you nothing."
+    _box: auto
+    _point: district:Housing
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: TaxDay
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: "That\u2019s how a kingdom is kept, I think: clear the fog, gather, build
+      \u2014 and they come home, one by one."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: idea
+    _text: "Lost? Look at their request and I\u2019ll point the way. Come back tomorrow
+      \u2014 the barns and the purse fill up overnight."
+    _box: auto
+    _point: quest
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: TaxDay
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: TaxDay
+      _amount: 0
+    _exit: 0
+    _stocks: 

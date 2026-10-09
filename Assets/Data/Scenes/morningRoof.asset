@@ -1,0 +1,136 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: morningRoof
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: morningRoof
+  _trigger:
+    _kind: 3
+    _target: ARoof
+    _amount: 0
+  _anywhere: 1
+  _skippable: 0
+  _where: 0
+  _doneWhen:
+    _kind: 0
+    _target: 
+    _amount: 0
+  _lines:
+  - _speaker: advisor
+    _side: 0
+    _expression: worried
+    _text: "Wood at last \u2014 and nowhere to sleep. But that shape past the trees\u2026
+      the Millers\u2019 house! Clear the fog, Your Majesty!"
+    _box: auto
+    _point: abandoned:OldHouse
+    _lock: 2
+    _until:
+      _kind: 39
+      _target: OldHouse
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: "There it is! The roof\u2019s fallen in, but the walls are sound. Open
+      it."
+    _box: auto
+    _point: abandoned:OldHouse
+    _lock: 2
+    _until:
+      _kind: 40
+      _target: OldHouse
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: worried
+    _text: "Builders want their wood up front \u2014 it says so in the guild charter.
+      Repair it!"
+    _box: auto
+    _point: ui:repair
+    _lock: 2
+    _until:
+      _kind: 41
+      _target: OldHouse
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: "Hear that? Hammers! And builders keep at it while you\u2019re away \u2014
+      they don\u2019t need watching. Unlike me."
+    _box: auto
+    _point: district:Housing
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: "Young Tom Miller\u2019s camped on the south road. Been waiting a year
+      for a roof to come home to."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: ARoof
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: ARoof
+      _amount: 0
+    _exit: 0
+    _stocks: 

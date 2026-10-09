@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: shrineRelic
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: shrineRelic
+  _trigger:
+    _kind: 14
+    _target: Shrine
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 49
+    _target: 
+    _amount: 0
+  _lines:
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: "The shrine stands again! And look what the Orcs left behind \u2014 the
+      Staff of Renewal, whole. It wants an altar. Tap the shrine."
+    _box: auto
+    _point: district:Shrine
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: shrine-slot
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: A relic set on this altar lends the kingdom its power. Tap the altar.
+    _box: auto
+    _point: ui:shrine-slot
+    _lock: 2
+    _until:
+      _kind: 15
+      _target: relicPicker
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 'There''s the Staff. It renews the land round the shrine: woods, fields
+      and stone hold more and grow back faster. Choose it.'
+    _box: auto
+    _point: ui:relic-pick:DowsingRod
+    _lock: 2
+    _until:
+      _kind: 48
+      _target: DowsingRod
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: Now Select, and it takes its place.
+    _box: auto
+    _point: ui:relic-pick-select
+    _lock: 2
+    _until:
+      _kind: 49
+      _target: DowsingRod
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: idea
+    _text: It sleeps until we wake it with Mana. Activate it and its power fills
+      the ground round the shrine. It grows longer, wider and stronger.
+    _box: auto
+    _point: ui:relic-activate
+    _lock: 0
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 

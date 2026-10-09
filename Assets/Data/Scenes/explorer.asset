@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: explorer
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: explorer
+  _trigger:
+    _kind: 43
+    _target: 
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 1
+  _doneWhen:
+    _kind: 45
+    _target: 
+    _amount: 0
+  _lines:
+  - _speaker: scout
+    _side: 1
+    _expression: 
+    _text: "Wren, Royal Scout, at your service! Boots laced, compass oiled \u2014
+      I\u2019m ready the moment you send me."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: "Sending a scout costs Gold, as a rule\u2026 but this first trip is on
+      the crown. I\u2019ve already signed the chit!"
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: scout
+    _side: 1
+    _expression: 
+    _text: "See the mist next door? Something\u2019s waiting under it. Tap that hex,
+      Your Majesty."
+    _box: auto
+    _point: hex:explore
+    _lock: 2
+    _until:
+      _kind: 15
+      _target: world
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: scout
+    _side: 1
+    _expression: 
+    _text: "Just say the word \u2014 Explore!"
+    _box: auto
+    _point: ui:explore
+    _lock: 2
+    _until:
+      _kind: 45
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: scout
+    _side: 1
+    _expression: 
+    _text: "I\u2019m off! I\u2019ll walk there, have a good look round, and send
+      word when I\u2019m done. Then come and see what I found."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: She always sends word. Usually by shouting it across the valley.
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 

@@ -1,0 +1,163 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: morningVillager
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: morningVillager
+  _trigger:
+    _kind: 3
+    _target: FirstVillager
+    _amount: 0
+  _anywhere: 0
+  _skippable: 0
+  _where: 0
+  _doneWhen:
+    _kind: 0
+    _target: 
+    _amount: 0
+  _lines:
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: "The House is still going up. Nobody moves in under scaffolding \u2014
+      I asked."
+    _box: auto
+    _point: district:Housing
+    _lock: 0
+    _until:
+      _kind: 14
+      _target: Housing
+      _amount: 1
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: idea
+    _text: "A roof, a pantry\u2026 now Tom! The Townhall bell carries to the roads.
+      Open it, Your Majesty."
+    _box: auto
+    _point: district:Townhall
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: card:train
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: "Ring for him! He\u2019ll need that roof \u2014 and a little Food for
+      the walk home."
+    _box: auto
+    _point: ui:card:train
+    _lock: 0
+    _until:
+      _kind: 33
+      _target: 
+      _amount: 1
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: idea
+    _text: "He\u2019s coming! We can wait for him \u2014 or a few Gems would hurry
+      him along. Whichever you think best!"
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 32
+      _target: 
+      _amount: 1
+    _exit: 0
+    _stocks: 
+  - _speaker: villager
+    _side: 1
+    _expression: happy
+    _text: "Is that\u2026 our roof? Your Majesty! Tom Miller, home at last. I\u2019ll
+      pay my rent on time, I swear it."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: Welcome home, Tom! You see, Your Majesty? Mend what the fog broke, and
+      the people come back.
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: "Let\u2019s close the Townhall \u2014 Tom\u2019s settling in."
+    _box: auto
+    _point: ui:card:close
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: quest
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: FirstVillager
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: FirstVillager
+      _amount: 0
+    _exit: 0
+    _stocks: 

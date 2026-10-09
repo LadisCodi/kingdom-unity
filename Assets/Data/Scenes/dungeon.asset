@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: dungeon
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: dungeon
+  _trigger:
+    _kind: 57
+    _target: dungeon
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 1
+  _doneWhen:
+    _kind: 0
+    _target: 
+    _amount: 0
+  _lines:
+  - _speaker: scout
+    _side: 1
+    _expression: 
+    _text: A dungeon! Three depths, eight rooms each, and treasure all the way down.
+    _box: auto
+    _point: hex:dungeon
+    _lock: 0
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: scout
+    _side: 1
+    _expression: 
+    _text: "Camp an army at its door and delve, room by room. Nobody can hold a dungeon
+      \u2014 only empty it."
+    _box: auto
+    _point: hex:dungeon
+    _lock: 0
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 

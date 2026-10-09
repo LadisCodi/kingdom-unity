@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: firstLair
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: firstLair
+  _trigger:
+    _kind: 20
+    _target: 
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 21
+    _target: 
+    _amount: 0
+  _lines:
+  - _speaker: advisor
+    _side: 0
+    _expression: worried
+    _text: "Your Majesty \u2014 a camp, past the fog! They\u2019ve smelled our smoke.
+      A town coming back to life draws company. Tap it\u2026 carefully."
+    _box: auto
+    _point: 'lair:'
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: lair-card
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: worried
+    _text: "Raiders! See that clock? When it runs out, they rob our stores \u2014
+      and nothing near their camp can be worked while it stands."
+    _box: auto
+    _point: ui:lair-card
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: worried
+    _text: "Axes won\u2019t do, not against that lot. You want soldiers \u2014 and
+      the book knows how. Look for the Warrior."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 

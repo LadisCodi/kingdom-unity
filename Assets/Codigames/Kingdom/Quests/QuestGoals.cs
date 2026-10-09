@@ -12,7 +12,7 @@ namespace Codigames.Kingdom.Quests
 {
     // The absolute goals, read off the kingdom. A build counts the moment it starts (it cannot be cancelled), and a
     // repaired ruin counts as its building. What is not in the game yet (an army, lairs, relics, heroes) reads 0.
-    public class QuestGoals : IQuestGoals
+    public class QuestGoals : IQuestGoals, IBuildingGroups
     {
         private const string ANY_DECORATION = "AnyDecoration";
         private const string ANY_PRODUCER = "AnyProducer";

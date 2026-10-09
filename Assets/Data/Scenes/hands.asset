@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: hands
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: hands
+  _trigger:
+    _kind: 3
+    _target: ManyHands
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 4
+    _target: ManyHands
+    _amount: 0
+  _lines:
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: New saws, and nobody on them. Open the new one.
+    _box: auto
+    _point: crew:Sawmill
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: card:workers
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: Two hands. Each walks to a tree in reach, cuts, and carries it home.
+    _box: auto
+    _point: ui:card:workers
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: ManyHands
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: villager
+    _side: 1
+    _expression: 
+    _text: 'Mind, Your Majesty: more hands than trees in reach, and the extra ones
+      just stand about. Count before you send them.'
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: ManyHands
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: ManyHands
+      _amount: 0
+    _exit: 0
+    _stocks: 

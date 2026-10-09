@@ -826,3 +826,101 @@ MonoBehaviour:
     _pitchJitter: 0
     _rate: 1
     _track: 3
+  - _id: voice:advisor
+    _clips:
+    - {fileID: 8300000, guid: a7b0343994575bec498a7bd6f2086358, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: voice:advisor_happy
+    _clips:
+    - {fileID: 8300000, guid: 82355ae08807fdb6fa48efbb78c58fa8, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: voice:advisor_idea
+    _clips:
+    - {fileID: 8300000, guid: 3e260eea78c1b2e31983bb1754e4fe93, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: voice:advisor_surprised
+    _clips:
+    - {fileID: 8300000, guid: 1e4c5b494dd3c12f6bcebca5ccc15191, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: voice:cook
+    _clips:
+    - {fileID: 8300000, guid: 3c14db32dfa2c503c9ed7f5321755b48, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: voice:orcChief
+    _clips:
+    - {fileID: 8300000, guid: e1dafcd489d651c98b749971e1f8ab93, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: voice:villager
+    _clips:
+    - {fileID: 8300000, guid: 58bbdec6519969f41a977a8504d012fd, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: voice:villager_happy
+    _clips:
+    - {fileID: 8300000, guid: 2b4b11ed450c4b522bbd9b6482595219, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: voice:villager_surprised
+    _clips:
+    - {fileID: 8300000, guid: a9712c2c6f9d7f141befb19cfeeba247, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: voice:warden
+    _clips:
+    - {fileID: 8300000, guid: 7390686a87c4149579bddbf49c9c14e6, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: voice:woodcutter
+    _clips:
+    - {fileID: 8300000, guid: 78ab818f07b096ba9a81daa047792ca6, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: voice:woodcutter_happy
+    _clips:
+    - {fileID: 8300000, guid: 924d337543762e4b19f4ee6df0b19e8a, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: voice:woodcutter_surprised
+    _clips:
+    - {fileID: 8300000, guid: 7a002b162601ec6cdad58f26ed309228, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0
+  - _id: voice:woodcutter_worried
+    _clips:
+    - {fileID: 8300000, guid: 40c9f637b0fd495c1a5e32568ed2edfa, type: 3}
+    _volume: 0.5
+    _pitchJitter: 0.03
+    _rate: 1
+    _track: 0

@@ -15,6 +15,7 @@ namespace Codigames.Game.Map
         private readonly ProvinceMap _map;
         private readonly Dictionary<LeanFinger, bool> _claims = new();
         private IMapDragHandler _dragHandler;
+        private Func<ModuleVector2Int, bool> _tapGate;
 
         public MapGestures(ProvinceMap map)
         {
@@ -41,6 +42,9 @@ namespace Codigames.Game.Map
         }
 
         public void SetDragHandler(IMapDragHandler handler) => _dragHandler = handler;
+
+        // Which taps reach the map: a tutorial line may hold them back. Null lets every tap through.
+        public void SetTapGate(Func<ModuleVector2Int, bool> gate) => _tapGate = gate;
 
         public void ClearDragHandler(IMapDragHandler handler)
         {
@@ -83,7 +87,9 @@ namespace Codigames.Game.Map
         private void OnFingerTap(LeanFinger finger)
         {
             if (finger.StartedOverGui || finger.IsOverGui) return;
-            Tapped?.Invoke(CellUnder(finger));
+            var cell = CellUnder(finger);
+            if (_tapGate != null && !_tapGate(cell)) return;
+            Tapped?.Invoke(cell);
         }
     }
 }

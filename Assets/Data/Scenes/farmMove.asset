@@ -1,0 +1,201 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: farmMove
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: farmMove
+  _trigger:
+    _kind: 3
+    _target: Fieldside
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 5
+    _target: Fieldside
+    _amount: 0
+  _lines:
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: "Nearly done \u2014 listen to those hammers!"
+    _box: auto
+    _point: district:Farm
+    _lock: 0
+    _until:
+      _kind: 14
+      _target: Farm
+      _amount: 1
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: worried
+    _text: "Oh. Oh no. A Farm works the plots one step around it, corners too \u2014
+      and ours are two steps away. I measured. Twice."
+    _box: auto
+    _point: district:Farm
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: "So pick it up and carry it. Did it with Widow Pell\u2019s henhouse once.
+      Hens weren\u2019t pleased."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: surprised
+    _text: "Can we? \u2026We can! The guild charter says a building may be moved
+      for free, as often as you like. Page forty!"
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: villager
+    _side: 1
+    _expression: 
+    _text: It wants to stand right between the two plots. Clear the fog there first,
+      Your Majesty.
+    _box: auto
+    _point: reach:Farm
+    _lock: 2
+    _until:
+      _kind: 12
+      _target: Farm
+      _amount: 2
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: Now open the Farm.
+    _box: auto
+    _point: district:Farm
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: card:move
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: idea
+    _text: "That\u2019s its Move knob. Tap it, and the whole Farm lifts right off
+      the ground!"
+    _box: auto
+    _point: ui:card:move
+    _lock: 2
+    _until:
+      _kind: 10
+      _target: Farm
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: villager
+    _side: 1
+    _expression: happy
+    _text: "There \u2014 between Dad\u2019s plots! Tap the spot."
+    _box: auto
+    _point: reach:Farm
+    _lock: 2
+    _until:
+      _kind: 11
+      _target: Farm
+      _amount: 2
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: Both plots in reach! Move it.
+    _box: auto
+    _point: ui:place-confirm
+    _lock: 2
+    _until:
+      _kind: 5
+      _target: Fieldside
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: 
+    _text: "Didn\u2019t drop a single plank. Better than the henhouse."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: Fieldside
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: Fieldside
+      _amount: 0
+    _exit: 0
+    _stocks: 

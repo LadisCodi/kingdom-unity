@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a410d1757598423e9bae90992f260ff6, type: 3}
+  m_Name: villager
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.SpeakerAsset
+  _id: villager
+  _name: Tom Miller
+  _title: "The Millers\u2019 son, home from the road"
+  _portrait: {fileID: 21300000, guid: 39561f540fc54d799b877cd91acf0814, type: 3}
+  _expressions:
+  - _expression: happy
+    _art: {fileID: 21300000, guid: ff4d39f812a259ababd833c19ef101a5, type: 3}
+  - _expression: worried
+    _art: {fileID: 21300000, guid: a26d8b1eb0b3d0ea3b2b151b23b7259d, type: 3}
+  - _expression: surprised
+    _art: {fileID: 21300000, guid: 87c053b4d13e2e856afe838dfdc4d020, type: 3}
+  _ribbon: {fileID: 21300000, guid: d1e894659140c5d148d470d914eefdc5, type: 3}

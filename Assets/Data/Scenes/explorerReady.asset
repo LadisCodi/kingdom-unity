@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: explorerReady
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: explorerReady
+  _trigger:
+    _kind: 46
+    _target: 
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 2
+  _doneWhen:
+    _kind: 47
+    _target: 
+    _amount: 0
+  _lines:
+  - _speaker: scout
+    _side: 1
+    _expression: 
+    _text: "Your Majesty! I\u2019m done at the hex \u2014 you\u2019ll want to see
+      this. Tap my message and I\u2019ll take you there."
+    _box: auto
+    _point: ui:notice:state:explorerReady
+    _lock: 2
+    _until:
+      _kind: 43
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: scout
+    _side: 1
+    _expression: 
+    _text: "Here I am! Tap the hex, and I\u2019ll show you everything I found."
+    _box: auto
+    _point: hex:ready
+    _lock: 2
+    _until:
+      _kind: 47
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: scout
+    _side: 1
+    _expression: 
+    _text: "Look at all that land \u2014 and what I dug up is already in your purse.
+      I\u2019ll head home now; send me out again once I\u2019m back."
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: "Every trip pushes the mist back a little further. I\u2019ll keep the
+      map \u2014 and the ledger!"
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 

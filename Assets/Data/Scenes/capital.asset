@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: capital
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: capital
+  _trigger:
+    _kind: 3
+    _target: ProperCapital
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 4
+    _target: ProperCapital
+    _amount: 0
+  _lines:
+  - _speaker: mason
+    _side: 1
+    _expression: happy
+    _text: "Master Kofi, Builders\u2019 Guild \u2014 Oakville chapter. Which is me.
+      Three families under roofs? This town has earned a proper hall!"
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: Master Kofi built half of old Oakville. The other half, he says, was built
+      wrong.
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: mason
+    _side: 1
+    _expression: 
+    _text: "Built by my cousin. Open the Townhall, Your Majesty \u2014 let\u2019s
+      see what she can become."
+    _box: auto
+    _point: district:Townhall
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: card:upgrade
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: mason
+    _side: 1
+    _expression: 
+    _text: 'Upgrade! Every level asks for more than the last, and gives back more:
+      more rent, more ground, more of everything.'
+    _box: auto
+    _point: ui:card:upgrade
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: upgrade-go
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: mason
+    _side: 1
+    _expression: 
+    _text: "The sheet says what she needs. Measure twice, pay once \u2014 then upgrade!"
+    _box: auto
+    _point: ui:upgrade-go
+    _lock: 0
+    _until:
+      _kind: 51
+      _target: Townhall
+      _amount: 2
+    _exit: 0
+    _stocks: 
+  - _speaker: mason
+    _side: 1
+    _expression: happy
+    _text: "Hammers up! A bigger job takes longer. That\u2019s not slowness, that\u2019s
+      craftsmanship \u2014 and builders keep at it while you\u2019re away."
+    _box: auto
+    _point: district:Townhall
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: ProperCapital
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: ProperCapital
+      _amount: 0
+    _exit: 0
+    _stocks: 

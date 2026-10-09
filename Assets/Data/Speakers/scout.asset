@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a410d1757598423e9bae90992f260ff6, type: 3}
+  m_Name: scout
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.SpeakerAsset
+  _id: scout
+  _name: Wren
+  _title: Royal Scout
+  _portrait: {fileID: 21300000, guid: 1724b95296d9a41838f91890163edc10, type: 3}
+  _expressions: []
+  _ribbon: {fileID: 21300000, guid: 2d3ceac10925ca41789f63b5b3e84567, type: 3}

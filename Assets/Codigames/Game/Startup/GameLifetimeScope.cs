@@ -12,6 +12,11 @@ using Codigames.Game.UI;
 using Codigames.Game.UI.Hud;
 using Codigames.Game.UI.Presenters;
 using Codigames.Game.UI.Research;
+using Codigames.Game.UI.Stage;
+using Codigames.Kingdom;
+using Codigames.Kingdom.Doors;
+using Codigames.Kingdom.Tutorial;
+using Codigames.Modules.Core;
 using Codigames.Kingdom.Map;
 using Codigames.Modules.Cameras;
 using Codigames.Modules.Feedback;
@@ -37,6 +42,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private WorldFeedbackCatalog _worldFeedbackCatalog;
         [SerializeField] private QuickInfoMessageSettings _quickInfoMessageSettings;
         [SerializeField] private UIRoot _uiRoot;
+        [SerializeField] private StageView _stage;
         [SerializeField] private CinemachineCameraRig _cameraRig;
         [SerializeField] private CameraInputHook _cameraInput;
         [SerializeField] private CameraSettings _cameraSettings;
@@ -90,10 +96,10 @@ namespace Codigames.Game.Startup
             builder.Register<HeaderMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<NavMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<BuildMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
-            builder.Register<PlacementMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<PlacementMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
             builder.Register<DistrictCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<TechProse>(Lifetime.Singleton);
-            builder.Register<RuinCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<RuinCardMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
             builder.Register<Codigames.Game.UI.Quests.QuestProse>(Lifetime.Singleton);
             builder.Register<Codigames.Game.UI.Quests.QuestFocus>(Lifetime.Singleton);
             builder.Register<QuestPillPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
@@ -103,6 +109,27 @@ namespace Codigames.Game.Startup
             builder.Register<KnowledgeSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.RegisterEntryPoint<KnowledgeTabPresenter>();
             builder.RegisterEntryPoint<BuildPlacementFlow>();
+            RegisterStage(builder);
+        }
+
+        // The tutorial stage: the kingdom's conditions and the screen's, the director, and the stage itself.
+        private void RegisterStage(IContainerBuilder builder)
+        {
+            builder.Register<UiTargets>(Lifetime.Singleton);
+            builder.RegisterEntryPoint<TapCount>().AsSelf();
+            builder.Register<KingdomConditions>(Lifetime.Singleton);
+            builder.Register<ScreenConditions>(Lifetime.Singleton);
+            builder.Register<IConditions>(resolver => new Conditions(new IConditionReader[]
+            {
+                resolver.Resolve<KingdomConditions>(), resolver.Resolve<ScreenConditions>(),
+            }), Lifetime.Singleton);
+            builder.Register<ScenePurse>(Lifetime.Singleton).As<IScenePurse>();
+            builder.Register(resolver => new SceneDirector(resolver.Resolve<ICatalog<ISceneDefinition>>().Items,
+                resolver.Resolve<KingdomState>().Tutorial, resolver.Resolve<IConditions>(), resolver.Resolve<IScenePurse>(),
+                resolver.Resolve<IMorning>()), Lifetime.Singleton);
+            builder.Register<StageContext>(Lifetime.Singleton).As<IStageContext>();
+            builder.RegisterComponent(_stage);
+            builder.RegisterEntryPoint<StagePresenter>();
         }
 
         private void RegisterFeedback(IContainerBuilder builder)

@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: summon
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: summon
+  _trigger:
+    _kind: 3
+    _target: FirstSummon
+    _amount: 0
+  _anywhere: 0
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 4
+    _target: FirstSummon
+    _amount: 0
+  _lines:
+  - _speaker: cook
+    _side: 1
+    _expression: 
+    _text: "Your first hero\u2019s on the house, love! Open the Tavern."
+    _box: auto
+    _point: district:Tavern
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: card:call
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: cook
+    _side: 1
+    _expression: 
+    _text: "Call! The banner\u2019s in the store."
+    _box: auto
+    _point: ui:card:call
+    _lock: 2
+    _until:
+      _kind: 18
+      _target: banner-call
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: cook
+    _side: 1
+    _expression: 
+    _text: Free, this once. Whoever answers is yours for good.
+    _box: auto
+    _point: ui:banner-call
+    _lock: 0
+    _until:
+      _kind: 31
+      _target: 
+      _amount: 1
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: A hero! They lead your soldiers into a fight, and grow with every one.
+      The Heroes tab keeps them all.
+    _box: auto
+    _point: 
+    _lock: 3
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 5
+      _target: FirstSummon
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: back
+    _lock: 2
+    _until:
+      _kind: 17
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: 
+    _text: 
+    _box: auto
+    _point: quest
+    _lock: 2
+    _until:
+      _kind: 4
+      _target: FirstSummon
+      _amount: 0
+    _exit: 0
+    _stocks: 

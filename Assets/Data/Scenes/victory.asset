@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba0e1840ea99ec2a9393fadfb0b20bd, type: 3}
+  m_Name: victory
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.StageSceneAsset
+  _id: victory
+  _trigger:
+    _kind: 21
+    _target: Orcs
+    _amount: 0
+  _anywhere: 1
+  _skippable: 1
+  _where: 0
+  _doneWhen:
+    _kind: 22
+    _target: Orcs
+    _amount: 0
+  _lines:
+  - _speaker: warden
+    _side: 1
+    _expression: 
+    _text: "They\u2019re scattered! And look what they left behind."
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: advisor
+    _side: 0
+    _expression: happy
+    _text: "Oakville is safe! Take the camp \u2014 whatever they stole comes home,
+      and the ground is ours again."
+    _box: auto
+    _point: lair:Orcs
+    _lock: 0
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 
+  - _speaker: woodcutter
+    _side: 1
+    _expression: happy
+    _text: Woodpile included.
+    _box: auto
+    _point: 
+    _lock: 0
+    _until:
+      _kind: 1
+      _target: 
+      _amount: 0
+    _exit: 0
+    _stocks: 

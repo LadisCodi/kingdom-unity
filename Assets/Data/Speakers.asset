@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7192850da7c61f71f941f71c0b9147d2, type: 3}
+  m_Name: Speakers
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Tutorial.SpeakerCollection
+  _entries:
+  - {fileID: 11400000, guid: 67073537a5f0ddd64b634acec10a2614, type: 2}
+  - {fileID: 11400000, guid: cc79ed54d76d7346bafd01cf5fce66eb, type: 2}
+  - {fileID: 11400000, guid: a6176531160be4f658b989107cb79810, type: 2}
+  - {fileID: 11400000, guid: 87094686da23bc5b8bd7e3239c6c6be5, type: 2}
+  - {fileID: 11400000, guid: d5dc7833b20c4c666a61214833b41d89, type: 2}
+  - {fileID: 11400000, guid: 740fd1eff2ccdfea6a5de84268ca484a, type: 2}
+  - {fileID: 11400000, guid: bc48ac4585b7cb3df95550cc4b0880ea, type: 2}
+  - {fileID: 11400000, guid: e9a64f288abee15d48c31f89ab5ede0e, type: 2}
+  - {fileID: 11400000, guid: 300837bb98176b3af9b87ab324db4599, type: 2}
+  - {fileID: 11400000, guid: 978b81070eba2c745950ee59caeeac79, type: 2}
+  - {fileID: 11400000, guid: 02bff3c703410594397c47bf0894e932, type: 2}

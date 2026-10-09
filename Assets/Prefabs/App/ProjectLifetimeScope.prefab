@@ -321,6 +321,9 @@ MonoBehaviour:
   _sites: {fileID: 11400000, guid: f5be6234054baa5ffadf3c9e8842127d, type: 2}
   _treasure: {fileID: 11400000, guid: a997340940dcad53b873379dc3f2321c, type: 2}
   _quests: {fileID: 11400000, guid: 1f03ac5a3e52845f096bbff9c66a0a09, type: 2}
+  _scenes: {fileID: 11400000, guid: 819b3b5d8c77007a7bd24e1b72a312ff, type: 2}
+  _speakers: {fileID: 11400000, guid: 83cf10aef51d5cad78bb05a4a3e5ab29, type: 2}
+  _stage: {fileID: 11400000, guid: 1eff32f922b7307c3b8e86e101ba7f2a, type: 2}
   _localization: {fileID: 11400000, guid: 4cb132bacd1c8e6019e5b08554960ec9, type: 2}
   _soundCatalog: {fileID: 11400000, guid: 83451c6dc2a68dd0d98655410dd96f32, type: 2}
   _music: {fileID: 11400000, guid: cf05f11578e47cd17bd4eecd9fc6e947, type: 2}
