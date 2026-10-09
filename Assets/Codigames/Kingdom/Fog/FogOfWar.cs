@@ -155,6 +155,14 @@ namespace Codigames.Kingdom.Fog
             Reveal(revealed, seen);
         }
 
+        // Brings a square's surroundings into view without making them the kingdom's: what a claim lights up.
+        public void DiscoverAround(Vector2Int anchor, int size, int radius)
+        {
+            var seen = GridMath.AroundRect(anchor, size, size, radius).Where(c => _map.Contains(c) && !_state.Revealed.Contains(c)).ToList();
+            foreach (var cell in seen) _state.Discovered.Add(cell);
+            if (seen.Count > 0) Changed?.Invoke(seen);
+        }
+
         // Every standing building's rings again: what a farther sight now sees.
         public void RevealAroundAll()
         {

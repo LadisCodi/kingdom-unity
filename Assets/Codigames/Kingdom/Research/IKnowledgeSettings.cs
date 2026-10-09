@@ -14,5 +14,8 @@ namespace Codigames.Kingdom.Research
 
         // A point bought with Gems; it never rises.
         double GemsPerPoint { get; }
+
+        // What claiming a landmark pays, once.
+        double LandmarkClaimLump { get; }
     }
 }

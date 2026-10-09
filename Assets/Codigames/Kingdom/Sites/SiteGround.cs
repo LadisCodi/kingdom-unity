@@ -26,7 +26,7 @@ namespace Codigames.Kingdom.Sites
         // The ruin standing on a cell; null when none does.
         public IAbandonedSite RuinAt(Vector2Int cell) => StandingRuins.FirstOrDefault(s => Cells(s).Contains(cell));
 
-        public bool Holds(Vector2Int cell) => RuinAt(cell) != null;
+        public bool Holds(Vector2Int cell) => RuinAt(cell) != null || _sites.Landmarks.Any(l => GridMath.Rect(l.Anchor, l.Size, l.Size).Contains(cell));
 
         public IEnumerable<Vector2Int> Cells(IAbandonedSite site)
         {
@@ -38,6 +38,7 @@ namespace Codigames.Kingdom.Sites
         public IEnumerable<(Vector2Int Anchor, int Size)> Blocks()
             => _sites.Abandoned.Select(s => (s.Anchor, Building: _buildings.Get(s.District)))
                 .Where(s => s.Building.Width == s.Building.Height && s.Building.Width > 1)
-                .Select(s => (s.Anchor, s.Building.Width));
+                .Select(s => (s.Anchor, s.Building.Width))
+                .Concat(_sites.Landmarks.Where(l => l.Size > 1).Select(l => (l.Anchor, l.Size)));
     }
 }

@@ -14,11 +14,13 @@ namespace Codigames.Game.Data.Research
         private double _goldPriceBase = 400;
         [BoxGroup("Buying it"), SerializeField, MinValue(1)] private double _goldPriceExponent = 2;
         [BoxGroup("Buying it"), SerializeField, MinValue(1), SuffixLabel("Gems")] private double _gemsPerPoint = 200;
+        [BoxGroup("Lumps"), SerializeField, MinValue(0), SuffixLabel("Knowledge")] private double _landmarkClaimLump = 3;
 
         public double PerHour => _perHour;
         public double Cap => _cap;
         public double GoldPriceBase => _goldPriceBase;
         public double GoldPriceExponent => _goldPriceExponent;
         public double GemsPerPoint => _gemsPerPoint;
+        public double LandmarkClaimLump => _landmarkClaimLump;
     }
 }

@@ -58,6 +58,7 @@ namespace Codigames.Game.Startup
             builder.RegisterComponent(_crewsView);
             builder.RegisterEntryPoint<MapTaps>();
             builder.RegisterEntryPoint<Sites.RuinsView>();
+            builder.RegisterEntryPoint<Sites.LandmarksView>();
             builder.RegisterEntryPoint<WorldCues>();
             builder.RegisterEntryPoint<TapPunch>().AsSelf();
             builder.Register<RewardHold>(Lifetime.Singleton);
@@ -89,6 +90,7 @@ namespace Codigames.Game.Startup
             builder.Register<DistrictCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<TechProse>(Lifetime.Singleton);
             builder.Register<RuinCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<LandmarkCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<ResearchMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<TechSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<KnowledgeSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();

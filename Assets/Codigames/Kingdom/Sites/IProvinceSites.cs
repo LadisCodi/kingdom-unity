@@ -6,5 +6,7 @@ namespace Codigames.Kingdom.Sites
     public interface IProvinceSites
     {
         IReadOnlyList<IAbandonedSite> Abandoned { get; }
+
+        IReadOnlyList<ILandmarkSite> Landmarks { get; }
     }
 }

@@ -14,7 +14,7 @@ using VContainer.Unity;
 namespace Codigames.Game.City
 {
     // What a tap on the map means while no menu is open: on the fog, a share of its price; on a building, a
-    // collect when its store is ready and its card otherwise; on a treasure, picking it up; on a ruin, its card; on
+    // collect when its store is ready and its card otherwise; on a treasure, picking it up; on a landmark or a ruin, its card; on
     // the ground, a harvest.
     public class MapTaps : IStartable, IDisposable
     {
@@ -28,10 +28,12 @@ namespace Codigames.Game.City
         private readonly FogInput _fogInput;
         private readonly Ruins _ruins;
         private readonly TreasureInput _treasures;
+        private readonly Landmarks _landmarks;
 
         public MapTaps(MapGestures gestures, UIManager ui, CityState city, ICatalog<IBuildingDefinition> buildings, HarvestInput harvest,
-            CollectInput collect, FogOfWar fog, FogInput fogInput, Ruins ruins, TreasureInput treasures)
+            CollectInput collect, FogOfWar fog, FogInput fogInput, Ruins ruins, TreasureInput treasures, Landmarks landmarks)
         {
+            _landmarks = landmarks;
             _treasures = treasures;
             _ruins = ruins;
             _fog = fog;
@@ -60,6 +62,13 @@ namespace Codigames.Game.City
 
             // A treasure is picked up before anything under it is touched.
             if (_treasures.TryPickUp(cell)) return;
+
+            var landmark = _landmarks.At(cell);
+            if (landmark != null)
+            {
+                _ = _ui.ShowMenu<LandmarkCardMenu, string>(landmark.Id);
+                return;
+            }
 
             var ruin = _ruins.At(cell);
             if (ruin != null)
