@@ -23,6 +23,8 @@ namespace Codigames.Game.UI.Presenters
     // the speed-ups that fit, and the Gems that finish it. It closes once the timer is done.
     public class SpeedupMenuPresenter : AbstractDataMenuPresenter<SpeedupMenu, SpeedJob>, IClosableMenuPresenter, ITickable
     {
+        private readonly Kingdom.Goods.Workshops _workshops;
+        private readonly Codigames.Game.Data.Goods.GoodCollection _goods;
         private readonly UIManager _ui;
         private readonly Speedups _speedups;
         private readonly Kingdom.Bag.Bag _bag;
@@ -45,8 +47,10 @@ namespace Codigames.Game.UI.Presenters
         public SpeedupMenuPresenter(IMenuViewFactory views, UIManager ui, Speedups speedups, Kingdom.Bag.Bag bag, ItemCollection items,
             ItemTiles tiles, GemRush rush, CityState city, BuildingCollection buildings, IConstructionSettings settings,
             VillagerTraining training, ITreasury treasury, UiIcons icons, NumberFormat numbers, Localizer localizer, IClock clock,
-            ISoundService sounds) : base(views)
+            ISoundService sounds, Kingdom.Goods.Workshops workshops, Codigames.Game.Data.Goods.GoodCollection goods) : base(views)
         {
+            _workshops = workshops;
+            _goods = goods;
             _ui = ui;
             _speedups = speedups;
             _bag = bag;
@@ -110,7 +114,12 @@ namespace Codigames.Game.UI.Presenters
         private void OnFinish()
         {
             var now = _clock.NowMs;
-            var done = Data.Kind == SpeedupKind.Construction ? _rush.FinishJob(Data.JobId, now) : _rush.FinishLine(now);
+            var done = Data.Kind switch
+            {
+                SpeedupKind.Construction => _rush.FinishJob(Data.JobId, now),
+                SpeedupKind.Workshop => _workshops.Rush(Data.JobId, now) == Kingdom.Goods.WorkshopRefusal.None,
+                _ => _rush.FinishLine(now),
+            };
             _sounds.Play(done ? SoundIds.GEM_SPEND : SoundIds.ERROR);
             Refresh();
         }
@@ -156,6 +165,16 @@ namespace Codigames.Game.UI.Presenters
                 var title = job.TargetLevel > 1 ? _localizer.Tr("{name} · level {n}", ("name", name), ("n", _numbers.Exact(job.TargetLevel))) : name;
                 return (title, _icons.Get(district.DefinitionId), (float)Math.Min(1, (now - job.StartedAt) / (job.Seconds * 1000)),
                     _rush.JobCost(job.Id, now));
+            }
+
+            if (Data.Kind == SpeedupKind.Workshop)
+            {
+                // The good and its workshop: "Planks · Carpenter".
+                var shop = _city.Districts.First(d => d.Id == Data.JobId);
+                var good = _workshops.GoodOf(shop);
+                var title = _localizer.Tr(good.Name) + " · " + _localizer.Tr(_buildings.Get<BuildingAsset>(shop.DefinitionId).DisplayName);
+                return (title, _goods.Get<Codigames.Game.Data.Goods.GoodAsset>(good.Id).Icon, (float)_workshops.Progress(shop.Id, 0, now),
+                    _workshops.RushCost(shop.Id, now));
             }
 
             var townhall = _settings.Townhall.Id;

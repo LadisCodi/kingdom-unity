@@ -68,6 +68,7 @@ namespace Codigames.Kingdom.Tests.Builders
             public IReadOnlyList<string> Requires { get; set; } = new string[0];
             public double Knowledge { get; set; } = 2;
             public IReadOnlyDictionary<string, double> Price { get; set; } = new Dictionary<string, double> { ["Gold"] = 20 };
+            public IReadOnlyDictionary<string, double> GoodsPrice { get; set; } = new Dictionary<string, double>();
             public TechKind Kind { get; set; } = TechKind.Mechanic;
             public List<TechUnlock> UnlockList { get; } = new();
             public List<TechEffect> EffectList { get; } = new();

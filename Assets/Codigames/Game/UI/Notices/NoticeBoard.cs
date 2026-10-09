@@ -31,10 +31,12 @@ namespace Codigames.Game.UI.Notices
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
         private readonly UIManager _ui;
+        private readonly Codigames.Game.Data.Goods.GoodCollection _goods;
 
         public NoticeBoard(Inbox inbox, INoticeSettings settings, CityState city, BuildingCollection buildings, IProvinceSites sites,
-            ProvinceSitesAsset siteArt, UiIcons icons, NumberFormat numbers, Localizer localizer, UIManager ui)
+            ProvinceSitesAsset siteArt, UiIcons icons, NumberFormat numbers, Localizer localizer, UIManager ui, Codigames.Game.Data.Goods.GoodCollection goods)
         {
+            _goods = goods;
             _inbox = inbox;
             _settings = settings;
             _city = city;
@@ -121,6 +123,7 @@ namespace Codigames.Game.UI.Notices
         {
             NewsGroup.Built => _localizer.Tr("{n} buildings finished", ("n", _numbers.Exact(count))),
             NewsGroup.Sighted => _localizer.Tr("{n} new places", ("n", _numbers.Exact(count))),
+            NewsGroup.Goods => _localizer.Tr("Goods ready"),
             _ => _localizer.Tr("The chain is done"),
         };
 
@@ -135,6 +138,7 @@ namespace Codigames.Game.UI.Notices
         {
             NewsGroup.Built => Built(news),
             NewsGroup.Sighted => Sighted(news),
+            NewsGroup.Goods => Goods(news),
             NewsGroup.ChainDone => new NewsLine
             {
                 Row = new NoticeRowData
@@ -169,6 +173,25 @@ namespace Codigames.Game.UI.Notices
                 },
                 Title = built ? _localizer.Tr("Construction complete!") : _localizer.Tr("Upgrade complete!"),
                 Body = built ? _localizer.Tr(building.Description) : _localizer.Tr("{name} is now level {n}.", ("name", name), ("n", level)),
+            };
+        }
+
+        private NewsLine Goods(News news)
+        {
+            if (!_goods.TryGet(news.Good, out var good)) return null;
+            var name = _localizer.Tr(good.Name);
+            var district = _city.Districts.FirstOrDefault(d => d.Id == news.District);
+            return new NewsLine
+            {
+                Row = new NoticeRowData
+                {
+                    Art = ((Codigames.Game.Data.Goods.GoodAsset)good).Icon,
+                    Name = name,
+                    Line = "+" + _numbers.Exact(news.Count),
+                    Go = district == null ? null : () => Open<DistrictCardMenu>(district.Id),
+                },
+                Title = _localizer.Tr("Goods ready"),
+                Body = _localizer.Tr("{n} {good} came off the workshop's bench.", ("n", _numbers.Exact(news.Count)), ("good", name)),
             };
         }
 

@@ -12,11 +12,14 @@ namespace Codigames.Kingdom.Bag
         // The typed speed-up that fits it.
         public SpeedupKind Kind { get; }
 
-        // A builder's job; null for the training line.
+        // A builder's job, or a workshop's district; null for the training line.
         public string JobId { get; }
 
         public static SpeedJob Construction(string jobId) => new(SpeedupKind.Construction, jobId);
 
         public static SpeedJob Training() => new(SpeedupKind.Training, null);
+
+        // The item at the front of a workshop's queue.
+        public static SpeedJob Workshop(string districtId) => new(SpeedupKind.Workshop, districtId);
     }
 }

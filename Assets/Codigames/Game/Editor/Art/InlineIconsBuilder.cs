@@ -21,7 +21,7 @@ namespace Codigames.Game.Editor.Art
         private const string TMP_SETTINGS = "Assets/TextMesh Pro/Resources/TMP Settings.asset";
 
         // The UI's own glyphs, by file name in Art/UI/Icons; the name is what a text writes.
-        private static readonly string[] EXTRAS = { "hourglass", "padlock", "clock", "compass", "harmony" };
+        private static readonly string[] EXTRAS = { "hourglass", "padlock", "clock", "compass", "harmony", "Planks", "CutStone", "Iron", "Runestone", "Starmetal", "Heartwood", "Moonglass", "workers" };
 
         // The face a glyph is measured against: the Price role's figure.
         private const float POINT_SIZE = 48f;

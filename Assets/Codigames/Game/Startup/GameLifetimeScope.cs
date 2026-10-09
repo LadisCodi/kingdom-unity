@@ -126,6 +126,7 @@ namespace Codigames.Game.Startup
             builder.Register<Codigames.Game.UI.Quests.QuestFocus>(Lifetime.Singleton);
             builder.Register<QuestPillPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<NoticeBoard>(Lifetime.Singleton);
+            builder.Register<Codigames.Game.UI.Data.PriceTerms>(Lifetime.Singleton);
             builder.Register<NoticesColumnPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<NoticeCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<LandmarkCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();

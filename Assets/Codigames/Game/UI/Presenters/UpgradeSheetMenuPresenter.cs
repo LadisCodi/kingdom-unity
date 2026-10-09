@@ -22,6 +22,7 @@ namespace Codigames.Game.UI.Presenters
     // its figure.
     public class UpgradeSheetMenuPresenter : AbstractDataMenuPresenter<UpgradeSheetMenu, string>, IClosableMenuPresenter
     {
+        private readonly PriceTerms _prices;
         private readonly UIManager _ui;
         private readonly Construction _construction;
         private readonly CityState _city;
@@ -38,8 +39,9 @@ namespace Codigames.Game.UI.Presenters
 
         public UpgradeSheetMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, CityState city,
             BuildingCollection buildings, ITreasury treasury, IClock clock, NumberFormat numbers, Localizer localizer,
-            BuildingStats stats, BuildingStatProse prose, TechProse techs, UiIcons icons, ISoundService sounds) : base(views)
+            BuildingStats stats, BuildingStatProse prose, TechProse techs, UiIcons icons, ISoundService sounds, PriceTerms prices) : base(views)
         {
+            _prices = prices;
             _ui = ui;
             _construction = construction;
             _city = city;
@@ -112,7 +114,7 @@ namespace Codigames.Game.UI.Presenters
             var locked = gates.Any(g => !g.Met);
             var note = locked ? _localizer.Tr("Complete all requirements to upgrade")
                 : offer.Refusal == ConstructionRefusal.NoFreeBuilder ? _localizer.Tr("Every builder is busy")
-                : offer.Refusal == ConstructionRefusal.CannotAfford ? _localizer.Tr("Not enough to pay for it")
+                : offer.Refusal is ConstructionRefusal.CannotAfford or ConstructionRefusal.NotEnoughGoods ? _localizer.Tr("Not enough to pay for it")
                 : string.Empty;
             var word = _localizer.Tr("Upgrade");
 
@@ -127,9 +129,7 @@ namespace Codigames.Game.UI.Presenters
                     .Select(c => new UpgradeRowData(_prose.Icon(c.Now), _prose.Label(c.Now.Kind), _prose.Value(c.Now), _prose.Delta(c), !c.Better))
                     .ToList(),
                 Gates = gates.Select(Gate).ToList(),
-                Price = offer.Price
-                    .Select(p => new PriceTerm(p.Key, _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
-                    .ToList(),
+                Price = _prices.Of(offer.Price, offer.Goods),
                 Time = "<color=#7A5C3E><font-weight=700><sprite name=\"hourglass\">" + _numbers.Duration(offer.Seconds) + "</font-weight></color>",
                 Locked = locked,
                 Button = locked ? "<size=60%><sprite name=\"padlock\"></size> " + word : word,

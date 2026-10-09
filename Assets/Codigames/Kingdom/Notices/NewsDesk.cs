@@ -21,8 +21,10 @@ namespace Codigames.Kingdom.Notices
         private readonly KingdomState _kingdom;
 
         public NewsDesk(Inbox inbox, NoticesState state, Construction construction, FogOfWar fog, SiteFinds finds, QuestChain chain,
-            IEnumerable<ISceneDefinition> scenes, TutorialState tutorial, KingdomState kingdom)
+            IEnumerable<ISceneDefinition> scenes, TutorialState tutorial, KingdomState kingdom, Goods.Workshops workshops = null)
         {
+            // Goods that came off one bench at one moment are one news, with their count.
+            if (workshops != null) workshops.Made += (district, good, at) => inbox.Tally(News.Goods(district.Id, good, at));
             _inbox = inbox;
             _fog = fog;
             _finds = finds;

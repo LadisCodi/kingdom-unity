@@ -85,7 +85,12 @@ namespace Codigames.Kingdom.Crews
         public IReadOnlyList<string> Currencies(DistrictState district)
             => Production(district).HarvestSources.Select(_harvesting.Source).Where(s => s != null).Select(s => s.Currency).Distinct().ToList();
 
-        public bool HasCrew(DistrictState district) => Production(district).HarvestSources.Count > 0;
+        // A crew of its own: one that harvests, or a workshop's at the bench.
+        public bool HasCrew(DistrictState district)
+            => Production(district).HarvestSources.Count > 0 || !string.IsNullOrEmpty(Production(district).Produces);
+
+        // A building's crew is about to change: its id and the moment.
+        public event Action<string, double> CrewChanging;
 
         public bool CanAssign(DistrictState district)
             => district.Built && HasCrew(district) && FreeVillagers > 0 && Assigned(district.Id) < Limit(district);
@@ -95,6 +100,7 @@ namespace Codigames.Kingdom.Crews
             var district = District(districtId);
             if (district == null || !CanAssign(district)) return false;
 
+            CrewChanging?.Invoke(districtId, now);
             var worker = new WorkerState { Id = _city.NewId(WORKER_PREFIX), BuildingId = districtId, StateStartedAt = now };
             _city.Workers.Add(worker);
             Dispatch(worker, district, now);
@@ -102,11 +108,12 @@ namespace Codigames.Kingdom.Crews
         }
 
         // Sends a villager home: one waiting by the door first, else the last to go out (its load is lost).
-        public bool Unassign(string districtId)
+        public bool Unassign(string districtId, double now)
         {
             var crew = WorkersOf(districtId).ToList();
             if (crew.Count == 0) return false;
 
+            CrewChanging?.Invoke(districtId, now);
             _city.Workers.Remove(crew.FirstOrDefault(w => w.Activity == WorkerActivity.Idle) ?? crew[crew.Count - 1]);
             return true;
         }

@@ -19,6 +19,8 @@ namespace Codigames.Kingdom.City
         AlreadyUnderWay,
         // The build or level asks more Harmony than the city's decorations supply.
         NeedsHarmony,
+        // The level or the build asks refined goods the stockpile does not hold.
+        NotEnoughGoods,
         NotFound,
     }
 }

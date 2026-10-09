@@ -26,6 +26,12 @@ namespace Codigames.Kingdom.City
         // The Harmony it demands at each level, a total (entry 0 is what building it asks); empty for none.
         IReadOnlyList<double> HarmonyCostPerLevel { get; }
 
+        // The good a workshop makes; null for a building that is not one.
+        string Produces { get; }
+
+        // How many goods a workshop may hold queued, by level.
+        IReadOnlyList<int> QueueLengthPerLevel { get; }
+
         // The feature it puts on the ground instead of standing (a crop plot plants Crops); null for a building.
         string Plants { get; }
 

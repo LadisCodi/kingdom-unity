@@ -13,10 +13,37 @@ namespace Codigames.Game.UI.Widgets
         [SerializeField] private TMP_Text _text;
         [SerializeField] private bool _wide;
 
+        // The smallest a long price is drawn, against its role's size.
+        private const float MIN_SCALE = 0.7f;
+
+        private string _line;
+
         public void Show(IReadOnlyList<PriceTerm> price, string trailing = null)
         {
             gameObject.SetActive(price.Count > 0 || !string.IsNullOrEmpty(trailing));
-            _text.text = PriceLine.Of(price, _wide, trailing);
+            _line = PriceLine.Of(price, _wide, trailing);
+            Fit();
+        }
+
+        // A price longer than its place is drawn smaller, all of it, rather than spilling out of its box.
+        private void Fit()
+        {
+            if (_line == null) return;
+            var room = ((RectTransform)transform).rect.width;
+            var wanted = _text.GetPreferredValues(_line).x;
+            if (room <= 0 || wanted <= room)
+            {
+                _text.text = _line;
+                return;
+            }
+
+            var scale = Mathf.Max(MIN_SCALE, Mathf.Floor(room / wanted * 100) / 100f);
+            _text.text = "<size=" + Mathf.RoundToInt(scale * 100) + "%>" + _line;
+        }
+
+        private void OnRectTransformDimensionsChange()
+        {
+            if (isActiveAndEnabled) Fit();
         }
     }
 }

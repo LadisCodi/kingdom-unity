@@ -27,11 +27,13 @@ namespace Codigames.Kingdom.City
         private readonly IBonuses _bonuses;
         private readonly IPlanting _planting;
         private readonly Harmony _harmony;
+        private readonly Goods.Stockpile _stockpile;
 
         public Construction(CityState city, ITreasury treasury, Placement placement, ICatalog<IBuildingDefinition> buildings,
             IConstructionSettings settings, IResearchGates gates = null, IBonuses bonuses = null, IPlanting planting = null,
-            Harmony harmony = null)
+            Harmony harmony = null, Goods.Stockpile stockpile = null)
         {
+            _stockpile = stockpile;
             _harmony = harmony;
             _planting = planting;
             _gates = gates;
@@ -70,7 +72,10 @@ namespace Codigames.Kingdom.City
 
             var building = _buildings.Get(definitionId);
             var ordinal = CountOf(building) + 1;
-            if (!_treasury.TryPay(BuildingPricing.Currencies(building, ordinal, 1))) return ConstructionRefusal.CannotAfford;
+            if (!_treasury.CanAfford(BuildingPricing.Currencies(building, ordinal, 1))) return ConstructionRefusal.CannotAfford;
+            if (!CanAffordGoods(building, 1)) return ConstructionRefusal.NotEnoughGoods;
+            _treasury.TryPay(BuildingPricing.Currencies(building, ordinal, 1));
+            _stockpile?.TryPay(BuildingPricing.Goods(building, 1));
             if (IsPlantable(building)) return Plant(building, anchor, now);
 
             CityChanging?.Invoke(now);
@@ -130,8 +135,16 @@ namespace Codigames.Kingdom.City
             if (!IsPlantable(building) && !CityQueries.HasFreeBuilder(_city)) return ConstructionRefusal.NoFreeBuilder;
 
             if (!_treasury.CanAfford(BuildingPricing.Currencies(building, count + 1, 1))) return ConstructionRefusal.CannotAfford;
+            if (!CanAffordGoods(building, 1)) return ConstructionRefusal.NotEnoughGoods;
             return HarmonyShort(building, 1) > 0 ? ConstructionRefusal.NeedsHarmony : ConstructionRefusal.None;
         }
+
+        // The refined goods a build (level 1) or a level costs, as charged: never multiplied by the instance.
+        public IReadOnlyDictionary<string, double> GoodsFor(IBuildingDefinition building, int level)
+            => _stockpile?.Priced(BuildingPricing.Goods(building, level)) ?? new Dictionary<string, double>();
+
+        private bool CanAffordGoods(IBuildingDefinition building, int level)
+            => _stockpile == null || _stockpile.CanAfford(BuildingPricing.Goods(building, level));
 
         // How much more Harmony a build (level 1) or a level asks than the city has: 0 when it may go ahead.
         public double HarmonyShort(IBuildingDefinition building, int level, string district = null)
@@ -147,7 +160,7 @@ namespace Codigames.Kingdom.City
 
             return new BuildOffer(definitionId, count + 1, BuildingPricing.Currencies(building, count + 1, 1),
                 BuildSeconds(building, count, rings), count, MaxCount(building), BuildRefusal(definitionId),
-                MissingTech(_gates?.DistrictTech(definitionId)));
+                MissingTech(_gates?.DistrictTech(definitionId)), GoodsFor(building, 1));
         }
 
         public ConstructionRefusal Upgrade(string districtId, double now)
@@ -160,7 +173,10 @@ namespace Codigames.Kingdom.City
 
             var building = _buildings.Get(district.DefinitionId);
             var target = district.Level + 1;
-            if (!_treasury.TryPay(BuildingPricing.Currencies(building, district.Ordinal, target))) return ConstructionRefusal.CannotAfford;
+            if (!_treasury.CanAfford(BuildingPricing.Currencies(building, district.Ordinal, target))) return ConstructionRefusal.CannotAfford;
+            if (!CanAffordGoods(building, target)) return ConstructionRefusal.NotEnoughGoods;
+            _treasury.TryPay(BuildingPricing.Currencies(building, district.Ordinal, target));
+            _stockpile?.TryPay(BuildingPricing.Goods(building, target));
 
             CityChanging?.Invoke(now);
             Start(district, target, UpgradeSeconds(building, target), now);
@@ -179,15 +195,20 @@ namespace Codigames.Kingdom.City
                 return new UpgradeOffer(district.Level, new Dictionary<string, double>(), 0, ConstructionRefusal.MaxLevel, 0);
 
             var price = BuildingPricing.Currencies(building, district.Ordinal, target);
+            // The purses before Harmony: what is short is said first.
             var refusal = UpgradeRefusal(district);
-            if (refusal == ConstructionRefusal.None && !_treasury.CanAfford(price)) refusal = ConstructionRefusal.CannotAfford;
+            if (refusal is ConstructionRefusal.None or ConstructionRefusal.NeedsHarmony)
+            {
+                if (!_treasury.CanAfford(price)) refusal = ConstructionRefusal.CannotAfford;
+                else if (!CanAffordGoods(building, target)) refusal = ConstructionRefusal.NotEnoughGoods;
+            }
 
             var gateIndex = district.Level - 1;
             var townhall = At(building.Gates.RequiredTownhallLevelPerLevel, gateIndex);
             var population = At(building.Gates.RequiredPopulationPerLevel, gateIndex);
 
             return new UpgradeOffer(target, price, UpgradeSeconds(building, target), refusal, townhall, population,
-                MissingTech(_gates?.LevelTech(district.DefinitionId, target)));
+                MissingTech(_gates?.LevelTech(district.DefinitionId, target)), GoodsFor(building, target));
         }
 
         // Every gate on a district's next level, met and unmet alike — a list with ticks is a plan, where the first
