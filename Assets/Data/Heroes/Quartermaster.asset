@@ -19,7 +19,7 @@ MonoBehaviour:
   _portrait: {fileID: 21300000, guid: 1a0a51a5c1d067f199a1e91e49602857, type: 3}
   _fragment: {fileID: 21300000, guid: d20b562809354dd21a8c98c320fda595, type: 3}
   _rarity: 0
-  _bagRank: 1
+  _bagRank: 0
   _unitType: Lancer
   _skill: Bulwark
   _skillValue: 2

@@ -19,7 +19,7 @@ MonoBehaviour:
   _portrait: {fileID: 21300000, guid: 53a50aecca3dfd791b11a244bcb29c9e, type: 3}
   _fragment: {fileID: 21300000, guid: 535b47524804f5c47a77ce852889bd8f, type: 3}
   _rarity: 1
-  _bagRank: 1
+  _bagRank: 0
   _unitType: Archer
   _skill: Sharpshot
   _skillValue: 100

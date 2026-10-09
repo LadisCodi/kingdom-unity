@@ -19,7 +19,7 @@ MonoBehaviour:
   _portrait: {fileID: 21300000, guid: 02bee337cea44bc4e8ff32997162b778, type: 3}
   _fragment: {fileID: 21300000, guid: 33ab8930683759de5be3ccb65c6e9d53, type: 3}
   _rarity: 0
-  _bagRank: 1
+  _bagRank: 0
   _unitType: Lancer
   _skill: Plunder
   _skillValue: 15

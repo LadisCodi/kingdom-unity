@@ -43,3 +43,7 @@ MonoBehaviour:
   _heroSlotGemCostBase: 2500
   _heroSlotGemCostGrowth: 2
   _heroRecoverHours: 8
+  _bagOpenCommon: 3
+  _bagOpenRare: 2
+  _bagOpenLegendary: 1
+  _firstCallsNewHero: 2

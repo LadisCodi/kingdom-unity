@@ -15,7 +15,7 @@ namespace Codigames.Game.Data.Heroes
         [BoxGroup("Art"), SerializeField, PreviewField(48)] private Sprite _portrait;
         [BoxGroup("Art"), SerializeField, PreviewField(48)] private Sprite _fragment;
         [SerializeField] private HeroRarity _rarity;
-        [SerializeField, Tooltip("Its place in its rarity's bag: the order new heroes arrive in.")] private int _bagRank = 1;
+        [SerializeField, MinValue(0), Tooltip("Its place in its rarity's bag: the order new heroes arrive in. 0 = after the ranked ones, shuffled per kingdom.")] private int _bagRank;
         [SerializeField, Tooltip("The unit type it fights as.")] private string _unitType = "Warrior";
 
         [BoxGroup("Skill"), SerializeField] private string _skill;
@@ -47,7 +47,7 @@ namespace Codigames.Game.Data.Heroes
         public Sprite Portrait => _portrait;
         public Sprite Fragment => _fragment;
         public HeroRarity Rarity => _rarity;
-        public int BagRank => _bagRank;
+        public int? BagRank => _bagRank > 0 ? _bagRank : null;
         public string UnitType => _unitType;
         public string Skill => _skill;
         public double SkillValue => _skillValue;

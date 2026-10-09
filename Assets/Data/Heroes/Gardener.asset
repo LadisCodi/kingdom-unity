@@ -19,7 +19,7 @@ MonoBehaviour:
   _portrait: {fileID: 21300000, guid: 04dacb6431c4056a0ab011843cb29ffe, type: 3}
   _fragment: {fileID: 21300000, guid: 1dd4c8c4780a8986fb8e618ad89679e8, type: 3}
   _rarity: 0
-  _bagRank: 1
+  _bagRank: 0
   _unitType: Warrior
   _skill: Wave
   _skillValue: 3

@@ -50,7 +50,7 @@ namespace Codigames.Game.Session
             builder.Register(resolver => resolver.Resolve<KingdomState>().Bag, Lifetime.Singleton);
             builder.Register<Boosts>(Lifetime.Singleton).AsSelf().As<IBoosts>();
             builder.Register<BoostEffects>(Lifetime.Singleton);
-            builder.Register<Codigames.Kingdom.Bag.Bag>(Lifetime.Singleton).AsSelf().As<IItemGrants>();
+            builder.Register<Codigames.Kingdom.Bag.Bag>(Lifetime.Singleton).AsSelf().As<IItemGrants>().As<IItemHoldings>();
             builder.Register<Speedups>(Lifetime.Singleton);
             builder.Register<SiteGround>(Lifetime.Singleton).AsSelf().As<ISiteGround>();
             builder.Register(resolver => resolver.Resolve<KingdomState>().Lairs, Lifetime.Singleton);
@@ -61,6 +61,10 @@ namespace Codigames.Game.Session
                 resolver.Resolve<ICatalog<Kingdom.Heroes.IHeroDefinition>>(), resolver.Resolve<Kingdom.Heroes.HeroLadder>(), resolver.Resolve<ITreasury>(),
                 resolver.Resolve<Kingdom.Goods.Stockpile>(), resolver.Resolve<CityState>(), resolver.Resolve<ICatalog<IBuildingDefinition>>(),
                 resolver.Resolve<IBonuses>(), () => resolver.Resolve<Kingdom.Modifiers.IModifiers>()), Lifetime.Singleton);
+            builder.Register(resolver => resolver.Resolve<KingdomState>().Gacha, Lifetime.Singleton);
+            builder.Register(resolver => new Kingdom.Heroes.Gacha(resolver.Resolve<KingdomState>().Gacha, resolver.Resolve<Kingdom.Heroes.Heroes>(),
+                resolver.Resolve<ICatalog<Kingdom.Heroes.IBannerDefinition>>(), resolver.Resolve<IItemHoldings>(), resolver.Resolve<ITreasury>(),
+                resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IBonuses>()), Lifetime.Singleton);
             // The kingdom's modifier stack: the Legendaries' boons now; relics and events join it.
             builder.Register<Kingdom.Modifiers.IModifiers>(resolver => new Kingdom.Modifiers.ModifierStack(
                 new Kingdom.Modifiers.IModifierSource[] { resolver.Resolve<Kingdom.Heroes.Heroes>() },

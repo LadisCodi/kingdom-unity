@@ -60,6 +60,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private Data.Army.CombatSettingsAsset _combat;
         [SerializeField] private Data.Heroes.HeroCollection _heroes;
         [SerializeField] private Data.Heroes.HeroLadderSettingsAsset _heroLadder;
+        [SerializeField] private Data.Heroes.BannerCollection _banners;
         [SerializeField] private QuestCollection _quests;
         [SerializeField] private SceneCollection _scenes;
         [SerializeField] private SpeakerCollection _speakers;
@@ -125,6 +126,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_combat).AsSelf().As<Kingdom.Battles.ICombatSettings>();
             builder.RegisterInstance(_heroes).AsSelf().As<ICatalog<Kingdom.Heroes.IHeroDefinition>>();
             builder.RegisterInstance(_heroLadder).As<Kingdom.Heroes.IHeroLadderSettings>();
+            builder.RegisterInstance(_banners).AsSelf().As<ICatalog<Kingdom.Heroes.IBannerDefinition>>();
             builder.RegisterInstance(_quests).As<ICatalog<IQuestDefinition>>();
             builder.RegisterInstance(_scenes).As<ICatalog<ISceneDefinition>>();
             builder.RegisterInstance(_speakers).As<ICatalog<ISpeaker>>();

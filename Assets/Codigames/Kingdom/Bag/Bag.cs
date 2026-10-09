@@ -15,7 +15,7 @@ namespace Codigames.Kingdom.Bag
     // 2. A chest is a duration of the city's own production, read when it is opened, floored for a coin the city
     //    barely makes yet; what it pays lands in the purse, past any store.
     // 3. A use is a command at `now`: nothing about it is scheduled, so an absence never replays one.
-    public class Bag : IItemGrants
+    public class Bag : IItemHoldings
     {
         public const string MANA = "Mana";
         private const double SECONDS_PER_HOUR = 3600;
