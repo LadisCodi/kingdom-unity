@@ -23,6 +23,7 @@ namespace Codigames.Game.UI.Presenters
         private const string BUILD = "build";
         private const string RESEARCH = "research";
         private const string BAG = "bag";
+        private const string HEROES = "heroes";
 
         // Each tab's door; a tab with none here stays shut (its system is not in the game yet).
         private static readonly Dictionary<string, DoorId> DOORS = new()
@@ -119,6 +120,7 @@ namespace Codigames.Game.UI.Presenters
             if (id == BUILD) _ = _ui.ShowMenu<BuildMenu>();
             else if (id == RESEARCH) _ = _ui.ShowMenu<ResearchMenu>();
             else if (id == BAG) _ = _ui.ShowMenu<BagMenu>();
+            else if (id == HEROES) _ = _ui.ShowMenu<HeroesMenu>();
         }
 
         private void OnPoured(string id, double amount) => ShowBadges();

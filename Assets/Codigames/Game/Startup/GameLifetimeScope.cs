@@ -66,6 +66,8 @@ namespace Codigames.Game.Startup
             builder.RegisterEntryPoint<MapGestures>().AsSelf();
             builder.Register<HarvestInput>(Lifetime.Singleton);
             builder.Register<Lairs.LairWords>(Lifetime.Singleton);
+            builder.Register<Heroes.HeroWords>(Lifetime.Singleton);
+            builder.Register<UI.Heroes.HeroCards>(Lifetime.Singleton);
             builder.Register<CollectInput>(Lifetime.Singleton);
             builder.Register<FogInput>(Lifetime.Singleton);
             builder.Register<TreasureInput>(Lifetime.Singleton);
@@ -140,6 +142,8 @@ namespace Codigames.Game.Startup
             builder.Register<Lairs.AttackParty>(Lifetime.Singleton);
             builder.Register<Battles.PlaybackPreferences>(Lifetime.Singleton);
             builder.Register<AttackSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<HeroesMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<HeroCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<BattleScreenPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<ResearchMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<TechSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();

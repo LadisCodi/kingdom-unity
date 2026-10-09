@@ -41,6 +41,8 @@ namespace Codigames.Game.Editor.Art
             // A head panel's deckled paper, and the painted plank nailed across it: its nails live in the ends.
             ["panel-paper"] = new Vector4(48, 48, 48, 48), ["plank-red"] = Ends(115), ["plank-blue"] = Ends(115),
             ["plank-wood"] = Ends(115), ["plank-green"] = Ends(115),
+            // A hero card's gilt frame (its corners and bevel the outer 50 px), and its level's dark glass pill.
+            ["hero-card-frame"] = new Vector4(50, 50, 50, 50), ["hero-level-pill"] = Ends(44),
         };
 
         private static Vector4 Ends(int width) => new(width, 0, width, 0);

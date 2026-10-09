@@ -128,25 +128,37 @@ namespace Codigames.Game.UI.Presenters
             Refresh();
             _treasury.Changed += OnChanged;
             _hold.Changed += Refresh;
+            _ui.MenuShown += OnMenu;
+            _ui.MenuHidden += OnMenu;
         }
 
         protected override void UnbindInternal(HeaderMenu view)
         {
             _treasury.Changed -= OnChanged;
             _hold.Changed -= Refresh;
+            _ui.MenuShown -= OnMenu;
+            _ui.MenuHidden -= OnMenu;
         }
 
         private void OnChanged(string currency, double amount) => Refresh();
+
+        private void OnMenu(IMenuPresenter menu) => Refresh();
 
         private void Refresh()
         {
             var visible = Visible().ToList();
             var key = string.Join(",", visible.Select(c => c.Id));
 
+            // A menu that reads its own purse puts its rows in place of the coins.
+            var purse = (_ui.TopMost as IPurseMenu)?.Purse;
+            if (purse != null) key = string.Join(",", purse) + "|" + key;
             if (key != _shown)
             {
                 _shown = key;
-                View.SetSlots(visible.Select(c => (c.Id, c.Icon, c.Sold, c.Place == PlankPlace.Right)));
+                var right = visible.Where(c => c.Place == PlankPlace.Right).Select(c => (c.Id, c.Icon, c.Sold, true));
+                View.SetSlots(purse != null
+                    ? purse.Select(id => (id, _icons.Get(id), false, false)).Concat(right)
+                    : visible.Select(c => (c.Id, c.Icon, c.Sold, c.Place == PlankPlace.Right)));
             }
 
             // Rolled up past ten thousand, so a balance never outgrows its slot.

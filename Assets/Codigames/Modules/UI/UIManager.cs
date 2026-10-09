@@ -34,6 +34,9 @@ namespace Codigames.Modules.UI
 
         private IClosableMenuPresenter Top => _stack.Count > 0 ? _stack[_stack.Count - 1] : null;
 
+        // The top-most closable menu, or null when only persistent menus are up.
+        public IMenuPresenter TopMost => Top;
+
         public bool IsShown<TView>() where TView : IMenuView => IsShown(typeof(TView));
 
         public bool IsShown(Type menuType) => Presenters.TryGetValue(menuType, out var presenter) && presenter.IsShown;
