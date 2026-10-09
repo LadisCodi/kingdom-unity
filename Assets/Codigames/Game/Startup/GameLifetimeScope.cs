@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Codigames.Game.Cameras;
 using Codigames.Game.City;
 using Codigames.Game.Feedback;
+using Codigames.Game.Harvest;
 using Codigames.Game.Map;
 using Codigames.Game.Session;
 using Codigames.Game.UI;
@@ -39,6 +40,7 @@ namespace Codigames.Game.Startup
             builder.RegisterComponent(_groundView);
             builder.RegisterComponent(_ghostView);
             builder.RegisterEntryPoint<MapGestures>().AsSelf();
+            builder.RegisterEntryPoint<HarvestInput>();
             RegisterUI(builder);
             RegisterFeedback(builder);
             RegisterCamera(builder);

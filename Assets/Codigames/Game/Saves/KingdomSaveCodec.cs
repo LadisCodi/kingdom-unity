@@ -1,4 +1,5 @@
 using Codigames.Kingdom;
+using Codigames.Kingdom.Harvest.State;
 using Codigames.Modules.Saves;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -13,7 +14,7 @@ namespace Codigames.Game.Saves
 
         private readonly JsonSerializer _serializer = JsonSerializer.Create(new JsonSerializerSettings
         {
-            Converters = { new CellDictionaryConverter<string>() },
+            Converters = { new CellDictionaryConverter<string>(), new CellDictionaryConverter<CellDepot>() },
             ObjectCreationHandling = ObjectCreationHandling.Replace,
         });
 

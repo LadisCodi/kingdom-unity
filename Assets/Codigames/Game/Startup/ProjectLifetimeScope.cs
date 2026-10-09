@@ -2,8 +2,12 @@ using Codigames.Game.App;
 using Codigames.Game.Audio;
 using Codigames.Game.Data.City;
 using Codigames.Game.Data.Economy;
+using Codigames.Game.Data.Harvest;
+using Codigames.Game.Data.Magic;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.Economy;
+using Codigames.Kingdom.Harvest;
+using Codigames.Kingdom.Magic;
 using Codigames.Modules.Audio;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Core;
@@ -23,6 +27,11 @@ namespace Codigames.Game.Startup
         [SerializeField] private CurrencyCollection _currencies;
         [SerializeField] private BuildingCollection _buildings;
         [SerializeField] private ConstructionSettingsAsset _construction;
+        [SerializeField] private HarvestSourceCollection _harvestSources;
+        [SerializeField] private FeatureCollection _features;
+        [SerializeField] private TerrainCollection _terrains;
+        [SerializeField] private TapSettingsAsset _tap;
+        [SerializeField] private ManaSettingsAsset _mana;
 
         [Header("App")]
         [SerializeField] private SoundCatalog _soundCatalog;
@@ -54,6 +63,11 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_currencies).As<ICatalog<ICurrencyDefinition>>().As<IPlankCurrencies>().As<ICurrencyIcons>();
             builder.RegisterInstance(_buildings).AsSelf().As<ICatalog<IBuildingDefinition>>().As<IBuildingCards>();
             builder.RegisterInstance(_construction).As<IConstructionSettings>();
+            builder.RegisterInstance(_harvestSources).As<ICatalog<IHarvestSource>>();
+            builder.RegisterInstance(_features).AsSelf().As<ICatalog<IFeatureDefinition>>();
+            builder.RegisterInstance(_terrains).As<ITerrainYields>();
+            builder.RegisterInstance(_tap).As<ITapSettings>();
+            builder.RegisterInstance(_mana).As<IManaSettings>();
         }
     }
 }

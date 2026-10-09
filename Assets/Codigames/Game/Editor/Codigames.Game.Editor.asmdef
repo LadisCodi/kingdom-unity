@@ -6,7 +6,8 @@
         "Codigames.Kingdom",
         "Codigames.Modules.Core",
         "VContainer",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "MoreMountains.Tools"
     ],
     "includePlatforms": [
         "Editor"

@@ -1,25 +1,54 @@
+using Codigames.Game.Data.Harvest;
 using Codigames.Game.Map;
 using Codigames.Kingdom.City.State;
+using Codigames.Kingdom.Harvest;
+using Codigames.Modules.Clock;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using VContainer;
+using ModuleVector2Int = Codigames.Modules.Core.Vector2Int;
 
 namespace Codigames.Game.City
 {
     // Keeps the features layer in step with the ground: a feature gone from the ground (under the Townhall,
-    // harvested away) is gone from the map.
+    // emptied for good) is gone from the map, one that comes back is drawn again, and a cell emptied and growing
+    // back is drawn dim.
     public class GroundView : MonoBehaviour
     {
+        [SerializeField] private Color _exhausted = new(0.55f, 0.5f, 0.45f, 1f);
+
         private GroundState _ground;
         private ProvinceMap _map;
+        private Harvesting _harvesting;
+        private FeatureCollection _features;
+        private IClock _clock;
 
         [Inject]
-        public void Construct(GroundState ground, ProvinceMap map)
+        public void Construct(GroundState ground, ProvinceMap map, Harvesting harvesting, FeatureCollection features, IClock clock)
         {
             _ground = ground;
             _map = map;
+            _harvesting = harvesting;
+            _features = features;
+            _clock = clock;
         }
 
-        private void Start() => Refresh();
+        private void Start()
+        {
+            Refresh();
+            _harvesting.DepotChanged += OnDepotChanged;
+            _harvesting.FeatureRemoved += OnFeatureRemoved;
+            _harvesting.FeatureAppeared += OnFeatureAppeared;
+        }
+
+        private void OnDestroy()
+        {
+            if (_harvesting == null) return;
+
+            _harvesting.DepotChanged -= OnDepotChanged;
+            _harvesting.FeatureRemoved -= OnFeatureRemoved;
+            _harvesting.FeatureAppeared -= OnFeatureAppeared;
+        }
 
         public void Refresh()
         {
@@ -29,6 +58,32 @@ namespace Codigames.Game.City
                 if (!layer.HasTile(position)) continue;
                 if (!_ground.Features.ContainsKey(ProvinceCoordinates.FromTilemap(position))) layer.SetTile(position, null);
             }
+
+            foreach (var feature in _ground.Features)
+            {
+                var position = ProvinceCoordinates.ToTilemap(feature.Key);
+                if (!layer.HasTile(position)) Draw(feature.Key, feature.Value);
+                Tint(feature.Key);
+            }
+        }
+
+        private void OnDepotChanged(ModuleVector2Int cell) => Tint(cell);
+
+        private void OnFeatureRemoved(ModuleVector2Int cell) => _map.Features.SetTile(ProvinceCoordinates.ToTilemap(cell), null);
+
+        private void OnFeatureAppeared(ModuleVector2Int cell, string featureId) => Draw(cell, featureId);
+
+        private void Draw(ModuleVector2Int cell, string featureId)
+        {
+            if (_features.TryGet(featureId, out var definition) && definition is FeatureAsset feature && feature.Tile != null)
+                _map.Features.SetTile(ProvinceCoordinates.ToTilemap(cell), feature.Tile);
+        }
+
+        private void Tint(ModuleVector2Int cell)
+        {
+            var position = ProvinceCoordinates.ToTilemap(cell);
+            _map.Features.SetTileFlags(position, TileFlags.None);
+            _map.Features.SetColor(position, _harvesting.IsExhausted(cell, _clock.NowMs) ? _exhausted : Color.white);
         }
     }
 }

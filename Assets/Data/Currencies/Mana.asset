@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Economy.CurrencyAsset
   _id: Mana
   _scope: 0
-  _start: 0
+  _start: 100
   _capped: 0
   _cap: 0
   _icon: {fileID: 21300000, guid: 8430aa44c44202312b89ae2fd1a2bef0, type: 3}

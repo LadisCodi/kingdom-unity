@@ -4,11 +4,14 @@ using System.Linq;
 using Codigames.Game.Data;
 using Codigames.Game.Data.City;
 using Codigames.Game.Data.Economy;
+using Codigames.Game.Data.Harvest;
+using Codigames.Game.Data.Magic;
 using Codigames.Game.Editor.Data;
 using Codigames.Kingdom.Economy;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Codigames.Game.Editor.WebImport
 {
@@ -34,12 +37,28 @@ namespace Codigames.Game.Editor.WebImport
             ["Stone"] = PlankPlace.CoinWhenHeld, ["Mana"] = PlankPlace.Right, ["Gems"] = PlankPlace.Right,
         };
 
+        // What each harvest source pays, and what each feature is, from the web's code tables (definitions.ts).
+        private static readonly Dictionary<string, string> SOURCE_CURRENCY = new()
+        {
+            ["Forest"] = "Wood", ["Crops"] = "Food", ["Berries"] = "Food", ["Meat"] = "Food", ["Stone"] = "Stone",
+            ["Fish"] = "Food", ["MountainIron"] = "Stone", ["MountainGold"] = "Gold",
+        };
+
+        private static readonly (string Id, string Source, string RespawnTerrain)[] FEATURES =
+        {
+            ("Trees", "Forest", "Grassland"), ("Mountain", "Stone", "Grassland"), ("MountainIron", "MountainIron", "Grassland"),
+            ("MountainGold", "MountainGold", "Grassland"), ("BerryBush", "Berries", "Grassland"), ("WildAnimals", "Meat", "Grassland"),
+            ("FishShoal", "Fish", "Water"), ("Crops", "Crops", "Grassland"),
+        };
+
         [MenuItem("Kingdom/Import web prototype data")]
         public static void ImportAll()
         {
             var currencies = ImportCurrencies();
             var buildings = ImportBuildings();
             ImportConstruction(buildings);
+            ImportHarvest();
+            ImportMagic();
 
             AssetDatabase.SaveAssets();
             Debug.Log($"#Data# Imported {currencies} currencies and {buildings.Count} buildings from the web prototype.");
@@ -138,6 +157,72 @@ namespace Codigames.Game.Editor.WebImport
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        private static void ImportHarvest()
+        {
+            var sources = new Dictionary<string, HarvestSourceAsset>();
+            foreach (var (id, row) in Read<Dictionary<string, HarvestSourceData>>("Game/harvest.json"))
+            {
+                var asset = LoadOrCreate<HarvestSourceAsset>("HarvestSources", id);
+                var so = new SerializedObject(asset);
+                so.FindProperty("_id").stringValue = id;
+                so.FindProperty("_currency").stringValue = SOURCE_CURRENCY[id];
+                so.FindProperty("_unitsPerStrike").doubleValue = row.UnitsPerStrike;
+                so.FindProperty("_secondsPerStrike").doubleValue = row.SecondsPerStrike;
+                so.FindProperty("_stock").doubleValue = row.Stock;
+                so.FindProperty("_recoverySeconds").doubleValue = row.RecoverySeconds;
+                so.FindProperty("_respawnSeconds").doubleValue = row.RespawnSeconds;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                sources[id] = asset;
+            }
+            SetEntries(LoadOrCreate<HarvestSourceCollection>(null, "HarvestSources"), sources.Values.ToList<DefinitionAsset>());
+
+            var features = new List<DefinitionAsset>();
+            foreach (var (id, source, respawnTerrain) in FEATURES)
+            {
+                var asset = LoadOrCreate<FeatureAsset>("Features", id);
+                var so = new SerializedObject(asset);
+                so.FindProperty("_id").stringValue = id;
+                so.FindProperty("_source").objectReferenceValue = sources[source];
+                so.FindProperty("_respawnTerrain").stringValue = respawnTerrain;
+                so.FindProperty("_tile").objectReferenceValue = AssetDatabase.LoadAssetAtPath<TileBase>($"Assets/Art/Features/Tiles/{id}.asset");
+                so.ApplyModifiedPropertiesWithoutUndo();
+                features.Add(asset);
+            }
+            SetEntries(LoadOrCreate<FeatureCollection>(null, "Features"), features);
+
+            var terrains = new List<DefinitionAsset>();
+            foreach (var (id, row) in Read<Dictionary<string, TerrainData>>("Game/terrain.json"))
+            {
+                var asset = LoadOrCreate<TerrainAsset>("Terrains", id);
+                var so = new SerializedObject(asset);
+                so.FindProperty("_id").stringValue = id;
+                SetAmounts(so.FindProperty("_yields"), new Dictionary<string, double> { ["Food"] = row.Food, ["Wood"] = row.Wood, ["Stone"] = row.Stone });
+                so.ApplyModifiedPropertiesWithoutUndo();
+                terrains.Add(asset);
+            }
+            SetEntries(LoadOrCreate<TerrainCollection>(null, "Terrains"), terrains);
+
+            var tap = Read<EconomyData>("Game/economy.json").Tap;
+            var settings = new SerializedObject(LoadOrCreate<TapSettingsAsset>("Settings", "Tap"));
+            settings.FindProperty("_workSeconds").doubleValue = tap.WorkSeconds;
+            settings.FindProperty("_manaCost").doubleValue = tap.ManaCost;
+            settings.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // The pool's base, and a new kingdom's Mana: a full pool.
+        private static void ImportMagic()
+        {
+            var mana = Read<EconomyData>("Game/economy.json").Mana;
+            var settings = new SerializedObject(LoadOrCreate<ManaSettingsAsset>("Settings", "Mana"));
+            settings.FindProperty("_baseCap").doubleValue = mana.BaseCap;
+            settings.FindProperty("_basePerHour").doubleValue = mana.BasePerHour;
+            settings.ApplyModifiedPropertiesWithoutUndo();
+
+            var currency = new SerializedObject(LoadOrCreate<CurrencyAsset>("Currencies", "Mana"));
+            currency.FindProperty("_start").doubleValue = mana.BaseCap;
+            currency.ApplyModifiedPropertiesWithoutUndo();
+        }
+
         private static T Read<T>(string file) => JsonConvert.DeserializeObject<T>(File.ReadAllText(Path.Combine(WebData, file)));
 
         // The asset at Assets/Data/<folder>/<name>.asset, created when missing.
@@ -177,12 +262,12 @@ namespace Codigames.Game.Editor.WebImport
             }
         }
 
-        // A building's tiers, from its sprite stem: <stem>_l<n>.png from level n, or <stem>.png alone.
         // The header's small cut of an icon when it has one, else the icon.
         private static Sprite CurrencyIcon(string id)
             => AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/UI/Icons/{id}-sm.png")
                ?? AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/UI/Icons/{id}.png");
 
+        // A building's tiers, from its sprite stem: <stem>_l<n>.png from level n, or <stem>.png alone.
         private static void SetArt(SerializedProperty list, string stem)
         {
             var tiers = new List<(int Level, Sprite Sprite)>();

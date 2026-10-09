@@ -25,6 +25,8 @@ namespace Codigames.Kingdom.Tests.Builders
             {
                 new FakeCurrency("Gold", CurrencyScope.City, START_GOLD),
                 new FakeCurrency("Wood", CurrencyScope.City, 0),
+                new FakeCurrency("Food", CurrencyScope.City, 0),
+                new FakeCurrency("Mana", CurrencyScope.City, 100),
                 new FakeCurrency("Knowledge", CurrencyScope.Kingdom, 0),
                 new FakeCurrency("Gems", CurrencyScope.Player, 500),
             });

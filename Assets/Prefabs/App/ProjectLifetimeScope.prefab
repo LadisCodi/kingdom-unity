@@ -307,6 +307,11 @@ MonoBehaviour:
   _currencies: {fileID: 11400000, guid: aac6aa195c71d844dbec88cdf15db72f, type: 2}
   _buildings: {fileID: 11400000, guid: 2f036e2d5070832dd996cfbeaa22c970, type: 2}
   _construction: {fileID: 11400000, guid: 88ee4745ec7edc426bd4b1e393dcb88b, type: 2}
+  _harvestSources: {fileID: 11400000, guid: 6a77a0da408cc29b791559cc76993fcd, type: 2}
+  _features: {fileID: 11400000, guid: 0fda7035ee47534c7b67e2f3656e2d7a, type: 2}
+  _terrains: {fileID: 11400000, guid: 787a475934e1657c49373f349147aec8, type: 2}
+  _tap: {fileID: 11400000, guid: 22d952877041eb838a83bb0350c31131, type: 2}
+  _mana: {fileID: 11400000, guid: 67b93fa68d579c88b850d807db62dbcd, type: 2}
   _soundCatalog: {fileID: 11400000, guid: 83451c6dc2a68dd0d98655410dd96f32, type: 2}
   _soundManager: {fileID: 6239535257238415513}
   _loadingScreen: {fileID: 4772335900836516188}

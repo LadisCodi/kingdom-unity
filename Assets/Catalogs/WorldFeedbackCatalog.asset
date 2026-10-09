@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca11fe2c324b8984ea478b4929f2e9f6, type: 3}
   m_Name: WorldFeedbackCatalog
   m_EditorClassIdentifier: Kingdom.Game::Kingdom.Game.Feedback.WorldFeedbackCatalog
-  _prefabs: []
+  _prefabs:
+  - {fileID: 8793269826012747068, guid: 7bce9b2f292f549f28e03a72b5bbb5d3, type: 3}

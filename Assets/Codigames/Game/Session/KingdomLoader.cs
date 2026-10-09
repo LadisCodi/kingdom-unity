@@ -31,7 +31,7 @@ namespace Codigames.Game.Session
                     break;
             }
 
-            return NewKingdom.Create(map, settings, currencies, clock.NowMs);
+            return NewKingdom.Create(map, settings, currencies, clock.NowMs, (uint)System.Guid.NewGuid().GetHashCode());
         }
     }
 }
