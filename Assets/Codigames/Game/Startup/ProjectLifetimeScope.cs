@@ -1,6 +1,7 @@
 using Codigames.Game.App;
 using Codigames.Game.Audio;
 using Codigames.Game.Data.City;
+using Codigames.Game.Data.Doors;
 using Codigames.Game.Data.Economy;
 using Codigames.Game.Data.Fog;
 using Codigames.Game.Data.Harvest;
@@ -56,6 +57,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private SceneCollection _scenes;
         [SerializeField] private SpeakerCollection _speakers;
         [SerializeField] private StageSettingsAsset _stage;
+        [SerializeField] private UnlockCollection _unlocks;
 
         [Header("App")]
         [SerializeField] private LocalizationCatalog _localization;
@@ -113,6 +115,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_scenes).As<ICatalog<ISceneDefinition>>();
             builder.RegisterInstance(_speakers).As<ICatalog<ISpeaker>>();
             builder.RegisterInstance(_stage).As<IStageSettings>();
+            builder.RegisterInstance(_unlocks).As<ICatalog<IUnlock>>();
         }
     }
 }

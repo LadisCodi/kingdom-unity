@@ -33,19 +33,21 @@ namespace Codigames.Game.UI.Presenters
         private readonly Researching _research;
         private readonly ITreasury _treasury;
         private readonly Doors _doors;
+        private readonly Openings _openings;
         private readonly QuestChain _chain;
         private readonly Construction _construction;
         private readonly Localizer _localizer;
         private readonly ISoundService _sounds;
         private readonly IQuickInfoMessageService _messages;
 
-        public NavMenuPresenter(IMenuViewFactory views, UIManager ui, Researching research, ITreasury treasury, Doors doors, QuestChain chain,
-            Construction construction, Localizer localizer, ISoundService sounds, IQuickInfoMessageService messages) : base(views)
+        public NavMenuPresenter(IMenuViewFactory views, UIManager ui, Researching research, ITreasury treasury, Doors doors, Openings openings,
+            QuestChain chain, Construction construction, Localizer localizer, ISoundService sounds, IQuickInfoMessageService messages) : base(views)
         {
             _ui = ui;
             _research = research;
             _treasury = treasury;
             _doors = doors;
+            _openings = openings;
             _chain = chain;
             _construction = construction;
             _localizer = localizer;
@@ -64,6 +66,7 @@ namespace Codigames.Game.UI.Presenters
             _chain.Claimed += OnClaimed;
             _construction.DistrictPlaced += OnPlaced;
             _construction.JobCompleted += OnJobCompleted;
+            _openings.Opened += OnOpened;
             ShowBadges();
         }
 
@@ -77,6 +80,7 @@ namespace Codigames.Game.UI.Presenters
             _chain.Claimed -= OnClaimed;
             _construction.DistrictPlaced -= OnPlaced;
             _construction.JobCompleted -= OnJobCompleted;
+            _openings.Opened -= OnOpened;
         }
 
         protected override void SubscribeToViewEventsInternal(NavMenu view) => view.TabTapped += OnTab;
@@ -110,11 +114,11 @@ namespace Codigames.Game.UI.Presenters
         private void OnClaimed(IQuestDefinition claimed, IQuestDefinition next) => ShowDoors();
         private void OnPlaced(DistrictState district) => ShowDoors();
         private void OnJobCompleted(ConstructionJob job, DistrictState district) => ShowDoors();
+        private void OnOpened(IReadOnlyList<DoorId> doors, IReadOnlyList<string> books) => ShowDoors();
 
-        // Every tab to its door; a door that has just opened is remembered open.
+        // Every tab to its door. A door that has just opened is remembered open by Openings, which announces it.
         private void ShowDoors()
         {
-            foreach (var door in _doors.FreshlyOpen()) _doors.MarkSeen(door);
             foreach (var tab in View.Tabs) tab.SetLocked(!IsOpen(tab.Id));
             ShowBadges();
         }

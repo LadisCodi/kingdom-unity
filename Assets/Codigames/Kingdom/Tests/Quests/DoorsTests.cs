@@ -58,7 +58,17 @@ namespace Codigames.Kingdom.Tests.Quests
                     new Quest { Id = "FirstSteps" }, new Quest { Id = "Woodcraft" }, new Quest { Id = "TaxDay" }, new Quest { Id = "GrowingTown" },
                 });
                 Doors = new Doors.Doors(Tutorial, Chain, quests, Research, City, SitesState, new Sites(), Settings);
+                Openings = new Openings(Doors, Shelf, Tree, Tutorial);
+                Openings.Opened += (doors, books) =>
+                {
+                    OpenedDoors.AddRange(doors);
+                    OpenedBooks.AddRange(books);
+                };
             }
+
+            public Openings Openings { get; }
+            public List<DoorId> OpenedDoors { get; } = new();
+            public List<string> OpenedBooks { get; } = new();
 
             public TutorialState Tutorial { get; } = new();
             public Position Chain { get; } = new();
@@ -101,6 +111,48 @@ namespace Codigames.Kingdom.Tests.Quests
 
             Assert.That(fixture.Doors.IsOpen(DoorId.Research), Is.True);
             Assert.That(fixture.Doors.FirstMorningOn, Is.True);
+        }
+
+        [Test]
+        public void AnOpening_ShouldBeAnnouncedOnceAndRemembered()
+        {
+            var fixture = new Fixture();
+            fixture.Chain.Index = 1;
+
+            fixture.Openings.Take();
+            fixture.Openings.Take();
+
+            Assert.That(fixture.OpenedDoors, Is.EqualTo(new[] { DoorId.Research, DoorId.Knowledge }));
+            fixture.Chain.Index = 0;
+            Assert.That(fixture.Doors.IsOpen(DoorId.Research), Is.True, "a door once open stays open");
+        }
+
+        [Test]
+        public void AFoundBook_ShouldBeAnnouncedOnce_ButNeverTheKingdomsOwn()
+        {
+            var fixture = new Fixture();
+            fixture.Openings.Take();
+            Assert.That(fixture.OpenedBooks, Is.Empty);
+
+            fixture.Shelf.Open.Add("Sagas");
+            fixture.Openings.Take();
+            fixture.Openings.Take();
+
+            Assert.That(fixture.OpenedBooks, Is.EqualTo(new[] { "Sagas" }));
+        }
+
+        [Test]
+        public void AVeteran_ShouldHaveNothingAnnounced()
+        {
+            var fixture = new Fixture();
+            fixture.Tutorial.Veteran = true;
+            fixture.Chain.Index = 1;
+            fixture.Shelf.Open.Add("Sagas");
+
+            fixture.Openings.Take();
+
+            Assert.That(fixture.OpenedDoors, Is.Empty);
+            Assert.That(fixture.OpenedBooks, Is.Empty);
         }
     }
 }

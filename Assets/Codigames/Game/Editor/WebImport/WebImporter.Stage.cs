@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Codigames.Game.Data;
+using Codigames.Game.Data.Doors;
 using Codigames.Game.Data.Tutorial;
 using Codigames.Kingdom.Tutorial;
 using UnityEditor;
@@ -28,6 +29,28 @@ namespace Codigames.Game.Editor.WebImport
             ImportSpeakers();
             ImportScenes();
             ImportStageSettings();
+            ImportUnlocks();
+        }
+
+        // The unlock splashes, in their order: a door's or a book's name, icon and paragraph.
+        private static void ImportUnlocks()
+        {
+            var assets = new List<DefinitionAsset>();
+            foreach (var (id, row) in Read<Dictionary<string, UnlockData>>("Game/unlocks.json"))
+            {
+                var asset = LoadOrCreate<UnlockAsset>("Unlocks", id);
+                var so = new SerializedObject(asset);
+                so.FindProperty("_id").stringValue = id;
+                so.FindProperty("_kind").enumValueIndex = (int)(row.Kind == "book" ? UnlockKind.Book : UnlockKind.Door);
+                so.FindProperty("_target").stringValue = row.Target;
+                so.FindProperty("_title").stringValue = row.Title;
+                so.FindProperty("_text").stringValue = row.Text;
+                so.FindProperty("_icon").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/UI/Unlocks/{row.Icon}.png");
+                so.ApplyModifiedPropertiesWithoutUndo();
+                assets.Add(asset);
+            }
+
+            SetEntries(LoadOrCreate<UnlockCollection>(null, "Unlocks"), assets);
         }
 
         private static void ImportSpeakers()

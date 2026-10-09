@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cc38fb6718c0b01282eee221e9042ac, type: 3}
+  m_Name: build
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Doors.UnlockAsset
+  _id: build
+  _kind: 0
+  _target: build
+  _title: Build
+  _text: Raise houses, farms and workshops on the land you have cleared. Every building
+    works for the kingdom, and grows with every level.
+  _icon: {fileID: 21300000, guid: 92e3ec00347b68ae0ade767db8650747, type: 3}
