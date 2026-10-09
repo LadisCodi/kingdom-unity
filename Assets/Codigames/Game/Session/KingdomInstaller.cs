@@ -78,6 +78,11 @@ namespace Codigames.Game.Session
             builder.Register<SiteManaSources>(Lifetime.Singleton).As<IManaSources>();
             builder.Register<Sighting>(Lifetime.Singleton);
             builder.Register<QuestGoals>(Lifetime.Singleton).AsSelf().As<IQuestGoals>();
+            builder.Register(resolver => resolver.Resolve<KingdomState>().Tutorial, Lifetime.Singleton);
+            builder.Register(resolver => new Kingdom.Doors.Doors(resolver.Resolve<KingdomState>().Tutorial, resolver.Resolve<QuestChain>(),
+                resolver.Resolve<ICatalog<IQuestDefinition>>(), resolver.Resolve<Researching>(), resolver.Resolve<CityState>(),
+                resolver.Resolve<KingdomState>().Sites, resolver.Resolve<IProvinceSites>(), resolver.Resolve<IConstructionSettings>()),
+                Lifetime.Singleton);
             builder.Register(resolver => new QuestChain(resolver.Resolve<KingdomState>().Quests, resolver.Resolve<ICatalog<IQuestDefinition>>(),
                 resolver.Resolve<IQuestGoals>(), resolver.Resolve<ITreasury>(), resolver.Resolve<CityState>(),
                 resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<Stores>(), resolver.Resolve<Harvesting>(),

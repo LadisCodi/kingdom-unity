@@ -17,7 +17,7 @@ namespace Codigames.Kingdom.Quests
     // relative ones count taps, collects and reveals from the quest's activation. Claiming pays the reward and
     // activates the next. A tutorial quest may rush the first house's rent at its own moment, so the chain is on
     // the timeline.
-    public class QuestChain : ITimedSystem
+    public class QuestChain : ITimedSystem, IChainPosition
     {
         private const string GOLD = "Gold";
         private const string KNOWLEDGE_YIELD = "knowledgeYield";
