@@ -7,6 +7,7 @@ namespace Codigames.Kingdom.Fog
         Mountain,
         Landmark,
         Abandoned,
+        Lair,
     }
 
     // A tall thing seen past the fog: what it is (a mountain's feature, a landmark's or a ruin's id) and where.

@@ -36,6 +36,8 @@ namespace Codigames.Game.Editor.Art
             ["scroll-parchment"] = new Vector4(100, 100, 100, 110), ["bar-fill-gold"] = Ends(54),
             // A level's enamel plaque (the upgrade sheet), 60 px caps and 70 px ends.
             ["plaque-blue"] = new Vector4(70, 60, 70, 60), ["plaque-green"] = new Vector4(70, 60, 70, 60),
+            // A countdown's nailed plaque (a standing notice, an offer): its nailed ends.
+            ["offer-plaque"] = Ends(60),
         };
 
         private static Vector4 Ends(int width) => new(width, 0, width, 0);

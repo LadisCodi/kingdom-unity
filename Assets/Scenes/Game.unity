@@ -1912,6 +1912,7 @@ MonoBehaviour:
   _crewsView: {fileID: 1724951325}
   _treasureArt: {fileID: 11400000, guid: e6065269213ef2641a45c237873661f6, type: 2}
   _sightArt: {fileID: 11400000, guid: 4fef8a17d3f6db21aa218d0068b1a5ca, type: 2}
+  _lairBubble: {fileID: 8437677429575701391, guid: afec8caaaa1484390b58e5779ffd3309, type: 3}
   _menuCatalog: {fileID: 11400000, guid: a7921335657e5c05bb7f2d747ef13a1c, type: 2}
   _worldFeedbackCatalog: {fileID: 11400000, guid: 2b3cc82e2020b8ef7969ca7a100dfe77, type: 2}
   _quickInfoMessageSettings: {fileID: 11400000, guid: d2ea249f972202ee68155316b2c34292, type: 2}

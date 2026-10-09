@@ -10,7 +10,7 @@ using Codigames.Kingdom.Tutorial.State;
 namespace Codigames.Kingdom.Notices
 {
     // Files the news of what happens (Docs/features/26-notices.md §2.1): a building finished, at the moment it finished,
-    // live and in replay alike; a site made out, unless a scene introduces it; the last quest claimed.
+    // live and in replay alike; a site made out, unless a scene introduces it; a lair's raid; the last quest claimed.
     public class NewsDesk
     {
         private readonly Inbox _inbox;
@@ -21,8 +21,20 @@ namespace Codigames.Kingdom.Notices
         private readonly KingdomState _kingdom;
 
         public NewsDesk(Inbox inbox, NoticesState state, Construction construction, FogOfWar fog, SiteFinds finds, QuestChain chain,
-            IEnumerable<ISceneDefinition> scenes, TutorialState tutorial, KingdomState kingdom, Goods.Workshops workshops = null, Army.Army army = null)
+            IEnumerable<ISceneDefinition> scenes, TutorialState tutorial, KingdomState kingdom, Goods.Workshops workshops = null, Army.Army army = null,
+            Lairs.Lairs lairs = null)
         {
+            if (lairs != null)
+            {
+                lairs.Raided += (lair, at, took) => inbox.Post(News.Raided(lair, at, took));
+                // A lair is a site found the moment it is armed, unless a scene introduces it.
+                lairs.Armed += (lair, at) =>
+                {
+                    if (!_tutorial.Veteran && SceneIntroduces(_scenes, lair)) return;
+                    inbox.Post(News.Sighted(lair, at));
+                };
+            }
+
             // A hall standing idle: one news per hall that ran dry, never one per soldier.
             if (army != null) army.LineDone += (hall, troop, at) => inbox.Post(News.Trained(hall.Id, troop, at));
             // Goods that came off one bench at one moment are one news, with their count.

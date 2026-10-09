@@ -9,6 +9,7 @@ using Codigames.Kingdom.Economy;
 using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Harvest;
 using Codigames.Kingdom.Harvest.State;
+using Codigames.Kingdom.Lairs;
 using Codigames.Kingdom.Magic;
 using Codigames.Kingdom.Map;
 using Codigames.Kingdom.Notices;
@@ -52,9 +53,14 @@ namespace Codigames.Game.Session
             builder.Register<Codigames.Kingdom.Bag.Bag>(Lifetime.Singleton).AsSelf().As<IItemGrants>();
             builder.Register<Speedups>(Lifetime.Singleton);
             builder.Register<SiteGround>(Lifetime.Singleton).AsSelf().As<ISiteGround>();
+            builder.Register(resolver => resolver.Resolve<KingdomState>().Lairs, Lifetime.Singleton);
+            builder.Register<LairGround>(Lifetime.Singleton).AsSelf().As<ILairGround>();
+            builder.Register(resolver => new Codigames.Kingdom.Lairs.Lairs(resolver.Resolve<KingdomState>().Lairs, resolver.Resolve<LairGround>(),
+                resolver.Resolve<ILairSettings>(), resolver.Resolve<CityState>(), resolver.Resolve<Stores>(), resolver.Resolve<Workforce>(),
+                resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IBonuses>()), Lifetime.Singleton);
             // No Bag yet: a ruin missing a piece waits for it.
             builder.Register(resolver => new Ruins(resolver.Resolve<SitesState>(), resolver.Resolve<SiteGround>(),
-                resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<Construction>(), resolver.Resolve<IRevealedGround>()),
+                resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<Construction>(), resolver.Resolve<IRevealedGround>(), lairs: resolver.Resolve<ILairGround>()),
                 Lifetime.Singleton);
             builder.Register(resolver => new Footprints(resolver.Resolve<IProvinceMap>(), resolver.Resolve<ICatalog<IFeatureDefinition>>(),
                 resolver.Resolve<SiteGround>().Blocks()), Lifetime.Singleton);
@@ -74,7 +80,7 @@ namespace Codigames.Game.Session
             builder.Register(resolver => new NewsDesk(resolver.Resolve<Inbox>(), resolver.Resolve<NoticesState>(),
                 resolver.Resolve<Construction>(), resolver.Resolve<FogOfWar>(), resolver.Resolve<SiteFinds>(), resolver.Resolve<QuestChain>(),
                 resolver.Resolve<ICatalog<ISceneDefinition>>().Items, resolver.Resolve<KingdomState>().Tutorial, resolver.Resolve<KingdomState>(),
-                resolver.Resolve<Kingdom.Goods.Workshops>(), resolver.Resolve<Kingdom.Army.Army>()),
+                resolver.Resolve<Kingdom.Goods.Workshops>(), resolver.Resolve<Kingdom.Army.Army>(), resolver.Resolve<Codigames.Kingdom.Lairs.Lairs>()),
                 Lifetime.Singleton);
             builder.Register<ITreasury>(resolver => new Treasury(
                 resolver.Resolve<ICatalog<ICurrencyDefinition>>(), resolver.Resolve<KingdomState>().Balances), Lifetime.Singleton);
@@ -102,7 +108,7 @@ namespace Codigames.Game.Session
                 resolver.Resolve<ICatalog<IFeatureDefinition>>(), resolver.Resolve<ICatalog<IHarvestSource>>(),
                 resolver.Resolve<ITerrainYields>(), resolver.Resolve<ITapSettings>(), resolver.Resolve<ITreasury>(),
                 resolver.Resolve<ManaPool>(), resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IRevealedGround>(),
-                resolver.Resolve<IResearchGates>(), resolver.Resolve<IBonuses>(), resolver.Resolve<IBoosts>()), Lifetime.Singleton)
+                resolver.Resolve<IResearchGates>(), resolver.Resolve<IBonuses>(), resolver.Resolve<IBoosts>(), resolver.Resolve<ILairGround>()), Lifetime.Singleton)
                 .AsSelf().As<IPlanting>();
             builder.Register<ResearchEffects>(Lifetime.Singleton);
             builder.Register<Transplanting>(Lifetime.Singleton);
@@ -124,7 +130,7 @@ namespace Codigames.Game.Session
             builder.Register(resolver => new Landmarks(resolver.Resolve<SitesState>(), resolver.Resolve<IProvinceSites>(),
                 resolver.Resolve<FogOfWar>(), resolver.Resolve<ITreasury>(), resolver.Resolve<IKnowledgeSettings>(),
                 ((Data.Fog.FogSettingsAsset)resolver.Resolve<IFogSettings>()).ClaimDiscoverRadius, resolver.Resolve<IBonuses>(),
-                resolver.Resolve<ManaPool>()), Lifetime.Singleton);
+                resolver.Resolve<ManaPool>(), resolver.Resolve<ILairGround>()), Lifetime.Singleton);
             builder.Register(resolver => new Treasures(resolver.Resolve<KingdomState>().Fog, resolver.Resolve<FogOfWar>(),
                 resolver.Resolve<IProvinceMap>(), resolver.Resolve<Footprints>(), resolver.Resolve<GroundState>(),
                 resolver.Resolve<ISiteGround>(), resolver.Resolve<ITreasureSettings>(), resolver.Resolve<ITreasury>(),
@@ -163,6 +169,9 @@ namespace Codigames.Game.Session
                 var stores = resolver.Resolve<Stores>();
                 stores.WakeAll(state.LastAdvance);
                 timeline.Register(stores);
+
+                // The lairs after the stores: a raid takes from what a boundary has already banked.
+                timeline.Register(resolver.Resolve<Codigames.Kingdom.Lairs.Lairs>());
 
                 // The chain's own clock: a tutorial quest's rent rush.
                 var quests = resolver.Resolve<QuestChain>();

@@ -40,6 +40,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private CrewsView _crewsView;
         [SerializeField] private TreasureArt _treasureArt;
         [SerializeField] private SightArt _sightArt;
+        [SerializeField] private Lairs.LairBubbleView _lairBubble;
         [SerializeField] private MenuCatalog _menuCatalog;
         [SerializeField] private WorldFeedbackCatalog _worldFeedbackCatalog;
         [SerializeField] private QuickInfoMessageSettings _quickInfoMessageSettings;
@@ -64,6 +65,7 @@ namespace Codigames.Game.Startup
             builder.RegisterComponent(_ghostView);
             builder.RegisterEntryPoint<MapGestures>().AsSelf();
             builder.Register<HarvestInput>(Lifetime.Singleton);
+            builder.Register<Lairs.LairWords>(Lifetime.Singleton);
             builder.Register<CollectInput>(Lifetime.Singleton);
             builder.Register<FogInput>(Lifetime.Singleton);
             builder.Register<TreasureInput>(Lifetime.Singleton);
@@ -84,6 +86,9 @@ namespace Codigames.Game.Startup
             builder.RegisterEntryPoint<MapTaps>();
             builder.RegisterEntryPoint<Sites.RuinsView>();
             builder.RegisterEntryPoint<Sites.LandmarksView>();
+            builder.RegisterInstance(_lairBubble);
+            builder.RegisterEntryPoint<Lairs.LairsView>().AsSelf();
+            builder.RegisterEntryPoint<Lairs.RaidAlarm>();
             builder.RegisterEntryPoint<WorldCues>();
             builder.RegisterEntryPoint<TapPunch>().AsSelf();
             builder.Register<RewardHold>(Lifetime.Singleton);
@@ -128,8 +133,10 @@ namespace Codigames.Game.Startup
             builder.Register<NoticeBoard>(Lifetime.Singleton);
             builder.Register<Codigames.Game.UI.Data.PriceTerms>(Lifetime.Singleton);
             builder.Register<NoticesColumnPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
+            builder.Register<StandingColumnPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<NoticeCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<LandmarkCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<LairCardMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<ResearchMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<TechSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<KnowledgeSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();

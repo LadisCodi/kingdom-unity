@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04874a6f0c17bc4b593c120e6a3b6229, type: 3}
+  m_Name: Lairs
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Lairs.LairSettingsAsset
+  _garrisons:
+  - Fights: 3
+    TakeSeconds: 300
+    HeroXp: 500
+    RewardItems:
+    - _id: ConstructionSpeedup15m
+      _value: 1
+    - _id: WatchtowerLens
+      _value: 1
+  - Fights: 4
+    TakeSeconds: 600
+    HeroXp: 1500
+    RewardItems:
+    - _id: GeneralSpeedup1h
+      _value: 1
+  - Fights: 5
+    TakeSeconds: 900
+    HeroXp: 4000
+    RewardItems:
+    - _id: GeneralSpeedup1h
+      _value: 2
+    - _id: HarvestBoost1h
+      _value: 1
+  - Fights: 6
+    TakeSeconds: 1200
+    HeroXp: 10000
+    RewardItems:
+    - _id: GeneralSpeedup3h
+      _value: 1
+    - _id: ChoiceChest1h
+      _value: 1
+  - Fights: 7
+    TakeSeconds: 1500
+    HeroXp: 25000
+    RewardItems:
+    - _id: GeneralSpeedup8h
+      _value: 1
+    - _id: ChoiceChest8h
+      _value: 1
+  _takeFractionMax: 0.5
+  _raidsPerDay: 3
+  _windowStartHour: 9
+  _windowEndHour: 23
+  _firstFightPower: 0.5
+  _firstClearKnowledge: 3

@@ -392,6 +392,7 @@ namespace Codigames.Game.UI.Presenters
                 case PlacementProblem.NeedsLand: return _localizer.Tr("It needs dry land");
                 case PlacementProblem.OutsideProvince: return _localizer.Tr("Outside the province");
                 case PlacementProblem.CountLimit: return _localizer.Tr("No more of these at this Townhall");
+                case PlacementProblem.LairZone: return _localizer.Tr("A lair holds this ground");
             }
 
             return refusal switch

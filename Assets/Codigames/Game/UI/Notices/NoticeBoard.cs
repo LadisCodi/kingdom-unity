@@ -6,6 +6,7 @@ using Codigames.Game.Data.Sites;
 using Codigames.Game.UI.Kit;
 using Codigames.Game.UI.Menus;
 using Codigames.Kingdom.City.State;
+using Codigames.Kingdom.Lairs;
 using Codigames.Kingdom.Notices;
 using Codigames.Kingdom.Sites;
 using Codigames.Modules.Localization;
@@ -20,6 +21,7 @@ namespace Codigames.Game.UI.Notices
     {
         public const string MORE = "more";
         private const string NEWS = "news:";
+        public const string RAID = "state:raid";
 
         private readonly Inbox _inbox;
         private readonly INoticeSettings _settings;
@@ -32,10 +34,15 @@ namespace Codigames.Game.UI.Notices
         private readonly Localizer _localizer;
         private readonly UIManager _ui;
         private readonly Codigames.Game.Data.Goods.GoodCollection _goods;
+        private readonly Codigames.Kingdom.Lairs.Lairs _lairs;
+        private readonly Codigames.Game.Lairs.LairWords _words;
 
         public NoticeBoard(Inbox inbox, INoticeSettings settings, CityState city, BuildingCollection buildings, IProvinceSites sites,
-            ProvinceSitesAsset siteArt, UiIcons icons, NumberFormat numbers, Localizer localizer, UIManager ui, Codigames.Game.Data.Goods.GoodCollection goods)
+            ProvinceSitesAsset siteArt, UiIcons icons, NumberFormat numbers, Localizer localizer, UIManager ui, Codigames.Game.Data.Goods.GoodCollection goods,
+            Codigames.Kingdom.Lairs.Lairs lairs, Codigames.Game.Lairs.LairWords words)
         {
+            _lairs = lairs;
+            _words = words;
             _goods = goods;
             _inbox = inbox;
             _settings = settings;
@@ -64,9 +71,14 @@ namespace Codigames.Game.UI.Notices
             }
         }
 
+        // What stays true until it is not, hung under the settings knob: the raid coming first.
+        public IReadOnlyList<Notice> Standing => Raid() is { } raid ? new[] { raid } : Array.Empty<Notice>();
+
         // A card's notice, by its id; null once it has nothing to say.
         public Notice Of(string id)
         {
+            if (id == RAID) return Raid();
+
             if (id == MORE)
             {
                 var all = All;
@@ -116,6 +128,33 @@ namespace Codigames.Game.UI.Notices
                 Picture = one ? lead.Row.Art : null,
                 Rows = one ? Array.Empty<NoticeRowData>() : lines.Select(l => l.Row).ToList(),
                 Go = one ? lead.Row.Go : null,
+                Threat = group == NewsGroup.Raided,
+            };
+        }
+
+        // RAID COMING: the nearest raid of the lairs still standing, and how many there are.
+        private Notice Raid()
+        {
+            var coming = _lairs.Coming.ToList();
+            if (coming.Count == 0) return null;
+            var (lair, at) = coming[0];
+            var art = _siteArt.LairOf(lair.Id)?.Creature;
+            var creature = _words.Creature(lair);
+            return new Notice
+            {
+                Id = RAID,
+                Kind = NoticeKind.State,
+                Art = art,
+                Picture = art,
+                Count = coming.Count > 1 ? coming.Count : 0,
+                Until = at,
+                Threat = true,
+                Title = _localizer.Tr("{creature} are coming", ("creature", creature)),
+                Body = coming.Count > 1
+                    ? _localizer.Tr("{n} lairs will raid the city's stores. Clear a lair to stop its raids.", ("n", _numbers.Exact(coming.Count)))
+                    : _localizer.Tr("{creature} from {lair} will raid the city's stores. Clear the lair to stop them.",
+                        ("creature", creature), ("lair", _localizer.Tr(lair.Name))),
+                Go = () => Open<LairCardMenu>(lair.Id),
             };
         }
 
@@ -125,6 +164,7 @@ namespace Codigames.Game.UI.Notices
             NewsGroup.Sighted => _localizer.Tr("{n} new places", ("n", _numbers.Exact(count))),
             NewsGroup.Goods => _localizer.Tr("Goods ready"),
             NewsGroup.Trained => _localizer.Tr("Training complete"),
+            NewsGroup.Raided => _localizer.Tr("{n} raids on the city", ("n", _numbers.Exact(count))),
             _ => _localizer.Tr("The chain is done"),
         };
 
@@ -141,6 +181,7 @@ namespace Codigames.Game.UI.Notices
             NewsGroup.Sighted => Sighted(news),
             NewsGroup.Goods => Goods(news),
             NewsGroup.Trained => Trained(news),
+            NewsGroup.Raided => Raided(news),
             NewsGroup.ChainDone => new NewsLine
             {
                 Row = new NoticeRowData
@@ -216,8 +257,36 @@ namespace Codigames.Game.UI.Notices
             };
         }
 
+        private NewsLine Raided(News news)
+        {
+            var lair = _lairs.Site(news.Lair);
+            if (lair == null) return null;
+            var creature = _words.Creature(lair);
+            var took = string.Join(", ", (news.Took ?? new Dictionary<string, double>())
+                .Select(t => _numbers.Count(t.Value) + " " + _localizer.Tr(t.Key)));
+            return new NewsLine
+            {
+                Row = new NoticeRowData
+                {
+                    Art = _siteArt.LairOf(lair.Id)?.Creature,
+                    Name = _localizer.Tr("{creature} raided the city", ("creature", creature)),
+                    Line = took,
+                    Go = () => Open<LairCardMenu>(lair.Id),
+                },
+                Title = _localizer.Tr("The city was raided"),
+                Body = _localizer.Tr("{creature} came down from {lair} and took {took}. Clear the lair to get it back.",
+                    ("creature", creature), ("lair", _localizer.Tr(lair.Name)), ("took", took)),
+            };
+        }
+
         private NewsLine Sighted(News news)
         {
+            if (_siteArt.LairOf(news.Site) is { } lairSite)
+            {
+                return Site(lairSite.Model, _localizer.Tr(lairSite.Name), _localizer.Tr("Lair sighted!"),
+                    _localizer.Tr(lairSite.Description), () => Open<LairCardMenu>(lairSite.Id));
+            }
+
             if (_sites.Landmarks.FirstOrDefault(l => l.Id == news.Site) is { } landmark)
             {
                 var kind = _siteArt.KindOf(landmark.Kind);

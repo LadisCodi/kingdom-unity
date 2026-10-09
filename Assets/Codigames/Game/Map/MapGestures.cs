@@ -36,6 +36,9 @@ namespace Codigames.Game.Map
         // A tap on the province: the cell.
         public event Action<ModuleVector2Int> Tapped;
 
+        // Where the last tap landed, in world space: what floats over the map (a lair's bubble) is hit by its point.
+        public Vector3 LastTap { get; private set; }
+
         // A hold has begun to count: where on the screen, and how long the ring has left to fill.
         public event Action<Vector2, float> HoldRingStarted;
 
@@ -155,6 +158,9 @@ namespace Codigames.Game.Map
             if (finger.StartedOverGui || finger.IsOverGui) return;
             var cell = CellUnder(finger);
             if (_tapGate != null && !_tapGate(cell)) return;
+            var camera = Camera.main;
+            if (camera != null)
+                LastTap = camera.ScreenToWorldPoint(new Vector3(finger.ScreenPosition.x, finger.ScreenPosition.y, -camera.transform.position.z));
             Tapped?.Invoke(cell);
         }
     }

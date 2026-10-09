@@ -56,6 +56,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private KnowledgeSettingsAsset _knowledge;
         [SerializeField] private ProvinceSitesAsset _sites;
         [SerializeField] private TreasureSettingsAsset _treasure;
+        [SerializeField] private Data.Lairs.LairSettingsAsset _lairs;
         [SerializeField] private QuestCollection _quests;
         [SerializeField] private SceneCollection _scenes;
         [SerializeField] private SpeakerCollection _speakers;
@@ -117,6 +118,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_knowledge).As<IKnowledgeSettings>();
             builder.RegisterInstance(_sites).AsSelf().As<IProvinceSites>();
             builder.RegisterInstance(_treasure).As<ITreasureSettings>();
+            builder.RegisterInstance(_lairs).As<Kingdom.Lairs.ILairSettings>();
             builder.RegisterInstance(_quests).As<ICatalog<IQuestDefinition>>();
             builder.RegisterInstance(_scenes).As<ICatalog<ISceneDefinition>>();
             builder.RegisterInstance(_speakers).As<ICatalog<ISpeaker>>();

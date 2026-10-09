@@ -79,6 +79,106 @@ MonoBehaviour:
     _anchor: {x: -10, y: -8}
     _size: 1
     _claimCost: 100000
+  _lairs:
+  - _id: Orcs
+    _name: Orc Lair
+    _description: Orcs dug in on the hillside, and bored of waiting.
+    _flavour: They burn what they cannot carry. Every night the war drums draw closer
+      to the town.
+    _anchor: {x: 4, y: 7}
+    _size: 2
+    _tier: 1
+    _radius: 2
+    _sight: 3
+    _threat: Warrior
+    _power: 60
+    _warningMinutes: 30
+    _mix:
+    - _id: Warrior
+      _value: 4
+    - _id: Lancer
+      _value: 1
+    _model: {fileID: 21300000, guid: 7f6756e751219d2e2a29c2eca3bed02b, type: 3}
+    _painting: {fileID: 21300000, guid: 80892a963ce3f58b9b619c0e69dacf10, type: 3}
+    _creature: {fileID: 21300000, guid: e7babfd22cbc5fdadaf57779b22d5e88, type: 3}
+    _medal: {fileID: 21300000, guid: 7636503bd6d9be42eb98ac4df8d5cfa4, type: 3}
+  - _id: Harpies
+    _name: Harpy Roost
+    _description: Harpies on the high rocks, watching everything that shines.
+    _flavour: Anything that shines is theirs by morning. The market has learned to
+      trade in the dark.
+    _anchor: {x: 4, y: -9}
+    _size: 2
+    _tier: 2
+    _radius: 2
+    _sight: 3
+    _threat: Archer
+    _power: 300
+    _warningMinutes: 90
+    _mix:
+    - _id: Archer
+      _value: 7
+    - _id: Cavalry
+      _value: 3
+    _model: {fileID: 21300000, guid: 3ea118b85636b3749ad02bcb0ad30bdf, type: 3}
+    _painting: {fileID: 21300000, guid: b0ffa8d8877471b6081f64f65cb5a03b, type: 3}
+    _creature: {fileID: 21300000, guid: 2157f3f08eba1dd08a97171bab2c899d, type: 3}
+    _medal: {fileID: 21300000, guid: 4de103d5bf946352f89bd1d1ec61e1e6, type: 3}
+  - _id: Goblins
+    _name: Goblin Den
+    _description: Goblins with sharp sticks and sharper ideas about your stores.
+    _flavour: They tunnel under the yards and come up where the tools are. Nothing
+      heavy is safe.
+    _anchor: {x: -15, y: 20}
+    _size: 2
+    _tier: 3
+    _radius: 2
+    _sight: 3
+    _threat: Lancer
+    _power: 440
+    _warningMinutes: 120
+    _mix: []
+    _model: {fileID: 21300000, guid: c10bc7a38ee5186cfbce5145b3cb2a45, type: 3}
+    _painting: {fileID: 21300000, guid: b57ee0160125becb4be42261a17e8ab9, type: 3}
+    _creature: {fileID: 21300000, guid: f79bb579e2345f8a5b76127b09ca5e54, type: 3}
+    _medal: {fileID: 21300000, guid: 303be125baa7ba325bf4a6a6e3c211af, type: 3}
+  - _id: WolfRiders
+    _name: Wolf-rider Camp
+    _description: Wolf riders who reach your walls before the dust of their riding
+      does.
+    _flavour: They ride in at dawn, take the flocks and are gone before the dust
+      settles.
+    _anchor: {x: 7, y: -15}
+    _size: 2
+    _tier: 4
+    _radius: 2
+    _sight: 3
+    _threat: Cavalry
+    _power: 700
+    _warningMinutes: 180
+    _mix: []
+    _model: {fileID: 21300000, guid: 241ea87ec1e09edc18a2cf76fb9457ab, type: 3}
+    _painting: {fileID: 21300000, guid: 97713ec70079b0d36863bd59679afa17, type: 3}
+    _creature: {fileID: 21300000, guid: 21835b87d174d1b74a3fcb652570e60f, type: 3}
+    _medal: {fileID: 21300000, guid: ce11a72db3ef20aacb5150a26552db28, type: 3}
+  - _id: Drake
+    _name: Drake's Lair
+    _description: A drake asleep on a hoard it means to make larger.
+    _flavour: It sleeps on a hill of gold and wakes hungry for more. The treasury
+      is its larder.
+    _anchor: {x: -15, y: -15}
+    _size: 2
+    _tier: 5
+    _radius: 3
+    _sight: 4
+    _threat: Any
+    _power: 1000
+    _warningMinutes: 240
+    _mix: []
+    _model: {fileID: 21300000, guid: 2868db303507387eba4f5adbba5ba15d, type: 3}
+    _painting: {fileID: 21300000, guid: 59cd9fe3be9d7f36190e365b68c93e19, type: 3}
+    _creature: {fileID: 21300000, guid: 7170498b3c16f94cfb208dfda2bbfef8, type: 3}
+    _medal: {fileID: 21300000, guid: c8ca1936ce76bfaa29922c853cd950cb, type: 3}
   _landmarkKinds:
   - _kind: StandingStones
     _name: Standing stones

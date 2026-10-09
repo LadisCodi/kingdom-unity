@@ -94,6 +94,7 @@ namespace Codigames.Game.UI.Presenters
         private string Refusal(RepairRefusal refusal, IAbandonedSite site) => refusal switch
         {
             RepairRefusal.NotRevealed => _localizer.Tr("Clear the fog off it first"),
+            RepairRefusal.LairHeld => _localizer.Tr("A lair holds its ground — clear it first"),
             RepairRefusal.NoFreeBuilder => _localizer.Tr("Every builder is busy"),
             RepairRefusal.AtCap => _localizer.Tr("The Townhall can hold no more {building} — raise it first",
                 ("building", _localizer.Tr(_buildings.Get<BuildingAsset>(site.District).DisplayName))),

@@ -95,6 +95,13 @@ namespace Codigames.Game.Fog
                     art.sprite = site == null ? null : _sites.KindOf(site.Kind)?.Art;
                     art.transform.position = corner;
                     break;
+                case SightedKind.Lair:
+                    // A feature's two plots across its footprint, feet on its bottom corner.
+                    var lair = _sites.LairOf(thing.Id);
+                    art.sprite = lair?.Model;
+                    art.transform.position = corner;
+                    art.transform.localScale = Vector3.one * thing.Size;
+                    break;
                 default:
                     // A ruin is building art: one plot across, sized to its footprint.
                     var ruin = _sites.Abandoned.Find(thing.Id);

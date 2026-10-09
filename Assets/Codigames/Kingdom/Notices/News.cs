@@ -14,11 +14,15 @@ namespace Codigames.Kingdom.Notices
         public string District { get; set; }
         public int Level { get; set; }
 
-        // Sighted: the landmark or abandoned building.
+        // Sighted: the landmark, lair or abandoned building.
         public string Site { get; set; }
 
         // Trained: the last troop a hall trained before its line ran dry.
         public string Troop { get; set; }
+
+        // Raided: the lair, and what it took from the stores by currency.
+        public string Lair { get; set; }
+        public System.Collections.Generic.Dictionary<string, double> Took { get; set; }
 
         // Goods: the good, and how many came off the bench together.
         public string Good { get; set; }
@@ -35,6 +39,13 @@ namespace Codigames.Kingdom.Notices
 
         public static News Trained(string district, string troop, double at)
             => new() { Group = NewsGroup.Trained, Key = $"trained:{district}:{at}", At = at, District = district, Troop = troop };
+
+        public static News Raided(string lair, double at, System.Collections.Generic.IReadOnlyDictionary<string, double> took)
+            => new()
+            {
+                Group = NewsGroup.Raided, Key = $"raided:{lair}:{at}", At = at, Lair = lair,
+                Took = new System.Collections.Generic.Dictionary<string, double>(took),
+            };
 
         public static News ChainDone(double at) => new() { Group = NewsGroup.ChainDone, Key = "chainDone", At = at };
     }

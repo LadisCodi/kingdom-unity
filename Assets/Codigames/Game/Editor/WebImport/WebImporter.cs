@@ -75,6 +75,7 @@ namespace Codigames.Game.Editor.WebImport
             ImportItems();
             ImportGoods();
             ImportUnits();
+            ImportLairs();
 
             AssetDatabase.SaveAssets();
             Debug.Log($"#Data# Imported {currencies} currencies, {buildings.Count} buildings and {technologies} technologies from the web prototype.");

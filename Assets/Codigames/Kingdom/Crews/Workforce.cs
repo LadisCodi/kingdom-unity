@@ -33,10 +33,12 @@ namespace Codigames.Kingdom.Crews
         private readonly Stores _stores;
         private readonly IWorkerSettings _settings;
         private readonly IBonuses _bonuses;
+        private readonly Lairs.ILairGround _lairs;
 
         public Workforce(CityState city, ICatalog<IBuildingDefinition> buildings, IRevealedGround revealed, Harvesting harvesting,
-            Stores stores, IWorkerSettings settings, IBonuses bonuses = null)
+            Stores stores, IWorkerSettings settings, IBonuses bonuses = null, Lairs.ILairGround lairs = null)
         {
+            _lairs = lairs;
             _bonuses = bonuses;
             _city = city;
             _buildings = buildings;
@@ -125,7 +127,8 @@ namespace Codigames.Kingdom.Crews
             return GridMath.AroundRect(district.Anchor, building.Width, building.Height, Radius(district)).ToList();
         }
 
-        // The cells a building's crew may work, nearest first: revealed, holding what it works, inside its reach.
+        // The cells a building's crew may work, nearest first: revealed, holding what it works, inside its reach, on no
+        // lair's ground — a haul already on its way lands, but nobody walks out to the zone again.
         public IReadOnlyList<Vector2Int> Workable(DistrictState district)
         {
             var building = _buildings.Get(district.DefinitionId);
@@ -134,7 +137,7 @@ namespace Codigames.Kingdom.Crews
 
             var footprint = new HashSet<Vector2Int>(GridMath.Rect(district.Anchor, building.Width, building.Height));
             return GridMath.AroundRect(district.Anchor, building.Width, building.Height, Radius(district))
-                .Where(c => !footprint.Contains(c) && _revealed.IsRevealed(c) && Works(sources, c))
+                .Where(c => !footprint.Contains(c) && _revealed.IsRevealed(c) && Works(sources, c) && _lairs?.HoldingAt(c) == null)
                 .OrderBy(c => GridMath.Euclidean(c, district.Anchor)).ThenBy(c => c.Y).ThenBy(c => c.X)
                 .ToList();
         }
