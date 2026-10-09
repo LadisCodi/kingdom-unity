@@ -40,11 +40,15 @@ namespace Codigames.Kingdom.Fog
         private readonly uint _seed;
         private readonly IBonuses _bonuses;
 
+        // Every so many treasures carry a relic fragment; null where relics are not in play.
+        private readonly Relics.IRelicDrops _relicDrops;
+
         public Treasures(FogState state, FogOfWar fog, IProvinceMap map, Footprints footprints, GroundState ground, ISiteGround sites,
             ITreasureSettings settings, ITreasury treasury, IProduction production, IResearchGates gates,
             ICatalog<IHarvestSource> sources, ICatalog<IBuildingDefinition> buildings, Construction construction, uint seed,
-            IBonuses bonuses = null)
+            IBonuses bonuses = null, Relics.IRelicDrops relicDrops = null)
         {
+            _relicDrops = relicDrops;
             _state = state;
             _fog = fog;
             _map = map;
@@ -101,6 +105,7 @@ namespace Codigames.Kingdom.Fog
 
             var reward = Reward(treasure);
             foreach (var line in reward) _treasury.Add(line.Key, line.Value);
+            _relicDrops?.ForTreasure(treasure.N);
             _state.Treasures.Remove(cell);
             PickedUp?.Invoke(cell, reward);
             return reward;

@@ -78,6 +78,7 @@ namespace Codigames.Game.Editor.WebImport
             ImportLairs();
             ImportHeroes();
             ImportMonetization();
+            ImportRelics();
 
             AssetDatabase.SaveAssets();
             Debug.Log($"#Data# Imported {currencies} currencies, {buildings.Count} buildings and {technologies} technologies from the web prototype.");
@@ -208,6 +209,7 @@ namespace Codigames.Game.Editor.WebImport
                 so.FindProperty("_width").intValue = (int)row.Size.X;
                 so.FindProperty("_height").intValue = (int)row.Size.Y;
                 so.FindProperty("_buildable").boolValue = row.Buildable;
+                so.FindProperty("_hostsRelic").boolValue = row.HostsRelic;
                 so.FindProperty("_displayName").stringValue = row.Name;
                 so.FindProperty("_promise").stringValue = row.Promise;
                 so.FindProperty("_description").stringValue = row.Description;

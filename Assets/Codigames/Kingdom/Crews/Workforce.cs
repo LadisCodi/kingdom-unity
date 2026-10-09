@@ -35,9 +35,12 @@ namespace Codigames.Kingdom.Crews
         private readonly IBonuses _bonuses;
         private readonly Lairs.ILairGround _lairs;
 
+        private readonly Relics.IRelicAura _aura;
+
         public Workforce(CityState city, ICatalog<IBuildingDefinition> buildings, IRevealedGround revealed, Harvesting harvesting,
-            Stores stores, IWorkerSettings settings, IBonuses bonuses = null, Lairs.ILairGround lairs = null)
+            Stores stores, IWorkerSettings settings, IBonuses bonuses = null, Lairs.ILairGround lairs = null, Relics.IRelicAura aura = null)
         {
+            _aura = aura;
             _lairs = lairs;
             _bonuses = bonuses;
             _city = city;
@@ -79,7 +82,7 @@ namespace Codigames.Kingdom.Crews
             var source = sources.Select(_harvesting.Source).FirstOrDefault(s => s != null && s.Currency == currency);
             if (!district.Built || crew == 0 || source == null) return 0;
 
-            var cycleSeconds = 2 * Radius(district) / WalkSpeed + StrikeMs(source, district) / 1000;
+            var cycleSeconds = 2 * Radius(district) / WalkSpeed(district) + StrikeMs(source, district) / 1000;
             return cycleSeconds > 0 ? (double)crew / sources.Count * Delivery(source, district) / cycleSeconds : 0;
         }
 
@@ -258,7 +261,7 @@ namespace Codigames.Kingdom.Crews
                         break;
                     }
 
-                    var owed = Delivery(source, building) + worker.StrikeCarry;
+                    var owed = Delivery(source, building, cell) + worker.StrikeCarry;
                     var want = Math.Floor(owed + 1e-9);
                     worker.StrikeCarry = Math.Max(0, owed - want);
                     worker.Carrying = _harvesting.Draw(cell, want, t);
@@ -319,19 +322,23 @@ namespace Codigames.Kingdom.Crews
             return source != null && sources.Contains(source.Id) && _harvesting.MissingTech(source) == null;
         }
 
-        private double WalkMs(Vector2Int cell, DistrictState building) => GridMath.Euclidean(cell, building.Anchor) / WalkSpeed * 1000;
+        private double WalkMs(Vector2Int cell, DistrictState building) => GridMath.Euclidean(cell, building.Anchor) / WalkSpeed(building) * 1000;
 
-        private double WalkSpeed => Math.Max(0.1, _settings.MoveSpeedTilesPerSecond * _bonuses.Multiplier(TechStats.WORKER_SPEED));
+        // The Winged Hammer's aura over a crew's building quickens its walk and its swing.
+        private double WalkSpeed(DistrictState building)
+            => Math.Max(0.1, _settings.MoveSpeedTilesPerSecond * _bonuses.Multiplier(TechStats.WORKER_SPEED)
+                             * Relics.RelicAuraExtensions.Over(_aura, Relics.RelicStats.WORKER_SPEED, building));
 
         // Units one strike brings home: the ground's yield and the building's late levels, raised by the crews' yield.
-        private double Delivery(IHarvestSource source, DistrictState building)
-            => (_harvesting.UnitsPerStrike(source) + At(Production(building).ExtraUnitsPerDeliveryPerLevel, building.Level))
+        private double Delivery(IHarvestSource source, DistrictState building, Vector2Int? cell = null)
+            => ((cell.HasValue ? _harvesting.UnitsPerStrike(source, cell.Value) : _harvesting.UnitsPerStrike(source)) + At(Production(building).ExtraUnitsPerDeliveryPerLevel, building.Level))
                * _bonuses.Multiplier(TechStats.CREW_YIELD);
 
         private double StrikeMs(IHarvestSource source, DistrictState building)
         {
             var speed = Math.Max(0.01, At(Production(building).StrikeSpeedPerLevel, building.Level, 1))
-                        * Math.Max(1, _bonuses.Multiplier(TechStats.CREW_STRIKE_SPEED, TargetKind.District, building.DefinitionId));
+                        * Math.Max(1, _bonuses.Multiplier(TechStats.CREW_STRIKE_SPEED, TargetKind.District, building.DefinitionId))
+                        * Relics.RelicAuraExtensions.Over(_aura, Relics.RelicStats.WORKER_STRIKE_SPEED, building);
             return Math.Max(MIN_STRIKE_MS, Math.Round(source.SecondsPerStrike * 1000 / speed));
         }
 

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40b554f0043318e8cb5e6052cc621180, type: 3}
+  m_Name: MusterHorn
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Relics.RelicAsset
+  _id: MusterHorn
+  _name: Warhorn of the Host
+  _icon: {fileID: 21300000, guid: 1f38741207bdf73e9a6c0d8b3dac7a33, type: 3}
+  _fragments:
+  - {fileID: 21300000, guid: d5f92ee2aa56b5336ac048d075ea8700, type: 3}
+  - {fileID: 21300000, guid: 271ca5a36a584c2d4a44e0ff40741ca3, type: 3}
+  - {fileID: 21300000, guid: f704c76d3a603602fad45cda4b6cc0d9, type: 3}
+  - {fileID: 21300000, guid: 2d21749a74f492198b6c0061a2b92cde, type: 3}
+  - {fileID: 21300000, guid: 2c5d28c726efa07adbddb27b9bb19ce4, type: 3}
+  - {fileID: 21300000, guid: 76bff842a78e684d2a109ad3db1cbbb3, type: 3}
+  _text: Your halls field a bigger army
+  _pending: when the world map opens
+  _kind: 1
+  _door: boss
+  _stats:
+  - Stat: armyCap
+    Add: 0
+  _passiveBase: 1.1
+  _passivePerLevel: 0.1
+  _activationMana: 0
+  _activationRadius: 0
+  _spellName: 
+  _spellText: 

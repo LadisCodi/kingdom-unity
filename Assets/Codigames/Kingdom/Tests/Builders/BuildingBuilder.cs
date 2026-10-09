@@ -7,6 +7,8 @@ namespace Codigames.Kingdom.Tests.Builders
     // A small building for a test, legal unless told otherwise: "a farm of 3 levels at 10 Gold a level".
     public class BuildingBuilder
     {
+        private bool _hostsRelic;
+
         private string _id = "Farm";
         private int _maxLevel = 3;
         private int _width = 1;
@@ -28,6 +30,12 @@ namespace Codigames.Kingdom.Tests.Builders
         private readonly Production _production = new();
         private readonly Fog _fog = new();
         private readonly Repair _repair = new();
+
+        public BuildingBuilder HostingRelic()
+        {
+            _hostsRelic = true;
+            return this;
+        }
 
         public BuildingBuilder WithId(string id) { _id = id; return this; }
         public BuildingBuilder WithMaxLevel(int maxLevel) { _maxLevel = maxLevel; return this; }
@@ -108,6 +116,7 @@ namespace Codigames.Kingdom.Tests.Builders
                 LateUpgradeSeconds = _lateSeconds, LateUpgradeLevelGrowth = _lateGrowth,
             },
             Gates = new Gates(_maxCount, _townhallGates, _populationGates),
+            HostsRelic = _hostsRelic,
             Production = _production,
             Fog = _fog,
             Repair = _repair,
@@ -120,6 +129,7 @@ namespace Codigames.Kingdom.Tests.Builders
             public int Width { get; set; }
             public int Height { get; set; }
             public bool Buildable { get; set; }
+            public bool HostsRelic { get; set; }
             public IBuildingCost Cost { get; set; }
             public IBuildingDuration Duration { get; set; }
             public IBuildingGates Gates { get; set; }

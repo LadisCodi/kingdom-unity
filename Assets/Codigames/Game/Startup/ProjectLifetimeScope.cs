@@ -62,6 +62,8 @@ namespace Codigames.Game.Startup
         [SerializeField] private Data.Heroes.HeroLadderSettingsAsset _heroLadder;
         [SerializeField] private Data.Heroes.BannerCollection _banners;
         [SerializeField] private Data.Monetization.AdSettingsAsset _ads;
+        [SerializeField] private Data.Relics.RelicCollection _relics;
+        [SerializeField] private Data.Relics.RelicSettingsAsset _relicSettings;
         [SerializeField] private QuestCollection _quests;
         [SerializeField] private SceneCollection _scenes;
         [SerializeField] private SpeakerCollection _speakers;
@@ -129,6 +131,8 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_heroLadder).As<Kingdom.Heroes.IHeroLadderSettings>();
             builder.RegisterInstance(_banners).AsSelf().As<ICatalog<Kingdom.Heroes.IBannerDefinition>>();
             builder.RegisterInstance(_ads);
+            builder.RegisterInstance(_relics).AsSelf().As<ICatalog<Kingdom.Relics.IRelicDefinition>>();
+            builder.RegisterInstance(_relicSettings).As<Kingdom.Relics.IRelicSettings>();
             builder.RegisterInstance(_quests).As<ICatalog<IQuestDefinition>>();
             builder.RegisterInstance(_scenes).As<ICatalog<ISceneDefinition>>();
             builder.RegisterInstance(_speakers).As<ICatalog<ISpeaker>>();

@@ -69,6 +69,7 @@ namespace Codigames.Kingdom.Lairs
         public double HeroXp;
         public double Knowledge;
         public IReadOnlyDictionary<string, int> Items;
+        public IReadOnlyList<Relics.FragmentDrop> Fragments = Array.Empty<Relics.FragmentDrop>();
     }
 
     // Lairs: the party and the fight (Docs/features/18-garrisons-and-raids.md §5). A lair is a path of fights resolved on
@@ -96,9 +97,14 @@ namespace Codigames.Kingdom.Lairs
         private readonly uint _seed;
         private readonly int _troopSlots;
 
+        // Where a claim's relic fragments come from; null where relics are not in play.
+        private readonly Relics.IRelicDrops _relicDrops;
+
         public LairAttack(Lairs lairs, Combat combat, EnemyGenerator generator, Army.Army army, ITreasury treasury, uint seed, int troopSlots = 6,
-            IItemGrants items = null, IBonuses bonuses = null, Heroes.Heroes heroes = null, IModifiers modifiers = null)
+            IItemGrants items = null, IBonuses bonuses = null, Heroes.Heroes heroes = null, IModifiers modifiers = null,
+            Relics.IRelicDrops relicDrops = null)
         {
+            _relicDrops = relicDrops;
             Stack = modifiers;
             _heroes = heroes;
             _lairs = lairs;
@@ -253,6 +259,8 @@ namespace Codigames.Kingdom.Lairs
             if (_items != null)
                 foreach (var (item, count) in claim.Items)
                     _items.Grant(item, count);
+            // A lair is a city relic's door.
+            if (_relicDrops != null) claim.Fragments = _relicDrops.ForLair(id, lair.Tier);
             Claimed?.Invoke(id, claim);
             return claim;
         }

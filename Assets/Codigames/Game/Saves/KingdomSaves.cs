@@ -10,7 +10,7 @@ namespace Codigames.Game.Saves
     public static class KingdomSaves
     {
         public const string SLOT = "kingdom";
-        public const int VERSION = 20;
+        public const int VERSION = 21;
 
         private static readonly ISaveMigration<JObject>[] MIGRATIONS =
         {
@@ -52,6 +52,8 @@ namespace Codigames.Game.Saves
             new AdditiveMigration<JObject>(18),
             // 19 → 20: the banners' calls, pity and free calls.
             new AdditiveMigration<JObject>(19),
+            // 20 → 21: the relics, their fragments, the Shrines' hosts and windows.
+            new AdditiveMigration<JObject>(20),
         };
 
         public static SaveSlot<KingdomState, JObject> Slot(ISaveStorage storage)

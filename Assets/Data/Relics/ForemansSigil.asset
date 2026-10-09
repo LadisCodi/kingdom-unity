@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40b554f0043318e8cb5e6052cc621180, type: 3}
+  m_Name: ForemansSigil
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Relics.RelicAsset
+  _id: ForemansSigil
+  _name: The Winged Hammer
+  _icon: {fileID: 21300000, guid: e6154b06a30a2938bb30546f76286131, type: 3}
+  _fragments:
+  - {fileID: 21300000, guid: a4e9be1dd376e67c0b8fce910d44e4eb, type: 3}
+  - {fileID: 21300000, guid: d948ad3345a59378bbf1a69f2ccaec53, type: 3}
+  - {fileID: 21300000, guid: a8837d2de73317f9ca27d463b1065a67, type: 3}
+  - {fileID: 21300000, guid: d251ddd1b2f312b01b4f4a65683ec5b0, type: 3}
+  - {fileID: 21300000, guid: dbbeddefa2b470cf7ab257d8cd9a9d16, type: 3}
+  - {fileID: 21300000, guid: 9562840716d60d6bf8448d2914883ee3, type: 3}
+  _text: Your crews work and your buildings train faster
+  _pending: 
+  _kind: 0
+  _door: Goblins
+  _stats:
+  - Stat: workerStrikeSpeed
+    Add: 0
+  - Stat: workerSpeed
+    Add: 0
+  - Stat: trainingSpeed
+    Add: 0
+  _passiveBase: 1.1
+  _passivePerLevel: 0.1
+  _activationMana: 20
+  _activationRadius: 2
+  _spellName: 
+  _spellText: 

@@ -15,6 +15,9 @@ namespace Codigames.Kingdom.City
         // False for what the city starts with (the Townhall).
         bool Buildable { get; }
 
+        // A Shrine: it hosts a city relic.
+        bool HostsRelic { get; }
+
         IBuildingCost Cost { get; }
         IBuildingDuration Duration { get; }
         IBuildingGates Gates { get; }

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40b554f0043318e8cb5e6052cc621180, type: 3}
+  m_Name: VerdantSeal
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Relics.RelicAsset
+  _id: VerdantSeal
+  _name: Sickle of Plenty
+  _icon: {fileID: 21300000, guid: db54df3814abe65b2914dd86728e3fce, type: 3}
+  _fragments:
+  - {fileID: 21300000, guid: 9a88a4583f69635469a9167cd80e0a4b, type: 3}
+  - {fileID: 21300000, guid: 0793e75622abe049f97307f54f0176ce, type: 3}
+  - {fileID: 21300000, guid: 1b10648713b78799e8f6e6747673a539, type: 3}
+  - {fileID: 21300000, guid: 437e95bdd9ea2a188b1b685b0a94527f, type: 3}
+  - {fileID: 21300000, guid: 7307153e68cf3177dae8e97f771bb2a2, type: 3}
+  - {fileID: 21300000, guid: dcca39245df9c8aaf818269ad5d35bed, type: 3}
+  _text: More out of every swing and every tap
+  _pending: 
+  _kind: 0
+  _door: Harpies
+  _stats:
+  - Stat: harvestUnitsPerStrike
+    Add: 0
+  _passiveBase: 1.2
+  _passivePerLevel: 0.2
+  _activationMana: 20
+  _activationRadius: 2
+  _spellName: 
+  _spellText: 

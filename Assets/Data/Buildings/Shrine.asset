@@ -17,6 +17,7 @@ MonoBehaviour:
   _width: 1
   _height: 1
   _buildable: 1
+  _hostsRelic: 1
   _cost:
     _perLevel:
     - _currencies:
@@ -43,6 +44,15 @@ MonoBehaviour:
     _populationCapacityPerLevel: 
     _taxBonusPerLevel: []
     _harvestSources: []
+    _harmonySupply: 0
+    _harmonyCostPerLevel: []
+    _plants: 
+    _produces: 
+    _trains: []
+    _armyCapPerLevel: 
+    _bedsPerLevel: 
+    _heroXpBonusPerLevel: []
+    _queueLengthPerLevel: 
     _maxWorkersPerLevel: 
     _influenceRadiusPerLevel: 
     _strikeSpeedPerLevel: []
