@@ -7,8 +7,10 @@ using Codigames.Game.Data.Economy;
 using Codigames.Game.Data.Fog;
 using Codigames.Game.Data.Harvest;
 using Codigames.Game.Data.Magic;
+using Codigames.Game.Data.Research;
 using Codigames.Game.Editor.Data;
 using Codigames.Kingdom.Economy;
+using Codigames.Kingdom.Research;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
@@ -62,9 +64,10 @@ namespace Codigames.Game.Editor.WebImport
             ImportEconomy();
             ImportFog();
             ImportMagic();
+            var technologies = ImportResearch();
 
             AssetDatabase.SaveAssets();
-            Debug.Log($"#Data# Imported {currencies} currencies and {buildings.Count} buildings from the web prototype.");
+            Debug.Log($"#Data# Imported {currencies} currencies, {buildings.Count} buildings and {technologies} technologies from the web prototype.");
         }
 
         private static int ImportCurrencies()
@@ -268,6 +271,141 @@ namespace Codigames.Game.Editor.WebImport
             var currency = new SerializedObject(LoadOrCreate<CurrencyAsset>("Currencies", "Mana"));
             currency.FindProperty("_start").doubleValue = mana.BaseCap;
             currency.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // The books' bookmarks: an emblem and a ribbon tint each (the web's research menu).
+        private static readonly Dictionary<string, (string Emblem, string Tint)> BOOKS = new()
+        {
+            ["Kingdom"] = ("research", "#efe2bd"), ["Sagas"] = ("helmet", "#d9912f"), ["Atlas"] = ("compass", "#4f9a6a"),
+        };
+
+        private static int ImportResearch()
+        {
+            var tree = Read<TechTreeDoc>("tech-tree.json");
+            var assets = new List<DefinitionAsset>();
+
+            foreach (var (id, row) in tree.Technologies)
+            {
+                if (id.StartsWith("_")) continue;
+
+                var asset = LoadOrCreate<TechnologyAsset>("Technologies", id);
+                var so = new SerializedObject(asset);
+                so.FindProperty("_id").stringValue = id;
+                so.FindProperty("_tome").stringValue = row.Tome ?? "Kingdom";
+                so.FindProperty("_placed").boolValue = row.IsPlaced;
+                so.FindProperty("_era").intValue = (int)(row.Era ?? 1);
+                so.FindProperty("_row").intValue = (int)(row.Row ?? 0);
+                so.FindProperty("_column").intValue = (int)(row.Col ?? 0);
+                SetStrings(so.FindProperty("_requires"), row.Requires);
+                so.FindProperty("_knowledge").doubleValue = row.Knowledge ?? 0;
+
+                var price = new Dictionary<string, double>();
+                if (row.Gold > 0) price["Gold"] = row.Gold;
+                foreach (var (currency, amount) in row.Materials ?? new Dictionary<string, double>()) price[currency] = amount;
+                SetAmounts(so.FindProperty("_price"), price);
+                SetAmounts(so.FindProperty("_goods"), row.Goods);
+                so.FindProperty("_anyPrecious").intValue = (int)(row.AnyPrecious ?? 0);
+
+                so.FindProperty("_kind").enumValueIndex = (int)(row.Kind switch
+                {
+                    "bonus" => TechKind.Bonus,
+                    "mechanic" => TechKind.Mechanic,
+                    _ => TechKind.Unlock,
+                });
+                var unlocks = (row.Unlocks ?? new List<TechUnlock>()).Select(ToUnlock).ToList();
+                var list = so.FindProperty("_unlocks");
+                list.arraySize = unlocks.Count;
+                for (var i = 0; i < unlocks.Count; i++)
+                {
+                    var line = list.GetArrayElementAtIndex(i);
+                    line.FindPropertyRelative("_kind").enumValueIndex = (int)unlocks[i].Kind;
+                    line.FindPropertyRelative("_id").stringValue = unlocks[i].Id;
+                    line.FindPropertyRelative("_level").intValue = unlocks[i].Level;
+                }
+
+                var effects = row.Effects ?? new List<TechEffect>();
+                list = so.FindProperty("_effects");
+                list.arraySize = effects.Count;
+                for (var i = 0; i < effects.Count; i++)
+                {
+                    var line = list.GetArrayElementAtIndex(i);
+                    var (target, targetId) = ToTarget(effects[i].Target);
+                    line.FindPropertyRelative("_stat").stringValue = effects[i].Stat;
+                    line.FindPropertyRelative("_op").enumValueIndex = (int)(effects[i].Op == "flat" ? EffectOp.Flat : EffectOp.Percent);
+                    line.FindPropertyRelative("_value").doubleValue = effects[i].Value;
+                    line.FindPropertyRelative("_target").enumValueIndex = (int)target;
+                    line.FindPropertyRelative("_targetId").stringValue = targetId;
+                }
+
+                so.FindProperty("_planned").boolValue = row.Planned ?? false;
+                so.FindProperty("_displayName").stringValue = row.Name;
+                so.FindProperty("_icon").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/UI/Icons/{row.Icon}.png");
+                so.FindProperty("_description").stringValue = row.Kind == "mechanic" ? row.Description : "";
+                so.ApplyModifiedPropertiesWithoutUndo();
+                assets.Add(asset);
+            }
+
+            SetEntries(LoadOrCreate<TechnologyCollection>(null, "Technologies"), assets);
+
+            var shelf = new SerializedObject(LoadOrCreate<TechTreeAsset>("Settings", "TechTree"));
+            var books = shelf.FindProperty("_books");
+            books.arraySize = tree.Eras.Count;
+            var b = 0;
+            foreach (var (tome, cells) in tree.Eras)
+            {
+                var book = books.GetArrayElementAtIndex(b++);
+                book.FindPropertyRelative("_id").stringValue = tome;
+                var (emblem, tint) = BOOKS.TryGetValue(tome, out var mark) ? mark : ("research", "#efe2bd");
+                book.FindPropertyRelative("_emblem").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/UI/Icons/{emblem}.png");
+                book.FindPropertyRelative("_tint").colorValue = ColorUtility.TryParseHtmlString(tint, out var color) ? color : Color.white;
+
+                var rewards = tree.EraRewards != null && tree.EraRewards.TryGetValue(tome, out var paid) ? paid : new List<double?>();
+                var eras = book.FindPropertyRelative("_eras");
+                eras.arraySize = cells.Count;
+                for (var e = 0; e < cells.Count; e++)
+                {
+                    var era = eras.GetArrayElementAtIndex(e);
+                    var reward = e < rewards.Count ? rewards[e] : null;
+                    era.FindPropertyRelative("_cellsToOpen").intValue = (int)cells[e];
+                    era.FindPropertyRelative("_rewarded").boolValue = reward.HasValue;
+                    era.FindPropertyRelative("_reward").intValue = (int)(reward ?? 0);
+                }
+            }
+            shelf.ApplyModifiedPropertiesWithoutUndo();
+
+            var knowledge = Read<ExplorationData>("Game/exploration.json").Knowledge;
+            var settings = new SerializedObject(LoadOrCreate<KnowledgeSettingsAsset>("Settings", "Knowledge"));
+            settings.FindProperty("_perHour").doubleValue = knowledge.BasePerHour;
+            settings.FindProperty("_cap").doubleValue = knowledge.Cap;
+            settings.FindProperty("_goldPriceBase").doubleValue = knowledge.GoldPriceBase;
+            settings.FindProperty("_goldPriceExponent").doubleValue = knowledge.GoldPriceExponent;
+            settings.FindProperty("_gemsPerPoint").doubleValue = knowledge.GemsPerPoint;
+            settings.ApplyModifiedPropertiesWithoutUndo();
+
+            return assets.Count;
+        }
+
+        private static Kingdom.Research.TechUnlock ToUnlock(TechUnlock doc)
+        {
+            if (doc.District != null) return new(UnlockKind.District, doc.District);
+            if (doc.DistrictLevel != null) return new(UnlockKind.DistrictLevel, doc.DistrictLevel.Id, (int)doc.DistrictLevel.Level);
+            if (doc.DistrictCount != null) return new(UnlockKind.DistrictCount, doc.DistrictCount);
+            if (doc.Unit != null) return new(UnlockKind.Unit, doc.Unit);
+            if (doc.Evolution != null) return new(UnlockKind.Evolution, doc.Evolution.Unit, (int)doc.Evolution.Rank);
+            if (doc.Harvest != null) return new(UnlockKind.Harvest, doc.Harvest);
+            if (doc.Terrain != null) return new(UnlockKind.Terrain, doc.Terrain);
+            return new(UnlockKind.WorldUpgrade, doc.WorldUpgrade);
+        }
+
+        private static (TargetKind, string) ToTarget(TechTarget doc)
+        {
+            if (doc == null) return (TargetKind.Global, null);
+            if (doc.District != null) return (TargetKind.District, doc.District);
+            if (doc.Unit != null) return (TargetKind.Unit, doc.Unit);
+            if (doc.UnitTag != null) return (TargetKind.UnitTag, doc.UnitTag);
+            if (doc.Harvest != null) return (TargetKind.Harvest, doc.Harvest);
+            if (doc.Tome != null) return (TargetKind.Tome, doc.Tome);
+            return doc.WorldDistrict != null ? (TargetKind.WorldDistrict, doc.WorldDistrict) : (TargetKind.Global, null);
         }
 
         private static T Read<T>(string file) => JsonConvert.DeserializeObject<T>(File.ReadAllText(Path.Combine(WebData, file)));

@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Codigames.Game.Data;
 using Codigames.Game.Data.City;
+using Codigames.Game.Data.Research;
 using Codigames.Kingdom.City;
+using Codigames.Kingdom.Research;
 
 namespace Codigames.Game.Editor.Data
 {
@@ -28,6 +30,13 @@ namespace Codigames.Game.Editor.Data
             {
                 foreach (var problem in BuildingRules.Problems(buildings.Entries.OfType<IBuildingDefinition>(), construction))
                     yield return $"{buildings.Title}: {problem}";
+            }
+
+            var technologies = DataAssets.FindFirst<TechnologyCollection>();
+            var tree = DataAssets.FindFirst<TechTreeAsset>();
+            if (technologies != null && tree != null)
+            {
+                foreach (var problem in TechTreeRules.Problems(technologies, tree)) yield return $"{technologies.Title}: {problem}";
             }
         }
 

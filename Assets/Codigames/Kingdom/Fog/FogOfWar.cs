@@ -6,6 +6,7 @@ using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Economy;
 using Codigames.Kingdom.Fog.State;
 using Codigames.Kingdom.Map;
+using Codigames.Kingdom.Research;
 using Codigames.Modules.Core;
 using Codigames.Modules.Grid;
 
@@ -16,7 +17,7 @@ namespace Codigames.Kingdom.Fog
     // definition gives; the rest is paid for in Gold, a share a tap, a cell at a time, only next to revealed
     // ground and within the rings the Townhall's level reaches. The price grows with the ring and with how much
     // is already revealed.
-    public class FogOfWar : IRevealedGround
+    public class FogOfWar : IRevealedGround, IExploredGround
     {
         public const string GOLD = "Gold";
 

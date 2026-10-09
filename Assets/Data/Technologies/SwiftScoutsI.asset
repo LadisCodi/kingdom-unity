@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48d295cac37a6912ebe2ee4db8aeb6ff, type: 3}
+  m_Name: SwiftScoutsI
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Research.TechnologyAsset
+  _id: SwiftScoutsI
+  _tome: Kingdom
+  _placed: 1
+  _era: 8
+  _row: 43
+  _column: 2
+  _requires:
+  - AttunementIV
+  _knowledge: 14
+  _price:
+  - _id: Gold
+    _value: 90000
+  _goods:
+  - _id: Starmetal
+    _value: 10
+  - _id: Heartwood
+    _value: 10
+  - _id: Moonglass
+    _value: 10
+  _anyPrecious: 0
+  _kind: 1
+  _unlocks: []
+  _effects:
+  - _stat: explorerSpeed
+    _op: 1
+    _value: 25
+    _target: 0
+    _targetId: 
+  _planned: 0
+  _displayName: Swift Scouts I
+  _icon: {fileID: 21300000, guid: 196d36594d6d315709a5977716000b8c, type: 3}
+  _description: 

@@ -1,8 +1,8 @@
+using Codigames.Kingdom.Economy;
+
 namespace Codigames.Kingdom.Magic.State
 {
-    public class ManaState
+    public class ManaState : DripState
     {
-        // Epoch milliseconds: when the unit the pool is gaining started; null while the pool is full.
-        public double? AccruingSince { get; set; }
     }
 }
