@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48d295cac37a6912ebe2ee4db8aeb6ff, type: 3}
+  m_Name: Tactics
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Research.TechnologyAsset
+  _id: Tactics
+  _tome: Kingdom
+  _placed: 1
+  _era: 6
+  _row: 28
+  _column: 2
+  _requires:
+  - Waterwheels
+  - Fortifications
+  _knowledge: 9
+  _price:
+  - _id: Gold
+    _value: 20000
+  _goods: []
+  _anyPrecious: 0
+  _kind: 2
+  _unlocks: []
+  _effects: []
+  _planned: 0
+  _displayName: Tactics
+  _icon: {fileID: 21300000, guid: 692dcfaad58ab7ab599e54b0a39106d2, type: 3}
+  _description: "Reading the ground \u2014 a bad matchup costs a tenth less."

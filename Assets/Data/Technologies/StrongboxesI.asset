@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48d295cac37a6912ebe2ee4db8aeb6ff, type: 3}
+  m_Name: StrongboxesI
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Research.TechnologyAsset
+  _id: StrongboxesI
+  _tome: Atlas
+  _placed: 1
+  _era: 1
+  _row: 7
+  _column: 0
+  _requires:
+  - GarrisonRightsI
+  _knowledge: 8
+  _price:
+  - _id: Gold
+    _value: 32000
+  _goods:
+  - _id: Heartwood
+    _value: 13
+  _anyPrecious: 0
+  _kind: 1
+  _unlocks: []
+  _effects:
+  - _stat: improvementStore
+    _op: 1
+    _value: 25
+    _target: 6
+    _targetId: Rural
+  _planned: 0
+  _displayName: Strongboxes I
+  _icon: {fileID: 21300000, guid: a125799ba1ae1350798034ce8cc76287, type: 3}
+  _description: 

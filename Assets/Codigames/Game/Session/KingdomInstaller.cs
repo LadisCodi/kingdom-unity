@@ -9,6 +9,7 @@ using Codigames.Kingdom.Harvest;
 using Codigames.Kingdom.Harvest.State;
 using Codigames.Kingdom.Magic;
 using Codigames.Kingdom.Map;
+using Codigames.Kingdom.Research;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Core;
 using Codigames.Modules.Saves;
@@ -36,7 +37,15 @@ namespace Codigames.Game.Session
             builder.Register(resolver => resolver.Resolve<KingdomState>().Harvest, Lifetime.Singleton);
             builder.Register(resolver => resolver.Resolve<KingdomState>().Mana, Lifetime.Singleton);
             builder.Register(resolver => resolver.Resolve<KingdomState>().Fog, Lifetime.Singleton);
-            builder.Register<FogOfWar>(Lifetime.Singleton).AsSelf().As<IRevealedGround>();
+            builder.Register<FogOfWar>(Lifetime.Singleton).AsSelf().As<IRevealedGround>().As<IExploredGround>();
+            builder.Register(resolver => resolver.Resolve<KingdomState>().Research, Lifetime.Singleton);
+            builder.Register(resolver => resolver.Resolve<KingdomState>().Knowledge, Lifetime.Singleton);
+            builder.Register<KnowledgeBar>(Lifetime.Singleton);
+            builder.Register<KnowledgeMarket>(Lifetime.Singleton);
+            builder.Register<Bookshelf>(Lifetime.Singleton).As<IBookshelf>();
+            builder.Register<Researching>(Lifetime.Singleton);
+            builder.Register<TechBonuses>(Lifetime.Singleton).As<IBonuses>();
+            builder.Register<ResearchGates>(Lifetime.Singleton).As<IResearchGates>();
             builder.Register<BuildingsLiftFog>(Lifetime.Singleton);
             builder.Register<ITreasury>(resolver => new Treasury(
                 resolver.Resolve<ICatalog<ICurrencyDefinition>>(), resolver.Resolve<KingdomState>().Balances), Lifetime.Singleton);
@@ -65,6 +74,11 @@ namespace Codigames.Game.Session
                 var mana = resolver.Resolve<ManaPool>();
                 mana.Wake(state.LastAdvance);
                 timeline.Register(mana);
+
+                // The bar likewise: a new kingdom starts with none, and drips from its first second.
+                var knowledge = resolver.Resolve<KnowledgeBar>();
+                knowledge.Wake(state.LastAdvance);
+                timeline.Register(knowledge);
                 timeline.Register(resolver.Resolve<Harvesting>());
 
                 // Stores registered after construction, so a level finishing is counted before a store fills.

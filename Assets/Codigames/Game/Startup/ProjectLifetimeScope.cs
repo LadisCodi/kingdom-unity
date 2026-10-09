@@ -5,6 +5,7 @@ using Codigames.Game.Data.Economy;
 using Codigames.Game.Data.Fog;
 using Codigames.Game.Data.Harvest;
 using Codigames.Game.Data.Magic;
+using Codigames.Game.Data.Research;
 using Codigames.Game.Localization;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.Crews;
@@ -12,6 +13,7 @@ using Codigames.Kingdom.Economy;
 using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Harvest;
 using Codigames.Kingdom.Magic;
+using Codigames.Kingdom.Research;
 using Codigames.Modules.Audio;
 using Codigames.Modules.Clock;
 using Codigames.Modules.Core;
@@ -39,6 +41,9 @@ namespace Codigames.Game.Startup
         [SerializeField] private EconomySettingsAsset _economy;
         [SerializeField] private TrainingSettingsAsset _training;
         [SerializeField] private FogSettingsAsset _fog;
+        [SerializeField] private TechnologyCollection _technologies;
+        [SerializeField] private TechTreeAsset _techTree;
+        [SerializeField] private KnowledgeSettingsAsset _knowledge;
 
         [Header("App")]
         [SerializeField] private LocalizationCatalog _localization;
@@ -87,6 +92,9 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_economy).As<IEconomySettings>().As<IWorkerSettings>();
             builder.RegisterInstance(_training).As<ITrainingSettings>();
             builder.RegisterInstance(_fog).As<IFogSettings>();
+            builder.RegisterInstance(_technologies).As<ICatalog<ITechnology>>().As<ITechnologyCards>();
+            builder.RegisterInstance(_techTree).AsSelf().As<ITechTree>();
+            builder.RegisterInstance(_knowledge).As<IKnowledgeSettings>();
         }
     }
 }
