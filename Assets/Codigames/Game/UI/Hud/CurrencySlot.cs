@@ -1,8 +1,9 @@
 using System;
+using Codigames.Game.UI.Stage;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
 
 namespace Codigames.Game.UI.Hud
 {
@@ -32,6 +33,7 @@ namespace Codigames.Game.UI.Hud
         public void Show(string currencyId, Sprite icon, bool sold, float width)
         {
             CurrencyId = currencyId;
+            CoachTarget.Tag(this, currencyId == "Mana" ? "mana" : "slot:" + currencyId);
             _icon.sprite = icon;
             _plus.SetActive(sold);
             _layout.preferredWidth = width;

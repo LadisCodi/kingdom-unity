@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Codigames.Game.UI.Hud;
+using Codigames.Game.UI.Stage;
 using UnityEngine;
 
 namespace Codigames.Game.UI.Menus
@@ -27,6 +28,12 @@ namespace Codigames.Game.UI.Menus
         public IReadOnlyList<CurrencySlot> Slots => _slots;
 
         public KnowledgeTab Knowledge => _knowledge;
+
+        // What the tutorial's lines call its controls.
+        protected override void InitializeInternal()
+        {
+            CoachTarget.Tag(_knowledge, "knowledge");
+        }
 
         // Rebuilds the slots: the coins on the left, the rest on the right, each in the order given.
         public void SetSlots(IEnumerable<(string Id, Sprite Icon, bool Sold, bool OnRight)> slots)

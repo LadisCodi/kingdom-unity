@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Codigames.Game.UI.Data;
 using Codigames.Game.UI.Data.Research;
 using Codigames.Game.UI.Research;
+using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
 using Codigames.Kingdom.Research;
 using TMPro;
@@ -57,8 +58,17 @@ namespace Codigames.Game.UI.Menus
         public event Action PourMostTapped;
         public event Action ResearchTapped;
 
+        // What the tutorial's lines call its controls.
+        protected override void InitializeInternal()
+        {
+            CoachTarget.Tag(_close, "close");
+            CoachTarget.Tag(_pourMost, "tech-pour");
+            CoachTarget.Tag(_research, "tech-research");
+        }
+
         public void Show(TechSheetData sheet)
         {
+            CoachTarget.Tag(this, "techsheet:" + sheet.Id);
             _title.text = sheet.Name;
             _emblem.sprite = sheet.Icon;
             _says.text = sheet.Says;

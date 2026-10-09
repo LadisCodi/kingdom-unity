@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Codigames.Game.UI.Data.Research;
 using Codigames.Game.UI.Research;
+using Codigames.Game.UI.Stage;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,6 +48,12 @@ namespace Codigames.Game.UI.Menus
 
         // A ribbon was tapped: its book.
         public event Action<string> BookmarkTapped;
+
+        // What the tutorial's lines call its controls.
+        protected override void InitializeInternal()
+        {
+            CoachTarget.Tag(_close, "close");
+        }
 
         public void SetTitle(string title) => _title.text = title;
 

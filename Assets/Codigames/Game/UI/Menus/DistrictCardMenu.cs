@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Codigames.Game.UI.Data;
+using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
 using TMPro;
 using UnityEngine;
@@ -57,6 +58,15 @@ namespace Codigames.Game.UI.Menus
         public event Action TrainTapped;
         public event Action CrewMinusTapped;
         public event Action CrewPlusTapped;
+
+        // What the tutorial's lines call its controls.
+        protected override void InitializeInternal()
+        {
+            CoachTarget.Tag(_close, "close", "card:close");
+            CoachTarget.Tag(_upgrade, "card:upgrade", "upgrade-go");
+            CoachTarget.Tag(_train, "card:train");
+            CoachTarget.Tag(_crewPlus, "card:workers");
+        }
 
         public void Show(DistrictCardData card)
         {

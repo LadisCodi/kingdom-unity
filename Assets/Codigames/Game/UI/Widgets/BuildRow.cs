@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Codigames.Game.UI.Data;
+using Codigames.Game.UI.Stage;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -38,6 +39,7 @@ namespace Codigames.Game.UI.Widgets
         public void Show(BuildRowData row)
         {
             Id = row.Id;
+            CoachTarget.Tag(this, "build:" + row.Id);
             _art.sprite = row.Art;
             _art.enabled = row.Art != null;
             if (row.Art != null) _artFit.aspectRatio = row.Art.rect.width / row.Art.rect.height;

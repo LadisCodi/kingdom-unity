@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Codigames.Game.UI.Data;
+using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +28,13 @@ namespace Codigames.Game.UI.Menus
 
         // A row was tapped: its building's id.
         public event Action<string> RowTapped;
+
+        // What the tutorial's lines call its controls.
+        protected override void InitializeInternal()
+        {
+            CoachTarget.Tag(_close, "close");
+            foreach (var tab in _tabs) CoachTarget.Tag(tab, "build-tab:" + tab.Id);
+        }
 
         public void SetOpenTab(string id)
         {

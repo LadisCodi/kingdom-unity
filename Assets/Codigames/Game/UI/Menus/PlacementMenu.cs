@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Codigames.Game.UI.Data;
+using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
 using TMPro;
 using UnityEngine;
@@ -29,6 +30,13 @@ namespace Codigames.Game.UI.Menus
 
         public event Action CloseTapped;
         public event Action BuildTapped;
+
+        // What the tutorial's lines call its controls.
+        protected override void InitializeInternal()
+        {
+            CoachTarget.Tag(_close, "close");
+            CoachTarget.Tag(_build, "place-confirm");
+        }
 
         public void Show(PlacementPanelData panel)
         {

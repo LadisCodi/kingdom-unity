@@ -28,6 +28,9 @@ namespace Codigames.Game.UI.Stage
 
         public bool IsOn => Speaker != null;
 
+        // How tall the figure stands from its feet, in the stage's units.
+        public float StandingHeight => _clip.sizeDelta.y;
+
         // `speaker` on this side: an entrance when it is someone new, a change of face when they are already here.
         public void Cast(string speaker, Sprite picture)
         {
@@ -46,6 +49,9 @@ namespace Codigames.Game.UI.Stage
                 .Join(_group.DOFade(1, FADE_SECONDS))
                 .SetUpdate(true);
         }
+
+        // A figure with no room above the box (it would stand under the header) is not shown at all.
+        public void SetRoom(bool room) => _clip.gameObject.SetActive(room);
 
         public void Leave()
         {
