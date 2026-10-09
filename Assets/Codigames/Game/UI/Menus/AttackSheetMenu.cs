@@ -24,6 +24,9 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private HeadPanel _army;
         [SerializeField] private RectTransform _armyCells;
         [SerializeField] private AttackCell _cellPrefab;
+        [SerializeField] private GameObject _heroRow;
+        [SerializeField] private RectTransform _heroCells;
+        [SerializeField] private HeroSlotView _heroSlotPrefab;
         [SerializeField] private SectionHead _rosterHead;
         [SerializeField] private RectTransform _roster;
         [SerializeField] private AttackTile _tilePrefab;
@@ -35,11 +38,13 @@ namespace Codigames.Game.UI.Menus
         private readonly List<AttackCell> _enemyShown = new();
         private readonly List<AttackCell> _armyShown = new();
         private readonly List<AttackTile> _tiles = new();
+        private readonly List<HeroSlotView> _heroSlots = new();
         private Color _trail;
 
         public event Action CloseTapped;
         public event Action<int> SlotTapped;
         public event Action<int> TroopTapped;
+        public event Action<int> HeroSlotTapped;
         public event Action QuickDeployTapped;
         public event Action AttackTapped;
 
@@ -62,6 +67,24 @@ namespace Codigames.Game.UI.Menus
             _army.Trail = data.ArmyPower;
             _army.TrailColor = data.Short ? SHORT : _trail;
             Cells(_armyShown, _armyCells, data.Party, data.Slots, i => SlotTapped?.Invoke(i));
+
+            // No hero yet — the first comes from the Tavern's banner — and the row would offer nothing.
+            _heroRow.SetActive(data.Heroes.Count > 0);
+            for (var i = 0; i < data.Heroes.Count; i++)
+            {
+                if (i == _heroSlots.Count)
+                {
+                    var slot = Instantiate(_heroSlotPrefab, _heroCells);
+                    var index = i;
+                    slot.Tapped += () => HeroSlotTapped?.Invoke(index);
+                    _heroSlots.Add(slot);
+                }
+
+                _heroSlots[i].gameObject.SetActive(true);
+                _heroSlots[i].Show(data.Heroes[i]);
+            }
+
+            for (var i = data.Heroes.Count; i < _heroSlots.Count; i++) _heroSlots[i].gameObject.SetActive(false);
 
             _rosterHead.Title = data.RosterHead;
             for (var i = 0; i < data.Roster.Count; i++)

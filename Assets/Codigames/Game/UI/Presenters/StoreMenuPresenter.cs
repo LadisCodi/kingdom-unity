@@ -21,8 +21,9 @@ namespace Codigames.Game.UI.Presenters
     // The store's logic (the web's storeSheet and storeHeroes, and Game.doPull/doPullMany/startFreePullWatch): the
     // tabs; on Heroes, the two calls — the ×1 one button with whichever face is true (free, an ad that pays for it, or a
     // key), the ×10 always a price — the free calls line ticking, the odds; and every call handed to the reveal. The
-    // golden call stands a different Legendary each visit, every one before any comes round again.
-    public class StoreMenuPresenter : AbstractDataMenuPresenter<StoreMenu, string>, IClosableMenuPresenter, IPurseMenu, ITickable
+    // golden call stands a different Legendary each visit, every one before any comes round again. A popup over whatever
+    // pointed at it (a hero's card), which keeps its state.
+    public class StoreMenuPresenter : AbstractDataMenuPresenter<StoreMenu, string>, IPopupMenuPresenter, IPurseMenu, ITickable
     {
         public const string HEROES = "heroes";
         private static readonly string[] TABS = { HEROES };

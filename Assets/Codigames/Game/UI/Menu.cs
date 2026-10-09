@@ -126,6 +126,8 @@ namespace Codigames.Game.UI
 
         public virtual async Task Show()
         {
+            // The menu opened last is drawn over the ones opened before it (a popup over its sheet).
+            transform.SetAsLastSibling();
             gameObject.SetActive(true);
 
             PreShow();

@@ -70,6 +70,7 @@ namespace Codigames.Game.UI.Presenters
         private readonly UIManager _ui;
         private readonly Combat _combat;
         private readonly PortraitArt _portraits;
+        private readonly Codigames.Game.Data.Heroes.HeroCollection _heroes;
         private readonly ProvinceSitesAsset _sites;
         private readonly IClock _clock;
         private readonly NumberFormat _numbers;
@@ -103,8 +104,10 @@ namespace Codigames.Game.UI.Presenters
         private bool _rewardsUp;
 
         public BattleScreenPresenter(IMenuViewFactory views, UIManager ui, Combat combat, PortraitArt portraits, ProvinceSitesAsset sites,
-            IClock clock, NumberFormat numbers, Localizer localizer, ISoundService sounds, MusicDirector music, PlaybackPreferences preferences) : base(views)
+            IClock clock, NumberFormat numbers, Localizer localizer, ISoundService sounds, MusicDirector music, PlaybackPreferences preferences,
+            Codigames.Game.Data.Heroes.HeroCollection heroes) : base(views)
         {
+            _heroes = heroes;
             _preferences = preferences;
             _ui = ui;
             _combat = combat;
@@ -679,9 +682,11 @@ namespace Codigames.Game.UI.Presenters
             _sounds.Play(id, volume);
         }
 
-        // A slot's face: the troop's bust — or, on a side that fields creatures, the creature's.
+        // A slot's face: the troop's bust — or, on a side that fields creatures, the creature's; a hero's own portrait.
         private (Sprite, Vector2, float) Face(BoardSlot board, Side side)
         {
+            if (board.IsHero && board.FighterId != null && _heroes.TryGet(board.FighterId, out var hero) && hero is Codigames.Game.Data.Heroes.HeroAsset asset)
+                return (asset.Portrait, Vector2.zero, 1);
             if (board.Troop == null) return (null, Vector2.zero, 1);
             if (side == Side.Theirs && Data.Creatures && _sites.CreatureOf(board.Type) is { } creature) return (creature, Vector2.zero, 1);
             var bust = _portraits.Of(board.Troop);

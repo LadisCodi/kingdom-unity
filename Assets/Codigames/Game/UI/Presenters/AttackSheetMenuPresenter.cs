@@ -42,11 +42,16 @@ namespace Codigames.Game.UI.Presenters
         private readonly IQuickInfoMessageService _messages;
         private readonly MusicDirector _music;
         private readonly PlaybackPreferences _preferences;
+        private readonly Kingdom.Heroes.Heroes _heroes;
+        private readonly UI.Heroes.HeroCards _heroCards;
 
         public AttackSheetMenuPresenter(IMenuViewFactory views, UIManager ui, Kingdom.Lairs.Lairs lairs, LairAttack attack, AttackParty party,
             Army army, LairWords words, PortraitArt portraits, ProvinceSitesAsset sites, ITreasury treasury, NumberFormat numbers,
-            Localizer localizer, IClock clock, ISoundService sounds, IQuickInfoMessageService messages, MusicDirector music, PlaybackPreferences preferences) : base(views)
+            Localizer localizer, IClock clock, ISoundService sounds, IQuickInfoMessageService messages, MusicDirector music, PlaybackPreferences preferences,
+            Kingdom.Heroes.Heroes heroes, UI.Heroes.HeroCards heroCards) : base(views)
         {
+            _heroes = heroes;
+            _heroCards = heroCards;
             _preferences = preferences;
             _ui = ui;
             _lairs = lairs;
@@ -71,7 +76,10 @@ namespace Codigames.Game.UI.Presenters
         {
             // A lair resolves on entry, so nobody is busy: the roster is the party, best answer first.
             if (_lairs.Site(Data) is { } lair) _party.QuickDeploy(lair.Threat);
+            // Every hero who can fight leads, as many as there are slots.
+            _party.SetHeroes(_heroes.Owned.Where(h => _heroes.CanFight(h, _clock.NowMs)).Take(_heroes.Slots));
             _music.Set(MusicMoment.Muster, true);
+            _heroes.Changed += Refresh;
             _army.Changed += Refresh;
             _treasury.Changed += OnTreasuryChanged;
             Refresh();
@@ -80,6 +88,7 @@ namespace Codigames.Game.UI.Presenters
         protected override void UnbindInternal(AttackSheetMenu view)
         {
             _music.Set(MusicMoment.Muster, false);
+            _heroes.Changed -= Refresh;
             _army.Changed -= Refresh;
             _treasury.Changed -= OnTreasuryChanged;
         }
@@ -89,6 +98,7 @@ namespace Codigames.Game.UI.Presenters
             view.CloseTapped += RequestClose;
             view.SlotTapped += OnSlot;
             view.TroopTapped += OnTroop;
+            view.HeroSlotTapped += OnHeroSlot;
             view.QuickDeployTapped += OnQuickDeploy;
             view.AttackTapped += OnAttack;
         }
@@ -98,6 +108,7 @@ namespace Codigames.Game.UI.Presenters
             view.CloseTapped -= RequestClose;
             view.SlotTapped -= OnSlot;
             view.TroopTapped -= OnTroop;
+            view.HeroSlotTapped -= OnHeroSlot;
             view.QuickDeployTapped -= OnQuickDeploy;
             view.AttackTapped -= OnAttack;
         }
@@ -127,6 +138,37 @@ namespace Codigames.Game.UI.Presenters
             Refresh();
         }
 
+        // An open slot, filled or not, opens the picker for all of them; a locked one buys the next.
+        private void OnHeroSlot(int index)
+        {
+            if (index < _heroes.Slots)
+            {
+                _ = _ui.ShowMenu<HeroPickerMenu, UI.Heroes.HeroPick>(new UI.Heroes.HeroPick
+                {
+                    Slots = _heroes.Slots,
+                    Selected = _party.Heroes.ToList(),
+                    Fight = true,
+                    Select = chosen =>
+                    {
+                        _party.SetHeroes(chosen);
+                        Refresh();
+                    },
+                });
+                return;
+            }
+
+            var result = _heroes.BuySlot();
+            if (result == Kingdom.Heroes.HeroSlotResult.Purchased) _sounds.Play(SoundIds.GEM_SPEND);
+            else
+            {
+                _sounds.Play(SoundIds.ERROR);
+                _messages.Show(new QuickInfoMessageData(result == Kingdom.Heroes.HeroSlotResult.NotEnoughGems
+                    ? _localizer.Tr("Not enough Gems") : _localizer.Tr("Three heroes is the whole board")));
+            }
+
+            Refresh();
+        }
+
         private void OnQuickDeploy()
         {
             if (_lairs.Site(Data) is { } lair) _party.QuickDeploy(lair.Threat);
@@ -140,7 +182,7 @@ namespace Codigames.Game.UI.Presenters
             if (lair == null) return;
             // Which fight of the path this is, for the playback's line — read before the fight moves the path on.
             var fight = _lairs.FightIndex(lair) + 1;
-            var report = _attack.Attack(Data, _party.Slots.ToList(), _clock.NowMs);
+            var report = _attack.Attack(Data, _party.Slots.ToList(), _clock.NowMs, _party.Heroes.ToList());
             if (report.Result == LairResult.Blocked)
             {
                 _sounds.Play(SoundIds.ERROR);
@@ -173,8 +215,8 @@ namespace Codigames.Game.UI.Presenters
             if (View == null || _lairs.Site(Data) is not { } lair) return;
             var enemy = _attack.Formation(lair);
             var power = _attack.Power(lair);
-            var attack = _attack.PartyPower(_party.Slots);
-            var block = _attack.Block(Data, _party.Slots);
+            var attack = _attack.PartyPower(_party.Slots, _party.Heroes);
+            var block = _attack.Block(Data, _party.Slots, _party.Heroes, _clock.NowMs);
             var fallen = _party.Fallen(lair);
             var price = _attack.Supplies.Select(s => new PriceTerm(s.Key, _numbers.Exact(s.Value), _treasury.Get(s.Key) < s.Value)).ToList();
             View.Show(new AttackSheetData
@@ -188,6 +230,7 @@ namespace Codigames.Game.UI.Presenters
                 Short = attack < power,
                 Slots = _party.SlotCount,
                 Party = _party.Slots.Select(s => Squad(s.Troop, "×" + _numbers.Exact(s.Count))).ToList(),
+                Heroes = HeroSlots(),
                 RosterHead = _localizer.Tr("Troops"),
                 Roster = _party.Roster.Select(t =>
                 {
@@ -205,6 +248,23 @@ namespace Codigames.Game.UI.Presenters
                     : fallen == 0 ? _localizer.Tr("No soldiers lost")
                     : _localizer.Trn(fallen, "Expected losses: ~{n} soldier", "Expected losses: ~{n} soldiers", ("n", _numbers.Exact(fallen))),
             });
+        }
+
+        // Every hero slot to the ceiling: the party's heroes, the open slots, and the locked ones — only the next with
+        // its Gems. None at all until the first hero has come.
+        private IReadOnlyList<HeroSlotData> HeroSlots()
+        {
+            if (_heroes.Owned.Count == 0) return System.Array.Empty<HeroSlotData>();
+            var now = _clock.NowMs;
+            var open = _heroes.Slots;
+            return Enumerable.Range(0, _heroes.Ladder.Settings.HeroSlots).Select(i =>
+                i < _party.Heroes.Count ? new HeroSlotData { Kind = HeroSlotKind.Hero, Card = _heroCards.Card(_party.Heroes[i], now) }
+                : i < open ? new HeroSlotData { Kind = HeroSlotKind.Empty }
+                : new HeroSlotData
+                {
+                    Kind = HeroSlotKind.Locked,
+                    Price = i == open ? "<sprite name=\"Gems\"> " + _numbers.Count(_heroes.SlotGemCost) : null,
+                }).ToList();
         }
 
         private string Power(int power) => "<sprite name=\"power\"> " + _numbers.Exact(power);
@@ -236,6 +296,9 @@ namespace Codigames.Game.UI.Presenters
             LairBlock.AlreadyDefeated => _localizer.Tr("They are beaten — claim what they left behind"),
             LairBlock.EmptyParty => _localizer.Tr("Pick who goes in"),
             LairBlock.NoSoldiers => _localizer.Tr("A lair wants soldiers — a hero cannot go in alone"),
+            LairBlock.NoHero => _localizer.Tr("Pick a hero to lead them"),
+            LairBlock.TooManyHeroes => _localizer.Tr("More heroes than you have slots for"),
+            LairBlock.HeroDown => _localizer.Tr("A hero in the party is exhausted — they rest until their HP is full"),
             LairBlock.TooManySlots => _localizer.Tr("Too many kinds of unit — buy another party slot"),
             LairBlock.NotEnoughUnits => _localizer.Tr("You do not have that many at home"),
             LairBlock.NotEnoughSupplies => _localizer.Tr("Not enough Mana to attack"),
