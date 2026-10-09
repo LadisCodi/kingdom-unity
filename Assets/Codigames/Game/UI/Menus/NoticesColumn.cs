@@ -12,6 +12,7 @@ namespace Codigames.Game.UI.Menus
     {
         [SerializeField] private RectTransform _column;
         [SerializeField] private NoticeBubble _bubblePrefab;
+        [SerializeField, Tooltip("A bubble's side; 0 keeps the prefab's.")] private float _bubbleSize;
 
         private readonly List<NoticeBubble> _bubbles = new();
 
@@ -25,6 +26,12 @@ namespace Codigames.Game.UI.Menus
                 if (i == _bubbles.Count)
                 {
                     var bubble = Instantiate(_bubblePrefab, _column);
+                    if (_bubbleSize > 0)
+                    {
+                        var layout = bubble.GetComponent<UnityEngine.UI.LayoutElement>();
+                        layout.minWidth = layout.preferredWidth = layout.minHeight = layout.preferredHeight = _bubbleSize;
+                    }
+
                     bubble.Tapped += id => BubbleTapped?.Invoke(id);
                     _bubbles.Add(bubble);
                 }
@@ -41,6 +48,12 @@ namespace Codigames.Game.UI.Menus
         {
             foreach (var bubble in _bubbles)
                 if (bubble.gameObject.activeSelf && bubble.Id == id) bubble.SetLeaving(leaving);
+        }
+
+        public void SetClock(string id, string text)
+        {
+            foreach (var bubble in _bubbles)
+                if (bubble.gameObject.activeSelf && bubble.Id == id) bubble.SetClock(text);
         }
 
         public void SetHidden(bool hidden)

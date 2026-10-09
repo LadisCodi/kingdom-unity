@@ -7,6 +7,8 @@ namespace Codigames.Kingdom.Sites
         NotFound,
         // The fog still covers some of it.
         NotRevealed,
+        // A lair still holds some of its ground.
+        LairHeld,
         NoFreeBuilder,
         AtCap,
         CannotAfford,

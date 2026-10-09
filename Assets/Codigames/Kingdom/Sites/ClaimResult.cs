@@ -7,6 +7,8 @@ namespace Codigames.Kingdom.Sites
         AlreadyClaimed,
         // The fog still covers it.
         NotRevealed,
+        // A lair still holds its ground.
+        LairHeld,
         CannotAfford,
     }
 }

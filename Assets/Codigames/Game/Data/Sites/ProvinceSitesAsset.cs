@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Codigames.Game.Data.Sites
 {
-    // What the province holds besides its ground: its abandoned buildings and its landmarks, by cell, and how each
+    // What the province holds besides its ground: its abandoned buildings, its landmarks and its lairs, by cell, and how each
     // kind of landmark is shown.
     [CreateAssetMenu(fileName = "ProvinceSites", menuName = "Kingdom/Data/Province Sites")]
     public class ProvinceSitesAsset : DataSettings, IProvinceSites
@@ -17,15 +17,23 @@ namespace Codigames.Game.Data.Sites
         [ListDrawerSettings(ShowFoldout = false)]
         [SerializeField] private List<LandmarkSiteData> _landmarks = new();
 
+        [ListDrawerSettings(ShowFoldout = false)]
+        [SerializeField] private List<LairSiteData> _lairs = new();
+
         [BoxGroup("Presentation"), ListDrawerSettings(ShowFoldout = false)]
         [SerializeField] private List<LandmarkKindData> _landmarkKinds = new();
 
         private List<IAbandonedSite> _sites;
         private List<ILandmarkSite> _landmarkSites;
+        private List<Kingdom.Lairs.ILairSite> _lairSites;
 
         public IReadOnlyList<IAbandonedSite> Abandoned => _sites ??= _abandoned.ToList<IAbandonedSite>();
 
         public IReadOnlyList<ILandmarkSite> Landmarks => _landmarkSites ??= _landmarks.ToList<ILandmarkSite>();
+
+        public IReadOnlyList<Kingdom.Lairs.ILairSite> Lairs => _lairSites ??= _lairs.ToList<Kingdom.Lairs.ILairSite>();
+
+        public LairSiteData LairOf(string id) => _lairs.FirstOrDefault(l => l.Id == id);
 
         public LandmarkKindData KindOf(string kind) => _landmarkKinds.FirstOrDefault(k => k.Kind == kind);
 
@@ -38,6 +46,7 @@ namespace Codigames.Game.Data.Sites
         {
             _sites = null;
             _landmarkSites = null;
+            _lairSites = null;
         }
     }
 }

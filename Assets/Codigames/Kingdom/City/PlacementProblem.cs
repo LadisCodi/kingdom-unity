@@ -10,5 +10,7 @@ namespace Codigames.Kingdom.City
         // Not the kingdom's ground yet: the fog still covers it.
         InFog,
         CountLimit,
+        // A lair holds the ground round it while it stands.
+        LairZone,
     }
 }

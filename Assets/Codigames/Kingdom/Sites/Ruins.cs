@@ -20,10 +20,12 @@ namespace Codigames.Kingdom.Sites
         private readonly Construction _construction;
         private readonly IRevealedGround _revealed;
         private readonly IRepairItems _items;
+        private readonly Lairs.ILairGround _lairs;
 
         public Ruins(SitesState state, SiteGround ground, ICatalog<IBuildingDefinition> buildings, Construction construction,
-            IRevealedGround revealed, IRepairItems items = null)
+            IRevealedGround revealed, IRepairItems items = null, Lairs.ILairGround lairs = null)
         {
+            _lairs = lairs;
             _state = state;
             _ground = ground;
             _buildings = buildings;
@@ -55,6 +57,7 @@ namespace Codigames.Kingdom.Sites
             var site = Get(id);
             if (site == null) return RepairRefusal.NotFound;
             if (_ground.Cells(site).Any(c => !_revealed.IsRevealed(c))) return RepairRefusal.NotRevealed;
+            if (_lairs != null && _ground.Cells(site).Any(c => _lairs.HoldingAt(c) != null)) return RepairRefusal.LairHeld;
 
             var refusal = _construction.RepairRefusal(site.District);
             if (refusal == ConstructionRefusal.NoFreeBuilder) return RepairRefusal.NoFreeBuilder;

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Codigames.Game.Fog;
 using Codigames.Game.Harvest;
 using Codigames.Game.Map;
@@ -14,7 +15,7 @@ using VContainer.Unity;
 namespace Codigames.Game.City
 {
     // What a tap on the map means while no menu is open: on the fog, a share of its price; on a building, a
-    // collect when its store is ready and its card otherwise; on a treasure, picking it up; on a landmark or a ruin, its card; on
+    // collect when its store is ready and its card otherwise; on a treasure, picking it up; on a lair, a landmark or a ruin, its card; on
     // the ground, a harvest.
     public class MapTaps : IStartable, IDisposable
     {
@@ -29,10 +30,15 @@ namespace Codigames.Game.City
         private readonly Ruins _ruins;
         private readonly TreasureInput _treasures;
         private readonly Landmarks _landmarks;
+        private readonly Lairs.LairsView _lairs;
+        private readonly Codigames.Kingdom.Lairs.LairGround _lairGround;
 
         public MapTaps(MapGestures gestures, UIManager ui, CityState city, ICatalog<IBuildingDefinition> buildings, HarvestInput harvest,
-            CollectInput collect, FogOfWar fog, FogInput fogInput, Ruins ruins, TreasureInput treasures, Landmarks landmarks)
+            CollectInput collect, FogOfWar fog, FogInput fogInput, Ruins ruins, TreasureInput treasures, Landmarks landmarks,
+            Lairs.LairsView lairs, Codigames.Kingdom.Lairs.LairGround lairGround)
         {
+            _lairs = lairs;
+            _lairGround = lairGround;
             _landmarks = landmarks;
             _treasures = treasures;
             _ruins = ruins;
@@ -50,9 +56,21 @@ namespace Codigames.Game.City
 
         public void Dispose() => _gestures.Tapped -= OnTapped;
 
+        private string StandingLairOn(Vector2Int cell)
+            => _lairGround.All.FirstOrDefault(l => _lairGround.Holds(l.Id) && Codigames.Modules.Grid.GridMath.Rect(l.Anchor, l.Size, l.Size).Contains(cell))?.Id;
+
         private void OnTapped(Vector2Int cell)
         {
             if (_ui.HasOverlayOpen) return;
+
+            // A lair's bubble floats over other cells, and its model stands taller than its ground: either is the lair,
+            // fog or not, and so is its own footprint.
+            var lair = _lairs.LairAt(_gestures.LastTap) ?? StandingLairOn(cell);
+            if (lair != null)
+            {
+                _ = _ui.ShowMenu<LairCardMenu, string>(lair);
+                return;
+            }
 
             if (!_fog.IsRevealed(cell))
             {

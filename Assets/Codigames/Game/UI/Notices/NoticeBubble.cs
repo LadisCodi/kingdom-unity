@@ -21,6 +21,9 @@ namespace Codigames.Game.UI.Notices
         [SerializeField] private Image _art;
         [SerializeField] private TMP_Text _carved;
         [SerializeField] private CtaBadge _seal;
+        [SerializeField, Tooltip("A threat's face: a dark red disc, the creature on it.")] private GameObject _threat;
+        [SerializeField, Tooltip("A countdown's nailed plaque, hung under the bubble.")] private GameObject _clock;
+        [SerializeField] private TMP_Text _clockText;
 
         private Tween _blink;
 
@@ -35,7 +38,23 @@ namespace Codigames.Game.UI.Notices
             _carved.gameObject.SetActive(!string.IsNullOrEmpty(notice.Carved));
             _carved.text = notice.Carved;
             _seal.Show(notice.Count > 1 ? notice.Count : 0);
+            _threat.SetActive(notice.Threat);
+            if (notice.Threat)
+            {
+                // The creature larger than the face, sunk into it: the web's 118%, sunk a fifth.
+                var face = ((RectTransform)_art.transform.parent).rect.width;
+                _art.rectTransform.localScale = Vector3.one * 1.18f;
+                _art.rectTransform.anchoredPosition = new Vector2(0, -0.2f * face);
+            }
+            else
+            {
+                _art.rectTransform.localScale = Vector3.one;
+            }
+
+            _clock.SetActive(notice.Until.HasValue);
         }
+
+        public void SetClock(string text) => _clockText.text = text;
 
         // A bubble that just arrived pops in.
         public void Pop()

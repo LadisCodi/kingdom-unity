@@ -33,6 +33,12 @@ namespace Codigames.Game.UI.Notices
         public Sprite Picture { get; set; }
         public IReadOnlyList<NoticeRowData> Rows { get; set; } = Array.Empty<NoticeRowData>();
         public Action Go { get; set; }
+
+        // A threat (a raid): its face a dark red disc, the creature on it.
+        public bool Threat { get; set; }
+
+        // Epoch milliseconds a standing notice counts down to, on a plaque under the bubble; null for none.
+        public double? Until { get; set; }
     }
 
     // A line of a group's card, or of the +N's: its picture, name and line, and its own Go — or the notice it opens.

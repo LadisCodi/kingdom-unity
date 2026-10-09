@@ -11,5 +11,7 @@ namespace Codigames.Kingdom.Harvest
         NoMana,
         // A technology opens this source and is not researched yet: refused before any Mana is spent.
         NeedsResearch,
+        // A lair holds this ground until it is cleared: refused before the tech gate, and free.
+        LairHeld,
     }
 }

@@ -27,10 +27,12 @@ namespace Codigames.Kingdom.Sites
         private readonly int _discoverRadius;
         private readonly IBonuses _bonuses;
         private readonly Drip _mana;
+        private readonly Lairs.ILairGround _lairs;
 
         public Landmarks(SitesState state, IProvinceSites sites, FogOfWar fog, ITreasury treasury, IKnowledgeSettings knowledge,
-            int discoverRadius, IBonuses bonuses = null, Drip mana = null)
+            int discoverRadius, IBonuses bonuses = null, Drip mana = null, Lairs.ILairGround lairs = null)
         {
+            _lairs = lairs;
             _mana = mana;
             _state = state;
             _sites = sites;
@@ -71,6 +73,7 @@ namespace Codigames.Kingdom.Sites
             if (site == null) return ClaimResult.NotFound;
             if (IsClaimed(id)) return ClaimResult.AlreadyClaimed;
             if (Cells(site).Any(c => !_fog.IsRevealed(c))) return ClaimResult.NotRevealed;
+            if (_lairs?.HoldingAt(site.Anchor) != null) return ClaimResult.LairHeld;
             if (!_treasury.TryPay(new Dictionary<string, double> { [GOLD] = ClaimCost(site) })) return ClaimResult.CannotAfford;
 
             _state.Claimed.Add(id);

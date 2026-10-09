@@ -31,12 +31,14 @@ namespace Codigames.Game.Harvest
         private readonly UI.Hud.RewardFragments _fragments;
 
         private readonly UI.Research.TechProse _prose;
+        private readonly Lairs.LairWords _lairs;
 
         public HarvestInput(Harvesting harvesting, ProvinceMap map, IClock clock,
             IWorldFeedbackService feedback, IQuickInfoMessageService messages, ICurrencyIcons icons, NumberFormat numbers,
             Localizer localizer, ISoundService sounds, Feedback.TapPunch punch, UI.Hud.RewardFlight flight,
-            UI.Hud.RewardFragments fragments, UI.Research.TechProse prose)
+            UI.Hud.RewardFragments fragments, UI.Research.TechProse prose, Lairs.LairWords lairs)
         {
+            _lairs = lairs;
             _prose = prose;
             _punch = punch;
             _flight = flight;
@@ -76,6 +78,11 @@ namespace Codigames.Game.Harvest
                     _sounds.Play(SoundIds.ERROR);
                     _messages.Show(new QuickInfoMessageData(_localizer.Tr("Research {tech} before you can work this",
                         ("tech", _prose.Name(result.RequiredTech)))));
+                    break;
+                case TapRefusal.LairHeld:
+                    // Whose: the refusal is the lair's, and naming it is what sends the player to clear it. No Mana spent.
+                    _sounds.Play(SoundIds.ERROR);
+                    _messages.Show(new QuickInfoMessageData(_lairs.HoldsThisGround(cell)));
                     break;
                 case TapRefusal.Exhausted:
                     _sounds.Play(SoundIds.TAP_EMPTY);

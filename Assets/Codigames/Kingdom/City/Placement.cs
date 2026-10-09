@@ -1,5 +1,6 @@
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Fog;
+using Codigames.Kingdom.Lairs;
 using Codigames.Kingdom.Map;
 using Codigames.Modules.Core;
 using Codigames.Modules.Grid;
@@ -19,10 +20,12 @@ namespace Codigames.Kingdom.City
         private readonly GroundState _ground;
         private readonly IRevealedGround _revealed;
         private readonly ISiteGround _sites;
+        private readonly ILairGround _lairs;
 
         public Placement(IProvinceMap map, ICatalog<IBuildingDefinition> buildings, IConstructionSettings settings,
-            CityState city, GroundState ground, IRevealedGround revealed, ISiteGround sites = null)
+            CityState city, GroundState ground, IRevealedGround revealed, ISiteGround sites = null, ILairGround lairs = null)
         {
+            _lairs = lairs;
             _sites = sites;
             _revealed = revealed;
             _map = map;
@@ -74,7 +77,9 @@ namespace Codigames.Kingdom.City
         {
             if (!_map.Contains(to)) return PlacementProblem.OutsideProvince;
             if (!_revealed.IsRevealed(to)) return PlacementProblem.InFog;
-            if ((_ground.Features.ContainsKey(to) && to != leaving) || (_sites?.Holds(to) ?? false)) return PlacementProblem.Occupied;
+            if ((_ground.Features.ContainsKey(to) && to != leaving) || (_sites?.Holds(to) ?? false) || (_lairs?.Stands(to) ?? false))
+                return PlacementProblem.Occupied;
+            if (_lairs?.HoldingAt(to) != null) return PlacementProblem.LairZone;
             if (CityQueries.At(_city, _buildings, to) != null) return PlacementProblem.Occupied;
             return _map.TerrainAt(to) == WATER ? PlacementProblem.NeedsLand : PlacementProblem.None;
         }
@@ -86,7 +91,9 @@ namespace Codigames.Kingdom.City
             {
                 if (!_map.Contains(cell)) return PlacementProblem.OutsideProvince;
                 if (!_revealed.IsRevealed(cell)) return PlacementProblem.InFog;
-                if (_ground.Features.ContainsKey(cell) || (_sites?.Holds(cell) ?? false)) return PlacementProblem.Occupied;
+                if (_ground.Features.ContainsKey(cell) || (_sites?.Holds(cell) ?? false) || (_lairs?.Stands(cell) ?? false))
+                    return PlacementProblem.Occupied;
+                if (_lairs?.HoldingAt(cell) != null) return PlacementProblem.LairZone;
 
                 var standing = CityQueries.At(_city, _buildings, cell);
                 if (standing != null && standing.Id != movingId) return PlacementProblem.Occupied;

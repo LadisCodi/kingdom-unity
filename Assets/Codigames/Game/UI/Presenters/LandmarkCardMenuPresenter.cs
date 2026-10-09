@@ -18,6 +18,7 @@ namespace Codigames.Game.UI.Presenters
     {
         private const string GOLD = "Gold";
 
+        private readonly Codigames.Game.Lairs.LairWords _lairWords;
         private readonly UIManager _ui;
         private readonly Landmarks _landmarks;
         private readonly ProvinceSitesAsset _sites;
@@ -33,8 +34,9 @@ namespace Codigames.Game.UI.Presenters
 
         public LandmarkCardMenuPresenter(IMenuViewFactory views, UIManager ui, Landmarks landmarks, ProvinceSitesAsset sites,
             IManaSettings manaSettings, ManaPool mana, ITreasury treasury, NumberFormat numbers, Localizer localizer, IClock clock,
-            ISoundService sounds, IQuickInfoMessageService messages, CardFraming framing) : base(views)
+            ISoundService sounds, IQuickInfoMessageService messages, CardFraming framing, Codigames.Game.Lairs.LairWords lairWords) : base(views)
         {
+            _lairWords = lairWords;
             _framing = framing;
             _ui = ui;
             _landmarks = landmarks;
@@ -90,6 +92,7 @@ namespace Codigames.Game.UI.Presenters
             var message = result switch
             {
                 ClaimResult.NotRevealed => _localizer.Tr("Clear the fog off it first"),
+                ClaimResult.LairHeld => _lairWords.HoldsThisGround(_landmarks.All.First(l => l.Id == Data).Anchor),
                 ClaimResult.CannotAfford => _localizer.Tr("Not enough Gold"),
                 _ => string.Empty,
             };

@@ -8,5 +8,8 @@ namespace Codigames.Kingdom.Sites
         IReadOnlyList<IAbandonedSite> Abandoned { get; }
 
         IReadOnlyList<ILandmarkSite> Landmarks { get; }
+
+        // The lairs, in their order: the order raids resolve in when two land together.
+        IReadOnlyList<Lairs.ILairSite> Lairs => System.Array.Empty<Lairs.ILairSite>();
     }
 }

@@ -41,12 +41,14 @@ namespace Codigames.Kingdom.Harvest
         private readonly IResearchGates _gates;
         private readonly IBonuses _bonuses;
         private readonly IBoosts _boosts;
+        private readonly Lairs.ILairGround _lairs;
 
         public Harvesting(HarvestState state, GroundState ground, CityState city, IProvinceMap map,
             ICatalog<IBuildingDefinition> buildings, ICatalog<IFeatureDefinition> features, ICatalog<IHarvestSource> sources,
             ITerrainYields yields, ITapSettings tap, ITreasury treasury, ManaPool mana, uint seed, IRevealedGround revealed,
-            IResearchGates gates = null, IBonuses bonuses = null, IBoosts boosts = null)
+            IResearchGates gates = null, IBonuses bonuses = null, IBoosts boosts = null, Lairs.ILairGround lairs = null)
         {
+            _lairs = lairs;
             _boosts = boosts;
             _gates = gates;
             _bonuses = bonuses;
@@ -130,6 +132,7 @@ namespace Codigames.Kingdom.Harvest
         {
             var source = SourceAt(cell);
             if (source == null) return new TapResult(TapRefusal.NothingThere);
+            if (_lairs?.HoldingAt(cell) != null) return new TapResult(TapRefusal.LairHeld);
             var missing = MissingTech(source);
             if (missing != null) return new TapResult(TapRefusal.NeedsResearch, requiredTech: missing);
             if (IsExhausted(cell, now)) return new TapResult(TapRefusal.Exhausted);

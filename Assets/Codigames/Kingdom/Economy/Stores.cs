@@ -135,6 +135,27 @@ namespace Codigames.Kingdom.Economy
             return moved;
         }
 
+        // What the store holds of one currency at a moment: its banked share, and for Gold what it has made since.
+        public double HeldOf(DistrictState district, string currency, double now)
+        {
+            var banked = district.Store.Held.TryGetValue(currency, out var n) ? n : 0;
+            if (currency != GOLD) return banked;
+            var others = district.Store.Held.Where(h => h.Key != GOLD).Sum(h => h.Value);
+            return Math.Max(0, Held(district, now) - others);
+        }
+
+        // Takes up to `amount` of one currency out of a store at `now`: what it made until then is counted first, and a
+        // store that had stopped full starts making again. Returns what it gave.
+        public double Take(DistrictState district, string currency, double amount, double now)
+        {
+            Settle(district, now);
+            if (!district.Store.Held.TryGetValue(currency, out var held) || held <= 0 || amount <= 0) return 0;
+            var taken = Math.Min(held, amount);
+            district.Store.Held[currency] = held - taken;
+            Wake(district, now);
+            return taken;
+        }
+
         // A crew's haul lands in the store, whole, even past its capacity.
         public void Deposit(DistrictState district, string currency, double amount)
         {
