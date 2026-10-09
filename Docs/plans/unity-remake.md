@@ -36,6 +36,11 @@
 
 ## 3. Decisions taken
 
+- **Platforms:** mobile only — Android and iOS.
+- **Goal:** everything the web prototype has, playable, with its sounds,
+  animations and feedback, built natively in Unity. New art is generated with
+  ChatGPT through Chrome, following the documented prompts.
+
 - **Balance:** read-only interfaces in Kingdom, implemented by
   ScriptableObjects in Game, edited with Odin; the web's JSON is imported once
   and then removed.
@@ -51,5 +56,4 @@
 
 ## 4. Decisions still open
 
-- Target platforms: mobile only, or mobile + WebGL for testers.
 - The web repo after the remake: frozen, or kept alive in parallel.
