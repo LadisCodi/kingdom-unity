@@ -26,11 +26,18 @@ namespace Codigames.Game.Harvest
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
         private readonly ISoundService _sounds;
+        private readonly Feedback.TapPunch _punch;
+        private readonly UI.Hud.RewardFlight _flight;
+        private readonly UI.Hud.RewardFragments _fragments;
 
         public HarvestInput(Harvesting harvesting, ProvinceMap map, IClock clock,
             IWorldFeedbackService feedback, IQuickInfoMessageService messages, ICurrencyIcons icons, NumberFormat numbers,
-            Localizer localizer, ISoundService sounds)
+            Localizer localizer, ISoundService sounds, Feedback.TapPunch punch, UI.Hud.RewardFlight flight,
+            UI.Hud.RewardFragments fragments)
         {
+            _punch = punch;
+            _flight = flight;
+            _fragments = fragments;
             _sounds = sounds;
             _harvesting = harvesting;
             _map = map;
@@ -50,6 +57,8 @@ namespace Codigames.Game.Harvest
             {
                 case TapRefusal.None:
                     _sounds.Play(SoundIds.TapOn(source?.Id));
+                    _punch.Cell(cell);
+                    Fly(cell, result.Currency, result.Paid);
                     var centre = _map.CellCentre(cell);
                     var view = _feedback.Spawn<YieldFeedbackView>(new ModuleVector3(centre.x, centre.y + RISE_FROM, 0f));
                     view.Show(_icons.IconOf(result.Currency), "+" + _numbers.Number(result.Paid));
@@ -64,6 +73,14 @@ namespace Codigames.Game.Harvest
                     _messages.Show(new QuickInfoMessageData(_localizer.Tr("Growing back")));
                     break;
             }
+        }
+
+        // What the tap took flies to the header from the cell.
+        private void Fly(ModuleVector2Int cell, string currency, double amount)
+        {
+            var screen = UnityEngine.Camera.main.WorldToScreenPoint(_map.CellCentre(cell));
+            _flight.Fly(new System.Collections.Generic.Dictionary<string, double> { [currency] = amount }, screen,
+                (c, a) => _fragments.For(c, a, true));
         }
     }
 }

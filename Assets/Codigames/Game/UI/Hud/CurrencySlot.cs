@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace Codigames.Game.UI.Hud
 {
@@ -22,6 +23,8 @@ namespace Codigames.Game.UI.Hud
         [SerializeField, Tooltip("The amount's size, and a smaller one for a line that takes its turn (a countdown).")]
         private Vector2 _amountSizes = new(30, 22);
 
+        private DG.Tweening.Tween _pulse;
+
         public event Action Tapped;
 
         public string CurrencyId { get; private set; }
@@ -35,6 +38,14 @@ namespace Codigames.Game.UI.Hud
 
             var amount = _amount.rectTransform;
             amount.offsetMax = new Vector2(-(sold ? _amountRight.y : _amountRight.x), amount.offsetMax.y);
+        }
+
+        public RectTransform Icon => _icon.rectTransform;
+
+        public void Pulse()
+        {
+            _pulse?.Complete();
+            _pulse = _icon.rectTransform.DOPunchScale(Vector3.one * 0.28f, 0.22f, 1, 0f);
         }
 
         public void SetAmount(string amount, bool small = false)

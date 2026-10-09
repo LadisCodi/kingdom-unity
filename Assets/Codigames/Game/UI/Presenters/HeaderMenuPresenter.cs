@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Codigames.Game.Data.Economy;
+using Codigames.Game.UI.Hud;
 using Codigames.Game.UI.Menus;
 using Codigames.Kingdom.Economy;
 using Codigames.Kingdom.Magic;
@@ -27,13 +28,15 @@ namespace Codigames.Game.UI.Presenters
         private readonly IClock _clock;
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
+        private readonly RewardHold _hold;
 
         private string _shown;
         private string _manaText;
 
         public HeaderMenuPresenter(IMenuViewFactory views, ITreasury treasury, IPlankCurrencies currencies, ManaPool mana,
-            IClock clock, NumberFormat numbers, Localizer localizer) : base(views)
+            IClock clock, NumberFormat numbers, Localizer localizer, RewardHold hold) : base(views)
         {
+            _hold = hold;
             _treasury = treasury;
             _currencies = currencies;
             _mana = mana;
@@ -52,9 +55,14 @@ namespace Codigames.Game.UI.Presenters
             _shown = null;
             Refresh();
             _treasury.Changed += OnChanged;
+            _hold.Changed += Refresh;
         }
 
-        protected override void UnbindInternal(HeaderMenu view) => _treasury.Changed -= OnChanged;
+        protected override void UnbindInternal(HeaderMenu view)
+        {
+            _treasury.Changed -= OnChanged;
+            _hold.Changed -= Refresh;
+        }
 
         private void OnChanged(string currency, double amount) => Refresh();
 
@@ -74,7 +82,8 @@ namespace Codigames.Game.UI.Presenters
             {
                 if (slot.CurrencyId == ManaPool.MANA) continue;
 
-                slot.SetAmount(_numbers.Count(_treasury.Get(slot.CurrencyId)));
+                // Less whatever a reward in flight has not landed yet.
+                slot.SetAmount(_numbers.Count(System.Math.Max(0, _treasury.Get(slot.CurrencyId) - _hold.HeldOf(slot.CurrencyId))));
                 slot.SetGauge(null);
             }
 
