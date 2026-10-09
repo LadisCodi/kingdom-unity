@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33bc6a7860e98d5a09205310980cf6fd, type: 3}
+  m_Name: WildAnimals
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Harvest.FeatureAsset
+  _id: WildAnimals
+  _source: {fileID: 11400000, guid: 97e11e21121cd467b94b73a18b8ecb88, type: 2}
+  _respawnTerrain: Grassland
+  _tile: {fileID: 11400000, guid: 866881bc26a890214a1f32a135581f8d, type: 2}

@@ -8,10 +8,11 @@ namespace Codigames.Kingdom
     // A kingdom on its first second: the new city, every currency at its start.
     public static class NewKingdom
     {
-        public static KingdomState Create(IProvinceMap map, IConstructionSettings settings, ICatalog<ICurrencyDefinition> currencies, double now)
+        public static KingdomState Create(IProvinceMap map, IConstructionSettings settings, ICatalog<ICurrencyDefinition> currencies, double now,
+            uint seed)
         {
             var (city, ground) = NewCity.Create(map, settings);
-            var state = new KingdomState { City = city, Ground = ground, LastAdvance = now };
+            var state = new KingdomState { City = city, Ground = ground, LastAdvance = now, Seed = seed };
 
             foreach (var currency in currencies.Items)
             {

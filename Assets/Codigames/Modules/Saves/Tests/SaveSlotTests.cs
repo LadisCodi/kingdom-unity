@@ -99,6 +99,16 @@ namespace Codigames.Modules.Saves.Tests
         }
 
         [Test]
+        public void Load_ShouldReadAnAdditiveVersionAsItIs()
+        {
+            _storage.Slots[SLOT] = "2|my city";
+            var slot = new SaveSlot<string, string[]>(_storage, new Codec(), SLOT, 3,
+                new ISaveMigration<string[]>[] { new RenameTown(), new AdditiveMigration<string[]>(2) });
+
+            Assert.That(slot.Load().State, Is.EqualTo("my city"));
+        }
+
+        [Test]
         public void Constructor_ShouldRefuseAGapInTheMigrations()
         {
             Assert.Throws<ArgumentException>(() => Slot(version: 3));

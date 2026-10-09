@@ -2,7 +2,8 @@
 
 > **Scope:** how Kingdom is rebuilt in Unity — the order of the work, what
 > each step delivers, and what is still to decide.
-> **Status:** foundation and architecture done; the balance migration next.
+> **Status:** foundation, architecture, balance and the city done; the economy
+> under way (harvest by tap and the Mana pool built; crews, stores, rent next).
 
 ## 1. Principles
 
@@ -24,9 +25,9 @@
 |---|---|---|
 | 0 | **Foundation** ✓ | repo, Git Flow, LFS, rules, clean docs; packages and plugins; scenes `Boot` and `Game`; ProtoLab's UI, camera, audio and feedback |
 | 1 | **Architecture** ✓ | `Codigames/{Modules,Kingdom,Game}`, content outside, modules independent behind ports, `dotnet test` for pure code |
-| 2 | **Balance** | definition interfaces in Kingdom; ScriptableObjects in `Assets/Data`; a one-off import from the web's JSON; the *Kingdom › Data* Odin window and its validation |
-| 3 | **The city** | the province grid with its terrain and features; place, build and upgrade buildings with builders; the wallet; the offline advance |
-| 4 | **The economy** | stores, rent, harvest by tap and by crew, Mana, collecting |
+| 2 | **Balance** ✓ | definition interfaces in Kingdom; ScriptableObjects in `Assets/Data`; a one-off import from the web's JSON; the *Kingdom › Data* Odin window and its validation |
+| 3 | **The city** ✓ | the province grid with its terrain and features; place, build and upgrade buildings with builders; the wallet; the offline advance |
+| 4 | **The economy** — under way | harvest by tap ✓ and Mana ✓; stores, rent, harvest by crew, collecting |
 | 5 | **The fog** | reveal, the Gold price by ring, treasures |
 | 6 | **Research** | Knowledge, the tech tree and its gates |
 | 7 | **The rest, in order** | army and lairs, heroes, quests and tutorials, store, world map |
@@ -41,6 +42,11 @@
 - **ProtoLab:** its UI framework, camera, sound, floating feedback,
   quick-info messages and lifecycle hook are modules here; its domain modules
   and save model are not taken.
+
+- **Research gates wait for research.** Harvest sources, buildings and
+  terrain are imported with their technology gates, which are enforced once
+  the tech tree exists (step 6); until then everything on the ground can be
+  tapped.
 
 ## 4. Decisions still open
 

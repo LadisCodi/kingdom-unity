@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 407712e686cf86f079e50e6aa49aa270, type: 3}
+  m_Name: Features
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Harvest.FeatureCollection
+  _entries:
+  - {fileID: 11400000, guid: c0d31de42b3cbffbd92aa2790df1a65d, type: 2}
+  - {fileID: 11400000, guid: 9227f27790782b0d98b10ef836e855ad, type: 2}
+  - {fileID: 11400000, guid: 726a3fd536723c84ab81806ff8fc04e7, type: 2}
+  - {fileID: 11400000, guid: 2505aa2cac1aaf3aaa060ae80132b34c, type: 2}
+  - {fileID: 11400000, guid: e95db39dd7babb294a765037a32f6ef2, type: 2}
+  - {fileID: 11400000, guid: 0c490afbed238d6cdbf188b86498e7c7, type: 2}
+  - {fileID: 11400000, guid: e4cbde4ae9f7c1b2e927b551ffb63f38, type: 2}
+  - {fileID: 11400000, guid: eb67fc837ae7b857381629e6838aa318, type: 2}

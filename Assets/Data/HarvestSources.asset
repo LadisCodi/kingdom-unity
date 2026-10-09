@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc65fad04cd69dd8d90258e2878be6b4, type: 3}
+  m_Name: HarvestSources
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Harvest.HarvestSourceCollection
+  _entries:
+  - {fileID: 11400000, guid: 00bce11b509fa22a59f78937ecc30412, type: 2}
+  - {fileID: 11400000, guid: 6d0fd1d66be5a409c8eacc2e13735807, type: 2}
+  - {fileID: 11400000, guid: 41c2d15425b365e4f8a55223f476cfff, type: 2}
+  - {fileID: 11400000, guid: 97e11e21121cd467b94b73a18b8ecb88, type: 2}
+  - {fileID: 11400000, guid: 95c5ae8600d2663e0a6c8427b4e25d37, type: 2}
+  - {fileID: 11400000, guid: 7981283bb0fd421e980dc0e654ff6478, type: 2}
+  - {fileID: 11400000, guid: beaed6d379ebcf4d4b7dfd5518b6ffd1, type: 2}
+  - {fileID: 11400000, guid: 515e2dca3c652df53894269ae84a234a, type: 2}

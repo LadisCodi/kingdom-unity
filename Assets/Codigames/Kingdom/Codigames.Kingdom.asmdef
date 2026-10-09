@@ -5,7 +5,8 @@
         "Codigames.Modules.Core",
         "Codigames.Modules.Grid",
         "Codigames.Modules.Wallet",
-        "Codigames.Modules.Timeline"
+        "Codigames.Modules.Timeline",
+        "Codigames.Modules.Randomness"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
