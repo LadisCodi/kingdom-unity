@@ -9,29 +9,23 @@ namespace Codigames.Kingdom.Tests.Builders
     // and the province as revealed as a test sets it. Band 2 of the Kingdom opens on 20 cells and pays 3.
     public class ResearchFixture : CityFixture
     {
-        public ResearchFixture(params ITechnology[] technologies)
+        public ResearchFixture(params ITechnology[] technologies) : base(technologies)
         {
-            Technologies = new Catalog<ITechnology>(technologies);
             Bar = new KnowledgeBar(Knowledge, Treasury, KnowledgeSettings);
             Market = new KnowledgeMarket(Knowledge, Treasury, KnowledgeSettings);
             Research = new Researching(State, Technologies, Tree, Shelf, Explored, Bar, Treasury);
-            Bonuses = new TechBonuses(State, Technologies);
-            Gates = new ResearchGates(State, Technologies);
             Timeline.Register(Bar);
         }
 
-        public ResearchState State { get; } = new();
+        public ResearchState State => ResearchState;
         public KnowledgeState Knowledge { get; } = new();
         public FakeKnowledgeSettings KnowledgeSettings { get; } = new();
         public FakeTree Tree { get; } = new();
         public FakeShelf Shelf { get; } = new();
         public FakeExplored Explored { get; } = new();
-        public Catalog<ITechnology> Technologies { get; }
         public KnowledgeBar Bar { get; }
         public KnowledgeMarket Market { get; }
         public Researching Research { get; }
-        public TechBonuses Bonuses { get; }
-        public ResearchGates Gates { get; }
 
         public void GiveKnowledge(double amount) => Treasury.Add(KnowledgeBar.KNOWLEDGE, amount);
 

@@ -7,8 +7,9 @@ namespace Codigames.Game.UI.Data
     public sealed class BuildRowData
     {
         public BuildRowData(string id, string name, string ordinal, string promise, Sprite art,
-            IReadOnlyList<CostChipData> price, string wait, string built, bool available)
+            IReadOnlyList<CostChipData> price, string wait, string built, bool available, bool locked = false)
         {
+            Locked = locked;
             Id = id;
             Name = name;
             Ordinal = ordinal;
@@ -34,5 +35,8 @@ namespace Codigames.Game.UI.Data
 
         // False when it cannot be built now: the row is drawn as such and refuses a tap.
         public bool Available { get; }
+
+        // Behind a technology: a padlock on its art, and what opens it in place of its promise and its price.
+        public bool Locked { get; }
     }
 }

@@ -6,6 +6,7 @@ using Codigames.Game.Data.City;
 using Codigames.Game.Data.Economy;
 using Codigames.Game.UI.Data;
 using Codigames.Game.UI.Menus;
+using Codigames.Game.UI.Research;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Economy;
@@ -29,13 +30,16 @@ namespace Codigames.Game.UI.Presenters
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
         private readonly ISoundService _sounds;
+        private readonly TechProse _prose;
 
         // Remembered between openings, so placement's way back lands on the same tab.
         private string _tab = FIRST_TAB;
 
         public BuildMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, ITreasury treasury,
-            IBuildingCards cards, ICurrencyIcons icons, NumberFormat numbers, Localizer localizer, ISoundService sounds) : base(views)
+            IBuildingCards cards, ICurrencyIcons icons, NumberFormat numbers, Localizer localizer, ISoundService sounds,
+            TechProse prose) : base(views)
         {
+            _prose = prose;
             _sounds = sounds;
             _ui = ui;
             _construction = construction;
@@ -118,16 +122,26 @@ namespace Codigames.Game.UI.Presenters
             View.SetRows(rows);
         }
 
-        // What can be built first, then what is waiting on money or a builder, then what is capped.
+        // What can be built first, then what is waiting on money or a builder, then what is capped, then what a
+        // technology has still to open.
         private static int Rank(ConstructionRefusal refusal) => refusal switch
         {
             ConstructionRefusal.None => 0,
             ConstructionRefusal.AtCap => 2,
+            ConstructionRefusal.NeedsResearch => 3,
             _ => 1,
         };
 
         private BuildRowData Row(IBuildingCard card, BuildOffer offer)
         {
+            // Not yet opened: what opens it, by name, in place of a promise and a price — there is nothing to pay yet.
+            if (offer.Refusal == ConstructionRefusal.NeedsResearch)
+            {
+                return new BuildRowData(card.Id, _localizer.Capitalized(_localizer.Tr(card.DisplayName)), string.Empty,
+                    _localizer.Tr("Research {tech}", ("tech", _prose.Name(offer.RequiredTech))), card.ArtFor(1),
+                    Array.Empty<CostChipData>(), string.Empty, string.Empty, false, true);
+            }
+
             var price = offer.Price
                 .Select(p => new CostChipData(_icons.IconOf(p.Key), _numbers.Exact(p.Value), _treasury.Get(p.Key) < p.Value))
                 .ToList();

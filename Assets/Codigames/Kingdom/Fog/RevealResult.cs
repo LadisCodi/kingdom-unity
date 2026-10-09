@@ -13,5 +13,7 @@ namespace Codigames.Kingdom.Fog
         // Past the rings the Townhall's level allows.
         OutOfReach,
         NotEnoughGold,
+        // Its terrain opens with a technology not researched yet.
+        NeedsResearch,
     }
 }

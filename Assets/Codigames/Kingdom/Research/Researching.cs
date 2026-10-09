@@ -35,6 +35,9 @@ namespace Codigames.Kingdom.Research
         // Knowledge went into a technology: its id and how much.
         public event Action<string, double> Poured;
 
+        // A technology is about to be researched, at a moment: nothing it moves has changed yet.
+        public event Action<string, double> Completing;
+
         // A technology was researched.
         public event Action<string> Researched;
 
@@ -98,12 +101,14 @@ namespace Codigames.Kingdom.Research
         // Could it be completed this second?
         public bool CanResearch(string id) => Refusal(id) == ResearchRefusal.None && IsFilled(id) && CanAfford(id);
 
-        // Pays the price and completes it. Its Knowledge must be in.
-        public ResearchResult Complete(string id)
+        // Pays the price and completes it, at `now`. Its Knowledge must be in.
+        public ResearchResult Complete(string id, double now)
         {
             if (Refusal(id) != ResearchRefusal.None) return ResearchResult.Refused;
             if (!IsFilled(id)) return ResearchResult.NotFilled;
             if (!_treasury.TryPay(_technologies.Get(id).Price)) return ResearchResult.CannotAfford;
+
+            Completing?.Invoke(id, now);
 
             _state.Poured.Remove(id);
             _state.Completed.Add(id);

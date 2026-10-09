@@ -8,6 +8,7 @@ using Codigames.Kingdom.Fog;
 using Codigames.Kingdom.Harvest.State;
 using Codigames.Kingdom.Magic;
 using Codigames.Kingdom.Map;
+using Codigames.Kingdom.Research;
 using Codigames.Modules.Core;
 using Codigames.Modules.Grid;
 using Codigames.Modules.Randomness;
@@ -37,11 +38,16 @@ namespace Codigames.Kingdom.Harvest
         private readonly ManaPool _mana;
         private readonly uint _seed;
         private readonly IRevealedGround _revealed;
+        private readonly IResearchGates _gates;
+        private readonly IBonuses _bonuses;
 
         public Harvesting(HarvestState state, GroundState ground, CityState city, IProvinceMap map,
             ICatalog<IBuildingDefinition> buildings, ICatalog<IFeatureDefinition> features, ICatalog<IHarvestSource> sources,
-            ITerrainYields yields, ITapSettings tap, ITreasury treasury, ManaPool mana, uint seed, IRevealedGround revealed)
+            ITerrainYields yields, ITapSettings tap, ITreasury treasury, ManaPool mana, uint seed, IRevealedGround revealed,
+            IResearchGates gates = null, IBonuses bonuses = null)
         {
+            _gates = gates;
+            _bonuses = bonuses;
             _revealed = revealed;
             _state = state;
             _ground = ground;
@@ -80,8 +86,23 @@ namespace Codigames.Kingdom.Harvest
             if (source.Stock <= 0) return 0;
 
             var yield = _yields.YieldOf(_map.TerrainAt(cell), source.Currency);
-            return Math.Max(1, (int)Math.Round(source.Stock * yield, MidpointRounding.AwayFromZero));
+            var held = source.Stock * yield * _bonuses.Multiplier(TechStats.CELL_STOCK, TargetKind.Harvest, source.Id);
+            return Math.Max(1, (int)Math.Round(held, MidpointRounding.AwayFromZero));
         }
+
+        // The technology that opens a source while it is not researched; null once it is (or nothing gates it).
+        public string MissingTech(IHarvestSource source)
+        {
+            var tech = _gates?.HarvestTech(source.Id);
+            return tech != null && !_gates.IsOpen(tech) ? tech : null;
+        }
+
+        // Units one extraction takes out of a kind of cell, tap or crew: a fraction, carried.
+        public double UnitsPerStrike(IHarvestSource source)
+            => source.UnitsPerStrike * _bonuses.Multiplier(TechStats.HARVEST_YIELD, TargetKind.Harvest, source.Id);
+
+        // Seconds of work one tap is worth.
+        public double TapWorkSeconds => _bonuses.Apply(TechStats.TAP_WORK_SECONDS, _tap.WorkSeconds);
 
         // What a cell holds now; 0 for bedrock.
         public int UnitsAt(Vector2Int cell)
@@ -101,10 +122,12 @@ namespace Codigames.Kingdom.Harvest
         {
             var source = SourceAt(cell);
             if (source == null) return new TapResult(TapRefusal.NothingThere);
+            var missing = MissingTech(source);
+            if (missing != null) return new TapResult(TapRefusal.NeedsResearch, requiredTech: missing);
             if (IsExhausted(cell, now)) return new TapResult(TapRefusal.Exhausted);
             if (!_mana.TrySpend(_tap.ManaCost, now)) return new TapResult(TapRefusal.NoMana);
 
-            var owed = _tap.WorkSeconds * source.UnitsPerStrike / source.SecondsPerStrike;
+            var owed = TapWorkSeconds * UnitsPerStrike(source) / source.SecondsPerStrike;
             _state.Carry.TryGetValue(source.Currency, out var carried);
             var total = owed + carried;
             var wanted = Math.Max(1, Math.Floor(total));
@@ -120,7 +143,7 @@ namespace Codigames.Kingdom.Harvest
         public double Draw(Vector2Int cell, double want, double now)
         {
             var source = SourceAt(cell);
-            if (source == null || want <= 0 || IsExhausted(cell, now)) return 0;
+            if (source == null || want <= 0 || IsExhausted(cell, now) || MissingTech(source) != null) return 0;
             return Draw(cell, source, want, now, out _);
         }
 
@@ -188,7 +211,8 @@ namespace Codigames.Kingdom.Harvest
         {
             if (source.RecoverySeconds > 0)
             {
-                _state.Depots[cell].ExhaustedUntil = now + Math.Max(MIN_RECOVERY_MS, source.RecoverySeconds * 1000);
+                var speed = Math.Max(1, _bonuses.Multiplier(TechStats.REGROWTH_SPEED, TargetKind.Harvest, source.Id));
+                _state.Depots[cell].ExhaustedUntil = now + Math.Max(MIN_RECOVERY_MS, source.RecoverySeconds * 1000 / speed);
                 DepotChanged?.Invoke(cell);
                 return;
             }
@@ -205,9 +229,12 @@ namespace Codigames.Kingdom.Harvest
                 Id = RESPAWN_PREFIX + "-" + _state.NextRespawn++,
                 FeatureId = featureId,
                 Origin = cell,
-                DueAt = now + source.RespawnSeconds * 1000,
+                DueAt = now + RespawnMs(source),
             });
         }
+
+        private double RespawnMs(IHarvestSource source)
+            => source.RespawnSeconds * 1000 / Math.Max(1, _bonuses.Multiplier(TechStats.RESPAWN_SPEED, TargetKind.Harvest, source.Id));
 
         // A finite feature comes back on a free cell of its terrain next to where it stood; with none free, it
         // tries again after another wait.
@@ -221,7 +248,7 @@ namespace Codigames.Kingdom.Harvest
 
             if (free.Length == 0)
             {
-                var wait = feature != null && _sources.TryGet(feature.Source, out var source) ? source.RespawnSeconds * 1000 : MIN_RECOVERY_MS;
+                var wait = feature != null && _sources.TryGet(feature.Source, out var source) ? RespawnMs(source) : MIN_RECOVERY_MS;
                 respawn.DueAt = time + wait;
                 return;
             }

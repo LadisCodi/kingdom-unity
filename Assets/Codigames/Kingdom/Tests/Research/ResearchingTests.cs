@@ -71,11 +71,11 @@ namespace Codigames.Kingdom.Tests.Research
             string researched = null;
             fixture.Research.Researched += id => researched = id;
 
-            Assert.That(fixture.Research.Complete("Forestry"), Is.EqualTo(ResearchResult.NotFilled));
+            Assert.That(fixture.Research.Complete("Forestry", 0), Is.EqualTo(ResearchResult.NotFilled));
 
             fixture.GiveKnowledge(2);
             fixture.Research.Pour("Forestry", 0);
-            Assert.That(fixture.Research.Complete("Forestry"), Is.EqualTo(ResearchResult.Researched));
+            Assert.That(fixture.Research.Complete("Forestry", 0), Is.EqualTo(ResearchResult.Researched));
 
             Assert.That(researched, Is.EqualTo("Forestry"));
             Assert.That(fixture.Treasury.Get("Gold"), Is.EqualTo(gold - 20));
@@ -91,7 +91,7 @@ namespace Codigames.Kingdom.Tests.Research
             fixture.GiveKnowledge(2);
             fixture.Research.Pour("Forestry", 0);
 
-            Assert.That(fixture.Research.Complete("Forestry"), Is.EqualTo(ResearchResult.CannotAfford));
+            Assert.That(fixture.Research.Complete("Forestry", 0), Is.EqualTo(ResearchResult.CannotAfford));
             Assert.That(fixture.Research.PouredInto("Forestry"), Is.EqualTo(2));
             Assert.That(fixture.Research.IsActionable("Forestry"), Is.False);
         }
@@ -149,7 +149,7 @@ namespace Codigames.Kingdom.Tests.Research
         {
             fixture.GiveKnowledge(fixture.Research.Missing(id));
             fixture.Research.Pour(id, 0);
-            Assert.That(fixture.Research.Complete(id), Is.EqualTo(ResearchResult.Researched), id);
+            Assert.That(fixture.Research.Complete(id, 0), Is.EqualTo(ResearchResult.Researched), id);
         }
     }
 }

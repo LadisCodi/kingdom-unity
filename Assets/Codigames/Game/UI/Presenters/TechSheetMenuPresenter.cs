@@ -137,7 +137,7 @@ namespace Codigames.Game.UI.Presenters
 
         private void OnResearch()
         {
-            var result = _research.Complete(Data);
+            var result = _research.Complete(Data, _clock.NowMs);
             if (result == ResearchResult.Researched)
             {
                 _sounds.Play(SoundIds.RESEARCH_COMPLETE);

@@ -28,10 +28,15 @@ namespace Codigames.Kingdom.Fog
         private readonly IConstructionSettings _construction;
         private readonly IFogSettings _settings;
         private readonly ITreasury _treasury;
+        private readonly IResearchGates _gates;
+        private readonly IBonuses _bonuses;
 
         public FogOfWar(FogState state, CityState city, IProvinceMap map, ICatalog<IBuildingDefinition> buildings,
-            IConstructionSettings construction, IFogSettings settings, ITreasury treasury)
+            IConstructionSettings construction, IFogSettings settings, ITreasury treasury, IResearchGates gates = null,
+            IBonuses bonuses = null)
         {
+            _gates = gates;
+            _bonuses = bonuses;
             _state = state;
             _city = city;
             _map = map;
@@ -102,6 +107,7 @@ namespace Codigames.Kingdom.Fog
             if (IsRevealed(cell)) return RevealResult.AlreadyRevealed;
             if (!_map.Contains(cell) || !IsReachable(cell)) return RevealResult.NotReachable;
             if (!IsWithinReach(cell)) return RevealResult.OutOfReach;
+            if (TerrainTech(cell) != null) return RevealResult.NeedsResearch;
 
             var payment = TapCost(cell);
             if (!_treasury.TryPay(new Dictionary<string, double> { [GOLD] = payment })) return RevealResult.NotEnoughGold;
@@ -127,10 +133,24 @@ namespace Codigames.Kingdom.Fog
             var reveal = fog.RevealRadiusPerLevel.Count > 0 ? At(fog.RevealRadiusPerLevel, district.Level) : fog.RevealRadius;
 
             var revealed = Around(district, building, reveal).ToList();
-            var seen = Around(district, building, Math.Max(reveal, fog.DiscoverRadius)).Where(c => !_state.Revealed.Contains(c) && !revealed.Contains(c)).ToList();
+            var discover = (int)Math.Floor(_bonuses.Apply(TechStats.DISCOVER_RADIUS, fog.DiscoverRadius));
+            var seen = Around(district, building, Math.Max(reveal, discover)).Where(c => !_state.Revealed.Contains(c) && !revealed.Contains(c)).ToList();
             foreach (var cell in seen) _state.Discovered.Add(cell);
 
             Reveal(revealed, seen);
+        }
+
+        // Every standing building's rings again: what a farther sight now sees.
+        public void RevealAroundAll()
+        {
+            foreach (var district in _city.Districts.Where(d => d.Built).ToList()) RevealAround(district);
+        }
+
+        // The technology a cell's terrain waits for, while it is not researched; null otherwise.
+        public string TerrainTech(Vector2Int cell)
+        {
+            var tech = _map.Contains(cell) ? _gates?.TerrainTech(_map.TerrainAt(cell)) : null;
+            return tech != null && !_gates.IsOpen(tech) ? tech : null;
         }
 
         // The rings from the Townhall's footprint to a cell.

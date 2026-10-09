@@ -5,6 +5,7 @@ using Codigames.Game.Data.City;
 using Codigames.Game.Data.Economy;
 using Codigames.Game.UI.Data;
 using Codigames.Game.UI.Menus;
+using Codigames.Game.UI.Research;
 using Codigames.Kingdom.City;
 using Codigames.Kingdom.City.State;
 using Codigames.Kingdom.Crews;
@@ -35,6 +36,7 @@ namespace Codigames.Game.UI.Presenters
         private readonly VillagerTraining _training;
         private readonly Workforce _crews;
         private readonly ISoundService _sounds;
+        private readonly TechProse _prose;
 
         // The second the card was last drawn at: it is redrawn once a second.
         private double _shownSeconds = -1;
@@ -42,8 +44,9 @@ namespace Codigames.Game.UI.Presenters
         public DistrictCardMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, CityState city,
             BuildingCollection buildings, IConstructionSettings settings, ITreasury treasury, ICurrencyIcons icons, IClock clock,
             NumberFormat numbers, Localizer localizer, Stores stores, VillagerTraining training, Workforce crews,
-            ISoundService sounds) : base(views)
+            ISoundService sounds, TechProse prose) : base(views)
         {
+            _prose = prose;
             _sounds = sounds;
             _crews = crews;
             _training = training;
@@ -227,6 +230,7 @@ namespace Codigames.Game.UI.Presenters
             ConstructionRefusal.NeedsTownhallLevel => _localizer.Tr("Needs Townhall level {n}", ("n", _numbers.Number(offer.RequiredTownhallLevel))),
             ConstructionRefusal.NoFreeBuilder => _localizer.Tr("Every builder is busy"),
             ConstructionRefusal.NeedsPopulation => _localizer.Tr("Needs {n} villagers", ("n", _numbers.Number(offer.RequiredPopulation))),
+            ConstructionRefusal.NeedsResearch => _localizer.Tr("Research {tech}", ("tech", _prose.Name(offer.RequiredTech))),
             _ => string.Empty,
         };
     }

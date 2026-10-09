@@ -30,11 +30,14 @@ namespace Codigames.Game.Harvest
         private readonly UI.Hud.RewardFlight _flight;
         private readonly UI.Hud.RewardFragments _fragments;
 
+        private readonly UI.Research.TechProse _prose;
+
         public HarvestInput(Harvesting harvesting, ProvinceMap map, IClock clock,
             IWorldFeedbackService feedback, IQuickInfoMessageService messages, ICurrencyIcons icons, NumberFormat numbers,
             Localizer localizer, ISoundService sounds, Feedback.TapPunch punch, UI.Hud.RewardFlight flight,
-            UI.Hud.RewardFragments fragments)
+            UI.Hud.RewardFragments fragments, UI.Research.TechProse prose)
         {
+            _prose = prose;
             _punch = punch;
             _flight = flight;
             _fragments = fragments;
@@ -67,6 +70,12 @@ namespace Codigames.Game.Harvest
                 case TapRefusal.NoMana:
                     _sounds.Play(SoundIds.ERROR);
                     _messages.Show(new QuickInfoMessageData(_localizer.Tr("Out of Mana")));
+                    break;
+                case TapRefusal.NeedsResearch:
+                    // Which research, by name: seeing it and not having it yet only teaches when it says what opens it.
+                    _sounds.Play(SoundIds.ERROR);
+                    _messages.Show(new QuickInfoMessageData(_localizer.Tr("Research {tech} before you can work this",
+                        ("tech", _prose.Name(result.RequiredTech)))));
                     break;
                 case TapRefusal.Exhausted:
                     _sounds.Play(SoundIds.TAP_EMPTY);

@@ -60,7 +60,9 @@ namespace Codigames.Game.Session
                 resolver.Resolve<CityState>(), resolver.Resolve<IProvinceMap>(), resolver.Resolve<ICatalog<IBuildingDefinition>>(),
                 resolver.Resolve<ICatalog<IFeatureDefinition>>(), resolver.Resolve<ICatalog<IHarvestSource>>(),
                 resolver.Resolve<ITerrainYields>(), resolver.Resolve<ITapSettings>(), resolver.Resolve<ITreasury>(),
-                resolver.Resolve<ManaPool>(), resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IRevealedGround>()), Lifetime.Singleton);
+                resolver.Resolve<ManaPool>(), resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IRevealedGround>(),
+                resolver.Resolve<IResearchGates>(), resolver.Resolve<IBonuses>()), Lifetime.Singleton);
+            builder.Register<ResearchEffects>(Lifetime.Singleton);
 
             builder.Register(resolver =>
             {
@@ -88,6 +90,9 @@ namespace Codigames.Game.Session
 
                 // The crews last: their steps run between the boundaries the others draw.
                 timeline.Register(resolver.Resolve<Workforce>());
+
+                // What a technology completing does to the rest of the kingdom.
+                resolver.Resolve<ResearchEffects>();
                 return timeline;
             }, Lifetime.Singleton);
 
