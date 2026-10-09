@@ -46,6 +46,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private StageView _stage;
         [SerializeField] private UnlockSplash _unlockSplash;
         [SerializeField] private SownPlot _sownPlot;
+        [SerializeField] private SpriteArt _spriteArt;
         [SerializeField] private CinemachineCameraRig _cameraRig;
         [SerializeField] private CameraInputHook _cameraInput;
         [SerializeField] private CameraSettings _cameraSettings;
@@ -66,6 +67,8 @@ namespace Codigames.Game.Startup
             builder.RegisterEntryPoint<TreasuresView>();
             builder.RegisterInstance(_sownPlot);
             builder.RegisterEntryPoint<SownPlotsView>();
+            builder.RegisterInstance(_spriteArt);
+            builder.RegisterEntryPoint<CellBarsView>();
             builder.RegisterInstance(_sightArt);
             builder.RegisterEntryPoint<SilhouettesView>();
             builder.RegisterEntryPoint<ReachBorderView>();

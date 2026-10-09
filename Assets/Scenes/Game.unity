@@ -1835,6 +1835,7 @@ MonoBehaviour:
   _stage: {fileID: 1467622789}
   _unlockSplash: {fileID: 683152001}
   _sownPlot: {fileID: 6879841534382463474, guid: cb27934ce3254d8b4874e05b88697acb, type: 3}
+  _spriteArt: {fileID: 11400000, guid: eb4c811a55b29ad9e81abeb3abd06c0f, type: 2}
   _cameraRig: {fileID: 1480592035}
   _cameraInput: {fileID: 1480592034}
   _cameraSettings: {fileID: 11400000, guid: a1a8ecb3854c4e3959f3d5b04189ec8f, type: 2}

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Codigames.Game.Data.Harvest;
 using Codigames.Game.Map;
 using Codigames.Game.Startup;
 using Newtonsoft.Json;
@@ -67,11 +68,59 @@ namespace Codigames.Game.Editor.WebImport
             PrefabUtility.SaveAsPrefabAsset(root, PREFAB);
             Object.DestroyImmediate(root);
 
+            ImportFeatureLooks();
             SortByScreenHeight();
             PlaceInGameScene();
             AssetDatabase.SaveAssets();
             Debug.Log($"#Map# Imported {map.terrain.cells.Count} terrain cells and {map.features.cells.Count} features.");
         }
+
+        // Each feature's other drawings, onto its data: emptied (<stem>_exhausted, and _exhausted_2x2 for a block), and
+        // coming up (<stem>_growing1, _growing2…). A planted feature with no tile of its own gets one.
+        [MenuItem("Kingdom/Import feature looks")]
+        public static void ImportFeatureLooks()
+        {
+            foreach (var (id, stem) in FEATURE_ART)
+            {
+                var asset = AssetDatabase.LoadAssetAtPath<FeatureAsset>($"Assets/Data/Features/{id}.asset");
+                if (asset == null) continue;
+
+                var so = new SerializedObject(asset);
+                if (so.FindProperty("_tile").objectReferenceValue == null)
+                    so.FindProperty("_tile").objectReferenceValue = Tile(FEATURE_TILES, id, "Assets/Art/Features", stem);
+
+                so.FindProperty("_exhaustedTile").objectReferenceValue = Look(id, $"{stem}_exhausted", "exhausted");
+                var blocks = so.FindProperty("_exhaustedBlockTiles");
+                blocks.arraySize = 0;
+                for (var size = 2; size <= 3; size++)
+                {
+                    var block = Look(id, $"{stem}_exhausted_{size}x{size}", $"exhausted_{size}x{size}");
+                    if (block == null) break;
+                    blocks.arraySize = size - 1;
+                    blocks.GetArrayElementAtIndex(size - 2).objectReferenceValue = block;
+                }
+
+                var growing = so.FindProperty("_growingTiles");
+                growing.arraySize = 0;
+                for (var stage = 1; ; stage++)
+                {
+                    var tile = Look(id, $"{stem}_growing{stage}", $"growing{stage}");
+                    if (tile == null) break;
+                    growing.arraySize = stage;
+                    growing.GetArrayElementAtIndex(stage - 1).objectReferenceValue = tile;
+                }
+
+                so.ApplyModifiedPropertiesWithoutUndo();
+            }
+
+            AssetDatabase.SaveAssets();
+        }
+
+        // One drawing of a feature as its own tile (<Id>_<look>), or null when the art does not exist.
+        private static VariantTile Look(string id, string art, string look)
+            => AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/Features/{art}.png") == null
+                ? null
+                : Tile(FEATURE_TILES, $"{id}_{look}", id, "Assets/Art/Features", art);
 
         // A feature's block drawing (<stem>_2x2.png), as a tile with the feature's id; null when it has none.
         internal static VariantTile BlockTile(string featureId, int size)

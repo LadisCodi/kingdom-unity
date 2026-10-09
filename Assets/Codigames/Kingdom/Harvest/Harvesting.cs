@@ -184,6 +184,9 @@ namespace Codigames.Kingdom.Harvest
             return Math.Clamp(1 - (depot.ExhaustedUntil.Value - now) / depot.WaitMs, 0, 1);
         }
 
+        // Is the cell's feature one of these (what plantables sow)?
+        public bool Sown(Vector2Int cell, ICollection<string> sown) => _ground.Features.TryGetValue(cell, out var feature) && sown.Contains(feature);
+
         // What is left of a cell's stock, 0 to 1: 1 for one never drawn on, or bedrock.
         public double StockLeft(Vector2Int cell)
         {

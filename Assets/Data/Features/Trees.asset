@@ -19,3 +19,9 @@ MonoBehaviour:
   _displayName: Forest
   _tile: {fileID: 11400000, guid: 3af5b4b97e58aef9893ffb09bc73e585, type: 2}
   _blockTiles: []
+  _exhaustedTile: {fileID: 11400000, guid: fab33d2388c24fd9f8117574c27c1244, type: 2}
+  _exhaustedBlockTiles: []
+  _growingTiles:
+  - {fileID: 11400000, guid: 50d6d682085496afca7db5a77c52b7c4, type: 2}
+  - {fileID: 11400000, guid: d0afef2fe6eaade78b8f607ea5d2fd2c, type: 2}
+  - {fileID: 11400000, guid: 73c32ae73fc4ddfa883a58bfb8998d32, type: 2}
