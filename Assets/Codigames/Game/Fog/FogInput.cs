@@ -32,11 +32,13 @@ namespace Codigames.Game.Fog
         private readonly ISoundService _sounds;
 
         private readonly UI.Research.TechProse _prose;
+        private readonly Sighting _sighting;
 
         public FogInput(FogOfWar fog, CityState city, IConstructionSettings construction, IFogSettings settings, ProvinceMap map,
             IWorldFeedbackService feedback, IQuickInfoMessageService messages, ICurrencyIcons icons, NumberFormat numbers,
-            Localizer localizer, ISoundService sounds, UI.Research.TechProse prose)
+            Localizer localizer, ISoundService sounds, UI.Research.TechProse prose, Sighting sighting)
         {
+            _sighting = sighting;
             _prose = prose;
             _sounds = sounds;
             _fog = fog;
@@ -53,6 +55,13 @@ namespace Codigames.Game.Fog
 
         public void Tap(ModuleVector2Int cell)
         {
+            // Under the cloud bank: a silhouette answers with the way to it; the plain dark swallows the tap.
+            if (_fog.VisibilityAt(cell) == Visibility.Undiscovered)
+            {
+                if (_sighting.At(cell) != null) Say(_localizer.Tr("Something stands in the dark — clear the fog towards it"));
+                return;
+            }
+
             var cost = _fog.IsPayable(cell) ? _fog.TapCost(cell) : 0;
 
             var result = _fog.Tap(cell);

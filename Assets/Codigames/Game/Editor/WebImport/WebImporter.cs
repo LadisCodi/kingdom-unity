@@ -251,6 +251,8 @@ namespace Codigames.Game.Editor.WebImport
             settings.FindProperty("_tapsToReveal").intValue = (int)fog.TapsToReveal;
             SetInts(settings.FindProperty("_reachPerTownhallLevel"), fog.ReachPerTownhallLevel);
             settings.FindProperty("_claimDiscoverRadius").intValue = (int)fog.ClaimDiscoverRadius;
+            SetInts(settings.FindProperty("_sightMountainBySize"), fog.Sight.MountainBySize);
+            settings.FindProperty("_sightLandmark").intValue = (int)fog.Sight.Landmark;
             settings.ApplyModifiedPropertiesWithoutUndo();
         }
 

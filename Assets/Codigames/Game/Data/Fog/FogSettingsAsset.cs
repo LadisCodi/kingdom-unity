@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Codigames.Game.Data.Fog
 {
     [CreateAssetMenu(fileName = "Fog", menuName = "Kingdom/Data/Fog Settings")]
-    public class FogSettingsAsset : DataSettings, IFogSettings
+    public class FogSettingsAsset : DataSettings, IFogSettings, ISightSettings
     {
         [BoxGroup("Price"), Tooltip("A cell's Gold by its ring from the Townhall, from ring 1."), ListDrawerSettings(ShowIndexLabels = true)]
         [SerializeField] private List<double> _costPerRing = new();
@@ -25,6 +25,9 @@ namespace Codigames.Game.Data.Fog
         [SerializeField] private List<int> _reachPerTownhallLevel = new();
         [SerializeField, MinValue(0), SuffixLabel("cells"), Tooltip("What claiming a landmark discovers round it.")]
         private int _claimDiscoverRadius = 5;
+        [BoxGroup("Sighting"), SerializeField, Tooltip("How far a mountain block is seen from past the fog, by its side from 1; 0 never.")]
+        private List<int> _sightMountainBySize = new() { 0, 4, 5 };
+        [BoxGroup("Sighting"), SerializeField, MinValue(0), SuffixLabel("cells")] private int _sightLandmark = 3;
 
         public IReadOnlyList<double> CostPerRing => _costPerRing;
         public double FallbackGrowth => _fallbackGrowth;
@@ -34,5 +37,7 @@ namespace Codigames.Game.Data.Fog
         public double CountGrowth => _countGrowth;
         public IReadOnlyList<int> ReachPerTownhallLevel => _reachPerTownhallLevel;
         public int ClaimDiscoverRadius => _claimDiscoverRadius;
+        public IReadOnlyList<int> MountainBySize => _sightMountainBySize;
+        public int Landmark => _sightLandmark;
     }
 }
