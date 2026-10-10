@@ -68,6 +68,9 @@ namespace Codigames.Game.UI.Presenters
         // The building faint at its old address, remembered: the order is gone by the time the menu has closed.
         private string _liftedDistrict;
         private readonly Feedback.LandingFx _landing;
+        // The ways a ghost can step: one grid axis each, wherever the map goes on.
+        private static readonly Vector2Int[] STEPS = { new(1, 0), new(-1, 0), new(0, 1), new(0, -1) };
+        private readonly List<Vector2Int> _steps = new();
 
         public PlacementMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, Placement placement,
             Transplanting transplanting, ITreasury treasury, BuildingCollection buildings, FeatureCollection features, CityState city,
@@ -415,6 +418,12 @@ namespace Codigames.Game.UI.Presenters
             }
 
             var (basePosition, width) = ProvinceGeometry.Footprint(_map, _anchor.Value, Width, Height);
+            _steps.Clear();
+            foreach (var d in STEPS)
+                if (_map.Contains(new ModuleVector2Int(_anchor.Value.X + d.x, _anchor.Value.Y + d.y))) _steps.Add(d);
+            var origin = _map.CellCentre(_anchor.Value);
+            _ghost.SetSteps(_steps, _map.CellCentre(new ModuleVector2Int(_anchor.Value.X + 1, _anchor.Value.Y)) - origin,
+                _map.CellCentre(new ModuleVector2Int(_anchor.Value.X, _anchor.Value.Y + 1)) - origin, new Vector2Int(Width, Height));
             _ghost.Show(art, basePosition, artWidth ?? width, ProvinceGeometry.Corners(_map, _anchor.Value, Width, Height),
                 problem == PlacementProblem.None);
         }
