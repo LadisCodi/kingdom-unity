@@ -15,6 +15,15 @@ namespace Codigames.Game.UI
         private static readonly int VISIBILITY_PARAMETER = Animator.StringToHash("IsVisible");
         private const string SHOW_NODE = "Show";
         private const string HIDE_NODE = "Hide";
+        // THE WINDOW'S ENTRANCE AND EXIT (the web's k-window-in / k-window-out, kit.css): a menu built on a window
+        // (Safe/Window) opens from its least height to its full height as it fades in, over 160 ms; it closes back
+        // to its least height and then fades, over 200 ms. A window docked at the bottom grows up; any other grows
+        // from its middle. What pokes out of it (its head plank, its close) is inside the clip's margin.
+        private const string WINDOW = "Safe/Window";
+        private const float WINDOW_IN = 0.16f;
+        private const float WINDOW_OUT = 0.2f;
+        private const float WINDOW_MIN = 120f;
+        private const float CLIP_MARGIN = 400f;
 
         [Title("Basic Behaviour")]
         [SerializeField] private bool _hideOnStart = true;
@@ -28,6 +37,10 @@ namespace Codigames.Game.UI
 
         protected CanvasGroup CanvasGroup { get; private set; }
         private Animator _animator;
+        private RectTransform _window;
+        private UnityEngine.UI.RectMask2D _clip;
+        // Which show or hide is the latest: one overtaken leaves the menu to the one that overtook it.
+        private int _turn;
         private ISoundService _sounds;
 
         // The game's sounds, for a view that plays its own sequence (the reveal).
@@ -40,6 +53,7 @@ namespace Codigames.Game.UI
         {
             CanvasGroup = GetComponent<CanvasGroup>();
             _animator = GetComponent<Animator>();
+            _window = transform.Find(WINDOW) as RectTransform;
 
             if (_hideOnStart)
             {
@@ -126,12 +140,15 @@ namespace Codigames.Game.UI
 
         public virtual async Task Show()
         {
+            var turn = ++_turn;
             // The menu opened last is drawn over the ones opened before it (a popup over its sheet).
             transform.SetAsLastSibling();
             gameObject.SetActive(true);
 
             PreShow();
             await PlayShowAnimation();
+            // Closed again while it opened: the close has the last word.
+            if (turn != _turn) return;
             PostShow();
 
             CanvasGroup.interactable = true;
@@ -140,8 +157,11 @@ namespace Codigames.Game.UI
 
         public virtual async Task Hide()
         {
+            var turn = ++_turn;
             PreHide();
             await PlayHideAnimation();
+            // Opened again while it closed: it stays open.
+            if (turn != _turn) return;
             PostHide();
 
             CanvasGroup.interactable = false;
@@ -189,6 +209,10 @@ namespace Codigames.Game.UI
                 _animator.SetBool(VISIBILITY_PARAMETER, true);
                 await UniTask.Delay(System.TimeSpan.FromSeconds(_showAnimationDuration), cancellationToken: ct);
             }
+            else if (_window != null)
+            {
+                await Unroll(true, ct);
+            }
             else
             {
                 await CanvasGroup
@@ -207,6 +231,10 @@ namespace Codigames.Game.UI
                 _animator.SetBool(VISIBILITY_PARAMETER, false);
                 await UniTask.Delay(System.TimeSpan.FromSeconds(_hideAnimationDuration), cancellationToken: ct);
             }
+            else if (_window != null)
+            {
+                await Unroll(false, ct);
+            }
             else
             {
                 await CanvasGroup
@@ -214,6 +242,51 @@ namespace Codigames.Game.UI
                     .SetEase(Ease.OutQuad)
                     .ToUniTask(TweenCancelBehaviour.KillWithCompleteCallback, cancellationToken: ct);
             }
+        }
+
+        // The window clipped to a band that grows from its least height to all of it (or back), with the fade.
+        private async UniTask Unroll(bool open, System.Threading.CancellationToken ct)
+        {
+            if (_clip == null) _clip = _window.gameObject.AddComponent<UnityEngine.UI.RectMask2D>();
+            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(_window);
+            var height = _window.rect.height;
+            var shut = Mathf.Max(0f, height - Mathf.Min(height, WINDOW_MIN));
+            var docked = Docked();
+            var closed = docked ? new Vector4(-CLIP_MARGIN, -CLIP_MARGIN, -CLIP_MARGIN, shut) : new Vector4(-CLIP_MARGIN, shut / 2f, -CLIP_MARGIN, shut / 2f);
+            var whole = new Vector4(-CLIP_MARGIN, -CLIP_MARGIN, -CLIP_MARGIN, -CLIP_MARGIN);
+            _clip.enabled = true;
+            // Not killing a run still going: its await would end early, and a hide overtaken by a show would then
+            // switch the menu off under it. The later run writes last each frame, so it wins.
+            var sequence = DOTween.Sequence().SetTarget(this).SetUpdate(true);
+            if (open)
+            {
+                _clip.padding = closed;
+                CanvasGroup.alpha = 0f;
+                _ = sequence.Join(DOTween.To(() => _clip.padding, v => _clip.padding = v, whole, WINDOW_IN).SetEase(Ease.OutCubic));
+                _ = sequence.Join(CanvasGroup.DOFade(1f, WINDOW_IN).SetEase(Ease.OutQuad));
+            }
+            else
+            {
+                _clip.padding = whole;
+                _ = sequence.Append(DOTween.To(() => _clip.padding, v => _clip.padding = v, closed, WINDOW_OUT * 0.75f).SetEase(Ease.InQuad));
+                _ = sequence.Append(CanvasGroup.DOFade(0f, WINDOW_OUT * 0.25f));
+            }
+
+            await sequence.ToUniTask(TweenCancelBehaviour.KillWithCompleteCallback, cancellationToken: ct);
+            // Open, it clips nothing: the window is itself again.
+            if (open && _clip != null && CanvasGroup.alpha >= 1f) _clip.enabled = false;
+        }
+
+        // Sitting on the bottom of its safe area, as a sheet or a card does.
+        private bool Docked()
+        {
+            if (_window.parent is not RectTransform parent) return false;
+            var mine = new Vector3[4];
+            var area = new Vector3[4];
+            _window.GetWorldCorners(mine);
+            parent.GetWorldCorners(area);
+            var tall = area[1].y - area[0].y;
+            return tall > 0f && mine[0].y - area[0].y < tall * 0.15f;
         }
 
         private bool HasAnimationParameter(int paramHash)
