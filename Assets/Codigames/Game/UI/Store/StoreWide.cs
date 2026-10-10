@@ -19,6 +19,8 @@ namespace Codigames.Game.UI.Store
         public bool Enabled;
         // Shown instead of the button: everything bought.
         public string Owned;
+        // Neither button nor words: a row only to read.
+        public bool Bare;
     }
 
     // A row the width of the page (the web's stx-wide): the relic fragments, another builder, another hero slot.
@@ -45,8 +47,8 @@ namespace Codigames.Game.UI.Store
             var owned = !string.IsNullOrEmpty(data.Owned);
             _owned.gameObject.SetActive(owned);
             _owned.text = owned ? "<sprite name=\"tick\"> " + data.Owned : string.Empty;
-            _buy.gameObject.SetActive(!owned);
-            if (owned) return;
+            _buy.gameObject.SetActive(!owned && !data.Bare);
+            if (owned || data.Bare) return;
             _buy.Button.Label = data.Label;
             _buy.Show(data.Price, data.Enabled);
         }

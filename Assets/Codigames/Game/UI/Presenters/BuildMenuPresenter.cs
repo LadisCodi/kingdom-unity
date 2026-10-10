@@ -112,7 +112,7 @@ namespace Codigames.Game.UI.Presenters
 
         private void OnRow(string id)
         {
-            if (_construction.BuildRefusal(id) != ConstructionRefusal.None)
+            if (_construction.BuildRefusal(id) is not ConstructionRefusal.None and not ConstructionRefusal.NoFreeBuilder)
             {
                 _sounds.Play(SoundIds.ERROR);
                 View.Shake(id);
@@ -218,7 +218,7 @@ namespace Codigames.Game.UI.Presenters
             return new BuildRowData(card.Id, _localizer.Capitalized(_localizer.Tr(card.DisplayName)),
                 offer.Numbered && !atCap ? "#" + _numbers.Number(offer.Ordinal) : string.Empty,
                 _localizer.Tr(card.Promise), card.ArtFor(1), atCap ? Array.Empty<PriceTerm>() : price,
-                _numbers.Duration(offer.Seconds), built, offer.Refusal == ConstructionRefusal.None, why);
+                _numbers.Duration(offer.Seconds), built, offer.Refusal is ConstructionRefusal.None or ConstructionRefusal.NoFreeBuilder, why);
         }
     }
 }
