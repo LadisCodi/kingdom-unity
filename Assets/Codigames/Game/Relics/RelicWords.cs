@@ -113,6 +113,26 @@ namespace Codigames.Game.Relics
                 : _localizer.Tr("{story}.", ("story", story));
         }
 
+        // What its number does now, in a line: "Your villagers pay +10%"; a speed reads as faster.
+        public string Effect(RelicAsset relic, int level)
+        {
+            var subject = _localizer.Tr(relic.Subject);
+            var value = _relics.Value(relic.Id, Math.Max(1, level));
+            var first = relic.Stats.FirstOrDefault();
+            if (first.Add) return subject + " +" + _numbers.Number(value, 1);
+            return first.Stat != null && first.Stat.EndsWith("Speed", StringComparison.Ordinal)
+                ? _localizer.Tr("{subject} {pct} faster", ("subject", subject), ("pct", Percent(value)))
+                : subject + " +" + Percent(value);
+        }
+
+        // Its effect in two words: "+10% tax".
+        public string Short(RelicAsset relic, int level)
+        {
+            var value = _relics.Value(relic.Id, Math.Max(1, level));
+            var amount = relic.Stats.FirstOrDefault().Add ? "+" + _numbers.Number(value, 1) : "+" + Percent(value);
+            return amount + " " + _localizer.Tr(relic.Short);
+        }
+
         // A window as a sentence says it: 30 minutes, 1 hour, 8 hours.
         public string SpokenWindow(double ms)
         {

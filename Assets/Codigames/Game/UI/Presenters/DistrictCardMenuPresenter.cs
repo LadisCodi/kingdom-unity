@@ -58,6 +58,8 @@ namespace Codigames.Game.UI.Presenters
         private readonly Codigames.Game.Data.Goods.GoodCollection _goods;
         private readonly PriceTerms _prices;
         private readonly Kingdom.Army.Army _army;
+        private readonly Relics.ShrinePanels _shrines;
+        private readonly Kingdom.Relics.Shrines _shrineRules;
         private readonly Codigames.Game.UI.Research.TechProse _techs;
 
         // A hall's chosen rank for this session, and the best rank open when it was chosen: a better one opening lets it lapse.
@@ -75,8 +77,11 @@ namespace Codigames.Game.UI.Presenters
             BuildingStatProse prose, GemRush rush, UiIcons icons, PortraitArt portraits, ISoundService sounds,
             CardFraming framing, Speedups speedups, Harmony harmony, IHarmonySettings harmonySettings, Adjacency adjacency, City.WorkAreaView workArea,
             Kingdom.Goods.Workshops workshops, Kingdom.Goods.Stockpile stockpile, Codigames.Game.Data.Goods.GoodCollection goods,
-            PriceTerms prices, Kingdom.Army.Army army, Codigames.Game.UI.Research.TechProse techs) : base(views)
+            PriceTerms prices, Kingdom.Army.Army army, Codigames.Game.UI.Research.TechProse techs, Relics.ShrinePanels shrines,
+            Kingdom.Relics.Shrines shrineRules) : base(views)
         {
+            _shrines = shrines;
+            _shrineRules = shrineRules;
             _army = army;
             _techs = techs;
             _workshops = workshops;
@@ -137,6 +142,7 @@ namespace Codigames.Game.UI.Presenters
             _construction.JobStarted += OnJob;
             _construction.JobCompleted += OnJobCompleted;
             _training.Arrived += Refresh;
+            _shrineRules.Changed += Refresh;
         }
 
         protected override void UnbindInternal(DistrictCardMenu view)
@@ -146,6 +152,7 @@ namespace Codigames.Game.UI.Presenters
             _construction.JobStarted -= OnJob;
             _construction.JobCompleted -= OnJobCompleted;
             _training.Arrived -= Refresh;
+            _shrineRules.Changed -= Refresh;
         }
 
         protected override void SubscribeToViewEventsInternal(DistrictCardMenu view)
@@ -158,6 +165,9 @@ namespace Codigames.Game.UI.Presenters
             view.SpeedUpTrainingTapped += OnSpeedUpTraining;
             view.MakeTapped += OnMake;
             view.RankPicked += OnRankPicked;
+            view.ShrinePickTapped += OnShrinePick;
+            view.ShrineActivateTapped += OnShrineActivate;
+            view.ShrineFlaskTapped += OnShrineFlask;
             view.HealTapped += OnHeal;
             view.CancelGoodTapped += OnCancelGood;
             view.FinishGoodTapped += OnFinishGood;
@@ -179,6 +189,9 @@ namespace Codigames.Game.UI.Presenters
             view.SpeedUpTrainingTapped -= OnSpeedUpTraining;
             view.MakeTapped -= OnMake;
             view.RankPicked -= OnRankPicked;
+            view.ShrinePickTapped -= OnShrinePick;
+            view.ShrineActivateTapped -= OnShrineActivate;
+            view.ShrineFlaskTapped -= OnShrineFlask;
             view.HealTapped -= OnHeal;
             view.CancelGoodTapped -= OnCancelGood;
             view.FinishGoodTapped -= OnFinishGood;
@@ -524,6 +537,25 @@ namespace Codigames.Game.UI.Presenters
             Refresh();
         }
 
+        // The chapel's painting opens the relic picker over the card.
+        private void OnShrinePick()
+        {
+            _sounds.Play(SoundIds.BUTTON_PRESS);
+            _ = _ui.ShowMenu<RelicPickerMenu, string>(Data);
+        }
+
+        private void OnShrineActivate()
+        {
+            if (District is { } district) _shrines.Activate(district);
+            Refresh();
+        }
+
+        private void OnShrineFlask()
+        {
+            _shrines.UseFlask();
+            Refresh();
+        }
+
         private ConstructionJob JobOf(string districtId) => _city.Jobs.FirstOrDefault(j => j.DistrictId == districtId);
 
         private void Refresh()
@@ -558,6 +590,8 @@ namespace Codigames.Game.UI.Presenters
                 SpeedUp = "<sprite name=\"hourglass\"> " + _localizer.Tr("Speed up"),
                 Crew = _crews.HasCrew(district) && district.Built ? Crew(district) : null,
             };
+            card.ShrineHead = _localizer.Tr("Relic");
+            card.Shrine = district.Built && _shrines.IsShrine(district) ? _shrines.Panel(district, now) : null;
             card.WorkshopHead = _localizer.Tr("Workshop");
             card.Workshop = Workshop(district, now);
             HarmonyOf(card, building, district);

@@ -25,6 +25,8 @@ MonoBehaviour:
   _text: Your villagers pay more tax
   _story: 'Reminds every household round its Shrine what it owes the crown: villagers
     there pay {p} more tax'
+  _subject: Your villagers pay
+  _short: tax
   _pending: 
   _kind: 0
   _door: WolfRiders

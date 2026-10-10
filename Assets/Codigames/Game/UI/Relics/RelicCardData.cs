@@ -42,6 +42,10 @@ namespace Codigames.Game.UI.Relics
         // Asleep: the Mana waking it costs.
         public IReadOnlyList<PriceTerm> Activate;
         public string ActivateLabel;
+        // In the relic picker: what it does in two words, whether a Shrine already holds it, whether it is the one chosen.
+        public string Effect;
+        public bool Hosted;
+        public bool Picked;
     }
 
     // The Bag's Relics tab: the Shrines standing, then the city relics and the world relics under their heads.

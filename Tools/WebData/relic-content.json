@@ -4,6 +4,8 @@
     "sprite": "artifact_staff_of_renewal",
     "text": "Forests, fields, rocks and shoals hold more and grow back faster",
     "story": "Renews the land round its Shrine: forests, fields, rocks and shoals there hold {p} more and grow back {p} faster",
+    "subject": "Forests, fields and rocks hold",
+    "short": "resources",
     "stats": [
       {
         "stat": "harvestStock",
@@ -20,6 +22,8 @@
     "sprite": "artifact_sickle_of_plenty",
     "text": "More out of every swing and every tap",
     "story": "Blesses every blade and every hand round its Shrine: each swing of a crew and each tap of yours there brings in {p} more",
+    "subject": "Every swing and tap takes",
+    "short": "per swing",
     "stats": [
       {
         "stat": "harvestUnitsPerStrike",
@@ -32,6 +36,8 @@
     "sprite": "artifact_winged_hammer",
     "text": "Your crews work and your buildings train faster",
     "story": "Lends wings to every working hand round its Shrine: crews there swing and walk {p} faster, and soldiers and villagers train {p} faster",
+    "subject": "Your crews work and halls train",
+    "short": "work speed",
     "stats": [
       {
         "stat": "workerStrikeSpeed",
@@ -52,6 +58,8 @@
     "sprite": "artifact_tribute_crown",
     "text": "Your villagers pay more tax",
     "story": "Reminds every household round its Shrine what it owes the crown: villagers there pay {p} more tax",
+    "subject": "Your villagers pay",
+    "short": "tax",
     "stats": [
       {
         "stat": "taxRate",
@@ -64,6 +72,8 @@
     "sprite": "artifact_stargazers_orb",
     "text": "Rooms pay more Stardust",
     "story": "Draws starlight out of the dark: every room you clear in the depths pays {p} more Stardust",
+    "subject": "Rooms pay Stardust",
+    "short": "Stardust",
     "stats": [
       {
         "stat": "stardustYield",
@@ -81,6 +91,8 @@
     "sprite": "artifact_wisp_lantern",
     "text": "Every room pays more gold and stone",
     "story": "Its wisps find what the dark hides: every room in the depths pays {p} more gold and stone",
+    "subject": "A room pays gold and stone",
+    "short": "room haul",
     "stats": [
       {
         "stat": "roomHaul",
@@ -98,6 +110,8 @@
     "sprite": "artifact_warhorn",
     "text": "Your halls field a bigger army",
     "story": "Its call brings more to your banner: your halls field an army {p} larger",
+    "subject": "Your halls field",
+    "short": "army",
     "stats": [
       {
         "stat": "armyCap",
@@ -111,6 +125,8 @@
     "sprite": "artifact_stewards_signet",
     "text": "Every improvement you hold pays more an hour",
     "story": "Your stewards collect what is owed: every district you hold on the world map pays {p} more an hour",
+    "subject": "Every district you hold pays",
+    "short": "district yield",
     "stats": [
       {
         "stat": "worldImprovementYield",

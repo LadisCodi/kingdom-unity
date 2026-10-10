@@ -25,6 +25,8 @@ MonoBehaviour:
   _text: More out of every swing and every tap
   _story: 'Blesses every blade and every hand round its Shrine: each swing of a crew
     and each tap of yours there brings in {p} more'
+  _subject: Every swing and tap takes
+  _short: per swing
   _pending: 
   _kind: 0
   _door: Harpies

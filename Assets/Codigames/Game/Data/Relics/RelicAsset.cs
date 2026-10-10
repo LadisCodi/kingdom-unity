@@ -26,6 +26,8 @@ namespace Codigames.Game.Data.Relics
         [BoxGroup("Card"), SerializeField, TextArea, Tooltip("One line about what having it does.")] private string _text;
         [BoxGroup("Card"), SerializeField, TextArea, Tooltip("What it is for, as its sheet says it: {p} is its percent at the level.")]
         private string _story;
+        [BoxGroup("Card"), SerializeField, Tooltip("What its number is about, in a few words: \"Your villagers pay\".")] private string _subject;
+        [BoxGroup("Card"), SerializeField, Tooltip("Its effect in two words, after its number: \"tax\".")] private string _short;
         [BoxGroup("Card"), SerializeField, Tooltip("Why its number does nothing yet; empty when it works.")] private string _pending;
 
         [BoxGroup("Kind"), SerializeField] private RelicKind _kind;
@@ -50,6 +52,8 @@ namespace Codigames.Game.Data.Relics
         public Sprite Fragment(int slot) => slot >= 0 && slot < _fragments.Count ? _fragments[slot] : _icon;
         public string Text => _text;
         public string Story => _story;
+        public string Subject => _subject;
+        public string Short => _short;
         public string PendingText => string.IsNullOrEmpty(_pending) ? null : _pending;
         public string SpellName => string.IsNullOrEmpty(_spellName) ? null : _spellName;
         public string SpellText => _spellText;

@@ -20,6 +20,7 @@ namespace Codigames.Game.Lairs
         [SerializeField] private float _bobSeconds = 0.8f;
         [SerializeField] private float _popSeconds = 0.25f;
 
+        private bool _hourglassShown = true;
         private Tween _pop;
         private Tween _bobbing;
         private string _text;
@@ -51,6 +52,17 @@ namespace Codigames.Game.Lairs
             gameObject.SetActive(false);
         }
 
+        // Another bubble on the same shape: a sleeping Shrine's is parchment, its relic and its Zs, no hourglass.
+        public void Restyle(Sprite body, Sprite tail, Color ink, bool hourglass)
+        {
+            _body.sprite = body;
+            _tail.sprite = tail;
+            _countdown.color = ink;
+            _hourglassShown = hourglass;
+            _hourglass.gameObject.SetActive(hourglass);
+            _text = null;
+        }
+
         // The web's measures, as shares of the body's height: padding 0.2, the head 0.58, the hourglass 0.38.
         public void SetText(string countdown)
         {
@@ -60,7 +72,7 @@ namespace Codigames.Game.Lairs
             _countdown.ForceMeshUpdate();
             var pad = 0.2f * H;
             var head = 0.58f * H;
-            var glass = 0.38f * H;
+            var glass = _hourglassShown ? 0.38f * H : 0;
             var textW = _countdown.preferredWidth;
             var w = Mathf.Max(1.6f * H, pad + head + 0.14f * H + glass + 0.06f * H + textW + pad);
             var tailH = _tail.sprite.bounds.size.y;

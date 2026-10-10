@@ -28,6 +28,8 @@ namespace Codigames.Game.Editor.WebImport
             public string sprite;
             public string text;
             public string story;
+            public string subject;
+            public string @short;
             public List<StatContent> stats;
             public SpellContent spell;
             public string pending;
@@ -59,6 +61,8 @@ namespace Codigames.Game.Editor.WebImport
                     fragments.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>($"{RELIC_ART}{c.sprite}_frag{i}.png");
                 so.FindProperty("_text").stringValue = c.text;
                 so.FindProperty("_story").stringValue = c.story ?? "";
+                so.FindProperty("_subject").stringValue = c.subject ?? "";
+                so.FindProperty("_short").stringValue = c.@short ?? "";
                 so.FindProperty("_pending").stringValue = c.pending ?? "";
                 so.FindProperty("_kind").enumValueIndex = (int)(city ? RelicKind.City : RelicKind.World);
                 so.FindProperty("_door").stringValue = row.Door;

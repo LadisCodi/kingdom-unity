@@ -25,6 +25,8 @@ MonoBehaviour:
   _text: Every improvement you hold pays more an hour
   _story: 'Your stewards collect what is owed: every district you hold on the world
     map pays {p} more an hour'
+  _subject: Every district you hold pays
+  _short: district yield
   _pending: when the world map opens
   _kind: 1
   _door: scouting

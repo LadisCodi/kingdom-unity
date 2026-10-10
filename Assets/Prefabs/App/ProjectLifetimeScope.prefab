@@ -328,6 +328,7 @@ MonoBehaviour:
   _ads: {fileID: 11400000, guid: 46102797eac37f32e9c99ce64d242da8, type: 2}
   _relics: {fileID: 11400000, guid: dabb8b316eafc7efdb14ab6704be3f4e, type: 2}
   _relicSettings: {fileID: 11400000, guid: f9ab2edfd4153d0ed8584adf34d750bf, type: 2}
+  _relicArt: {fileID: 11400000, guid: c7192bf7e5d0da09eb43c0f90c5a7de3, type: 2}
   _quests: {fileID: 11400000, guid: 1f03ac5a3e52845f096bbff9c66a0a09, type: 2}
   _scenes: {fileID: 11400000, guid: 819b3b5d8c77007a7bd24e1b72a312ff, type: 2}
   _speakers: {fileID: 11400000, guid: 83cf10aef51d5cad78bb05a4a3e5ab29, type: 2}

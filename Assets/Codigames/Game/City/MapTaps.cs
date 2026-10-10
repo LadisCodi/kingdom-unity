@@ -32,11 +32,13 @@ namespace Codigames.Game.City
         private readonly Landmarks _landmarks;
         private readonly Lairs.LairsView _lairs;
         private readonly Codigames.Kingdom.Lairs.LairGround _lairGround;
+        private readonly Relics.ShrinesView _shrines;
 
         public MapTaps(MapGestures gestures, UIManager ui, CityState city, ICatalog<IBuildingDefinition> buildings, HarvestInput harvest,
             CollectInput collect, FogOfWar fog, FogInput fogInput, Ruins ruins, TreasureInput treasures, Landmarks landmarks,
-            Lairs.LairsView lairs, Codigames.Kingdom.Lairs.LairGround lairGround)
+            Lairs.LairsView lairs, Codigames.Kingdom.Lairs.LairGround lairGround, Relics.ShrinesView shrines)
         {
+            _shrines = shrines;
             _lairs = lairs;
             _lairGround = lairGround;
             _landmarks = landmarks;
@@ -69,6 +71,14 @@ namespace Codigames.Game.City
             if (lair != null)
             {
                 _ = _ui.ShowMenu<LairCardMenu, string>(lair);
+                return;
+            }
+
+            // A sleeping Shrine's bubble floats over the cells above it: it is the Shrine, whose card holds Activate.
+            var shrine = _shrines.ShrineAt(_gestures.LastTap);
+            if (shrine != null)
+            {
+                _ = _ui.ShowMenu<DistrictCardMenu, string>(shrine);
                 return;
             }
 

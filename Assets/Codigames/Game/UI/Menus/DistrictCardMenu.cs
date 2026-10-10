@@ -81,6 +81,11 @@ namespace Codigames.Game.UI.Menus
         private readonly System.Collections.Generic.List<Buildings.RankRow> _rankRowViews = new();
         private readonly System.Collections.Generic.List<Buildings.WardRow> _wardRowViews = new();
 
+        [Header("Shrine")]
+        [SerializeField] private GameObject _shrineBlock;
+        [SerializeField] private SectionHead _shrineHead;
+        [SerializeField] private Buildings.ShrinePanel _shrine;
+
         [Header("Workshop")]
         [SerializeField] private GameObject _workshopBlock;
         [SerializeField] private SectionHead _workshopHead;
@@ -122,6 +127,9 @@ namespace Codigames.Game.UI.Menus
         public event Action FinishTrainingTapped;
         public event Action CrewMinusTapped;
         public event Action CrewPlusTapped;
+        public event Action ShrinePickTapped;
+        public event Action ShrineActivateTapped;
+        public event Action ShrineFlaskTapped;
 
         // What the tutorial's lines call its controls.
         protected override void InitializeInternal()
@@ -167,6 +175,13 @@ namespace Codigames.Game.UI.Menus
             {
                 _workshopHead.Title = card.WorkshopHead;
                 _workshop.Show(card.Workshop);
+            }
+
+            _shrineBlock.SetActive(card.Shrine != null);
+            if (card.Shrine != null)
+            {
+                _shrineHead.Title = card.ShrineHead;
+                _shrine.Show(card.Shrine);
             }
 
             ShowWard(card);
@@ -326,6 +341,9 @@ namespace Codigames.Game.UI.Menus
             _finishTraining.Button.onClick.AddListener(OnFinishTraining);
             _crewMinus.onClick.AddListener(OnCrewMinus);
             _crewPlus.onClick.AddListener(OnCrewPlus);
+            _shrine.PickTapped += OnShrinePick;
+            _shrine.ActivateTapped += OnShrineActivate;
+            _shrine.FlaskTapped += OnShrineFlask;
         }
 
         protected override void UnsubscribeFromEventsInternal()
@@ -346,6 +364,9 @@ namespace Codigames.Game.UI.Menus
             _finishTraining.Button.onClick.RemoveListener(OnFinishTraining);
             _crewMinus.onClick.RemoveListener(OnCrewMinus);
             _crewPlus.onClick.RemoveListener(OnCrewPlus);
+            _shrine.PickTapped -= OnShrinePick;
+            _shrine.ActivateTapped -= OnShrineActivate;
+            _shrine.FlaskTapped -= OnShrineFlask;
         }
 
         private void OnClose() => CloseTapped?.Invoke();
@@ -363,5 +384,8 @@ namespace Codigames.Game.UI.Menus
         private void OnFinishTraining() => FinishTrainingTapped?.Invoke();
         private void OnCrewMinus() => CrewMinusTapped?.Invoke();
         private void OnCrewPlus() => CrewPlusTapped?.Invoke();
+        private void OnShrinePick() => ShrinePickTapped?.Invoke();
+        private void OnShrineActivate() => ShrineActivateTapped?.Invoke();
+        private void OnShrineFlask() => ShrineFlaskTapped?.Invoke();
     }
 }
