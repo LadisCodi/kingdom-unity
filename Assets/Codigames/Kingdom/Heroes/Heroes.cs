@@ -236,6 +236,8 @@ namespace Codigames.Kingdom.Heroes
 
         public int Slots => Math.Min(_ladder.Settings.HeroSlots, 1 + _state.SlotsPurchased);
 
+        public int SlotCeiling => _ladder.Settings.HeroSlots;
+
         public double SlotGemCost => Prices.RoundPrice(_ladder.Settings.HeroSlotGemCostBase * Math.Pow(_ladder.Settings.HeroSlotGemCostGrowth, _state.SlotsPurchased));
 
         // Slots handed over for good (a product), up to the ceiling as the count reads them.
