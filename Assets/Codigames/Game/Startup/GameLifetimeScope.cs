@@ -49,6 +49,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private UnlockSplash _unlockSplash;
         [SerializeField] private SownPlot _sownPlot;
         [SerializeField] private SpriteArt _spriteArt;
+        [SerializeField] private TapFlashArt _tapFlashArt;
         [SerializeField] private Codigames.Game.UI.Kit.UiIcons _uiIcons;
         [SerializeField] private Codigames.Game.UI.Kit.PortraitArt _portraitArt;
         [SerializeField] private HoldRing _holdRing;
@@ -76,6 +77,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_sownPlot);
             builder.RegisterEntryPoint<SownPlotsView>();
             builder.RegisterInstance(_spriteArt);
+            if (_tapFlashArt != null) builder.RegisterInstance(_tapFlashArt);
             builder.RegisterInstance(_uiIcons);
             builder.RegisterInstance(_portraitArt);
             builder.RegisterEntryPoint<CellBarsView>();

@@ -33,11 +33,13 @@ namespace Codigames.Game.Fog
 
         private readonly UI.Research.TechProse _prose;
         private readonly Sighting _sighting;
+        private readonly Feedback.TapPunch _punch;
 
         public FogInput(FogOfWar fog, CityState city, IConstructionSettings construction, IFogSettings settings, ProvinceMap map,
             IWorldFeedbackService feedback, IQuickInfoMessageService messages, ICurrencyIcons icons, NumberFormat numbers,
-            Localizer localizer, ISoundService sounds, UI.Research.TechProse prose, Sighting sighting)
+            Localizer localizer, ISoundService sounds, UI.Research.TechProse prose, Sighting sighting, Feedback.TapPunch punch = null)
         {
+            _punch = punch;
             _sighting = sighting;
             _prose = prose;
             _sounds = sounds;
@@ -70,6 +72,7 @@ namespace Codigames.Game.Fog
                 case RevealResult.Paid:
                 case RevealResult.Revealed:
                     _sounds.Play(result == RevealResult.Revealed ? SoundIds.REVEAL_DONE : SoundIds.REVEAL_PAID);
+                    _punch?.Fog(cell);
                     var centre = _map.CellCentre(cell);
                     var view = _feedback.Spawn<YieldFeedbackView>(new ModuleVector3(centre.x, centre.y + RISE_FROM, 0f));
                     view.Show(_icons.IconOf(FogOfWar.GOLD), "−" + _numbers.Number(cost));
