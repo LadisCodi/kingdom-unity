@@ -52,6 +52,8 @@ namespace Codigames.Kingdom
 
         public Store.State.PayerState Payer { get; set; } = new();
 
+        public Store.State.OffersState Offers { get; set; } = new();
+
         // This kingdom's own randomness: every draw hashes it with the parts that name the event.
         public uint Seed { get; set; }
 

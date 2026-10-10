@@ -88,6 +88,16 @@ namespace Codigames.Game.Session
                 resolver.Resolve<ICatalog<Kingdom.Store.IProductDefinition>>(), resolver.Resolve<Kingdom.Store.IPayerSettings>(),
                 resolver.Resolve<ITreasury>(), resolver.Resolve<Codigames.Kingdom.Bag.Bag>(), resolver.Resolve<Kingdom.Heroes.Heroes>(),
                 resolver.Resolve<ICatalog<Kingdom.Heroes.IBannerDefinition>>(), resolver.Resolve<Builders>()), Lifetime.Singleton);
+            builder.Register<Store.OfferContext>(Lifetime.Singleton).As<Kingdom.Store.IOfferContext>();
+            builder.Register(resolver => new Kingdom.Store.Offers(resolver.Resolve<KingdomState>().Offers, resolver.Resolve<KingdomState>().Payer,
+                resolver.Resolve<ICatalog<Kingdom.Store.IProductDefinition>>(), resolver.Resolve<Kingdom.Store.IPayerSettings>(),
+                resolver.Resolve<Kingdom.Store.IOfferContext>(), resolver.Resolve<KingdomState>().Seed, resolver.Resolve<ITreasury>(),
+                resolver.Resolve<Codigames.Kingdom.Bag.Bag>(), resolver.Resolve<Kingdom.Heroes.Heroes>()), Lifetime.Singleton);
+            builder.Register(resolver => new Kingdom.Store.OfferValue(resolver.Resolve<ICatalog<Kingdom.Store.IProductDefinition>>(),
+                resolver.Resolve<ICatalog<IItemDefinition>>(), resolver.Resolve<ICatalog<Kingdom.Heroes.IBannerDefinition>>(),
+                resolver.Resolve<ICatalog<Kingdom.Heroes.IHeroDefinition>>(), resolver.Resolve<Kingdom.Heroes.IHeroLadderSettings>(),
+                resolver.Resolve<IRushSettings>(), resolver.Resolve<Kingdom.Research.IKnowledgeSettings>(), resolver.Resolve<Kingdom.Store.IManaRefillPrice>(),
+                () => resolver.Resolve<Builders>().GemCost, () => resolver.Resolve<Kingdom.Heroes.Heroes>().SlotGemCost), Lifetime.Singleton);
             builder.Register<Kingdom.Battles.Combat>(Lifetime.Singleton);
             builder.Register<Kingdom.Battles.EnemyGenerator>(Lifetime.Singleton);
             builder.Register(resolver => new LairAttack(resolver.Resolve<Codigames.Kingdom.Lairs.Lairs>(), resolver.Resolve<Kingdom.Battles.Combat>(),

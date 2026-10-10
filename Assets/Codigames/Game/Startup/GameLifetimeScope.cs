@@ -143,6 +143,7 @@ namespace Codigames.Game.Startup
             builder.Register<IapMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<PayerMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.RegisterEntryPoint<Codigames.Game.Store.PayerGate>().AsSelf();
+            builder.RegisterEntryPoint<Codigames.Game.Store.OfferLatch>();
             builder.Register<SpeedupMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<Codigames.Game.UI.Buildings.BuildingStatProse>(Lifetime.Singleton);
             builder.Register<TechProse>(Lifetime.Singleton);
