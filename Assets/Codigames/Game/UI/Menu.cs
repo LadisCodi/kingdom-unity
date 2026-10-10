@@ -37,8 +37,8 @@ namespace Codigames.Game.UI
 
         protected CanvasGroup CanvasGroup { get; private set; }
         private Animator _animator;
-        private RectTransform _window;
-        private UnityEngine.UI.RectMask2D _clip;
+        private RectTransform _unrolled;
+        private UnityEngine.UI.RectMask2D _unrolledClip;
         // Which show or hide is the latest: one overtaken leaves the menu to the one that overtook it.
         private int _turn;
         private ISoundService _sounds;
@@ -53,7 +53,7 @@ namespace Codigames.Game.UI
         {
             CanvasGroup = GetComponent<CanvasGroup>();
             _animator = GetComponent<Animator>();
-            _window = transform.Find(WINDOW) as RectTransform;
+            _unrolled = transform.Find(WINDOW) as RectTransform;
 
             if (_hideOnStart)
             {
@@ -209,7 +209,7 @@ namespace Codigames.Game.UI
                 _animator.SetBool(VISIBILITY_PARAMETER, true);
                 await UniTask.Delay(System.TimeSpan.FromSeconds(_showAnimationDuration), cancellationToken: ct);
             }
-            else if (_window != null)
+            else if (_unrolled != null)
             {
                 await Unroll(true, ct);
             }
@@ -231,7 +231,7 @@ namespace Codigames.Game.UI
                 _animator.SetBool(VISIBILITY_PARAMETER, false);
                 await UniTask.Delay(System.TimeSpan.FromSeconds(_hideAnimationDuration), cancellationToken: ct);
             }
-            else if (_window != null)
+            else if (_unrolled != null)
             {
                 await Unroll(false, ct);
             }
@@ -247,43 +247,43 @@ namespace Codigames.Game.UI
         // The window clipped to a band that grows from its least height to all of it (or back), with the fade.
         private async UniTask Unroll(bool open, System.Threading.CancellationToken ct)
         {
-            if (_clip == null) _clip = _window.gameObject.AddComponent<UnityEngine.UI.RectMask2D>();
-            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(_window);
-            var height = _window.rect.height;
+            if (_unrolledClip == null) _unrolledClip = _unrolled.gameObject.AddComponent<UnityEngine.UI.RectMask2D>();
+            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(_unrolled);
+            var height = _unrolled.rect.height;
             var shut = Mathf.Max(0f, height - Mathf.Min(height, WINDOW_MIN));
             var docked = Docked();
             var closed = docked ? new Vector4(-CLIP_MARGIN, -CLIP_MARGIN, -CLIP_MARGIN, shut) : new Vector4(-CLIP_MARGIN, shut / 2f, -CLIP_MARGIN, shut / 2f);
             var whole = new Vector4(-CLIP_MARGIN, -CLIP_MARGIN, -CLIP_MARGIN, -CLIP_MARGIN);
-            _clip.enabled = true;
+            _unrolledClip.enabled = true;
             // Not killing a run still going: its await would end early, and a hide overtaken by a show would then
             // switch the menu off under it. The later run writes last each frame, so it wins.
             var sequence = DOTween.Sequence().SetTarget(this).SetUpdate(true);
             if (open)
             {
-                _clip.padding = closed;
+                _unrolledClip.padding = closed;
                 CanvasGroup.alpha = 0f;
-                _ = sequence.Join(DOTween.To(() => _clip.padding, v => _clip.padding = v, whole, WINDOW_IN).SetEase(Ease.OutCubic));
+                _ = sequence.Join(DOTween.To(() => _unrolledClip.padding, v => _unrolledClip.padding = v, whole, WINDOW_IN).SetEase(Ease.OutCubic));
                 _ = sequence.Join(CanvasGroup.DOFade(1f, WINDOW_IN).SetEase(Ease.OutQuad));
             }
             else
             {
-                _clip.padding = whole;
-                _ = sequence.Append(DOTween.To(() => _clip.padding, v => _clip.padding = v, closed, WINDOW_OUT * 0.75f).SetEase(Ease.InQuad));
+                _unrolledClip.padding = whole;
+                _ = sequence.Append(DOTween.To(() => _unrolledClip.padding, v => _unrolledClip.padding = v, closed, WINDOW_OUT * 0.75f).SetEase(Ease.InQuad));
                 _ = sequence.Append(CanvasGroup.DOFade(0f, WINDOW_OUT * 0.25f));
             }
 
             await sequence.ToUniTask(TweenCancelBehaviour.KillWithCompleteCallback, cancellationToken: ct);
             // Open, it clips nothing: the window is itself again.
-            if (open && _clip != null && CanvasGroup.alpha >= 1f) _clip.enabled = false;
+            if (open && _unrolledClip != null && CanvasGroup.alpha >= 1f) _unrolledClip.enabled = false;
         }
 
         // Sitting on the bottom of its safe area, as a sheet or a card does.
         private bool Docked()
         {
-            if (_window.parent is not RectTransform parent) return false;
+            if (_unrolled.parent is not RectTransform parent) return false;
             var mine = new Vector3[4];
             var area = new Vector3[4];
-            _window.GetWorldCorners(mine);
+            _unrolled.GetWorldCorners(mine);
             parent.GetWorldCorners(area);
             var tall = area[1].y - area[0].y;
             return tall > 0f && mine[0].y - area[0].y < tall * 0.15f;
