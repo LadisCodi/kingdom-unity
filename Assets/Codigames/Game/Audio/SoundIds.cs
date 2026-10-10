@@ -26,6 +26,7 @@ namespace Codigames.Game.Audio
         public const string SCROLL_OPEN = "scrollOpen";
         public const string SCROLL_CLOSE = "scrollClose";
         public const string UNLOCK = "unlock";
+        public const string OFFER_SPLASH = "offerSplash";
         public const string RAID_ALARM = "raidAlarm";
         public const string BATTLE_START = "battleStart";
         public const string SWORD_HIT = "swordHit";

@@ -13,5 +13,6 @@
  "Train villagers at the Townhall": "Entrena aldeanos en el Ayuntamiento",
  "Villagers {n}/{cap}": "Aldeanos {n}/{cap}",
  "{n} free villagers": "{n} aldeanos libres",
- "{n} on the way · next in {time}": "{n} en camino · el siguiente en {time}"
+ "{n} on the way · next in {time}": "{n} en camino · el siguiente en {time}",
+ "{n} relic fragment — in the Bag|{n} relic fragments — in the Bag": "{n} fragmento de reliquia — en la Bolsa|{n} fragmentos de reliquia — en la Bolsa"
 }

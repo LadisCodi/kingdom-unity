@@ -33,7 +33,7 @@ namespace Codigames.Game.UI.Presenters
         public const string HEROES = "heroes";
         public const string SUPPLIES = "supplies";
         public const string GEMS = "gems";
-        private static readonly string[] TABS = { HEROES, SUPPLIES, GEMS };
+        public const string OFFERS = "offers";
         private const string GEM = "Gems";
         private const string FRAGMENTS = "fragments";
         private const string BUILDER = "builder";
@@ -58,6 +58,9 @@ namespace Codigames.Game.UI.Presenters
         private readonly Kingdom.Relics.Relics _relics;
         private readonly UiIcons _icons;
         private readonly Kingdom.Economy.ITreasury _treasury;
+        private readonly Offers _offers;
+        private readonly OfferValue _value;
+        private readonly OfferTiles _tiles;
         private readonly IQuickInfoMessageService _messages;
 
         private string _tab = HEROES;
@@ -67,8 +70,12 @@ namespace Codigames.Game.UI.Presenters
         public StoreMenuPresenter(IMenuViewFactory views, UIManager ui, Gacha gacha, Reveals reveals, HeroCollection heroes, IItemHoldings items,
             Doors doors, RewardedAd ads, NumberFormat numbers, Localizer localizer, IClock clock, ISoundService sounds,
             Kingdom.Store.Store store, ProductProse prose, Kingdom.City.Builders builders, Kingdom.Heroes.Heroes heroRoster,
-            Kingdom.Relics.Relics relics, UiIcons icons, IQuickInfoMessageService messages, Kingdom.Economy.ITreasury treasury) : base(views)
+            Kingdom.Relics.Relics relics, UiIcons icons, IQuickInfoMessageService messages, Kingdom.Economy.ITreasury treasury, Offers offers,
+            OfferValue value, OfferTiles tiles) : base(views)
         {
+            _tiles = tiles;
+            _offers = offers;
+            _value = value;
             _store = store;
             _prose = prose;
             _builders = builders;
@@ -102,11 +109,12 @@ namespace Codigames.Game.UI.Presenters
             if (second == _shownSecond) return;
             _shownSecond = second;
             Refresh();
+            View.TickCountdowns(_clock.NowMs, s => _numbers.Countdown(s));
         }
 
         protected override void BindInternal(StoreMenu view)
         {
-            _tab = string.IsNullOrEmpty(Data) ? HEROES : Data;
+            _tab = string.IsNullOrEmpty(Data) ? Tabs()[0] : Data;
             NextLegend();
             view.HideOdds();
             view.SetCarousel(_heroes.Entries.OfType<HeroAsset>().Where(h => h.Art != null).Select(h => h.Art).ToList());
@@ -138,7 +146,8 @@ namespace Codigames.Game.UI.Presenters
 
         private void OnTab(int index)
         {
-            _tab = TABS[Math.Min(index, TABS.Length - 1)];
+            var tabs = Tabs();
+            _tab = tabs[Math.Min(index, tabs.Count - 1)];
             Refresh();
         }
 
@@ -191,7 +200,15 @@ namespace Codigames.Game.UI.Presenters
         private void Refresh()
         {
             if (View == null) return;
-            View.ShowTabs(TABS.Select(t => (TabLabel(t), t == _tab, t == HEROES && News())).ToList());
+            var tabs = Tabs();
+            if (!tabs.Contains(_tab)) _tab = tabs[0];
+            View.ShowTabs(tabs.Select(t => (TabLabel(t), t == _tab, (t == HEROES && News()) || (t == OFFERS && _tab != OFFERS))).ToList());
+            if (_tab == OFFERS)
+            {
+                ShowOffers();
+                return;
+            }
+
             if (_tab == SUPPLIES)
             {
                 ShowSupplies();
@@ -214,12 +231,80 @@ namespace Codigames.Game.UI.Presenters
             View.ShowHeroes(_localizer.Tr("Call for aid"), _localizer.Tr("Odds"), Odds(), _gacha.Banners.Select(b => Banner(b, now)).ToList());
         }
 
+        // Offers while there is one, or a daily; then Heroes, Supplies, Gems.
+        private List<string> Tabs()
+        {
+            var now = _clock.NowMs;
+            var tabs = new List<string>();
+            if (_offers.OffersOn(now).Count > 0 || _offers.DailyOffers(now).Count > 0) tabs.Add(OFFERS);
+            tabs.Add(HEROES);
+            tabs.Add(SUPPLIES);
+            tabs.Add(GEMS);
+            return tabs;
+        }
+
         private string TabLabel(string tab) => tab switch
         {
+            OFFERS => _localizer.Tr("Offers"),
             SUPPLIES => _localizer.Tr("Supplies"),
             GEMS => _localizer.Tr("Gems"),
             _ => _localizer.Tr("Heroes"),
         };
+
+        // ---- Offers: a banner each, then today's draw
+
+        private void ShowOffers()
+        {
+            var now = _clock.NowMs;
+            var shelves = new List<StoreShelf>();
+            var banners = new StoreShelf();
+            foreach (var product in _offers.OffersOn(now))
+            {
+                var tiles = _tiles.Now(product);
+                var shown = tiles.Take(tiles.Count > 4 ? 3 : 4).ToList();
+                var window = _offers.Window(product.Id);
+                var value = _value.ValuePercent(product);
+                var asset = product as ProductAsset;
+                var hero = product.Hero != null && _heroes.TryGet(product.Hero, out var h) ? h as HeroAsset : null;
+                banners.Offers.Add((product.Id, new StoreOfferData
+                {
+                    Name = _localizer.Tr(product.DisplayName),
+                    Pitch = _localizer.Tr(product.Description),
+                    // Unity's null: an unset sprite is not C# null, so no ?? here.
+                    Figure = asset != null && asset.Art != null ? asset.Art : hero != null && hero.Art != null ? hero.Art : asset != null ? asset.Icon : null,
+                    HeroFigure = (asset == null || asset.Art == null) && hero != null,
+                    Tiles = shown,
+                    More = tiles.Count > shown.Count ? "+" + _numbers.Exact(tiles.Count - shown.Count) : null,
+                    ClosesAt = window?.Closes,
+                    Price = _prose.Price(product),
+                    Value = value > 100 ? _numbers.Exact(value) + "%" : null,
+                }));
+            }
+
+            if (banners.Offers.Count > 0) shelves.Add(banners);
+            var dailies = _offers.DailyOffers(now);
+            if (dailies.Count > 0)
+            {
+                var today = new StoreShelf { Ribbon = _localizer.Tr("Today"), RibbonUntil = Offers.DailyResetsAt(now), CardHeight = 520 };
+                foreach (var product in dailies)
+                {
+                    var soldOut = product.Limit > 0 && _offers.BoughtToday(product.Id, now) >= product.Limit;
+                    today.Dailies.Add((product.Id, new StoreDailyData
+                    {
+                        Name = _localizer.Tr(product.DisplayName),
+                        Tiles = _tiles.Now(product).Take(2).ToList(),
+                        Price = soldOut ? _localizer.Tr("Sold out") : _prose.Price(product),
+                        SoldOut = soldOut,
+                    }));
+                }
+
+                shelves.Add(today);
+            }
+
+            var signature = string.Join("|", shelves.SelectMany(sh => sh.Offers.Select(o => o.Id + o.Data.Value + o.Data.ClosesAt)
+                .Concat(sh.Dailies.Select(d => d.Id + d.Data.SoldOut))).Append(Offers.DayIndex(now).ToString()));
+            View.ShowShelves(OFFERS, shelves, signature);
+        }
 
         // ---- Supplies: the Bag's bundles, the relic fragments, the crew's slots
 
@@ -277,7 +362,7 @@ namespace Codigames.Game.UI.Presenters
             }
 
             shelves.Add(crew);
-            View.ShowShelves(false, shelves, Signature(shelves) + gems);
+            View.ShowShelves(SUPPLIES, shelves, Signature(shelves) + gems);
         }
 
         // ---- Gems: the six packs
@@ -287,7 +372,7 @@ namespace Codigames.Game.UI.Presenters
             var shelf = new StoreShelf { Ribbon = _localizer.Tr("Gem packs"), Columns = 3, CardHeight = 520 };
             foreach (var product in _store.All.Where(p => p.Shelf == ProductShelf.Gems))
                 shelf.Cards.Add((product.Id, Card(product, "<size=45>" + _numbers.Exact(product.Gems) + "</size> <sprite name=\"Gems\">", false)));
-            View.ShowShelves(true, new[] { shelf }, Signature(new[] { shelf }));
+            View.ShowShelves(GEMS, new[] { shelf }, Signature(new[] { shelf }));
         }
 
         private StoreCardData Card(IProductDefinition product, string name, bool lines = true) => new()
@@ -307,7 +392,13 @@ namespace Codigames.Game.UI.Presenters
                                                      + ":" + string.Join(",", s.Rows.Select(r => r.Id + r.Data.Line + r.Data.Owned
                                                                                             + string.Join("", r.Data.Price.Select(p => p.Amount + p.IsShort))))));
 
-        private void OnProduct(string sku) => _ = _ui.ShowMenu<IapMenu, IapData>(new IapData { Sku = sku, From = "store" });
+        // An offer opens its splash, over the store; anything else its confirmation.
+        private void OnProduct(string sku)
+        {
+            if (_store.Get(sku).Shelf == ProductShelf.Offer)
+                _ = _ui.ShowMenu<OfferSplashMenu, OfferSplashOrder>(new OfferSplashOrder { Sku = sku });
+            else _ = _ui.ShowMenu<IapMenu, IapData>(new IapData { Sku = sku, From = "store" });
+        }
 
         private void OnRow(string row)
         {
