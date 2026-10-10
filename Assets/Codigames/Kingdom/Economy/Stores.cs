@@ -265,7 +265,7 @@ namespace Codigames.Kingdom.Economy
         }
 
         // Beds: whole villagers, so the tree's ranks add whole beds to a house that has any.
-        private int HousingOf(DistrictState district)
+        public int HousingOf(DistrictState district)
         {
             if (!district.Built) return 0;
 

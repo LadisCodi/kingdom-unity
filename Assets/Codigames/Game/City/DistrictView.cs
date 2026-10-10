@@ -18,6 +18,7 @@ namespace Codigames.Game.City
         private float _plotWidth = 1f;
         private Vector3 _artScale = Vector3.one;
         private SpriteRenderer _flash;
+        private Transform _depth;
         private float _alpha = 1f;
         private bool _lifted;
 
@@ -34,6 +35,7 @@ namespace Codigames.Game.City
             transform.position = basePosition;
             _plotWidth = plotWidth;
             _art.sprite = sprite;
+            PlaceDepth();
 
             if (sprite != null)
             {
@@ -74,8 +76,29 @@ namespace Codigames.Game.City
         // Planted from the ghost: the art `lift` plot widths above its plot, squashed by `scale` about its foot.
         public void SetLanding(float lift, Vector2 scale)
         {
-            _art.transform.localPosition = new Vector3(0f, lift * _plotWidth, 0f);
+            _art.transform.localPosition = new Vector3(0f, -FootprintDepth + lift * _plotWidth, 0f);
             SetPunch(scale);
+        }
+
+        // WHERE IT SORTS is the middle of its footprint, as the web's depth is (mapRenderer.ts `later`): its art is
+        // drawn from its front corner, but sorted by the bounds' centre a tall hall was behind everyone standing
+        // beside it — its back wall included. A sorting group at the footprint's middle holds the art.
+        private float FootprintDepth => _plotWidth / 4f;
+
+        private void PlaceDepth()
+        {
+            if (_depth == null)
+            {
+                _depth = new GameObject("Depth").transform;
+                _depth.SetParent(transform, false);
+                var group = _depth.gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>();
+                group.sortingLayerID = _art.sortingLayerID;
+                group.sortingOrder = _art.sortingOrder;
+                _art.transform.SetParent(_depth, false);
+            }
+
+            _depth.localPosition = new Vector3(0f, FootprintDepth, 0f);
+            _art.transform.localPosition = new Vector3(0f, -FootprintDepth, 0f);
         }
 
         // A tap's white flash: the art added onto itself, just in front of it, while `flash` lasts.

@@ -38,6 +38,7 @@ namespace Codigames.Game.Startup
         [SerializeField] private GhostView _ghostView;
         [SerializeField] private FogView _fogView;
         [SerializeField] private CrewsView _crewsView;
+        [SerializeField] private VillagersView _villagersView;
         [SerializeField] private TreasureArt _treasureArt;
         [SerializeField] private SightArt _sightArt;
         [SerializeField] private Lairs.LairBubbleView _lairBubble;
@@ -87,6 +88,7 @@ namespace Codigames.Game.Startup
             builder.Register<Codigames.Game.City.WorkAreaView>(Lifetime.Singleton).AsSelf().As<ITickable>();
             builder.RegisterComponent(_fogView);
             builder.RegisterComponent(_crewsView);
+            if (_villagersView != null) builder.RegisterComponent(_villagersView);
             builder.RegisterEntryPoint<MapTaps>();
             builder.RegisterEntryPoint<Sites.RuinsView>();
             builder.RegisterEntryPoint<Sites.LandmarksView>();

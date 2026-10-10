@@ -236,6 +236,7 @@ Transform:
   m_Children:
   - {fileID: 132387082}
   - {fileID: 1724951324}
+  - {fileID: 1941323631}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &311992717
@@ -1781,6 +1782,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1480592033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1941323630
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1941323631}
+  - component: {fileID: 1941323632}
+  m_Layer: 0
+  m_Name: Villagers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1941323631
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941323630}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 172435652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1941323632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941323630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 608ab159d0e6afa379e82e810276bd26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Crews.VillagersView
+  _characters: {fileID: 11400000, guid: bef79a810b228b35ebe1927bd2d7c41c, type: 2}
+  _memberPrefab: {fileID: 5001078882665402896, guid: ef50de608464293538b63da11ac1178a, type: 3}
 --- !u!1 &2007333688
 GameObject:
   m_ObjectHideFlags: 0
@@ -1910,6 +1957,7 @@ MonoBehaviour:
   _ghostView: {fileID: 132387083}
   _fogView: {fileID: 1135050809}
   _crewsView: {fileID: 1724951325}
+  _villagersView: {fileID: 1941323632}
   _treasureArt: {fileID: 11400000, guid: e6065269213ef2641a45c237873661f6, type: 2}
   _sightArt: {fileID: 11400000, guid: 4fef8a17d3f6db21aa218d0068b1a5ca, type: 2}
   _lairBubble: {fileID: 8437677429575701391, guid: afec8caaaa1484390b58e5779ffd3309, type: 3}
