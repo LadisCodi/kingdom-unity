@@ -49,7 +49,7 @@ namespace Codigames.Game.UI.Presenters
         {
             _notice = _board.Of(id) ?? new Notice { Title = _localizer.Tr("Notices"), Body = _localizer.Tr("Nothing new.") };
             _board.Read(id);
-            View.Show(_notice, Go, _localizer.Tr("Go"), _localizer.Tr("Open"));
+            View.Show(_notice, _notice.ActionLabel ?? Go, _localizer.Tr("Go"), _localizer.Tr("Open"));
         }
 
         private string Go => "<sprite name=\"compass\"> " + _localizer.Tr("Go");

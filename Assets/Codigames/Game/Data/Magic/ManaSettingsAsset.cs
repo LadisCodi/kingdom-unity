@@ -18,5 +18,6 @@ namespace Codigames.Game.Data.Magic
         public double BasePerHour => _basePerHour;
         public double LandmarkCap => _landmarkCap;
         public double FirstRefillGems => _gemRefillCosts.Count > 0 ? _gemRefillCosts[0] : 0;
+        public System.Collections.Generic.IReadOnlyList<double> GemRefillCosts => _gemRefillCosts;
     }
 }

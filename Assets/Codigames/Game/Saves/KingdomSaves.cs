@@ -10,7 +10,7 @@ namespace Codigames.Game.Saves
     public static class KingdomSaves
     {
         public const string SLOT = "kingdom";
-        public const int VERSION = 23;
+        public const int VERSION = 24;
 
         private static readonly ISaveMigration<JObject>[] MIGRATIONS =
         {
@@ -58,6 +58,8 @@ namespace Codigames.Game.Saves
             new AdditiveMigration<JObject>(21),
             // 22 → 23: the offers' windows and the next-day parts unclaimed.
             new AdditiveMigration<JObject>(22),
+            // 23 → 24: the Mana refills' day and the video's offer.
+            new AdditiveMigration<JObject>(23),
         };
 
         public static SaveSlot<KingdomState, JObject> Slot(ISaveStorage storage)

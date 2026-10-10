@@ -8,8 +8,8 @@ using Codigames.Kingdom.Store;
 namespace Codigames.Game.Store
 {
     // What the offers read off the kingdom (the web's offers.ts reads state directly): the doors by the data's ids, the
-    // Townhall, the needs felt, and the slots a pack would open. There are no Mana refills nor explorers yet: Mana out is
-    // the pool below one, and neither Mana low (the refill ad) nor explorers out is felt.
+    // Townhall, the needs felt, and the slots a pack would open. Mana low is the refill video offered; Mana out, the pool
+    // empty with the day's videos spent. There are no explorers yet: explorers out is never felt.
     public class OfferContext : IOfferContext
     {
         private readonly Doors _doors;
@@ -18,10 +18,14 @@ namespace Codigames.Game.Store
         private readonly Builders _builders;
         private readonly Kingdom.Heroes.Heroes _heroes;
         private readonly ManaPool _mana;
+        private readonly ManaRefills _refills;
+        private readonly Codigames.Modules.Clock.IClock _clock;
 
         public OfferContext(Doors doors, CityState city, IConstructionSettings construction, Builders builders, Kingdom.Heroes.Heroes heroes,
-            ManaPool mana)
+            ManaPool mana, ManaRefills refills = null, Codigames.Modules.Clock.IClock clock = null)
         {
+            _refills = refills;
+            _clock = clock;
             _doors = doors;
             _city = city;
             _construction = construction;
@@ -36,7 +40,8 @@ namespace Codigames.Game.Store
 
         public bool Feels(string need) => need switch
         {
-            "manaOut" => _mana.Amount < 1,
+            "manaLow" => _refills != null && _refills.Eligible,
+            "manaOut" => _mana.Amount < 1 && (_refills == null || _refills.WatchedLeft(_clock?.NowMs ?? 0) == 0),
             "heroesBenched" => _heroes.Owned.Count > _heroes.Slots,
             _ => false,
         };

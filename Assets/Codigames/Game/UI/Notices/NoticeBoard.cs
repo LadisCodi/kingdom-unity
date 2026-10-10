@@ -23,6 +23,7 @@ namespace Codigames.Game.UI.Notices
         private const string NEWS = "news:";
         public const string RAID = "state:raid";
         public const string RELIC = "state:relic";
+        public const string MANA = "state:mana";
 
         private readonly Inbox _inbox;
         private readonly INoticeSettings _settings;
@@ -41,12 +42,21 @@ namespace Codigames.Game.UI.Notices
         private readonly Codigames.Game.UI.Relics.RelicCards _relics;
         private readonly Kingdom.Relics.Shrines _shrines;
         private readonly Presenters.BagMenuPresenter _bag;
+        private readonly Kingdom.Magic.ManaRefills _refills;
+        private readonly Codigames.Game.Ads.RewardedAd _ads;
+        private readonly Codigames.Modules.Clock.IClock _clock;
+        private readonly Codigames.Modules.Audio.ISoundService _sounds;
 
         public NoticeBoard(Inbox inbox, INoticeSettings settings, CityState city, BuildingCollection buildings, IProvinceSites sites,
             ProvinceSitesAsset siteArt, UiIcons icons, NumberFormat numbers, Localizer localizer, UIManager ui, Codigames.Game.Data.Goods.GoodCollection goods,
             Codigames.Kingdom.Lairs.Lairs lairs, Codigames.Game.Lairs.LairWords words, Codigames.Game.Relics.AsleepRelics asleep,
-            Codigames.Game.UI.Relics.RelicCards relics, Kingdom.Relics.Shrines shrines, Presenters.BagMenuPresenter bag)
+            Codigames.Game.UI.Relics.RelicCards relics, Kingdom.Relics.Shrines shrines, Presenters.BagMenuPresenter bag,
+            Kingdom.Magic.ManaRefills refills = null, Codigames.Game.Ads.RewardedAd ads = null, Codigames.Modules.Clock.IClock clock = null, Codigames.Modules.Audio.ISoundService sounds = null)
         {
+            _refills = refills;
+            _ads = ads;
+            _clock = clock;
+            _sounds = sounds;
             _asleep = asleep;
             _relics = relics;
             _shrines = shrines;
@@ -82,13 +92,14 @@ namespace Codigames.Game.UI.Notices
         }
 
         // What stays true until it is not, hung under the settings knob: the raid coming first.
-        public IReadOnlyList<Notice> Standing => new[] { Raid(), Asleep() }.Where(n => n != null).ToList();
+        public IReadOnlyList<Notice> Standing => new[] { Raid(), Refill(), Asleep() }.Where(n => n != null).ToList();
 
         // A card's notice, by its id; null once it has nothing to say.
         public Notice Of(string id)
         {
             if (id == RAID) return Raid();
             if (id == RELIC) return Asleep();
+            if (id == MANA) return Refill();
 
             if (id == MORE)
             {
@@ -343,6 +354,24 @@ namespace Codigames.Game.UI.Notices
                     ? _localizer.Tr("Its window has closed. Wake it in its Shrine for {n} Mana.", ("n", _numbers.Exact(_shrines.ActivationCost(relic.Id))))
                     : _localizer.Tr("Their windows have closed. Wake each in its Shrine with Mana."),
                 Go = one ? () => Open<RelicSheetMenu>(relic.Id) : OpenBagOnRelics,
+            };
+        }
+
+        // MANA REFILL: the rewarded video, while it is offered (and not playing).
+        private Notice Refill()
+        {
+            if (_refills == null || !_refills.Pending || _ads == null || _ads.Watching) return null;
+            var flask = _icons.Get("flask");
+            return new Notice
+            {
+                Id = MANA,
+                Kind = NoticeKind.State,
+                Art = flask,
+                Picture = _icons.Get("Mana") ?? flask,
+                Title = _localizer.Tr("A free refill"),
+                Body = _localizer.Tr("Watch a short video for {n} Mana.", ("n", _numbers.Exact(_refills.Reward))),
+                ActionLabel = "<sprite name=\"video\"> " + _localizer.Tr("Watch"),
+                Go = () => Presenters.ManaMenuPresenter.WatchFor(_ads, _refills, _clock, _sounds),
             };
         }
 

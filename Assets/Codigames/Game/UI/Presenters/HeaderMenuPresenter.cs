@@ -135,16 +135,24 @@ namespace Codigames.Game.UI.Presenters
             _ui.MenuHidden += OnMenu;
             _bag.Granted += OnItems;
             _bag.Taken += OnItems;
+            view.CurrencyTapped += OnCurrency;
         }
 
         protected override void UnbindInternal(HeaderMenu view)
         {
+            view.CurrencyTapped -= OnCurrency;
             _treasury.Changed -= OnChanged;
             _hold.Changed -= Refresh;
             _ui.MenuShown -= OnMenu;
             _ui.MenuHidden -= OnMenu;
             _bag.Granted -= OnItems;
             _bag.Taken -= OnItems;
+        }
+
+        // The Mana gauge opens the Mana sheet: always openable, the Gem ladder is not an ad.
+        private void OnCurrency(string currency)
+        {
+            if (currency == ManaPool.MANA && !_ui.IsShown<Menus.ManaMenu>()) _ = _ui.ShowMenu<Menus.ManaMenu>();
         }
 
         // A purse may count items (the keys over the store).

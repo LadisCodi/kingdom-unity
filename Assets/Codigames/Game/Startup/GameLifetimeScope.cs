@@ -148,6 +148,8 @@ namespace Codigames.Game.Startup
             builder.Register<Codigames.Game.UI.Store.OfferTiles>(Lifetime.Singleton);
             builder.Register<OfferSplashMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<BuilderMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
+            builder.Register<ManaMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
+            builder.RegisterEntryPoint<Codigames.Game.Store.RefillLatch>();
             builder.Register<SpeedupMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<Codigames.Game.UI.Buildings.BuildingStatProse>(Lifetime.Singleton);
             builder.Register<TechProse>(Lifetime.Singleton);

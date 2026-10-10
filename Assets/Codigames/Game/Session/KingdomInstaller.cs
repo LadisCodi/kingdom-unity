@@ -88,6 +88,9 @@ namespace Codigames.Game.Session
                 resolver.Resolve<ICatalog<Kingdom.Store.IProductDefinition>>(), resolver.Resolve<Kingdom.Store.IPayerSettings>(),
                 resolver.Resolve<ITreasury>(), resolver.Resolve<Codigames.Kingdom.Bag.Bag>(), resolver.Resolve<Kingdom.Heroes.Heroes>(),
                 resolver.Resolve<ICatalog<Kingdom.Heroes.IBannerDefinition>>(), resolver.Resolve<Builders>()), Lifetime.Singleton);
+            builder.Register<Store.RefillSettings>(Lifetime.Singleton).As<Kingdom.Magic.IRefillSettings>();
+            builder.Register(resolver => new Kingdom.Magic.ManaRefills(resolver.Resolve<KingdomState>().Ads, resolver.Resolve<Kingdom.Magic.ManaPool>(),
+                resolver.Resolve<Kingdom.Magic.IRefillSettings>(), resolver.Resolve<ITreasury>(), resolver.Resolve<KingdomState>().Seed), Lifetime.Singleton);
             builder.Register<Store.OfferContext>(Lifetime.Singleton).As<Kingdom.Store.IOfferContext>();
             builder.Register(resolver => new Kingdom.Store.Offers(resolver.Resolve<KingdomState>().Offers, resolver.Resolve<KingdomState>().Payer,
                 resolver.Resolve<ICatalog<Kingdom.Store.IProductDefinition>>(), resolver.Resolve<Kingdom.Store.IPayerSettings>(),
