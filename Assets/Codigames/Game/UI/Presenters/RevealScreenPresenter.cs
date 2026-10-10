@@ -31,10 +31,12 @@ namespace Codigames.Game.UI.Presenters
         private readonly NumberFormat _numbers;
         private readonly Localizer _localizer;
         private readonly MusicDirector _music;
+        private readonly Codigames.Game.Data.Relics.RelicCollection _relics;
 
         public RevealScreenPresenter(IMenuViewFactory views, UIManager ui, HeroCollection heroes, ItemCollection items, ItemProse prose, HeroWords words,
-            UiIcons icons, NumberFormat numbers, Localizer localizer, MusicDirector music) : base(views)
+            UiIcons icons, NumberFormat numbers, Localizer localizer, MusicDirector music, Codigames.Game.Data.Relics.RelicCollection relics = null) : base(views)
         {
+            _relics = relics;
             _ui = ui;
             _heroes = heroes;
             _items = items;
@@ -118,6 +120,18 @@ namespace Codigames.Game.UI.Presenters
                     return new RevealCardData
                     {
                         Kind = prize.Kind, Icon = item.Icon, Name = _prose.Name(item), Count = Times(prize.Amount), Wash = CLEAR,
+                    };
+                }
+                case PrizeKind.RelicFragment:
+                {
+                    var relic = _relics?.Get<Codigames.Game.Data.Relics.RelicAsset>(prize.Id);
+                    var piece = relic != null ? relic.Fragment(prize.Slot) : null;
+                    return new RevealCardData
+                    {
+                        Kind = prize.Kind, Icon = piece, Count = Times(prize.Amount), Wash = CLEAR,
+                        Name = relic == null ? prize.Id : prize.Slot == Kingdom.Relics.Relics.KEYSTONE
+                            ? _localizer.Tr("{relic} keystone", ("relic", _localizer.Tr(relic.Name)))
+                            : _localizer.Tr(relic.Name),
                     };
                 }
                 case PrizeKind.Supplies:

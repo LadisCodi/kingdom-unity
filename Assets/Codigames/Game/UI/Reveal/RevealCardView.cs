@@ -69,7 +69,7 @@ namespace Codigames.Game.UI.Reveal
 
             // A whole hero is the roster's card, not a page.
             _page.SetActive(card.Kind != PrizeKind.Hero);
-            _std.SetActive(card.Kind is PrizeKind.Currency or PrizeKind.Item or PrizeKind.Fragments);
+            _std.SetActive(card.Kind is PrizeKind.Currency or PrizeKind.Item or PrizeKind.Fragments or PrizeKind.RelicFragment);
             _hero.SetActive(card.Kind == PrizeKind.Hero);
             _supplies.SetActive(card.Kind == PrizeKind.Supplies);
             _bag.SetActive(card.Kind == PrizeKind.Bag);

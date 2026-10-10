@@ -408,8 +408,11 @@ namespace Codigames.Game.UI.Presenters
                     if (_relics.OpenPack(out var drops) == FragmentPackResult.Opened)
                     {
                         _sounds.Play(SoundIds.GEM_SPEND);
-                        _messages.Show(new QuickInfoMessageData(_localizer.Trn(drops.Count, "{n} relic fragment — in the Bag", "{n} relic fragments — in the Bag",
-                            ("n", _numbers.Exact(drops.Count)))));
+                        // Dealt on the reveal, one piece a card, the same piece counted once, the keystones last.
+                        var prizes = drops.GroupBy(d => (d.Relic, d.Slot))
+                            .Select(g => new Prize { Kind = PrizeKind.RelicFragment, Id = g.Key.Relic, Slot = g.Key.Slot, Amount = g.Count() })
+                            .OrderBy(p => p.Slot == Kingdom.Relics.Relics.KEYSTONE ? 1 : 0).ToList();
+                        _ = _ui.ShowMenu<RevealScreen, Kingdom.Heroes.Reveal>(new Kingdom.Heroes.Reveal { Chest = RevealChest.Relic, Caption = _localizer.Tr("Relic fragments"), Prizes = prizes });
                     }
                     else _sounds.Play(SoundIds.ERROR);
                     break;
