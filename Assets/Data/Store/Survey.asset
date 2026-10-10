@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 604f61999a2607ee5922a28f05bb8a1b, type: 3}
+  m_Name: Survey
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Store.ProductAsset
+  _id: Survey
+  _name: The Royal Survey
+  _description: "The Survey\u2019s second column, for the whole province."
+  _icon: {fileID: 0}
+  _art: {fileID: 0}
+  _shelf: 4
+  _priceUsd: 9.99
+  _gems: 0
+  _items: []
+  _hero: 
+  _builders: 0
+  _explorers: 0
+  _heroSlots: 0
+  _nextDayGems: 0
+  _nextDayHeroXp: 0
+  _nextDayFragments: 0
+  _nextDayItems: []
+  _opensOn: always
+  _door: 
+  _after: 
+  _townhall: 0
+  _hours: 0
+  _limit: 1
+  _cooldownHours: 0
+  _splash: 0
+  _widget: 0

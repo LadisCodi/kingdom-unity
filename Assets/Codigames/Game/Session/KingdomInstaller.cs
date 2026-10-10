@@ -80,6 +80,14 @@ namespace Codigames.Game.Session
                 () => resolver.Resolve<Kingdom.Modifiers.IModifiers>()), Lifetime.Singleton).AsSelf().As<Kingdom.Relics.IRelicAura>();
             builder.Register<Kingdom.Relics.ShrineLadder>(Lifetime.Singleton).As<IBuildLadder>();
             builder.Register<Relics.AsleepRelics>(Lifetime.Singleton);
+
+            // The simulated store: the payer's budget, the products, the crew bought for Gems.
+            builder.Register(resolver => new Builders(resolver.Resolve<KingdomState>().City, resolver.Resolve<IConstructionSettings>(),
+                resolver.Resolve<ITreasury>()), Lifetime.Singleton);
+            builder.Register(resolver => new Kingdom.Store.Store(resolver.Resolve<KingdomState>().Payer,
+                resolver.Resolve<ICatalog<Kingdom.Store.IProductDefinition>>(), resolver.Resolve<Kingdom.Store.IPayerSettings>(),
+                resolver.Resolve<ITreasury>(), resolver.Resolve<Codigames.Kingdom.Bag.Bag>(), resolver.Resolve<Kingdom.Heroes.Heroes>(),
+                resolver.Resolve<ICatalog<Kingdom.Heroes.IBannerDefinition>>(), resolver.Resolve<Builders>()), Lifetime.Singleton);
             builder.Register<Kingdom.Battles.Combat>(Lifetime.Singleton);
             builder.Register<Kingdom.Battles.EnemyGenerator>(Lifetime.Singleton);
             builder.Register(resolver => new LairAttack(resolver.Resolve<Codigames.Kingdom.Lairs.Lairs>(), resolver.Resolve<Kingdom.Battles.Combat>(),

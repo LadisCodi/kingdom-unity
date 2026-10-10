@@ -64,6 +64,8 @@ namespace Codigames.Game.Startup
         [SerializeField] private Data.Monetization.AdSettingsAsset _ads;
         [SerializeField] private Data.Relics.RelicCollection _relics;
         [SerializeField] private Data.Relics.RelicSettingsAsset _relicSettings;
+        [SerializeField] private Data.Store.ProductCollection _products;
+        [SerializeField] private Data.Store.PayerSettingsAsset _payer;
         [SerializeField] private Data.Relics.RelicArtAsset _relicArt;
         [SerializeField] private QuestCollection _quests;
         [SerializeField] private SceneCollection _scenes;
@@ -135,6 +137,8 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_ads);
             builder.RegisterInstance(_relics).AsSelf().As<ICatalog<Kingdom.Relics.IRelicDefinition>>();
             builder.RegisterInstance(_relicSettings).As<Kingdom.Relics.IRelicSettings>();
+            builder.RegisterInstance(_products).AsSelf().As<ICatalog<Kingdom.Store.IProductDefinition>>();
+            builder.RegisterInstance(_payer).As<Kingdom.Store.IPayerSettings>();
             builder.RegisterInstance(_relicArt);
             builder.RegisterInstance(_quests).As<ICatalog<IQuestDefinition>>();
             builder.RegisterInstance(_scenes).As<ICatalog<ISceneDefinition>>();

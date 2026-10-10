@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 604f61999a2607ee5922a28f05bb8a1b, type: 3}
+  m_Name: BuildPack
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Store.ProductAsset
+  _id: BuildPack
+  _name: Rush the works
+  _description: Your crew, faster than legend.
+  _icon: {fileID: 0}
+  _art: {fileID: 0}
+  _shelf: 2
+  _priceUsd: 5.99
+  _gems: 2500
+  _items:
+  - _id: ConstructionSpeedup1h
+    _value: 26
+  - _id: ConstructionSpeedup5m
+    _value: 120
+  - _id: ChoiceChest8h
+    _value: 5
+  _hero: 
+  _builders: 0
+  _explorers: 0
+  _heroSlots: 0
+  _nextDayGems: 0
+  _nextDayHeroXp: 0
+  _nextDayFragments: 0
+  _nextDayItems: []
+  _opensOn: buildersBusy
+  _door: 
+  _after: 
+  _townhall: 3
+  _hours: 96
+  _limit: 1
+  _cooldownHours: 168
+  _splash: 0
+  _widget: 1

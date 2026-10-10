@@ -50,6 +50,8 @@ namespace Codigames.Kingdom
 
         public Relics.State.RelicsState Relics { get; set; } = new();
 
+        public Store.State.PayerState Payer { get; set; } = new();
+
         // This kingdom's own randomness: every draw hashes it with the parts that name the event.
         public uint Seed { get; set; }
 
