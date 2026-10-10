@@ -13,9 +13,11 @@ namespace Codigames.Game.City
         // The hammer's frame: at most this many cells wide, its top this far up the art.
         private const float HAMMER_CELLS = 1.6f;
         private const float HAMMER_TOP = 0.85f;
+        private const float FLASH_IN_FRONT = 0.002f;
 
         private float _plotWidth = 1f;
         private Vector3 _artScale = Vector3.one;
+        private SpriteRenderer _flash;
         private float _alpha = 1f;
         private bool _lifted;
 
@@ -68,6 +70,33 @@ namespace Codigames.Game.City
 
         // A tap's squash and stretch, about the building's feet.
         public void SetPunch(Vector2 scale) => _art.transform.localScale = new Vector3(_artScale.x * scale.x, _artScale.y * scale.y, 1f);
+
+        // A tap's white flash: the art added onto itself, just in front of it, while `flash` lasts.
+        public void SetFlash(float flash, Material material)
+        {
+            if (flash <= 0.004f || material == null)
+            {
+                if (_flash != null) _flash.enabled = false;
+                return;
+            }
+
+            if (_flash == null)
+            {
+                _flash = new GameObject("Flash").AddComponent<SpriteRenderer>();
+                _flash.transform.SetParent(_art.transform, false);
+                _flash.sortingLayerID = _art.sortingLayerID;
+                _flash.sortingOrder = _art.sortingOrder;
+                _flash.spriteSortPoint = _art.spriteSortPoint;
+            }
+
+            // A hair lower on the sort axis than the art, so it draws just after it.
+            _flash.transform.localPosition = new Vector3(0f, -FLASH_IN_FRONT / Mathf.Max(0.0001f, _artScale.y), 0f);
+            _flash.sharedMaterial = material;
+            _flash.sprite = _art.sprite;
+            _flash.flipX = _art.flipX;
+            _flash.color = new Color(1f, 1f, 1f, flash * _art.color.a);
+            _flash.enabled = true;
+        }
 
         // Over the roof while the store is ready to collect.
         public void SetStore(bool ready, Sprite icon, bool full)
