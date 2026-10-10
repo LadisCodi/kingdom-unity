@@ -23,7 +23,7 @@ namespace Codigames.Game.Startup
         {
             await UniTask.WhenAll(_ui.ShowMenu<HeaderMenu>().AsUniTask(), _ui.ShowMenu<NavMenu>().AsUniTask(),
                 _ui.ShowMenu<QuestPill>().AsUniTask(), _ui.ShowMenu<NoticesColumn>().AsUniTask(),
-                _ui.ShowMenu<StandingColumn>().AsUniTask());
+                _ui.ShowMenu<StandingColumn>().AsUniTask(), _ui.ShowMenu<OfferWidget>().AsUniTask());
             await _loadingScreen.Hide(cancellation);
         }
     }
