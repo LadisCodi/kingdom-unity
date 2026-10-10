@@ -100,6 +100,28 @@ namespace Codigames.Game.UI.Presenters
             var refusal = _construction.Upgrade(Data, _clock.NowMs);
             _sounds.Play(refusal == ConstructionRefusal.None ? SoundIds.UPGRADE_BOUGHT : SoundIds.ERROR);
             if (refusal == ConstructionRefusal.None) RequestClose();
+            // Every builder busy: the builder sheet, its free row offering this very upgrade.
+            else if (refusal == ConstructionRefusal.NoFreeBuilder) OfferBuilder();
+        }
+
+        private void OfferBuilder()
+        {
+            var district = District;
+            var building = _buildings.Get<BuildingAsset>(district.DefinitionId);
+            var offer = _construction.UpgradeOffer(district.Id);
+            var id = Data;
+            _ = _ui.ShowMenu<BuilderMenu, BuilderOrder>(new BuilderOrder
+            {
+                Verb = _localizer.Tr("Upgrade"),
+                What = _localizer.Tr("Ready to upgrade the {name}", ("name", _localizer.Tr(building.DisplayName))),
+                Price = _prices.Of(offer.Price, offer.Goods),
+                Start = () =>
+                {
+                    var refusal = _construction.Upgrade(id, _clock.NowMs);
+                    _sounds.Play(refusal == ConstructionRefusal.None ? SoundIds.UPGRADE_BOUGHT : SoundIds.ERROR);
+                    if (refusal == ConstructionRefusal.None) RequestClose();
+                },
+            });
         }
 
         private void Refresh()
@@ -133,7 +155,7 @@ namespace Codigames.Game.UI.Presenters
                 Time = "<color=#7A5C3E><font-weight=700><sprite name=\"hourglass\">" + _numbers.Duration(offer.Seconds) + "</font-weight></color>",
                 Locked = locked,
                 Button = locked ? "<size=60%><sprite name=\"padlock\"></size> " + word : word,
-                CanUpgrade = offer.Refusal == ConstructionRefusal.None,
+                CanUpgrade = offer.Refusal is ConstructionRefusal.None or ConstructionRefusal.NoFreeBuilder,
                 Note = note,
             });
         }

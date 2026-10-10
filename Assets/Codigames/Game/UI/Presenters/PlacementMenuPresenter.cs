@@ -227,7 +227,26 @@ namespace Codigames.Game.UI.Presenters
             if (Data.MovesDistrict) PutDown(_construction.Move(Data.DistrictId, _anchor.Value, _clock.NowMs) == ConstructionRefusal.None, true);
             else if (Data.MovesFeature)
                 PutDown(_transplanting.Move(Data.FeatureCell.Value, _anchor.Value, _clock.NowMs) == TransplantRefusal.None, false);
-            else PutDown(_construction.Build(Data.DefinitionId, _anchor.Value, _clock.NowMs) == ConstructionRefusal.None, false);
+            else
+            {
+                var refusal = _construction.Build(Data.DefinitionId, _anchor.Value, _clock.NowMs);
+                if (refusal == ConstructionRefusal.NoFreeBuilder)
+                {
+                    // Every builder busy: the builder sheet, its free row offering this very build.
+                    _sounds.Play(SoundIds.ERROR);
+                    var offer = _construction.Offer(Data.DefinitionId, _anchor);
+                    _ = _ui.ShowMenu<BuilderMenu, BuilderOrder>(new BuilderOrder
+                    {
+                        Verb = _localizer.Tr("Build"),
+                        What = _localizer.Tr("Ready to build the {name}", ("name", _localizer.Tr(Building.DisplayName))),
+                        Price = _prices.Of(offer.Price, offer.Goods),
+                        Start = OnBuild,
+                    });
+                    return;
+                }
+
+                PutDown(refusal == ConstructionRefusal.None, false);
+            }
         }
 
         // Down: the thud, and back to the map — or to the card the move was started from.
@@ -298,8 +317,8 @@ namespace Codigames.Game.UI.Presenters
                 _localizer.Capitalized(_localizer.Tr(building.DisplayName)),
                 offer.Numbered ? "#" + _numbers.Number(offer.Ordinal) : string.Empty,
                 building.ArtFor(1), _localizer.Tr(building.Promise), _numbers.Duration(offer.Seconds), price,
-                problem == PlacementProblem.None && offer.Refusal == ConstructionRefusal.None,
-                Reason(problem, offer.Refusal, _localizer.Tr("Nowhere legal to build it")), _localizer.Tr("Build")));
+                problem == PlacementProblem.None && offer.Refusal is ConstructionRefusal.None or ConstructionRefusal.NoFreeBuilder,
+                Reason(problem, offer.Refusal == ConstructionRefusal.NoFreeBuilder ? ConstructionRefusal.None : offer.Refusal, _localizer.Tr("Nowhere legal to build it")), _localizer.Tr("Build")));
         }
 
         // A move is free and at once: neither a wait nor a price.
