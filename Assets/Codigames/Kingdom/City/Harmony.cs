@@ -43,12 +43,27 @@ namespace Codigames.Kingdom.City
         }
 
         // Only what stands supplies: a piece going up gives nothing yet.
-        public double Supply => _city.Districts.Where(d => d.Built).Sum(SupplyOf);
+        public double Supply
+        {
+            get
+            {
+                var sum = 0.0;
+                foreach (var district in _city.Districts)
+                    if (district.Built) sum += SupplyOf(district);
+                return sum;
+            }
+        }
 
         // Every building's demand, one going up or being raised counted at the level it is going to; `exclude` leaves
         // one out.
         public double Demand(string exclude = null)
-            => _city.Districts.Where(d => d.Id != exclude).Sum(d => Cost(_buildings.Get(d.DefinitionId), DemandLevel(d)));
+        {
+            // Walked by hand: every store's rent asks it, every frame.
+            var sum = 0.0;
+            foreach (var district in _city.Districts)
+                if (district.Id != exclude) sum += Cost(_buildings.Get(district.DefinitionId), DemandLevel(district));
+            return sum;
+        }
 
         // How much more Harmony a build (level 1) or a level asks than the city has; 0 when it may go ahead. A level
         // replaces its building's demand rather than adding to it.
@@ -80,8 +95,9 @@ namespace Codigames.Kingdom.City
 
         private int DemandLevel(DistrictState district)
         {
-            var job = _city.Jobs.FirstOrDefault(j => j.DistrictId == district.Id);
-            return job != null ? Math.Max(job.TargetLevel, district.Level) : district.Level;
+            foreach (var job in _city.Jobs)
+                if (job.DistrictId == district.Id) return Math.Max(job.TargetLevel, district.Level);
+            return district.Level;
         }
     }
 }

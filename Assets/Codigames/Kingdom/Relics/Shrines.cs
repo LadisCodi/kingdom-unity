@@ -155,19 +155,23 @@ namespace Codigames.Kingdom.Relics
 
         public double At(string stat, Vector2Int cell)
         {
+            // Nothing is awake most of the time, and every store asks this for every cell every frame.
+            if (_state.Windows.Count == 0) return 1.0;
             var mul = 1.0;
-            var counted = new HashSet<string>();
+            HashSet<string> counted = null;
             foreach (var shrine in All)
             {
                 var relic = Hosted(shrine);
-                if (relic == null || counted.Contains(relic) || !IsAwake(relic)) continue;
-                var definition = _relics.Get(relic);
-                var entries = definition.Stats.Where(s => s.Stat == stat).ToList();
-                if (entries.Count == 0 || !Covers(shrine, relic, cell)) continue;
-                counted.Add(relic);
+                if (relic == null || (counted != null && counted.Contains(relic)) || !IsAwake(relic)) continue;
+                var stats = _relics.Get(relic).Stats;
+                var any = false;
+                foreach (var entry in stats) any |= entry.Stat == stat;
+                if (!any || !Covers(shrine, relic, cell)) continue;
+                (counted ??= new HashSet<string>()).Add(relic);
                 var value = _relics.Value(relic);
                 // Every city relic's number is a multiplier; one that adds has no aura to act in.
-                foreach (var e in entries.Where(e => !e.Add)) mul *= value;
+                foreach (var entry in stats)
+                    if (entry.Stat == stat && !entry.Add) mul *= value;
             }
 
             return mul;
@@ -176,6 +180,7 @@ namespace Codigames.Kingdom.Relics
         // A building reaching into an aura is in it: the strongest any of its cells stands in.
         public double Over(string stat, DistrictState district)
         {
+            if (_state.Windows.Count == 0) return 1.0;
             var building = _buildings.Get(district.DefinitionId);
             var best = 1.0;
             for (var dy = 0; dy < building.Height; dy++)
@@ -196,6 +201,7 @@ namespace Codigames.Kingdom.Relics
 
         public void ApplyDue(double time)
         {
+            if (_state.Windows.Count == 0) return;
             var closed = _state.Windows.Where(w => w.Value <= time).Select(w => w.Key).ToList();
             foreach (var relic in closed) _state.Windows.Remove(relic);
             foreach (var relic in closed) WindowClosed?.Invoke(relic);

@@ -245,6 +245,12 @@ namespace Codigames.Kingdom.Harvest
 
         public void ApplyDue(double time)
         {
+            // Asked every frame: nothing due is the usual answer, and it needs no list.
+            var due = false;
+            foreach (var depot in _state.Depots.Values) due |= depot.ExhaustedUntil <= time;
+            foreach (var respawn in _state.Respawns) due |= respawn.DueAt <= time;
+            if (!due) return;
+
             foreach (var cell in _state.Depots.Where(d => d.Value.ExhaustedUntil <= time).Select(d => d.Key).ToList())
             {
                 _state.Depots.Remove(cell);

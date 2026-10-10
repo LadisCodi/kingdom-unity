@@ -109,7 +109,7 @@ namespace Codigames.Kingdom.Economy
         // What the store holds at a moment, banked and made since, never past its capacity.
         public double Held(DistrictState district, double now)
         {
-            var banked = district.Store.Held.Values.Sum();
+            var banked = Banked(district);
             return Math.Min(Capacity(district), banked + Made(district, now));
         }
 
@@ -146,7 +146,9 @@ namespace Codigames.Kingdom.Economy
         {
             var banked = district.Store.Held.TryGetValue(currency, out var n) ? n : 0;
             if (currency != GOLD) return banked;
-            var others = district.Store.Held.Where(h => h.Key != GOLD).Sum(h => h.Value);
+            var others = 0.0;
+            foreach (var line in district.Store.Held)
+                if (line.Key != GOLD) others += line.Value;
             return Math.Max(0, Held(district, now) - others);
         }
 
@@ -181,7 +183,7 @@ namespace Codigames.Kingdom.Economy
             var units = Math.Floor((now - since.Value) * perMs);
             if (units <= 0) return;
 
-            var room = Math.Max(0, Capacity(district) - district.Store.Held.Values.Sum());
+            var room = Math.Max(0, Capacity(district) - Banked(district));
             Bank(district, Math.Min(units, room));
             district.Store.AccruingSince = since + units / perMs;
         }
@@ -219,7 +221,7 @@ namespace Codigames.Kingdom.Economy
             {
                 if (!(FullAt(district) <= time)) continue;
 
-                var room = Math.Max(0, Capacity(district) - district.Store.Held.Values.Sum());
+                var room = Math.Max(0, Capacity(district) - Banked(district));
                 Bank(district, room);
                 district.Store.AccruingSince = null;
             }
@@ -230,7 +232,7 @@ namespace Codigames.Kingdom.Economy
         private void Wake(DistrictState district, double now)
         {
             if (district.Store.AccruingSince != null || GoldPerMinute(district) <= 0) return;
-            if (district.Store.Held.Values.Sum() >= Capacity(district)) return;
+            if (Banked(district) >= Capacity(district)) return;
 
             district.Store.AccruingSince = now;
         }
@@ -242,7 +244,7 @@ namespace Codigames.Kingdom.Economy
             var perMs = GoldPerMinute(district) / MS_PER_MINUTE;
             if (since == null || perMs <= 0) return null;
 
-            var room = Math.Max(0, Capacity(district) - district.Store.Held.Values.Sum());
+            var room = Math.Max(0, Capacity(district) - Banked(district));
             return since + room / perMs;
         }
 
@@ -276,5 +278,13 @@ namespace Codigames.Kingdom.Economy
 
         private static double At(IReadOnlyList<int> perLevel, int level)
             => perLevel.Count == 0 ? 0 : perLevel[Math.Min(Math.Max(level, 1), perLevel.Count) - 1];
+
+        // Everything the store has banked, summed without LINQ (asked every frame).
+        private static double Banked(DistrictState district)
+        {
+            var sum = 0.0;
+            foreach (var amount in district.Store.Held.Values) sum += amount;
+            return sum;
+        }
     }
 }

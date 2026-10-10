@@ -211,10 +211,20 @@ namespace Codigames.Kingdom.Crews
             if (worker.Activity != WorkerActivity.Idle) return worker.StateUntil;
             if (_stores.IsFull(building, worker.StateStartedAt)) return null;
 
+            // The earliest any workable cell is free: the same cells as Workable, walked without building the list (an
+            // idle crew is asked this every frame).
+            var definition = _buildings.Get(building.DefinitionId);
+            var sources = definition.Production.HarvestSources;
+            if (sources.Count == 0) return null;
+            var radius = Radius(building);
             double? earliest = null;
-            foreach (var cell in Workable(building))
+            for (var x = building.Anchor.X - radius; x < building.Anchor.X + definition.Width + radius; x++)
+            for (var y = building.Anchor.Y - radius; y < building.Anchor.Y + definition.Height + radius; y++)
             {
-                if (ClaimedByOther(cell, worker)) continue;
+                if (x >= building.Anchor.X && x < building.Anchor.X + definition.Width && y >= building.Anchor.Y && y < building.Anchor.Y + definition.Height)
+                    continue;
+                var cell = new Vector2Int(x, y);
+                if (!_revealed.IsRevealed(cell) || !Works(sources, cell) || _lairs?.HoldingAt(cell) != null || ClaimedByOther(cell, worker)) continue;
 
                 var recovers = _harvesting.RecoversAt(cell);
                 var at = Math.Max(worker.StateStartedAt, recovers ?? worker.StateStartedAt);
@@ -314,12 +324,19 @@ namespace Codigames.Kingdom.Crews
         }
 
         private bool ClaimedByOther(Vector2Int cell, WorkerState worker)
-            => _city.Workers.Any(w => w != worker && w.ClaimedCell == cell);
+        {
+            foreach (var other in _city.Workers)
+                if (other != worker && other.ClaimedCell == cell) return true;
+            return false;
+        }
 
         private bool Works(IReadOnlyList<string> sources, Vector2Int cell)
         {
             var source = _harvesting.SourceAt(cell);
-            return source != null && sources.Contains(source.Id) && _harvesting.MissingTech(source) == null;
+            if (source == null || _harvesting.MissingTech(source) != null) return false;
+            for (var i = 0; i < sources.Count; i++)
+                if (sources[i] == source.Id) return true;
+            return false;
         }
 
         private double WalkMs(Vector2Int cell, DistrictState building) => GridMath.Euclidean(cell, building.Anchor) / WalkSpeed(building) * 1000;
@@ -355,7 +372,12 @@ namespace Codigames.Kingdom.Crews
             return level <= 0 ? 0 : (int)Math.Floor(_bonuses.Apply(stat, level, TargetKind.District, district.DefinitionId));
         }
 
-        private DistrictState District(string id) => _city.Districts.FirstOrDefault(d => d.Id == id);
+        private DistrictState District(string id)
+        {
+            foreach (var district in _city.Districts)
+                if (district.Id == id) return district;
+            return null;
+        }
 
         private IBuildingProduction Production(DistrictState district) => _buildings.Get(district.DefinitionId).Production;
 
