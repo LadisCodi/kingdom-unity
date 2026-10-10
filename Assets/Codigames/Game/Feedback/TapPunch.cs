@@ -125,10 +125,11 @@ namespace Codigames.Game.Feedback
             }
 
             var renderer = Rent(_fogFlashes, cell, null);
-            var position = ProvinceCoordinates.ToTilemap(cell);
             renderer.sprite = _art.Cell;
             renderer.color = new Color(_art.FogFlash.r, _art.FogFlash.g, _art.FogFlash.b, alpha);
-            renderer.transform.position = _map.Features.GetCellCenterWorld(position) + new Vector3(0f, -IN_FRONT, 0f);
+            // The cell's own middle: the features layer's anchor is its bottom corner, where their art stands.
+            var centre = _map.CellCentre(cell);
+            renderer.transform.position = new Vector3(centre.x, centre.y - IN_FRONT, 0f);
             renderer.transform.localScale = Vector3.one;
         }
 
