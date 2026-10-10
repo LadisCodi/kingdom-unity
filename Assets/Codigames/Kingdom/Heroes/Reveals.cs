@@ -15,6 +15,8 @@ namespace Codigames.Kingdom.Heroes
         Supplies,
         // A ten-call's Fragments, every hero that got any on one card.
         Bag,
+        // A relic's fragment of one slot (the fragment pack's; 5 is the keystone).
+        RelicFragment,
     }
 
     public enum SupplyFamily
@@ -63,6 +65,8 @@ namespace Codigames.Kingdom.Heroes
         public SupplyFamily Family { get; set; }
         public IReadOnlyList<(string Item, int Amount)> Items { get; set; } = new List<(string, int)>();
         public IReadOnlyList<BagRow> Rows { get; set; } = new List<BagRow>();
+        // A relic fragment's slot.
+        public int Slot { get; set; }
 
         public static Prize Currency(string currency, int amount) => new() { Kind = PrizeKind.Currency, Id = currency, Amount = amount };
     }

@@ -33,11 +33,13 @@ namespace Codigames.Game.UI.Presenters
         private readonly RewardFlight _flight;
         private readonly RewardFragments _fragments;
         private readonly IQuickInfoMessageService _messages;
+        private readonly Kingdom.Heroes.Heroes _heroes;
 
         public IapMenuPresenter(IMenuViewFactory views, UIManager ui, Kingdom.Store.Store store, ProductProse prose, NumberFormat numbers,
             Localizer localizer, IClock clock, ISoundService sounds, RewardFlight flight, RewardFragments fragments,
-            IQuickInfoMessageService messages) : base(views)
+            IQuickInfoMessageService messages, Kingdom.Heroes.Heroes heroes = null) : base(views)
         {
+            _heroes = heroes;
             _ui = ui;
             _store = store;
             _prose = prose;
@@ -101,6 +103,8 @@ namespace Codigames.Game.UI.Presenters
         private async void OnBuy()
         {
             var product = _store.Get(Data.Sku);
+            var held = product.Hero != null && _heroes != null && _heroes.Owns(product.Hero);
+            var fragmentsBefore = product.Hero != null && _heroes != null ? _heroes.Fragments(product.Hero) : 0;
             var result = _store.Buy(product.Id, _clock.NowMs);
             switch (result)
             {
@@ -116,6 +120,17 @@ namespace Codigames.Game.UI.Presenters
                     if (product.Gems > 0)
                         _flight.Fly(new Dictionary<string, double> { [GEMS] = product.Gems },
                             new Vector2(Screen.width / 2f, Screen.height / 2f), (c, a) => _fragments.For(c, a, false));
+                    if (product.Hero != null && _heroes != null)
+                    {
+                        var prize = held
+                            ? new Kingdom.Heroes.Prize { Kind = Kingdom.Heroes.PrizeKind.Fragments, Id = product.Hero, Amount = _heroes.Fragments(product.Hero) - fragmentsBefore }
+                            : new Kingdom.Heroes.Prize { Kind = Kingdom.Heroes.PrizeKind.Hero, Id = product.Hero, Amount = 1 };
+                        _ = _ui.ShowMenu<RevealScreen, Kingdom.Heroes.Reveal>(new Kingdom.Heroes.Reveal
+                        {
+                            Chest = Kingdom.Heroes.RevealChest.Golden, Calls = 1, Prizes = new[] { prize },
+                        });
+                    }
+
                     return;
                 default:
                     // A refusal is data, and a denial: the sheet stays, saying why.
