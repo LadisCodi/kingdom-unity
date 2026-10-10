@@ -24,6 +24,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 76bff842a78e684d2a109ad3db1cbbb3, type: 3}
   _text: Your halls field a bigger army
   _story: 'Its call brings more to your banner: your halls field an army {p} larger'
+  _subject: Your halls field
+  _short: army
   _pending: when the world map opens
   _kind: 1
   _door: boss

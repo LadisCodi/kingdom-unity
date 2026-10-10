@@ -25,6 +25,8 @@ MonoBehaviour:
   _text: Every room pays more gold and stone
   _story: 'Its wisps find what the dark hides: every room in the depths pays {p}
     more gold and stone'
+  _subject: A room pays gold and stone
+  _short: room haul
   _pending: when the world map opens
   _kind: 1
   _door: room

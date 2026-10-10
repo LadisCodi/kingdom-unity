@@ -84,6 +84,31 @@ namespace Codigames.Game.UI.Relics
             };
         }
 
+        // A restored city relic as the picker shows it: art, level, name and what it does, the Shrine mark when one holds
+        // it, the check when it is the one chosen.
+        public RelicCardData PickCard(string id, bool picked, string effect)
+        {
+            var relic = Get(id);
+            return new RelicCardData
+            {
+                Id = id,
+                Name = _localizer.Tr(relic.Name),
+                Art = relic.Icon,
+                Status = RelicStatus.Bag,
+                Level = _localizer.Tr("Lv {level}", ("level", _numbers.Exact(_relics.Level(id)))),
+                Slots = Array.Empty<RelicSlotData>(),
+                Held = string.Empty,
+                Effect = effect,
+                Hosted = _shrines.HostOf(id) != null,
+                Picked = picked,
+                Activate = Array.Empty<PriceTerm>(),
+            };
+        }
+
+        // Every restored city relic, in the collection's order: what a Shrine can hold.
+        public IReadOnlyList<string> Hostable()
+            => _catalog.Items.OfType<RelicAsset>().Where(r => r.Kind == RelicKind.City && _relics.IsRestored(r.Id)).Select(r => r.Id).ToList();
+
         // Every relic met, city then world, each in the collection's order.
         public IReadOnlyList<string> Met()
             => _catalog.Items.OfType<RelicAsset>().Where(r => _relics.IsMet(r.Id))

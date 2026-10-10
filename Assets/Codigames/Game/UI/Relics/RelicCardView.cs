@@ -33,6 +33,10 @@ namespace Codigames.Game.UI.Relics
         [SerializeField] private TMP_Text _awakeText;
         [SerializeField] private TMP_Text _where;
         [SerializeField] private CostButton _activate;
+        [SerializeField] private TMP_Text _effect;
+        [SerializeField] private GameObject _hostMark;
+        [SerializeField] private GameObject _check;
+        [SerializeField] private Image _pickedRim;
 
         private string _id;
 
@@ -68,6 +72,11 @@ namespace Codigames.Game.UI.Relics
             _awakeText.text = "<sprite name=\"hourglass\">" + card.Awake;
             _where.gameObject.SetActive(card.Where != null);
             _where.text = card.Where ?? string.Empty;
+            _effect.gameObject.SetActive(card.Effect != null);
+            _effect.text = card.Effect ?? string.Empty;
+            _hostMark.SetActive(card.Hosted);
+            _check.SetActive(card.Picked);
+            _pickedRim.enabled = card.Picked;
             _activate.gameObject.SetActive(card.Status == RelicStatus.Asleep);
             if (card.Status != RelicStatus.Asleep) return;
             _activate.Button.Label = card.ActivateLabel;

@@ -90,6 +90,7 @@ namespace Codigames.Game.Startup
             builder.RegisterEntryPoint<Sites.LandmarksView>();
             builder.RegisterInstance(_lairBubble);
             builder.RegisterEntryPoint<Lairs.LairsView>().AsSelf();
+            builder.RegisterEntryPoint<Relics.ShrinesView>().AsSelf();
             builder.RegisterEntryPoint<Lairs.RaidAlarm>();
             builder.RegisterEntryPoint<WorldCues>();
             builder.RegisterEntryPoint<TapPunch>().AsSelf();
@@ -129,6 +130,9 @@ namespace Codigames.Game.Startup
             builder.Register<Relics.RelicActions>(Lifetime.Singleton);
             builder.Register<UI.Relics.RelicCards>(Lifetime.Singleton);
             builder.Register<RelicSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
+            builder.Register<UI.Relics.ShrinePanels>(Lifetime.Singleton);
+            builder.Register<RelicPickerMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<ConfirmMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<SpeedupMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<Codigames.Game.UI.Buildings.BuildingStatProse>(Lifetime.Singleton);
             builder.Register<TechProse>(Lifetime.Singleton);

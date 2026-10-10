@@ -25,6 +25,8 @@ MonoBehaviour:
   _text: Rooms pay more Stardust
   _story: 'Draws starlight out of the dark: every room you clear in the depths pays
     {p} more Stardust'
+  _subject: Rooms pay Stardust
+  _short: Stardust
   _pending: when the world map opens
   _kind: 1
   _door: portal

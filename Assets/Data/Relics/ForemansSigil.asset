@@ -25,6 +25,8 @@ MonoBehaviour:
   _text: Your crews work and your buildings train faster
   _story: 'Lends wings to every working hand round its Shrine: crews there swing
     and walk {p} faster, and soldiers and villagers train {p} faster'
+  _subject: Your crews work and halls train
+  _short: work speed
   _pending: 
   _kind: 0
   _door: Goblins
