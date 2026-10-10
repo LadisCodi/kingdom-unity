@@ -206,12 +206,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Fog.FogView
   _floor: {fileID: 6761199665530085259}
   _clouds: {fileID: 2646004318738406861}
-  _bankFloor: {fileID: 11400000, guid: 7066b052275f72017abe08a5985ec445, type: 2}
   _veil: {fileID: 11400000, guid: bc114f9224fb1a4f59ee23601bb3a5d1, type: 2}
-  _bankCloud: {fileID: 11400000, guid: 8ae3e65a49af3a3ffbeee9b60c0c53d8, type: 2}
   _patch: {fileID: 11400000, guid: a91d23aace10bbb6088894a8f5e40fe3, type: 2}
   _cushion: {fileID: 11400000, guid: 88ef61a9018e1ede38a4d2eefbf91ece, type: 2}
-  _margin: 4
+  _bank: {fileID: 2100000, guid: 9233a5ab5e3388cd3975c95274982aa4, type: 2}
+  _bankOrder: -49
+  _margin: 40
 --- !u!1 &3717244787065434861
 GameObject:
   m_ObjectHideFlags: 0
