@@ -33,6 +33,8 @@ namespace Codigames.Kingdom.City
             // Walked by hand: crews and the harvest ask this for every cell they look at, every frame.
             foreach (var district in city.Districts)
             {
+                // A footprint grows from its anchor up both axes: a cell before the anchor is never on it.
+                if (cell.X < district.Anchor.X || cell.Y < district.Anchor.Y) continue;
                 var building = buildings.Get(district.DefinitionId);
                 if (cell.X >= district.Anchor.X && cell.X < district.Anchor.X + building.Width
                     && cell.Y >= district.Anchor.Y && cell.Y < district.Anchor.Y + building.Height) return district;
