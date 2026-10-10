@@ -36,6 +36,9 @@ namespace Codigames.Game.UI.Menus
         [Header("Supplies and Gems")]
         [SerializeField, Tooltip("A scrolling page each, filled from code.")] private ScrollRect _suppliesPage;
         [SerializeField] private ScrollRect _gemsPage;
+        [SerializeField] private ScrollRect _offersPage;
+        [SerializeField] private StoreOffer _offerPrefab;
+        [SerializeField] private StoreDaily _dailyPrefab;
         [SerializeField] private StoreRibbon _ribbonPrefab;
         [SerializeField] private StoreCard _cardPrefab;
         [SerializeField] private StoreWide _widePrefab;
@@ -126,25 +129,60 @@ namespace Codigames.Game.UI.Menus
 
         private string _shown;
 
-        public void ShowShelves(bool gems, IReadOnlyList<StoreShelf> shelves, string signature)
+        private readonly List<(TMP_Text Label, double Until)> _countdowns = new();
+
+        // `page`: "supplies", "gems" or "offers".
+        public void ShowShelves(string page, IReadOnlyList<StoreShelf> shelves, string signature)
         {
-            var page = gems ? _gemsPage : _suppliesPage;
-            ShowPage(page.gameObject);
-            var key = (gems ? "g:" : "s:") + signature;
+            var scroll = page == "gems" ? _gemsPage : page == "offers" ? _offersPage : _suppliesPage;
+            ShowPage(scroll.gameObject);
+            var key = page + ":" + signature;
             if (_shown == key) return;
-            var fresh = _shown == null || _shown[0] != key[0];
+            var fresh = _shown == null || !_shown.StartsWith(page + ":");
             _shown = key;
-            var content = page.content;
+            _countdowns.Clear();
+            var content = scroll.content;
             for (var i = content.childCount - 1; i >= 0; i--) Destroy(content.GetChild(i).gameObject);
             foreach (var shelf in shelves)
             {
-                if (!string.IsNullOrEmpty(shelf.Ribbon)) Instantiate(_ribbonPrefab, content).Show(shelf.Ribbon);
+                if (!string.IsNullOrEmpty(shelf.Ribbon))
+                {
+                    var ribbon = Instantiate(_ribbonPrefab, content);
+                    ribbon.Show(shelf.Ribbon, shelf.RibbonUntil != null);
+                    if (shelf.RibbonUntil != null && ribbon.Countdown != null) _countdowns.Add((ribbon.Countdown, shelf.RibbonUntil.Value));
+                }
+
+                foreach (var offer in shelf.Offers)
+                {
+                    var view = Instantiate(_offerPrefab, content);
+                    view.Show(offer.Data);
+                    var id = offer.Id;
+                    view.Tapped += () => ProductTapped?.Invoke(id);
+                    if (offer.Data.ClosesAt != null && view.Countdown != null) _countdowns.Add((view.Countdown, offer.Data.ClosesAt.Value));
+                }
+
+                if (shelf.Dailies.Count > 0)
+                {
+                    var grid = Instantiate(_gridPrefab, content);
+                    grid.constraintCount = 3;
+                    var width = ((RectTransform)content).rect.width - content.GetComponent<VerticalLayoutGroup>().padding.horizontal;
+                    if (width <= 0) width = ((RectTransform)scroll.transform).rect.width;
+                    grid.cellSize = new Vector2((width - grid.padding.horizontal - grid.spacing.x * 2) / 3, shelf.CardHeight);
+                    foreach (var daily in shelf.Dailies)
+                    {
+                        var view = Instantiate(_dailyPrefab, grid.transform);
+                        view.Show(daily.Data);
+                        var id = daily.Id;
+                        view.Tapped += () => ProductTapped?.Invoke(id);
+                    }
+                }
+
                 if (shelf.Cards.Count > 0)
                 {
                     var grid = Instantiate(_gridPrefab, content);
                     grid.constraintCount = shelf.Columns;
-                    var width = ((RectTransform)content).rect.width;
-                    if (width <= 0) width = ((RectTransform)page.transform).rect.width;
+                    var width = ((RectTransform)content).rect.width - content.GetComponent<VerticalLayoutGroup>().padding.horizontal;
+                    if (width <= 0) width = ((RectTransform)scroll.transform).rect.width;
                     var cell = (width - grid.padding.horizontal - grid.spacing.x * (shelf.Columns - 1)) / shelf.Columns;
                     grid.cellSize = new Vector2(cell, shelf.CardHeight);
                     foreach (var card in shelf.Cards)
@@ -166,7 +204,14 @@ namespace Codigames.Game.UI.Menus
             }
 
             WireClicks(content.gameObject);
-            if (fresh) page.verticalNormalizedPosition = 1f;
+            if (fresh) scroll.verticalNormalizedPosition = 1f;
+        }
+
+        // Every countdown on the page, written in place: the page is not rebuilt for the clock.
+        public void TickCountdowns(double now, Func<double, string> format)
+        {
+            foreach (var (label, until) in _countdowns)
+                if (label != null) label.text = format(Math.Max(0, Math.Ceiling((until - now) / 1000)));
         }
 
         private void ShowPage(GameObject page)
@@ -175,6 +220,7 @@ namespace Codigames.Game.UI.Menus
             _heroesPage.SetActive(page == _heroesPage);
             _suppliesPage.gameObject.SetActive(page == _suppliesPage.gameObject);
             _gemsPage.gameObject.SetActive(page == _gemsPage.gameObject);
+            _offersPage.gameObject.SetActive(page == _offersPage.gameObject);
             if (page == _heroesPage) _shown = null;
         }
 
