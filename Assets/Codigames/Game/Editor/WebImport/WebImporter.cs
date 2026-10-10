@@ -563,6 +563,7 @@ namespace Codigames.Game.Editor.WebImport
                 SetAmounts(so.FindProperty("_reward"), reward);
                 so.FindProperty("_rewardKnowledge").doubleValue = row.RewardKnowledge;
                 SetAmounts(so.FindProperty("_rewardItems"), row.RewardItems);
+                so.FindProperty("_rewardFragments").intValue = (int)row.RewardFragments;
                 so.FindProperty("_autoClaim").boolValue = row.AutoClaim;
                 so.FindProperty("_tutorialRentSeconds").doubleValue = row.TutorialRentSeconds ?? 0;
                 so.FindProperty("_mark").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>($"Assets/Art/UI/Icons/{GoalIcon(row)}.png");

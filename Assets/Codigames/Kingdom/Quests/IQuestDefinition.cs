@@ -26,8 +26,11 @@ namespace Codigames.Kingdom.Quests
         // Knowledge paid on claim, as a lump.
         double RewardKnowledge { get; }
 
-        // Bag items paid on claim (the Bag is not in the game yet).
+        // Bag items paid on claim.
         IReadOnlyDictionary<string, double> RewardItems { get; }
+
+        // Relic fragments paid on claim, of relics already met, rolled on the quest.
+        int RewardFragments => 0;
 
         // Claims itself the moment it is done.
         bool AutoClaim { get; }

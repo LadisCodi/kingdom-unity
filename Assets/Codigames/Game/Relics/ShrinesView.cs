@@ -209,7 +209,7 @@ namespace Codigames.Game.Relics
             var small = plot * 0.3f;
             Fit(held.Relic, sprite, new Vector3(art.center.x, art.min.y + art.size.y * 0.42f, 0), small);
             held.Relic.color = ASLEEP;
-            var tip = new Vector3(art.center.x, art.max.y - art.size.y * 0.12f, 0);
+            var tip = new Vector3(art.center.x, art.max.y - art.size.y * 0.3f, 0);
             held.Bubble.Show(sprite, "Zz", tip, Mathf.Clamp(plot * 0.32f, 0.35f * Cell, 0.6f * Cell) / 1.6f, Mathf.Repeat(shrine.Anchor.X * 0.37f, 1));
         }
 

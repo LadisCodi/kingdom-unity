@@ -34,11 +34,13 @@ namespace Codigames.Kingdom.Quests
         private readonly GroundState _ground;
         private readonly IBonuses _bonuses;
         private readonly IItemGrants _items;
+        private readonly Relics.IRelicDrops _relicDrops;
 
         public QuestChain(QuestState state, ICatalog<IQuestDefinition> quests, IQuestGoals goals, ITreasury treasury, CityState city,
             ICatalog<IBuildingDefinition> buildings, Stores stores, Harvesting harvesting, FogOfWar fog, GroundState ground,
-            IBonuses bonuses = null, IItemGrants items = null, Modifiers.IModifiers modifiers = null)
+            IBonuses bonuses = null, IItemGrants items = null, Modifiers.IModifiers modifiers = null, Relics.IRelicDrops relicDrops = null)
         {
+            _relicDrops = relicDrops;
             _modifiers = modifiers;
             _items = items;
             _state = state;
@@ -86,6 +88,7 @@ namespace Codigames.Kingdom.Quests
 
             // Items go into the Bag.
             foreach (var item in quest.RewardItems.Where(i => i.Value > 0)) _items?.Grant(item.Key, (int)item.Value);
+            if (quest.RewardFragments > 0) _relicDrops?.Drop(null, quest.RewardFragments, "quest", quest.Id);
 
             _state.Index++;
             _state.Progress = 0;

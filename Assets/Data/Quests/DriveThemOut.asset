@@ -26,5 +26,6 @@ MonoBehaviour:
   _rewardItems:
   - _id: GoldChest1h
     _value: 1
+  _rewardFragments: 1
   _autoClaim: 0
   _tutorialRentSeconds: 0

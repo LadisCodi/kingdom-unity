@@ -42,13 +42,15 @@ namespace Codigames.Game.UI.Presenters
         private readonly Localizer _localizer;
         private readonly IClock _clock;
         private readonly ISoundService _sounds;
+        private readonly AsleepRelics _asleep;
 
         private double _shownSecond = -1;
 
         public RelicSheetMenuPresenter(IMenuViewFactory views, UIManager ui, Kingdom.Relics.Relics relics, Shrines shrines, RelicCards cards,
             RelicWords words, RelicActions actions, ManaPool mana, ICatalog<IBuildingDefinition> buildings, PriceTerms prices, UiIcons icons,
-            NumberFormat numbers, Localizer localizer, IClock clock, ISoundService sounds) : base(views)
+            NumberFormat numbers, Localizer localizer, IClock clock, ISoundService sounds, AsleepRelics asleep) : base(views)
         {
+            _asleep = asleep;
             _ui = ui;
             _relics = relics;
             _shrines = shrines;
@@ -79,6 +81,7 @@ namespace Codigames.Game.UI.Presenters
 
         protected override void BindInternal(RelicSheetMenu view)
         {
+            _asleep.Seen(Data);
             Refresh();
             view.ScrollToTop();
             _relics.Changed += Refresh;

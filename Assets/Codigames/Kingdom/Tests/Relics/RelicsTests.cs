@@ -212,6 +212,22 @@ namespace Codigames.Kingdom.Tests.Relics
         }
 
         [Test]
+        public void AWindowClosing_ShouldSayWhichRelicFellAsleep_EvenInAnAbsenceReplayed()
+        {
+            var fixture = new Fixture();
+            fixture.Relics.Give("Crown");
+            var shrine = fixture.Stand("Shrine", new Vector2Int(3, 0));
+            fixture.Shrines.Host("Crown", shrine.Id);
+            fixture.Shrines.Activate("Crown", 0);
+            var asleep = new List<string>();
+            fixture.Shrines.WindowClosed += asleep.Add;
+
+            fixture.Timeline.Advance(5 * 3_600_000);
+
+            Assert.That(asleep, Is.EqualTo(new[] { "Crown" }));
+        }
+
+        [Test]
         public void HostingElsewhere_ShouldCloseTheWindowItHad()
         {
             var fixture = new Fixture();

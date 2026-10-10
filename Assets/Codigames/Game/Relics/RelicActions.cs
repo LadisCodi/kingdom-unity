@@ -26,10 +26,12 @@ namespace Codigames.Game.Relics
         private readonly ISoundService _sounds;
         private readonly IQuickInfoMessageService _messages;
         private readonly Localizer _localizer;
+        private readonly AsleepRelics _asleep;
 
         public RelicActions(Kingdom.Relics.Relics relics, Shrines shrines, RelicCollection catalog, Kingdom.Bag.Bag bag, ItemCollection items,
-            IClock clock, ISoundService sounds, IQuickInfoMessageService messages, Localizer localizer)
+            IClock clock, ISoundService sounds, IQuickInfoMessageService messages, Localizer localizer, AsleepRelics asleep)
         {
+            _asleep = asleep;
             _relics = relics;
             _shrines = shrines;
             _catalog = catalog;
@@ -58,6 +60,7 @@ namespace Codigames.Game.Relics
             }
 
             _sounds.Play(SoundIds.RELIC_WAKE);
+            _asleep.Seen(id);
             Activated?.Invoke(id);
             return true;
         }
