@@ -96,6 +96,7 @@ namespace Codigames.Game.Startup
             builder.RegisterEntryPoint<Lairs.RaidAlarm>();
             builder.RegisterEntryPoint<WorldCues>();
             builder.RegisterEntryPoint<TapPunch>().AsSelf();
+            builder.RegisterEntryPoint<LandingFx>().AsSelf();
             builder.Register<RewardHold>(Lifetime.Singleton);
             builder.Register<RewardFlight>(Lifetime.Singleton);
             builder.Register<RewardFragments>(Lifetime.Singleton);

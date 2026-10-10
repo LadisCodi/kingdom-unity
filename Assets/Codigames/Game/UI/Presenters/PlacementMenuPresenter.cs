@@ -67,14 +67,17 @@ namespace Codigames.Game.UI.Presenters
         private string _feature;
         // The building faint at its old address, remembered: the order is gone by the time the menu has closed.
         private string _liftedDistrict;
+        private readonly Feedback.LandingFx _landing;
 
         public PlacementMenuPresenter(IMenuViewFactory views, UIManager ui, Construction construction, Placement placement,
             Transplanting transplanting, ITreasury treasury, BuildingCollection buildings, FeatureCollection features, CityState city,
             GroundState ground, ProvinceMap map, MapGestures gestures, GhostView ghost, CityView cityView,
             GroundView groundView, CameraController camera, IClock clock, NumberFormat numbers, Localizer localizer, ISoundService sounds,
-            Adjacency adjacency, WorkAreaView workArea, Kingdom.Crews.Workforce crews, Harvesting harvesting, Kingdom.Map.IProvinceMap province, PriceTerms prices)
+            Adjacency adjacency, WorkAreaView workArea, Kingdom.Crews.Workforce crews, Harvesting harvesting, Kingdom.Map.IProvinceMap province, PriceTerms prices,
+            Feedback.LandingFx landing = null)
             : base(views)
         {
+            _landing = landing;
             _prices = prices;
             _province = province;
             _workArea = workArea;
@@ -133,6 +136,7 @@ namespace Codigames.Game.UI.Presenters
             _anchor = Data.IsMove ? Origin : _placement.Nearest(Data.DefinitionId);
             Lift(Data.DistrictId, Data.FeatureCell);
             _sounds.Play(SoundIds.GHOST_LIFT);
+            _ghost.Begin(!Data.IsMove);
             Refresh();
             CentreOnGhost();
 
@@ -169,12 +173,18 @@ namespace Codigames.Game.UI.Presenters
 
             _grab = new ModuleVector2Int(cell.X - _anchor.Value.X, cell.Y - _anchor.Value.Y);
             _sounds.Play(SoundIds.GHOST_LIFT);
+            _ghost.Grab();
+            _ghost.SetHeld(true);
             return true;
         }
 
         public void Drag(ModuleVector2Int cell) => MoveTo(new ModuleVector2Int(cell.X - _grab.X, cell.Y - _grab.Y));
 
-        public void EndDrag() => _sounds.Play(SoundIds.GHOST_PLANT);
+        public void EndDrag()
+        {
+            _sounds.Play(SoundIds.GHOST_PLANT);
+            _ghost.SetHeld(false);
+        }
 
         private void OnMapTapped(ModuleVector2Int cell)
         {
@@ -223,14 +233,36 @@ namespace Codigames.Game.UI.Presenters
             if (!done)
             {
                 _sounds.Play(SoundIds.ERROR);
+                _ghost.Shake();
                 Refresh();
                 return;
             }
 
             _sounds.Play(SoundIds.BUILD_PLACED);
+            Land();
             var district = Data.DistrictId;
             await _ui.CloseAll();
             if (reopenCard) _ = _ui.ShowMenu<DistrictCardMenu, string>(district);
+        }
+
+        // What now stands where the ghost was falls from its height onto the plot.
+        private void Land()
+        {
+            if (!_anchor.HasValue || _landing == null) return;
+            var anchor = _anchor.Value;
+            var lift = _ghost.Lift;
+            // Planted: the ghost is gone at once, not when the menu has faded.
+            _ghost.Hide();
+            _workArea.Hide();
+            Lift(null, null);
+            if (Data.MovesFeature)
+            {
+                _landing.Feature(anchor, lift);
+                return;
+            }
+
+            var district = Data.MovesDistrict ? District : _city.Districts.LastOrDefault(d => d.Anchor == anchor);
+            if (district != null) _landing.District(district.Id, anchor, Width, Height, lift);
         }
 
         private void CentreOnGhost()

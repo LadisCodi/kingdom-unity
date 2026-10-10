@@ -71,6 +71,13 @@ namespace Codigames.Game.City
         // A tap's squash and stretch, about the building's feet.
         public void SetPunch(Vector2 scale) => _art.transform.localScale = new Vector3(_artScale.x * scale.x, _artScale.y * scale.y, 1f);
 
+        // Planted from the ghost: the art `lift` plot widths above its plot, squashed by `scale` about its foot.
+        public void SetLanding(float lift, Vector2 scale)
+        {
+            _art.transform.localPosition = new Vector3(0f, lift * _plotWidth, 0f);
+            SetPunch(scale);
+        }
+
         // A tap's white flash: the art added onto itself, just in front of it, while `flash` lasts.
         public void SetFlash(float flash, Material material)
         {
