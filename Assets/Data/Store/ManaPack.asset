@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 604f61999a2607ee5922a28f05bb8a1b, type: 3}
+  m_Name: ManaPack
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Store.ProductAsset
+  _id: ManaPack
+  _name: A cask of Mana
+  _description: Every tap you were saving for.
+  _icon: {fileID: 0}
+  _art: {fileID: 0}
+  _shelf: 2
+  _priceUsd: 0.99
+  _gems: 500
+  _items:
+  - _id: ManaFlask
+    _value: 6
+  - _id: ManaBoost8h
+    _value: 1
+  - _id: ChoiceChest1h
+    _value: 1
+  _hero: 
+  _builders: 0
+  _explorers: 0
+  _heroSlots: 0
+  _nextDayGems: 0
+  _nextDayHeroXp: 0
+  _nextDayFragments: 0
+  _nextDayItems: []
+  _opensOn: manaOut
+  _door: 
+  _after: 
+  _townhall: 3
+  _hours: 24
+  _limit: 1
+  _cooldownHours: 72
+  _splash: 0
+  _widget: 1

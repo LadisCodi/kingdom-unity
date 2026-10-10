@@ -238,6 +238,14 @@ namespace Codigames.Kingdom.Heroes
 
         public double SlotGemCost => Prices.RoundPrice(_ladder.Settings.HeroSlotGemCostBase * Math.Pow(_ladder.Settings.HeroSlotGemCostGrowth, _state.SlotsPurchased));
 
+        // Slots handed over for good (a product), up to the ceiling as the count reads them.
+        public void GrantSlots(int count)
+        {
+            if (count <= 0) return;
+            _state.SlotsPurchased += count;
+            Changed?.Invoke();
+        }
+
         public HeroSlotResult BuySlot()
         {
             if (Slots >= _ladder.Settings.HeroSlots) return HeroSlotResult.AtMax;
