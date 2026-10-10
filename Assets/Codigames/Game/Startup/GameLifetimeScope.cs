@@ -144,6 +144,7 @@ namespace Codigames.Game.Startup
             builder.Register<PayerMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.RegisterEntryPoint<Codigames.Game.Store.PayerGate>().AsSelf();
             builder.RegisterEntryPoint<Codigames.Game.Store.OfferLatch>();
+            builder.Register<Codigames.Game.Store.OfferWidgets>(Lifetime.Singleton);
             builder.RegisterEntryPoint<Codigames.Game.Store.OfferSplashGate>().AsSelf();
             builder.Register<Codigames.Game.UI.Store.OfferTiles>(Lifetime.Singleton);
             builder.Register<OfferSplashMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();

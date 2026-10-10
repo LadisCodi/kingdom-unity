@@ -1,5 +1,6 @@
 using System;
 using Codigames.Game.UI.Stage;
+using Codigames.Game.UI.Store;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,7 +27,6 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private Button _button;
         [SerializeField] private CanvasGroup _body;
         [SerializeField] private Image _glow;
-        [SerializeField] private Image _icon;
         [SerializeField] private RectTransform _track;
         [SerializeField] private TMP_Text _text;
         [SerializeField] private TMP_Text _echo;
@@ -34,22 +34,11 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private CanvasGroup _fade;
         [SerializeField] private CanvasGroup _signFade;
         [SerializeField] private Image[] _sparkles;
-        [SerializeField] private GameObject _tile;
-        [SerializeField] private Image _bust;
-        [SerializeField] private Image _kind;
-        [SerializeField] private KindIcon[] _kinds;
+        [SerializeField] private OfferIconView _icon;
 
         private float _offset;
         private string _words;
         private float _turnedAt = float.NegativeInfinity;
-
-        // What an offer is for, drawn while it has no icon of its own.
-        [Serializable]
-        private struct KindIcon
-        {
-            public string Kind;
-            public Sprite Icon;
-        }
 
         public event Action Tapped;
         // The sign has scrolled its words by once: time for the next offer.
@@ -67,22 +56,10 @@ namespace Codigames.Game.UI.Menus
             _body.blocksRaycasts = shown;
         }
 
-        // The next offer on show: its own art, or — on the gold reward tile — its hero's bust or a picture of what it is
-        // for. `turned` fades it in, as one replacing another does.
+        // The next offer on show; `turned` fades it in, as one replacing another does.
         public void ShowOffer(Sprite icon, Sprite bust, string kind, bool turned)
         {
-            var own = icon != null;
-            _icon.gameObject.SetActive(own);
-            _tile.SetActive(!own);
-            if (own) _icon.sprite = icon;
-            else
-            {
-                _bust.gameObject.SetActive(bust != null);
-                _kind.gameObject.SetActive(bust == null);
-                if (bust != null) _bust.sprite = bust;
-                else _kind.sprite = Array.Find(_kinds, k => k.Kind == kind).Icon;
-            }
-
+            _icon.Show(icon, bust, kind);
             if (turned) _turnedAt = Time.unscaledTime;
         }
 

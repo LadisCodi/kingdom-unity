@@ -144,7 +144,6 @@ MonoBehaviour:
   _button: {fileID: 1168738574345916554}
   _body: {fileID: 4232629923916695657}
   _glow: {fileID: 7744794232021616338}
-  _icon: {fileID: 4071858449917256159}
   _track: {fileID: 1020743205583036021}
   _text: {fileID: 4111771289282139856}
   _echo: {fileID: 5894891255809551224}
@@ -155,20 +154,7 @@ MonoBehaviour:
   - {fileID: 5358911766082861823}
   - {fileID: 3583852363713467840}
   - {fileID: 4957280608073856434}
-  _tile: {fileID: 1793131100457700091}
-  _bust: {fileID: 8135728500946865299}
-  _kind: {fileID: 6681623254414411494}
-  _kinds:
-  - Kind: compass
-    Icon: {fileID: 21300000, guid: 4f23275d575446fb7adf90a40c0b1b71, type: 3}
-  - Kind: helmet
-    Icon: {fileID: 21300000, guid: ccdbc59db2991937c9805f7758138ca6, type: 3}
-  - Kind: flask
-    Icon: {fileID: 21300000, guid: a2e3392cb3f175cfab2888a807856c0a, type: 3}
-  - Kind: speedup
-    Icon: {fileID: 21300000, guid: 64fed8dedb34c87fdb0c709a16b2ff15, type: 3}
-  - Kind: chest
-    Icon: {fileID: 21300000, guid: 2022b3d13905032e1a027d131a4e5f04, type: 3}
+  _icon: {fileID: 1023050733495459025}
 --- !u!1 &1793131100457700091
 GameObject:
   m_ObjectHideFlags: 0
@@ -1415,6 +1401,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2960355708563805970}
   - component: {fileID: 7714034317943925172}
+  - component: {fileID: 1023050733495459025}
   m_Layer: 0
   m_Name: Slot
   m_TagString: Untagged
@@ -1455,3 +1442,30 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1023050733495459025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8890146549321439619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 653f5e3591c44219287c0bb672b4b8c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Codigames.Game::Codigames.Game.UI.Store.OfferIconView
+  _icon: {fileID: 4071858449917256159}
+  _tile: {fileID: 1793131100457700091}
+  _bust: {fileID: 8135728500946865299}
+  _kind: {fileID: 6681623254414411494}
+  _kinds:
+  - Kind: compass
+    Icon: {fileID: 21300000, guid: 4f23275d575446fb7adf90a40c0b1b71, type: 3}
+  - Kind: helmet
+    Icon: {fileID: 21300000, guid: ccdbc59db2991937c9805f7758138ca6, type: 3}
+  - Kind: flask
+    Icon: {fileID: 21300000, guid: a2e3392cb3f175cfab2888a807856c0a, type: 3}
+  - Kind: speedup
+    Icon: {fileID: 21300000, guid: 64fed8dedb34c87fdb0c709a16b2ff15, type: 3}
+  - Kind: chest
+    Icon: {fileID: 21300000, guid: 2022b3d13905032e1a027d131a4e5f04, type: 3}

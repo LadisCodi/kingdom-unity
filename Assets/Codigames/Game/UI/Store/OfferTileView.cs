@@ -14,6 +14,8 @@ namespace Codigames.Game.UI.Store
 
     public class OfferTileView : MonoBehaviour
     {
+        private const string SMALL_COUNT = "Count";
+
         [SerializeField] private Image _icon;
         [SerializeField] private TMP_Text _count;
         [SerializeField, Tooltip("A hero's tile is gilded.")] private Image _gilt;
@@ -24,6 +26,14 @@ namespace Codigames.Game.UI.Store
             _icon.enabled = data.Icon != null;
             _count.text = data.Count;
             if (_gilt != null) _gilt.enabled = data.Hero;
+        }
+
+        // A panel of many rewards draws them smaller (offer.css .ofs-panel.is-many): the tile and its count.
+        public void Shrink(float size)
+        {
+            var element = GetComponent<LayoutElement>();
+            element.minWidth = element.preferredWidth = element.minHeight = element.preferredHeight = size;
+            if (TMP_Settings.defaultStyleSheet != null && TMP_Settings.defaultStyleSheet.GetStyle(SMALL_COUNT) is { } style) _count.textStyle = style;
         }
     }
 }

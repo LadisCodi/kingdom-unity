@@ -5,5 +5,7 @@ namespace Codigames.Game.UI.Data
     {
         public string Sku;
         public bool Auto;
+        // Opened from the map's widget: every widget offer in a row along its top, to turn to.
+        public bool Browse;
     }
 }
