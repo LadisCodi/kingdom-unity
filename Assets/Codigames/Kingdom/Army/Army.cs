@@ -239,12 +239,20 @@ namespace Codigames.Kingdom.Army
         // Seconds until a line is done: what is left of its head, and the rest priced now.
         public double? RemainingSeconds(string hallId, double now)
         {
-            var line = Line(hallId);
-            if (line.Count == 0) return null;
-            var hall = District(hallId);
-            var head = line[0];
-            var total = head.StartedAt.HasValue ? Math.Max(0, (head.CompletesAt - now) / 1000) : SecondsFor(head, hall);
-            foreach (var item in line.Skip(1)) total += SecondsFor(item, hall);
+            // Walked in place, in the line's order: the city's view asks it for every hall, every frame.
+            double? total = null;
+            DistrictState hall = null;
+            foreach (var item in _state.Lines)
+            {
+                if (item.BuildingId != hallId) continue;
+                if (total == null)
+                {
+                    hall = District(hallId);
+                    total = item.StartedAt.HasValue ? Math.Max(0, (item.CompletesAt - now) / 1000) : SecondsFor(item, hall);
+                }
+                else total += SecondsFor(item, hall);
+            }
+
             return total;
         }
 

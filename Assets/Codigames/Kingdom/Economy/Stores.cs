@@ -60,7 +60,11 @@ namespace Codigames.Kingdom.Economy
         public event Action<DistrictState, string, double> Deposited;
 
         // Gold a minute the district makes now.
-        public double GoldPerMinute(DistrictState district)
+        public double GoldPerMinute(DistrictState district) => district.Built ? GoldPerMinute(district, Residents(district), null) : 0;
+
+        // …given its residents, and the city's Harmony surplus when it is already known (a pass over every store asks
+        // it once, not once a store: it is the same for all of them).
+        private double GoldPerMinute(DistrictState district, int residents, double? knownSurplus)
         {
             if (!district.Built) return 0;
 
@@ -68,9 +72,8 @@ namespace Codigames.Kingdom.Economy
             var own = At(production.GoldPerMinutePerLevel, district.Level) * _bonuses.Multiplier(TechStats.OWN_GOLD);
             // The rent: a Harmony surplus at its base, then the tree, then a Rent boost running; the neighbours' Gold on
             // top. An empty house pays nothing, its neighbours' share neither.
-            var residents = Residents(district);
             if (residents <= 0) return own;
-            var surplus = _harmony?.Multiplier ?? 1;
+            var surplus = knownSurplus ?? _harmony?.Multiplier ?? 1;
             var rate = _bonuses.Apply(TechStats.TAX_RATE, _settings.GoldPerPopulationPerMinute * surplus, TargetKind.District, district.DefinitionId)
                        * (_boosts?.Multiplier(BoostKind.Rent) ?? 1)
                        // The Tribute Crown's aura over the house.
@@ -201,13 +204,17 @@ namespace Codigames.Kingdom.Economy
             foreach (var district in _city.Districts) Wake(district, now);
         }
 
+        // Both passes walk the stores once: residents fill the houses in build order as they go, and the surplus is
+        // the city's — the same answers as asking each store alone, without walking the city for each one.
         public double? NextBoundary(double after)
         {
             double? next = null;
+            var surplus = _harmony?.Multiplier ?? 1;
+            var left = _city.Population;
 
             foreach (var district in _city.Districts)
             {
-                var full = FullAt(district);
+                var full = FullAt(district, PerMinute(district, surplus, ref left));
                 if (full > after && (next == null || full < next)) next = full;
             }
 
@@ -217,9 +224,11 @@ namespace Codigames.Kingdom.Economy
         // A store that fills stops: what it made is banked to the cap and nothing more is counted.
         public void ApplyDue(double time)
         {
+            var surplus = _harmony?.Multiplier ?? 1;
+            var left = _city.Population;
             foreach (var district in _city.Districts)
             {
-                if (!(FullAt(district) <= time)) continue;
+                if (!(FullAt(district, PerMinute(district, surplus, ref left)) <= time)) continue;
 
                 var room = Math.Max(0, Capacity(district) - Banked(district));
                 Bank(district, room);
@@ -237,11 +246,19 @@ namespace Codigames.Kingdom.Economy
             district.Store.AccruingSince = now;
         }
 
+        // A store's Gold a minute in a pass over the stores in order, `left` the villagers not yet housed.
+        private double PerMinute(DistrictState district, double surplus, ref int left)
+        {
+            var here = Math.Min(left, HousingOf(district));
+            left -= here;
+            return GoldPerMinute(district, here, surplus);
+        }
+
         // When a making store reaches its capacity; null when it is not making.
-        private double? FullAt(DistrictState district)
+        private double? FullAt(DistrictState district, double perMinute)
         {
             var since = district.Store.AccruingSince;
-            var perMs = GoldPerMinute(district) / MS_PER_MINUTE;
+            var perMs = perMinute / MS_PER_MINUTE;
             if (since == null || perMs <= 0) return null;
 
             var room = Math.Max(0, Capacity(district) - Banked(district));

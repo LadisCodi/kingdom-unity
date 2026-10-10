@@ -56,8 +56,18 @@ namespace Codigames.Game.Data.Economy
             public double Magnitude;
         }
 
-        public IReadOnlyList<HarmonyTier> SurplusTiers => _harmonyTiers.Select(t => new HarmonyTier(t.At, t.Bonus)).ToList();
-        public IReadOnlyList<AdjacencyRule> Rules => _adjacency.Select(r => new AdjacencyRule(r.District, r.Neighbor, r.Stat, r.Magnitude)).ToList();
+        // Built once and kept: every store's rent reads them, every frame. An edit in the inspector builds them anew.
+        public IReadOnlyList<HarmonyTier> SurplusTiers => _surplusTiers ??= _harmonyTiers.Select(t => new HarmonyTier(t.At, t.Bonus)).ToList();
+        public IReadOnlyList<AdjacencyRule> Rules => _rules ??= _adjacency.Select(r => new AdjacencyRule(r.District, r.Neighbor, r.Stat, r.Magnitude)).ToList();
+
+        [NonSerialized] private List<HarmonyTier> _surplusTiers;
+        [NonSerialized] private List<AdjacencyRule> _rules;
+
+        private void OnValidate()
+        {
+            _surplusTiers = null;
+            _rules = null;
+        }
 
         [SerializeField, Range(0, 1), Tooltip("Of the soldiers who fall, the share that reaches a bed instead of dying.")]
         private double _woundedShare = 0.1;
