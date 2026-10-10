@@ -106,6 +106,9 @@ namespace Codigames.Game.City
         }
 
         // Over the roof while the store is ready to collect.
+        // A haul landed in its store: the bubble hops.
+        public void HopStore() => _bubble.Hop();
+
         public void SetStore(bool ready, Sprite icon, bool full)
         {
             if (!ready)

@@ -61,6 +61,7 @@ namespace Codigames.Game.City
             _construction.DistrictMoved += Refresh;
             _construction.JobCompleted += OnJobCompleted;
             _construction.JobStarted += OnJobStarted;
+            _stores.Deposited += OnDeposited;
         }
 
         private void OnDestroy()
@@ -71,6 +72,7 @@ namespace Codigames.Game.City
             _construction.DistrictMoved -= Refresh;
             _construction.JobCompleted -= OnJobCompleted;
             _construction.JobStarted -= OnJobStarted;
+            _stores.Deposited -= OnDeposited;
         }
 
         private void Update()
@@ -114,6 +116,8 @@ namespace Codigames.Game.City
         }
 
         public DistrictView ViewOf(string districtId) => _views.TryGetValue(districtId, out var view) ? view : null;
+
+        private void OnDeposited(DistrictState district, string currency, double amount) => ViewOf(district.Id)?.HopStore();
 
         private void OnJobCompleted(ConstructionJob job, DistrictState district) => Refresh(district);
 
