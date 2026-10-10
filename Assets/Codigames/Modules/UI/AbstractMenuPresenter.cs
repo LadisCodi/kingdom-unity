@@ -17,6 +17,10 @@ namespace Codigames.Modules.UI
 
         public Type MenuType => typeof(TView);
         public bool IsShown { get; private set; }
+
+        // Bumped by every show and hide: a show that a later hide overtook (both animating at once) must not leave the
+        // menu counted as shown with its view put away.
+        private int _turn;
         public bool HasFocus { get; private set; }
 
         protected TView View { get; private set; }
@@ -24,6 +28,7 @@ namespace Codigames.Modules.UI
         public async Task Show()
         {
             View ??= _views.Resolve<TView>();
+            var turn = ++_turn;
 
             BindInternal(View);
             SubscribeToViewEvents(View);
@@ -31,12 +36,13 @@ namespace Codigames.Modules.UI
             await View.Show();
             await PostShowInternal(View);
 
-            IsShown = true;
+            if (turn == _turn) IsShown = true;
         }
 
         public async Task Hide()
         {
             if (View == null) return;
+            _turn++;
 
             await PreHideInternal(View);
             await View.Hide();

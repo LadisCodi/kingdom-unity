@@ -22,6 +22,9 @@ namespace Codigames.Kingdom.Doors
         private const string WATCHTOWER = "Watchtower";
         private const string TOWNHALL = "Townhall";
 
+        // Whether this build has a world map to open; until it has, the World door stays shut.
+        private readonly bool _worldMap;
+
         private readonly TutorialState _tutorial;
         private readonly IChainPosition _chain;
         private readonly ICatalog<IQuestDefinition> _quests;
@@ -31,10 +34,14 @@ namespace Codigames.Kingdom.Doors
         private readonly IProvinceSites _provinceSites;
         private readonly IConstructionSettings _settings;
         private readonly BagState _bag;
+        private readonly Relics.State.RelicsState _relics;
 
         public Doors(TutorialState tutorial, IChainPosition chain, ICatalog<IQuestDefinition> quests, Researching research, CityState city,
-            SitesState sites, IProvinceSites provinceSites, IConstructionSettings settings, BagState bag = null)
+            SitesState sites, IProvinceSites provinceSites, IConstructionSettings settings, BagState bag = null,
+            Relics.State.RelicsState relics = null, bool worldMap = false)
         {
+            _worldMap = worldMap;
+            _relics = relics;
             _bag = bag;
             _tutorial = tutorial;
             _chain = chain;
@@ -67,9 +74,13 @@ namespace Codigames.Kingdom.Doors
             DoorId.Build => QuestReached("GrowingTown") || _city.Districts.Any(d => d.DefinitionId != TOWNHALL && !WasAbandoned(d)),
             DoorId.Heroes or DoorId.Banner => _city.Districts.Any(d => d.DefinitionId == TAVERN && d.Built),
             DoorId.Store or DoorId.Survey => CityQueries.TownhallLevel(_city, _settings) >= 2,
-            DoorId.World => _city.Districts.Any(d => d.DefinitionId == WATCHTOWER && d.Built),
+            // The Watchtower opens the world map, once there is one to open: until then its scenes would wait for a map
+            // that never comes, and hold every scene after them.
+            DoorId.World => _worldMap && _city.Districts.Any(d => d.DefinitionId == WATCHTOWER && d.Built),
             // The first item found opens the Bag.
             DoorId.Bag => _bag != null && _bag.Held.Count > 0,
+            // The first relic fragment, found at a relic's door.
+            DoorId.Relics => _relics != null && (_relics.Levels.Count > 0 || _relics.Held.Values.Any(f => f.Found.Any(n => n > 0) || f.Bound.Any(n => n > 0))),
             _ => false,
         };
 

@@ -43,9 +43,12 @@ namespace Codigames.Kingdom.Tutorial
         private readonly Stores _stores;
         private readonly Placement _placement;
 
+        private readonly ReachSpots _reach;
+
         public MapTargets(KingdomState state, IProvinceMap map, FogOfWar fog, Harvesting harvesting, ICatalog<IBuildingDefinition> buildings,
-            IProvinceSites sites, Workforce crews, Stores stores, Placement placement)
+            IProvinceSites sites, Workforce crews, Stores stores, Placement placement, ReachSpots reach = null)
         {
+            _reach = reach;
             _state = state;
             _map = map;
             _fog = fog;
@@ -114,7 +117,9 @@ namespace Codigames.Kingdom.Tutorial
                 case "reach":
                 {
                     if (!_buildings.TryGet(id, out var building)) return null;
-                    var spot = _placement.Nearest(id);
+                    // Where it would work the most — clear, or once its fog is paid; for a building without a crew, the
+                    // nearest clear anchor.
+                    var spot = _reach?.Best(id, false)?.Cell ?? _placement.Nearest(id);
                     return spot.HasValue ? new MapTarget(spot.Value, building.Width, building.Height) : null;
                 }
                 case "treasure":

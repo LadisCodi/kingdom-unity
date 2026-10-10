@@ -48,6 +48,7 @@ namespace Codigames.Game.UI.Menus
         {
             CoachTarget.Tag(_close, "close");
             CoachTarget.Tag(_action, "lair-attack");
+            CoachTarget.Tag(_painting, "lair-card");
         }
 
         public void Show(LairCardData data)

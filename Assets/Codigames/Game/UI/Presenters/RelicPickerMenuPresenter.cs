@@ -48,6 +48,9 @@ namespace Codigames.Game.UI.Presenters
 
         public void RequestClose() => _ = _ui.HideMenu<RelicPickerMenu>();
 
+        // The relic in the Shrine's slot while choosing; null when it is empty.
+        public string Slot => IsShown ? _slot : null;
+
         private Kingdom.City.State.DistrictState Shrine => _city.Districts.FirstOrDefault(d => d.Id == Data);
 
         protected override void BindInternal(RelicPickerMenu view)

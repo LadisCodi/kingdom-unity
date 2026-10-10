@@ -131,7 +131,7 @@ namespace Codigames.Game.Startup
             builder.Register<UI.Relics.RelicCards>(Lifetime.Singleton);
             builder.Register<RelicSheetMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<UI.Relics.ShrinePanels>(Lifetime.Singleton);
-            builder.Register<RelicPickerMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
+            builder.Register<RelicPickerMenuPresenter>(Lifetime.Singleton).AsSelf().As<IMenuPresenter>();
             builder.Register<ConfirmMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>();
             builder.Register<SpeedupMenuPresenter>(Lifetime.Singleton).As<IMenuPresenter>().As<ITickable>();
             builder.Register<Codigames.Game.UI.Buildings.BuildingStatProse>(Lifetime.Singleton);
@@ -174,14 +174,20 @@ namespace Codigames.Game.Startup
             builder.Register<Dev.DevSwitches>(Lifetime.Singleton);
             builder.Register<UiTargets>(Lifetime.Singleton);
             builder.Register<StageHint>(Lifetime.Singleton);
-            builder.Register<MapTargets>(Lifetime.Singleton);
+            builder.Register(resolver => new MapTargets(resolver.Resolve<KingdomState>(), resolver.Resolve<Kingdom.Map.IProvinceMap>(),
+                resolver.Resolve<Kingdom.Fog.FogOfWar>(), resolver.Resolve<Kingdom.Harvest.Harvesting>(),
+                resolver.Resolve<Modules.Core.ICatalog<Kingdom.City.IBuildingDefinition>>(), resolver.Resolve<Kingdom.Sites.IProvinceSites>(),
+                resolver.Resolve<Kingdom.Crews.Workforce>(), resolver.Resolve<Kingdom.Economy.Stores>(), resolver.Resolve<Kingdom.City.Placement>(),
+                resolver.Resolve<ReachSpots>()), Lifetime.Singleton);
             builder.Register<PlotGlow>(Lifetime.Singleton);
             builder.RegisterEntryPoint<TapCount>().AsSelf();
             builder.Register<KingdomConditions>(Lifetime.Singleton);
+            builder.Register<CampaignConditions>(Lifetime.Singleton);
+            builder.Register<ReachSpots>(Lifetime.Singleton);
             builder.Register<ScreenConditions>(Lifetime.Singleton);
             builder.Register<IConditions>(resolver => new Conditions(new IConditionReader[]
             {
-                resolver.Resolve<KingdomConditions>(), resolver.Resolve<ScreenConditions>(),
+                resolver.Resolve<KingdomConditions>(), resolver.Resolve<CampaignConditions>(), resolver.Resolve<ScreenConditions>(),
             }), Lifetime.Singleton);
             builder.Register<ScenePurse>(Lifetime.Singleton).As<IScenePurse>();
             builder.Register(resolver => new SceneDirector(resolver.Resolve<ICatalog<ISceneDefinition>>().Items,

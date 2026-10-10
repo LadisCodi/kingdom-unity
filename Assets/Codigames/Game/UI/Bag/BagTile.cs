@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Codigames.Game.UI.Stage;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,6 +35,7 @@ namespace Codigames.Game.UI.Bag
 
         public void Show(BagTileData tile)
         {
+            CoachTarget.Tag(this, "bag-item:" + tile.Id);
             Id = tile.Id;
             _wood.color = TIERS[Mathf.Clamp(tile.Tier, 1, 5) - 1];
             _art.sprite = tile.Icon;

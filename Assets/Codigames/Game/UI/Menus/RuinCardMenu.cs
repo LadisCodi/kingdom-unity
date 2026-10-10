@@ -40,11 +40,27 @@ namespace Codigames.Game.UI.Menus
             CoachTarget.Tag(_repair.Button, "repair");
         }
 
+        // The building stands on its tile and rises out of it; a tall one (a tower) is held lower, so its top stays clear
+        // of the title.
+        private void FitArt(Sprite art)
+        {
+            if (_artHeight <= 0) _artHeight = ((RectTransform)_art.transform).sizeDelta.y;
+            var aspect = art.rect.width / art.rect.height;
+            var rect = (RectTransform)_art.transform;
+            // Before its first layout the tile has no height yet: its preferred one stands in.
+            var tile = ((RectTransform)rect.parent).rect.height;
+            if (tile <= 0 && rect.parent.TryGetComponent<LayoutElement>(out var element)) tile = element.preferredHeight;
+            rect.sizeDelta = new Vector2(rect.sizeDelta.x, aspect < 1 && tile > 0 ? Mathf.Min(_artHeight, tile * 1.25f) : _artHeight);
+            _artFit.aspectRatio = aspect;
+        }
+
+        private float _artHeight;
+
         public void Show(string title, Sprite art, string promise, string need, IReadOnlyList<PriceTerm> price, bool affordable)
         {
             _title.text = title;
             _art.sprite = art;
-            if (art != null) _artFit.aspectRatio = art.rect.width / art.rect.height;
+            if (art != null) FitArt(art);
             _promise.text = promise;
             _need.SetActive(!string.IsNullOrEmpty(need));
             _needText.text = need;

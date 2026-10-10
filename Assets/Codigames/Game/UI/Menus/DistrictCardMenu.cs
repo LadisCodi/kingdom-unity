@@ -81,6 +81,12 @@ namespace Codigames.Game.UI.Menus
         private readonly System.Collections.Generic.List<Buildings.RankRow> _rankRowViews = new();
         private readonly System.Collections.Generic.List<Buildings.WardRow> _wardRowViews = new();
 
+        [Header("Tavern")]
+        [SerializeField] private GameObject _tavernBlock;
+        [SerializeField] private SectionHead _tavernHead;
+        [SerializeField] private KitButton _tavernHeroes;
+        [SerializeField] private KitButton _tavernCall;
+
         [Header("Shrine")]
         [SerializeField] private GameObject _shrineBlock;
         [SerializeField] private SectionHead _shrineHead;
@@ -127,6 +133,8 @@ namespace Codigames.Game.UI.Menus
         public event Action FinishTrainingTapped;
         public event Action CrewMinusTapped;
         public event Action CrewPlusTapped;
+        public event Action TavernHeroesTapped;
+        public event Action TavernCallTapped;
         public event Action ShrinePickTapped;
         public event Action ShrineActivateTapped;
         public event Action ShrineFlaskTapped;
@@ -140,6 +148,7 @@ namespace Codigames.Game.UI.Menus
             CoachTarget.Tag(_train.Button, "card:train");
             CoachTarget.Tag(_finishTraining.Button, "card:finish-training");
             CoachTarget.Tag(_crewPlus, "card:workers");
+            CoachTarget.Tag(_tavernCall, "card:call");
             CoachTarget.Tag(_speedUpWork, "speedup");
         }
 
@@ -175,6 +184,14 @@ namespace Codigames.Game.UI.Menus
             {
                 _workshopHead.Title = card.WorkshopHead;
                 _workshop.Show(card.Workshop);
+            }
+
+            _tavernBlock.SetActive(card.TavernHead != null);
+            if (card.TavernHead != null)
+            {
+                _tavernHead.Title = card.TavernHead;
+                _tavernHeroes.Label = card.TavernHeroes;
+                _tavernCall.Label = card.TavernCall;
             }
 
             _shrineBlock.SetActive(card.Shrine != null);
@@ -341,6 +358,8 @@ namespace Codigames.Game.UI.Menus
             _finishTraining.Button.onClick.AddListener(OnFinishTraining);
             _crewMinus.onClick.AddListener(OnCrewMinus);
             _crewPlus.onClick.AddListener(OnCrewPlus);
+            _tavernHeroes.onClick.AddListener(OnTavernHeroes);
+            _tavernCall.onClick.AddListener(OnTavernCall);
             _shrine.PickTapped += OnShrinePick;
             _shrine.ActivateTapped += OnShrineActivate;
             _shrine.FlaskTapped += OnShrineFlask;
@@ -364,6 +383,8 @@ namespace Codigames.Game.UI.Menus
             _finishTraining.Button.onClick.RemoveListener(OnFinishTraining);
             _crewMinus.onClick.RemoveListener(OnCrewMinus);
             _crewPlus.onClick.RemoveListener(OnCrewPlus);
+            _tavernHeroes.onClick.RemoveListener(OnTavernHeroes);
+            _tavernCall.onClick.RemoveListener(OnTavernCall);
             _shrine.PickTapped -= OnShrinePick;
             _shrine.ActivateTapped -= OnShrineActivate;
             _shrine.FlaskTapped -= OnShrineFlask;
@@ -384,6 +405,8 @@ namespace Codigames.Game.UI.Menus
         private void OnFinishTraining() => FinishTrainingTapped?.Invoke();
         private void OnCrewMinus() => CrewMinusTapped?.Invoke();
         private void OnCrewPlus() => CrewPlusTapped?.Invoke();
+        private void OnTavernHeroes() => TavernHeroesTapped?.Invoke();
+        private void OnTavernCall() => TavernCallTapped?.Invoke();
         private void OnShrinePick() => ShrinePickTapped?.Invoke();
         private void OnShrineActivate() => ShrineActivateTapped?.Invoke();
         private void OnShrineFlask() => ShrineFlaskTapped?.Invoke();

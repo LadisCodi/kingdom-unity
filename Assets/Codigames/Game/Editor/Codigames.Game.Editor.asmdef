@@ -8,7 +8,8 @@
         "VContainer",
         "Unity.TextMeshPro",
         "MoreMountains.Tools",
-        "Codigames.Modules.Audio"
+        "Codigames.Modules.Audio",
+        "Codigames.Modules.Clock"
     ],
     "includePlatforms": [
         "Editor"

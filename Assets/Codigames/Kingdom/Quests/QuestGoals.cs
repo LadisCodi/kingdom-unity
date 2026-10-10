@@ -11,7 +11,8 @@ using Codigames.Modules.Core;
 namespace Codigames.Kingdom.Quests
 {
     // The absolute goals, read off the kingdom. A build counts the moment it starts (it cannot be cancelled), and a
-    // repaired ruin counts as its building. What is not in the game yet (an army, lairs, relics, heroes) reads 0.
+    // repaired ruin counts as its building. The army is its soldiers standing; a lair counts once found, and again
+    // once cleared; a relic once restored.
     public class QuestGoals : IQuestGoals, IBuildingGroups
     {
 
@@ -24,10 +25,19 @@ namespace Codigames.Kingdom.Quests
         private readonly Landmarks _landmarks;
         private readonly FogOfWar _fog;
         private readonly IPlanting _planting;
+        private readonly Lairs.State.LairsState _lairs;
+        private readonly Army.State.ArmyState _army;
+        private readonly Heroes.State.HeroesState _heroes;
+        private readonly Relics.State.RelicsState _relics;
 
         public QuestGoals(CityState city, ICatalog<IBuildingDefinition> buildings, ITreasury treasury, Researching research, Workforce crews,
-            Landmarks landmarks, FogOfWar fog, IPlanting planting)
+            Landmarks landmarks, FogOfWar fog, IPlanting planting, Lairs.State.LairsState lairs = null, Army.State.ArmyState army = null,
+            Heroes.State.HeroesState heroes = null, Relics.State.RelicsState relics = null)
         {
+            _lairs = lairs;
+            _army = army;
+            _heroes = heroes;
+            _relics = relics;
             _planting = planting;
             _city = city;
             _buildings = buildings;
@@ -66,6 +76,16 @@ namespace Codigames.Kingdom.Quests
                     return _landmarks.All.Count(l => _landmarks.IsClaimed(l.Id) && (target == null || l.Kind == target));
                 case GoalType.DiscoverCells:
                     return _fog.RevealedCount;
+                case GoalType.TrainArmy:
+                    return _army?.Troops.Values.Sum() ?? 0;
+                case GoalType.FindLairs:
+                    return _lairs?.Lairs.Count ?? 0;
+                case GoalType.ClearLairs:
+                    return _lairs?.Lairs.Values.Count(l => l.Cleared) ?? 0;
+                case GoalType.OwnHeroes:
+                    return _heroes?.Owned.Count ?? 0;
+                case GoalType.OwnArtifacts:
+                    return _relics?.Levels.Count(l => l.Value >= 1) ?? 0;
                 default:
                     return 0;
             }

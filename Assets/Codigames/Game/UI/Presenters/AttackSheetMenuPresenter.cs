@@ -204,10 +204,17 @@ namespace Codigames.Game.UI.Presenters
                     ? new[] { Kingdom.Heroes.Prize.Currency(Kingdom.Heroes.Heroes.HERO_XP, (int)report.HeroXp) }
                     : System.Array.Empty<Kingdom.Heroes.Prize>(),
             };
-            // Won: the sheet is done, and the player lands back on the lair's card when the playback closes.
-            if (report.Result is LairResult.Won or LairResult.Cleared) RequestClose();
-            else Refresh();
-            _ = _ui.ShowMenu<BattleScreen, BattlePlayback>(playback);
+            var won = report.Result is LairResult.Won or LairResult.Cleared;
+            if (!won) Refresh();
+            _ = Launch(playback, won);
+        }
+
+        // The playback over the sheet; won, the sheet is done once it is covered, and the player lands back on the
+        // lair's card when the playback closes. Closing it first would reveal the card under a playback opening.
+        private async System.Threading.Tasks.Task Launch(BattlePlayback playback, bool won)
+        {
+            await _ui.ShowMenu<BattleScreen, BattlePlayback>(playback);
+            if (won) await _ui.HideMenu<AttackSheetMenu>();
         }
 
         private void Refresh()

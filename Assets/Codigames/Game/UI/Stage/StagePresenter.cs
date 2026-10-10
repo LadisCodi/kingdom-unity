@@ -40,6 +40,7 @@ namespace Codigames.Game.UI.Stage
         private const string TEXT_TICK = "textTick";
         private const string VOICE = "voice:";
         private const string AUTO = "auto";
+        private const string KEEP_CLEAR = "battle-leave";
         private const string QUEST = "quest";
         private const string UI = "ui:";
 
@@ -370,15 +371,17 @@ namespace Codigames.Game.UI.Stage
                 return;
             }
 
-            var rect = ScreenRect(_target);
+            var rect = ScreenRect(_target) ?? ScreenRect(StageTarget.Ui(KEEP_CLEAR));
             if (rect != null && _view.Covers(rect.Value)) _view.Place(best);
         }
 
-        // Where the target will be: a map target is being flown to the middle of the screen.
+        // Where the target will be: a map target is being flown to the middle of the screen. With no target on screen,
+        // what must stay reachable under any line: the battle's way out.
         private Rect? JudgedRect()
         {
             var rect = ScreenRect(_target);
-            if (rect == null || _target?.Map == null) return rect;
+            if (rect == null) return ScreenRect(StageTarget.Ui(KEEP_CLEAR));
+            if (_target?.Map == null) return rect;
             var size = rect.Value.size;
             return new Rect(new Vector2(Screen.width, Screen.height) / 2f - size / 2f, size);
         }

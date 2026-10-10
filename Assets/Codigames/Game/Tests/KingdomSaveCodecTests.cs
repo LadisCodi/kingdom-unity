@@ -41,5 +41,34 @@ namespace Codigames.Game.Tests
             Assert.That(read.Ground.Features[new Vector2Int(3, -2)], Is.EqualTo("Trees"));
             Assert.That(read.Balances["Gold"], Is.EqualTo(585));
         }
+
+        // Every map by cell, whatever it holds: the fog's treasures once broke a reload.
+        [Test]
+        public void EveryMapByCell_ShouldReadBack()
+        {
+            var codec = new KingdomSaveCodec();
+            var state = Kingdom();
+            state.Fog.Treasures[new Vector2Int(4, -2)] = new Kingdom.Fog.State.Treasure { N = 3, Coin = "Gold", At = 12 };
+            state.Fog.Progress[new Vector2Int(-1, 2)] = 2;
+
+            var read = codec.Decode(codec.Parse(codec.Encode(state, 21)));
+
+            Assert.That(read.Fog.Treasures[new Vector2Int(4, -2)].N, Is.EqualTo(3));
+            Assert.That(read.Fog.Treasures[new Vector2Int(4, -2)].Coin, Is.EqualTo("Gold"));
+            Assert.That(read.Fog.Progress[new Vector2Int(-1, 2)], Is.EqualTo(2));
+        }
+
+        // An older build wrote the treasures keyed "x,y": they still read.
+        [Test]
+        public void AMapKeyedByText_ShouldStillRead()
+        {
+            var codec = new KingdomSaveCodec();
+            var raw = codec.Parse(codec.Encode(Kingdom(), 21));
+            raw["kingdom"]["Fog"]["Treasures"] = Newtonsoft.Json.Linq.JObject.Parse("{\"4,-2\": { \"N\": 5, \"Coin\": \"Wood\", \"At\": 1 }}");
+
+            var read = codec.Decode(raw);
+
+            Assert.That(read.Fog.Treasures[new Vector2Int(4, -2)].N, Is.EqualTo(5));
+        }
     }
 }

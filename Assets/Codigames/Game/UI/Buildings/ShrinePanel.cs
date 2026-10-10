@@ -1,6 +1,7 @@
 using System;
 using Codigames.Game.UI.Kit;
 using Codigames.Game.UI.Relics;
+using Codigames.Game.UI.Stage;
 using Codigames.Game.UI.Widgets;
 using TMPro;
 using UnityEngine;
@@ -46,6 +47,7 @@ namespace Codigames.Game.UI.Buildings
 
         public void Show(ShrinePanelData shrine)
         {
+            CoachTarget.Tag(_press, "shrine-slot");
             _painting.sprite = shrine.Painting;
             _call.SetActive(shrine.Empty);
             _cta.gameObject.SetActive(shrine.Empty && shrine.Placeable);

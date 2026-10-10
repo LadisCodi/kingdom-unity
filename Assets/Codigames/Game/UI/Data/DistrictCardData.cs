@@ -39,6 +39,10 @@ namespace Codigames.Game.UI.Data
         public string WorkshopHead { get; set; }
         public WorkshopPanelData Workshop { get; set; }
         public string ShrineHead { get; set; }
+        // The Tavern's way to the heroes and to a call: its head and its two labels; null head on any other card.
+        public string TavernHead { get; set; }
+        public string TavernHeroes { get; set; }
+        public string TavernCall { get; set; }
         public Relics.ShrinePanelData Shrine { get; set; }
 
         // Harmony: what a decoration supplies, or on the Townhall the city's supply and demand; null for none.
