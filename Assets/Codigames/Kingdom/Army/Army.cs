@@ -322,6 +322,7 @@ namespace Codigames.Kingdom.Army
         // Every head due by `time`, earliest first; the next in its line starts the moment it finishes.
         public void ApplyDue(double time)
         {
+            if (_state.Lines.Count == 0) return;
             while (true)
             {
                 HallItem due = null;

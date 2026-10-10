@@ -31,10 +31,21 @@ namespace Codigames.Kingdom.City
         // that matches each.
         public double Effect(string definitionId, Vector2Int anchor, AdjacencyStat stat, string exclude = null)
         {
+            // Walked by hand, in the same order as Neighbours and RulesFor: every store's rent asks it, every frame.
             var building = _buildings.Get(definitionId);
             var total = 0.0;
-            foreach (var neighbour in Neighbours(anchor, building.Width, building.Height, exclude))
-                total += RulesFor(definitionId, neighbour.DefinitionId, stat).Sum(r => r.Magnitude);
+            foreach (var neighbour in _city.Districts)
+            {
+                if (!neighbour.Built || neighbour.Id == exclude) continue;
+                var other = _buildings.Get(neighbour.DefinitionId);
+                if (!ShareEdge(anchor, building.Width, building.Height, neighbour.Anchor, other.Width, other.Height)) continue;
+                var sum = 0.0;
+                var rules = _rules.Rules;
+                for (var i = 0; i < rules.Count; i++)
+                    if (rules[i] is var rule && rule.Stat == stat && Matches(rule.District, definitionId) && Matches(rule.Neighbor, neighbour.DefinitionId)) sum += rule.Magnitude;
+                total += sum;
+            }
+
             return stat == AdjacencyStat.GoldPerMinute ? total : Math.Max(-CLAMP, Math.Min(CLAMP, total));
         }
 
@@ -86,9 +97,6 @@ namespace Codigames.Kingdom.City
                 if (ShareEdge(anchor, width, height, district.Anchor, other.Width, other.Height)) yield return district;
             }
         }
-
-        private IEnumerable<AdjacencyRule> RulesFor(string district, string neighbour, AdjacencyStat stat)
-            => _rules.Rules.Where(r => r.Stat == stat && Matches(r.District, district) && Matches(r.Neighbor, neighbour));
 
         private bool Matches(string side, string definitionId) => side == definitionId || _groups.Names(side, definitionId);
     }

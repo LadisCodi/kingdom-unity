@@ -21,7 +21,12 @@ namespace Codigames.Kingdom.Bag
 
         public double Multiplier(BoostKind kind) => Running(kind)?.Multiplier ?? 1;
 
-        public RunningBoost Running(BoostKind kind) => _state.Boosts.FirstOrDefault(b => b.Kind == kind);
+        public RunningBoost Running(BoostKind kind)
+        {
+            foreach (var boost in _state.Boosts)
+                if (boost.Kind == kind) return boost;
+            return null;
+        }
 
         // Starts one at `now`, or extends the one running by its length and lifts it to the stronger multiplier.
         public void Start(BoostKind kind, double multiplier, double seconds, double now)

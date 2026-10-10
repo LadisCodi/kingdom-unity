@@ -29,7 +29,17 @@ namespace Codigames.Kingdom.City
             => GridMath.Rect(district.Anchor, building.Width, building.Height);
 
         public static DistrictState At(CityState city, ICatalog<IBuildingDefinition> buildings, Vector2Int cell)
-            => city.Districts.FirstOrDefault(d => Footprint(d, buildings.Get(d.DefinitionId)).Contains(cell));
+        {
+            // Walked by hand: crews and the harvest ask this for every cell they look at, every frame.
+            foreach (var district in city.Districts)
+            {
+                var building = buildings.Get(district.DefinitionId);
+                if (cell.X >= district.Anchor.X && cell.X < district.Anchor.X + building.Width
+                    && cell.Y >= district.Anchor.Y && cell.Y < district.Anchor.Y + building.Height) return district;
+            }
+
+            return null;
+        }
 
         // Rings from the Townhall's footprint to a cell: 0 inside it.
         public static int DistanceFromTownhall(CityState city, ICatalog<IBuildingDefinition> buildings, IConstructionSettings settings, Vector2Int cell)

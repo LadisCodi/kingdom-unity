@@ -329,7 +329,25 @@ namespace Codigames.Kingdom.Heroes
 
         // ---- the boons: a kingdom multiplier for every Legendary owned, summed across heroes
 
-        public IEnumerable<Modifier> Modifiers => _state.Owned.Select(_heroes.Get).Where(h => h.BoonStat != null)
-            .Select(h => new Modifier(BOON + h.Id, h.BoonStat, ModifierOp.Mul, h.BoonValue));
+        // Folded once per hero called (a hero is never lost), since the stack asks it every frame.
+        public IEnumerable<Modifier> Modifiers
+        {
+            get
+            {
+                if (_boonsOf != _state.Owned || _boonsCount != _state.Owned.Count)
+                {
+                    _boons = _state.Owned.Select(_heroes.Get).Where(h => h.BoonStat != null)
+                        .Select(h => new Modifier(BOON + h.Id, h.BoonStat, ModifierOp.Mul, h.BoonValue)).ToList();
+                    _boonsOf = _state.Owned;
+                    _boonsCount = _state.Owned.Count;
+                }
+
+                return _boons;
+            }
+        }
+
+        private List<Modifier> _boons;
+        private List<string> _boonsOf;
+        private int _boonsCount = -1;
     }
 }

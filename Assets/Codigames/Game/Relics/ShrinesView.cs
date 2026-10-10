@@ -129,8 +129,11 @@ namespace Codigames.Game.Relics
             if (_root == null) return;
             var now = _clock.NowMs;
             var time = Time.unscaledTime;
-            var hosting = new HashSet<string>();
-            var awake = new HashSet<string>();
+            // Reused every frame rather than allocated.
+            var hosting = _hosting;
+            var awake = _awake;
+            hosting.Clear();
+            awake.Clear();
             foreach (var shrine in _shrines.All)
             {
                 var relic = _shrines.Hosted(shrine);
@@ -145,11 +148,19 @@ namespace Codigames.Game.Relics
                 ShowAura(shrine, relic, time);
             }
 
-            foreach (var id in _held.Keys.Where(k => !hosting.Contains(k)).ToList()) HideHeld(id);
-            foreach (var id in _auras.Keys.Where(k => !awake.Contains(k)).ToList()) HideAura(id);
+            if (_held.Count > hosting.Count) HideAllBut(_held.Keys, hosting, HideHeld);
+            if (_auras.Count > awake.Count) HideAllBut(_auras.Keys, awake, HideAura);
             ShowBadges();
             StepBursts(time);
             StepFloaters(time);
+        }
+
+        private readonly HashSet<string> _hosting = new();
+        private readonly HashSet<string> _awake = new();
+
+        private static void HideAllBut(IEnumerable<string> shown, HashSet<string> keep, System.Action<string> hide)
+        {
+            foreach (var id in shown.Where(k => !keep.Contains(k)).ToList()) hide(id);
         }
 
         // ---- the relic in its Shrine, and its bubble asleep

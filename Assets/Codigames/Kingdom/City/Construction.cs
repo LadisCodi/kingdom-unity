@@ -352,6 +352,10 @@ namespace Codigames.Kingdom.City
 
         public void ApplyDue(double time)
         {
+            var due = false;
+            foreach (var job in _city.Jobs) due |= job.CompletesAt <= time;
+            if (!due) return;
+
             foreach (var job in _city.Jobs.Where(j => j.CompletesAt <= time).OrderBy(j => j.CompletesAt).ToList())
             {
                 // Completing while the job still stands: the city is still what it was.
