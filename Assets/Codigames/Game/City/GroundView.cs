@@ -74,14 +74,15 @@ namespace Codigames.Game.City
 
         public void Refresh()
         {
-            var layer = _map.Features;
-            var wanted = new System.Collections.Generic.Dictionary<Vector3Int, (ModuleVector2Int Cell, TileBase Tile)>();
+            var wanted = new System.Collections.Generic.Dictionary<Vector3Int, (ModuleVector2Int Cell, TileBase Tile, bool Sways)>();
             foreach (var feature in _ground.Features)
             {
                 if (Hidden(feature.Key)) continue;
-                wanted[ProvinceCoordinates.ToTilemap(DrawnAt(feature.Key))] = (feature.Key, TileOf(feature.Key, feature.Value));
+                var tile = TileOf(feature.Key, feature.Value, out var sways);
+                wanted[ProvinceCoordinates.ToTilemap(DrawnAt(feature.Key))] = (feature.Key, tile, sways);
             }
 
+            foreach (var layer in new[] { _map.Features, _map.Swaying })
             foreach (var position in layer.cellBounds.allPositionsWithin)
             {
                 if (layer.HasTile(position) && !wanted.ContainsKey(position)) layer.SetTile(position, null);
@@ -89,9 +90,18 @@ namespace Codigames.Game.City
 
             foreach (var drawn in wanted)
             {
-                if (layer.GetTile(drawn.Key) != drawn.Value.Tile) layer.SetTile(drawn.Key, drawn.Value.Tile);
+                Place(drawn.Key, drawn.Value.Tile, drawn.Value.Sways);
                 Tint(drawn.Value.Cell);
             }
+        }
+
+        // On the swaying layer or the still one, and off the other.
+        private void Place(Vector3Int position, TileBase tile, bool sways)
+        {
+            var layer = sways ? _map.Swaying : _map.Features;
+            var other = sways ? _map.Features : _map.Swaying;
+            if (other != layer && other.HasTile(position)) other.SetTile(position, null);
+            if (layer.GetTile(position) != tile) layer.SetTile(position, tile);
         }
 
         // A cell emptied, grown back or coming up is drawn anew: its drawing may change with it.
@@ -117,7 +127,12 @@ namespace Codigames.Game.City
         // Under the cloud bank nothing on the ground is drawn.
         private bool Hidden(ModuleVector2Int cell) => _fog.VisibilityAt(cell) == Visibility.Undiscovered;
 
-        private void OnFeatureRemoved(ModuleVector2Int cell) => _map.Features.SetTile(ProvinceCoordinates.ToTilemap(cell), null);
+        private void OnFeatureRemoved(ModuleVector2Int cell)
+        {
+            var position = ProvinceCoordinates.ToTilemap(cell);
+            _map.Features.SetTile(position, null);
+            _map.Swaying.SetTile(position, null);
+        }
 
         private void OnFeatureAppeared(ModuleVector2Int cell, string featureId)
         {
@@ -126,20 +141,32 @@ namespace Codigames.Game.City
 
         private void Draw(ModuleVector2Int cell, string featureId)
         {
-            var tile = TileOf(cell, featureId);
-            if (tile != null) _map.Features.SetTile(ProvinceCoordinates.ToTilemap(DrawnAt(cell)), tile);
+            var tile = TileOf(cell, featureId, out var sways);
+            if (tile != null) Place(ProvinceCoordinates.ToTilemap(DrawnAt(cell)), tile, sways);
         }
 
         // Its drawing as it stands now: coming up, emptied, or whole.
-        private TileBase TileOf(ModuleVector2Int cell, string featureId)
+        // `sways`: whole or coming up, a feature that sways does; emptied it stands still.
+        private TileBase TileOf(ModuleVector2Int cell, string featureId, out bool sways)
         {
+            sways = false;
             if (!_features.TryGet(featureId, out var definition) || definition is not FeatureAsset feature) return null;
 
             var now = _clock.NowMs;
             var size = _footprints.SizeOf(cell);
             if (_harvesting.IsGrowing(cell, now))
+            {
+                sways = feature.Sways && feature.GrowingTile(_harvesting.Regrowth(cell, now) ?? 0) != null;
                 return feature.GrowingTile(_harvesting.Regrowth(cell, now) ?? 0) ?? feature.ExhaustedTileFor(size) ?? feature.TileFor(size);
-            if (_harvesting.IsExhausted(cell, now)) return feature.ExhaustedTileFor(size) ?? feature.TileFor(size);
+            }
+
+            if (_harvesting.IsExhausted(cell, now))
+            {
+                sways = feature.Sways && feature.ExhaustedTileFor(size) == null;
+                return feature.ExhaustedTileFor(size) ?? feature.TileFor(size);
+            }
+
+            sways = feature.Sways;
             return feature.TileFor(size);
         }
 
@@ -169,11 +196,12 @@ namespace Codigames.Game.City
         private void Tint(ModuleVector2Int cell)
         {
             var position = ProvinceCoordinates.ToTilemap(DrawnAt(cell));
-            _map.Features.SetTileFlags(position, TileFlags.None);
+            var layer = _map.FeatureLayer(position);
+            layer.SetTileFlags(position, TileFlags.None);
             var colour = DrawnDim(cell) ? _exhausted : Color.white;
             if (_fog.VisibilityAt(cell) == Visibility.Discovered) colour *= _discovered;
             if (_lifted == cell) colour.a *= LIFTED_ALPHA;
-            _map.Features.SetColor(position, colour);
+            layer.SetColor(position, colour);
         }
     }
 }

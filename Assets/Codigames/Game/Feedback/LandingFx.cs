@@ -144,8 +144,9 @@ namespace Codigames.Game.Feedback
 
             var position = ProvinceCoordinates.ToTilemap(landing.Cell);
             var width = _map.Grid.cellSize.x;
-            _map.Features.SetTileFlags(position, TileFlags.None);
-            _map.Features.SetTransformMatrix(position,
+            var layer = _map.FeatureLayer(position);
+            layer.SetTileFlags(position, TileFlags.None);
+            layer.SetTransformMatrix(position,
                 Matrix4x4.TRS(new Vector3(0f, lift * width, 0f), Quaternion.identity, new Vector3(scale.x, scale.y, 1f)));
         }
 
