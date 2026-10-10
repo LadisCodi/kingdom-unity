@@ -39,6 +39,9 @@ namespace Codigames.Game.UI.Notices
 
         // Epoch milliseconds a standing notice counts down to, on a plaque under the bubble; null for none.
         public double? Until { get; set; }
+
+        // The card's button in place of Go (a video's Watch); null for Go.
+        public string ActionLabel { get; set; }
     }
 
     // A line of a group's card, or of the +N's: its picture, name and line, and its own Go — or the notice it opens.

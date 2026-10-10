@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: Ads
   m_EditorClassIdentifier: Codigames.Game::Codigames.Game.Data.Monetization.AdSettingsAsset
   _watchSeconds: 5
+  _cooldownMinSeconds: 30
+  _cooldownMaxSeconds: 90
+  _eligibleBelowFraction: 0.5
+  _refillsPerDay: 5

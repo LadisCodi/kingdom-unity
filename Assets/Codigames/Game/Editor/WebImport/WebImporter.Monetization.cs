@@ -11,6 +11,10 @@ namespace Codigames.Game.Editor.WebImport
             var ads = Read<MonetizationData>("Game/monetization.json").Ads;
             var settings = new SerializedObject(LoadOrCreate<AdSettingsAsset>("Settings", "Ads"));
             settings.FindProperty("_watchSeconds").doubleValue = ads.WatchSeconds;
+            settings.FindProperty("_cooldownMinSeconds").doubleValue = ads.CooldownMinSeconds;
+            settings.FindProperty("_cooldownMaxSeconds").doubleValue = ads.CooldownMaxSeconds;
+            settings.FindProperty("_eligibleBelowFraction").doubleValue = ads.EligibleBelowFraction;
+            settings.FindProperty("_refillsPerDay").intValue = (int)ads.ManaRefillsPerDay;
             settings.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(settings.targetObject);
         }
