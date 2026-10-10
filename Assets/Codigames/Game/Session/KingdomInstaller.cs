@@ -79,6 +79,7 @@ namespace Codigames.Game.Session
                 resolver.Resolve<CityState>(), resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<ManaPool>(),
                 () => resolver.Resolve<Kingdom.Modifiers.IModifiers>()), Lifetime.Singleton).AsSelf().As<Kingdom.Relics.IRelicAura>();
             builder.Register<Kingdom.Relics.ShrineLadder>(Lifetime.Singleton).As<IBuildLadder>();
+            builder.Register<Relics.AsleepRelics>(Lifetime.Singleton);
             builder.Register<Kingdom.Battles.Combat>(Lifetime.Singleton);
             builder.Register<Kingdom.Battles.EnemyGenerator>(Lifetime.Singleton);
             builder.Register(resolver => new LairAttack(resolver.Resolve<Codigames.Kingdom.Lairs.Lairs>(), resolver.Resolve<Kingdom.Battles.Combat>(),
@@ -158,7 +159,7 @@ namespace Codigames.Game.Session
                 resolver.Resolve<IQuestGoals>(), resolver.Resolve<ITreasury>(), resolver.Resolve<CityState>(),
                 resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<Stores>(), resolver.Resolve<Harvesting>(),
                 resolver.Resolve<FogOfWar>(), resolver.Resolve<GroundState>(), resolver.Resolve<IBonuses>(), resolver.Resolve<IItemGrants>(),
-                resolver.Resolve<Kingdom.Modifiers.IModifiers>()),
+                resolver.Resolve<Kingdom.Modifiers.IModifiers>(), resolver.Resolve<Kingdom.Relics.IRelicDrops>()),
                 Lifetime.Singleton);
             builder.Register(resolver => new Landmarks(resolver.Resolve<SitesState>(), resolver.Resolve<IProvinceSites>(),
                 resolver.Resolve<FogOfWar>(), resolver.Resolve<ITreasury>(), resolver.Resolve<IKnowledgeSettings>(),
@@ -211,8 +212,10 @@ namespace Codigames.Game.Session
                 quests.Wake(state.LastAdvance);
                 timeline.Register(quests);
 
-                // A relic's window closes at its own moment, before the crews step through it.
+                // A relic's window closes at its own moment, before the crews step through it; one closed in an
+                // absence is remembered as asleep.
                 timeline.Register(resolver.Resolve<Kingdom.Relics.Shrines>());
+                resolver.Resolve<Relics.AsleepRelics>();
 
                 // The crews last: their steps run between the boundaries the others draw.
                 timeline.Register(resolver.Resolve<Workforce>());

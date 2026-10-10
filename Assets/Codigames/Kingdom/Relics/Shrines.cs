@@ -59,6 +59,9 @@ namespace Codigames.Kingdom.Relics
         // A relic was hosted, unhosted, activated, or its window closed.
         public event Action Changed;
 
+        // A relic's window closed at its own moment, live or in an absence replayed: it is asleep.
+        public event Action<string> WindowClosed;
+
         // Every Shrine standing, built.
         public IEnumerable<DistrictState> All => _city.Districts.Where(d => d.Built && _buildings.Get(d.DefinitionId).HostsRelic);
 
@@ -195,6 +198,7 @@ namespace Codigames.Kingdom.Relics
         {
             var closed = _state.Windows.Where(w => w.Value <= time).Select(w => w.Key).ToList();
             foreach (var relic in closed) _state.Windows.Remove(relic);
+            foreach (var relic in closed) WindowClosed?.Invoke(relic);
             if (closed.Count > 0) Changed?.Invoke();
         }
 

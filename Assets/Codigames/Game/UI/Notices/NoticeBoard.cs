@@ -22,6 +22,7 @@ namespace Codigames.Game.UI.Notices
         public const string MORE = "more";
         private const string NEWS = "news:";
         public const string RAID = "state:raid";
+        public const string RELIC = "state:relic";
 
         private readonly Inbox _inbox;
         private readonly INoticeSettings _settings;
@@ -36,11 +37,20 @@ namespace Codigames.Game.UI.Notices
         private readonly Codigames.Game.Data.Goods.GoodCollection _goods;
         private readonly Codigames.Kingdom.Lairs.Lairs _lairs;
         private readonly Codigames.Game.Lairs.LairWords _words;
+        private readonly Codigames.Game.Relics.AsleepRelics _asleep;
+        private readonly Codigames.Game.UI.Relics.RelicCards _relics;
+        private readonly Kingdom.Relics.Shrines _shrines;
+        private readonly Presenters.BagMenuPresenter _bag;
 
         public NoticeBoard(Inbox inbox, INoticeSettings settings, CityState city, BuildingCollection buildings, IProvinceSites sites,
             ProvinceSitesAsset siteArt, UiIcons icons, NumberFormat numbers, Localizer localizer, UIManager ui, Codigames.Game.Data.Goods.GoodCollection goods,
-            Codigames.Kingdom.Lairs.Lairs lairs, Codigames.Game.Lairs.LairWords words)
+            Codigames.Kingdom.Lairs.Lairs lairs, Codigames.Game.Lairs.LairWords words, Codigames.Game.Relics.AsleepRelics asleep,
+            Codigames.Game.UI.Relics.RelicCards relics, Kingdom.Relics.Shrines shrines, Presenters.BagMenuPresenter bag)
         {
+            _asleep = asleep;
+            _relics = relics;
+            _shrines = shrines;
+            _bag = bag;
             _lairs = lairs;
             _words = words;
             _goods = goods;
@@ -72,12 +82,13 @@ namespace Codigames.Game.UI.Notices
         }
 
         // What stays true until it is not, hung under the settings knob: the raid coming first.
-        public IReadOnlyList<Notice> Standing => Raid() is { } raid ? new[] { raid } : Array.Empty<Notice>();
+        public IReadOnlyList<Notice> Standing => new[] { Raid(), Asleep() }.Where(n => n != null).ToList();
 
         // A card's notice, by its id; null once it has nothing to say.
         public Notice Of(string id)
         {
             if (id == RAID) return Raid();
+            if (id == RELIC) return Asleep();
 
             if (id == MORE)
             {
@@ -312,6 +323,37 @@ namespace Codigames.Game.UI.Notices
         };
 
         // Go closes the card first, then opens the subject's own card, which brings the camera to it.
+        // RELIC ASLEEP: a city relic whose window has closed. One opens its sheet; several, the Bag's Relics.
+        private Notice Asleep()
+        {
+            var asleep = _asleep.All;
+            if (asleep.Count == 0) return null;
+            var relic = _relics.Get(asleep[0]);
+            var one = asleep.Count == 1;
+            return new Notice
+            {
+                Id = RELIC,
+                Kind = NoticeKind.State,
+                Art = relic.Icon,
+                Picture = relic.Icon,
+                Count = one ? 0 : asleep.Count,
+                Title = one ? _localizer.Tr("{name} is asleep", ("name", _localizer.Tr(relic.Name)))
+                    : _localizer.Tr("{n} relics are asleep", ("n", _numbers.Exact(asleep.Count))),
+                Body = one
+                    ? _localizer.Tr("Its window has closed. Wake it in its Shrine for {n} Mana.", ("n", _numbers.Exact(_shrines.ActivationCost(relic.Id))))
+                    : _localizer.Tr("Their windows have closed. Wake each in its Shrine with Mana."),
+                Go = one ? () => Open<RelicSheetMenu>(relic.Id) : OpenBagOnRelics,
+            };
+        }
+
+        private async void OpenBagOnRelics()
+        {
+            _asleep.SeenAll();
+            await _ui.CloseAll();
+            _bag.OpenOn(Kingdom.Bag.BagTab.Relics);
+            _ = _ui.ShowMenu<BagMenu>();
+        }
+
         private async void Open<TMenu>(string id) where TMenu : IMenuView
         {
             await _ui.CloseAll();

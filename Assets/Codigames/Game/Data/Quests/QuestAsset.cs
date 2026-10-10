@@ -22,6 +22,7 @@ namespace Codigames.Game.Data.Quests
         [BoxGroup("Reward"), SerializeField, Tooltip("Gold, Food, Wood, Stone, Mana, Gems, Stardust.")] private List<Amount> _reward = new();
         [BoxGroup("Reward"), SerializeField, MinValue(0), SuffixLabel("Knowledge")] private double _rewardKnowledge;
         [BoxGroup("Reward"), SerializeField] private List<Amount> _rewardItems = new();
+        [BoxGroup("Reward"), SerializeField, MinValue(0), SuffixLabel("fragments"), Tooltip("Of relics already met.")] private int _rewardFragments;
 
         [BoxGroup("Pacing"), SerializeField, Tooltip("Claims itself the moment it is done.")] private bool _autoClaim;
         [BoxGroup("Pacing"), SerializeField, MinValue(0), SuffixLabel("s"), Tooltip("Tops the first house up with the Gold it asks, this long after it starts; 0 = never.")]
@@ -39,6 +40,7 @@ namespace Codigames.Game.Data.Quests
         public IReadOnlyDictionary<string, double> Reward => _rewardLookup ??= _reward.ToDictionary(a => a.Id, a => a.Value);
         public double RewardKnowledge => _rewardKnowledge;
         public IReadOnlyDictionary<string, double> RewardItems => _itemLookup ??= _rewardItems.ToDictionary(a => a.Id, a => a.Value);
+        public int RewardFragments => _rewardFragments;
         public bool AutoClaim => _autoClaim;
         public double TutorialRentSeconds => _tutorialRentSeconds;
 
