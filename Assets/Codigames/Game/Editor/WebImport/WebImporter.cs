@@ -422,6 +422,9 @@ namespace Codigames.Game.Editor.WebImport
             settings.FindProperty("_baseCap").doubleValue = mana.BaseCap;
             settings.FindProperty("_basePerHour").doubleValue = mana.BasePerHour;
             settings.FindProperty("_landmarkCap").doubleValue = mana.LandmarkCap;
+            var refills = settings.FindProperty("_gemRefillCosts");
+            refills.arraySize = mana.GemRefillCosts?.Count ?? 0;
+            for (var i = 0; i < refills.arraySize; i++) refills.GetArrayElementAtIndex(i).doubleValue = mana.GemRefillCosts[i];
             settings.ApplyModifiedPropertiesWithoutUndo();
 
             var currency = new SerializedObject(LoadOrCreate<CurrencyAsset>("Currencies", "Mana"));

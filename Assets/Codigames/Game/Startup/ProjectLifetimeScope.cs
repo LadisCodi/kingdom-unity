@@ -120,7 +120,7 @@ namespace Codigames.Game.Startup
             builder.RegisterInstance(_features).AsSelf().As<ICatalog<IFeatureDefinition>>();
             builder.RegisterInstance(_terrains).As<ITerrainYields>();
             builder.RegisterInstance(_tap).As<ITapSettings>();
-            builder.RegisterInstance(_mana).As<IManaSettings>();
+            builder.RegisterInstance(_mana).As<IManaSettings>().As<Kingdom.Store.IManaRefillPrice>();
             builder.RegisterInstance(_economy).As<IEconomySettings>().As<IWorkerSettings>().As<IBagSettings>().As<IRushSettings>().As<INoticeSettings>().As<IHarmonySettings>().As<IAdjacencyRules>().As<Kingdom.Army.IArmySettings>();
             builder.RegisterInstance(_training).As<ITrainingSettings>();
             builder.RegisterInstance(_fog).As<IFogSettings>().As<ISightSettings>();
