@@ -21,6 +21,17 @@ namespace Codigames.Game.City
         private const float APPEAR_SECONDS = 0.26f;
         private const float PUNCH_SECONDS = 0.32f;
         private const float SHAKE_SECONDS = 0.38f;
+        // The move arrows (the web's drawMoveArrows): one a way the ghost can step, bobbing outward.
+        private const float ARROW_CYCLE = 1.25f;
+        private static readonly Color ARROW = new Color32(0x4f, 0x9f, 0x33, 0xeb);
+        private static readonly Color ARROW_LIGHT = new Color32(0x8f, 0xd4, 0x66, 0xeb);
+        private static readonly Color ARROW_RIM = new Color32(0x2f, 0x6b, 0x1f, 0xff);
+        // Tail to tip in cells (along, across): a short shaft and a broad head.
+        private static readonly Vector2[] ARROW_SHAPE =
+        {
+            new(0f, -0.11f), new(0.26f, -0.11f), new(0.26f, -0.26f), new(0.55f, 0f), new(0.26f, 0.26f), new(0.26f, 0.11f), new(0f, 0.11f),
+        };
+        private static readonly int[] ARROW_TRIANGLES = { 0, 1, 5, 0, 5, 6, 2, 3, 4 };
 
         [SerializeField] private SpriteRenderer _art;
         [SerializeField] private MeshFilter _plot;
@@ -47,6 +58,32 @@ namespace Codigames.Game.City
         private bool _scaleIn;
         private bool _held;
         private bool _fresh = true;
+        private readonly Vector2Int[] _steps = new Vector2Int[4];
+        private int _stepCount;
+        private Vector3 _alongX;
+        private Vector3 _alongY;
+        private Vector2Int _size = Vector2Int.one;
+        private Arrow[] _arrows;
+
+        private sealed class Arrow
+        {
+            public Mesh Mesh;
+            public MeshRenderer Renderer;
+            public LineRenderer Rim;
+            public readonly Vector3[] Points = new Vector3[7];
+            public readonly Color[] Colours = new Color[7];
+        }
+
+        // The ways it can step, one grid axis each (none while it is carried): `alongX` and `alongY` are one cell
+        // along each axis on the ground, `size` its footprint.
+        public void SetSteps(System.Collections.Generic.IReadOnlyList<Vector2Int> steps, Vector3 alongX, Vector3 alongY, Vector2Int size)
+        {
+            _stepCount = Mathf.Min(steps.Count, _steps.Length);
+            for (var i = 0; i < _stepCount; i++) _steps[i] = steps[i];
+            _alongX = alongX;
+            _alongY = alongY;
+            _size = size;
+        }
 
         // How high it floats now, in plot widths: a building planted falls from here.
         public float Lift => _lift;
@@ -151,6 +188,73 @@ namespace Codigames.Game.City
             _plot.transform.position = _plotHome + offset;
             for (var i = 0; i < _corners.Length; i++) _drawn[i] = _corners[i] + offset;
             _outline.SetPositions(_drawn);
+            PoseArrows(t, offset);
+        }
+
+        private void PoseArrows(float t, Vector3 offset)
+        {
+            var count = _held ? 0 : _stepCount;
+            if (count > 0 && _arrows == null) BuildArrows();
+            if (_arrows == null) return;
+
+            var centre = _corners.Length == 4 ? (_corners[0] + _corners[2]) / 2f + offset : _at;
+            var bob = 0.5f - 0.5f * Mathf.Cos(t % ARROW_CYCLE / ARROW_CYCLE * Mathf.PI * 2f);
+            var tall = Mathf.Abs(_alongX.y) + Mathf.Abs(_alongY.y);
+            for (var i = 0; i < _arrows.Length; i++)
+            {
+                var arrow = _arrows[i];
+                var on = i < count;
+                arrow.Renderer.enabled = arrow.Rim.enabled = on;
+                if (!on) continue;
+
+                var d = _steps[i];
+                var v = _alongX * d.x + _alongY * d.y;
+                var across = d.x != 0 ? _alongY : _alongX;
+                var along = (d.x != 0 ? _size.x : _size.y) / 2f + 0.3f + bob * 0.12f;
+                for (var p = 0; p < ARROW_SHAPE.Length; p++)
+                {
+                    var point = centre + v * (along + ARROW_SHAPE[p].x) + across * ARROW_SHAPE[p].y;
+                    arrow.Points[p] = point;
+                    // Lit from above: light at the top of the cell's height, dark at its foot.
+                    var k = Mathf.InverseLerp(centre.y + tall * 0.3f, centre.y - tall * 0.3f, point.y);
+                    arrow.Colours[p] = Color.Lerp(ARROW_LIGHT, ARROW, k);
+                }
+
+                arrow.Mesh.vertices = arrow.Points;
+                arrow.Mesh.colors = arrow.Colours;
+                arrow.Mesh.RecalculateBounds();
+                arrow.Rim.SetPositions(arrow.Points);
+            }
+        }
+
+        private void BuildArrows()
+        {
+            _arrows = new Arrow[4];
+            var material = _plotRenderer.sharedMaterial;
+            for (var i = 0; i < _arrows.Length; i++)
+            {
+                var go = new GameObject("MoveArrow");
+                go.transform.SetParent(transform, false);
+                var mesh = new Mesh { name = "Move arrow", vertices = new Vector3[7], colors = new Color[7] };
+                mesh.triangles = ARROW_TRIANGLES;
+                go.AddComponent<MeshFilter>().sharedMesh = mesh;
+                var renderer = go.AddComponent<MeshRenderer>();
+                renderer.sharedMaterial = material;
+                renderer.sortingLayerID = _outline.sortingLayerID;
+                renderer.sortingOrder = _outline.sortingOrder + 1;
+                var rim = new GameObject("Rim").AddComponent<LineRenderer>();
+                rim.transform.SetParent(go.transform, false);
+                rim.sharedMaterial = _outline.sharedMaterial;
+                rim.useWorldSpace = true;
+                rim.loop = true;
+                rim.positionCount = 7;
+                rim.widthMultiplier = 0.025f;
+                rim.numCornerVertices = 2;
+                rim.startColor = rim.endColor = ARROW_RIM;
+                rim.sortingLayerID = _outline.sortingLayerID;
+                rim.sortingOrder = _outline.sortingOrder + 2;
+                _arrows[i] = new Arrow { Mesh = mesh, Renderer = renderer, Rim = rim };
+            }
         }
 
         // Overshoots a little past 1 and settles: a thing popping into place.
@@ -181,6 +285,8 @@ namespace Codigames.Game.City
 
         private void OnDestroy()
         {
+            if (_arrows != null)
+                foreach (var arrow in _arrows) Destroy(arrow.Mesh);
             if (_mesh != null) Destroy(_mesh);
         }
     }
