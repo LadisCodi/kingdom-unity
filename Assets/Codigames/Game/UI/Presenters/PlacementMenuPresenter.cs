@@ -105,6 +105,12 @@ namespace Codigames.Game.UI.Presenters
         // What is being placed, while the ghost is out: a building's id when it is built.
         public string PlacingId => IsShown && Data is { IsMove: false } ? Data.DefinitionId : null;
 
+        // Where the ghost stands now, while it is out.
+        public ModuleVector2Int? GhostAnchor => IsShown ? _anchor : null;
+
+        // The building being moved, by its district id; null while placing or moving a feature.
+        public string MovingDistrictId => IsShown && Data is { IsMove: true, MovesDistrict: true } ? Data.DistrictId : null;
+
         // What is moving: a building's id, or the feature's.
         public string MovingId => !IsShown || Data is not { IsMove: true } ? null : Data.MovesDistrict ? Data.DefinitionId : _feature;
 

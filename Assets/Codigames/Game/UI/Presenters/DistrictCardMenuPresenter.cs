@@ -165,6 +165,8 @@ namespace Codigames.Game.UI.Presenters
             view.SpeedUpTrainingTapped += OnSpeedUpTraining;
             view.MakeTapped += OnMake;
             view.RankPicked += OnRankPicked;
+            view.TavernHeroesTapped += OnTavernHeroes;
+            view.TavernCallTapped += OnTavernCall;
             view.ShrinePickTapped += OnShrinePick;
             view.ShrineActivateTapped += OnShrineActivate;
             view.ShrineFlaskTapped += OnShrineFlask;
@@ -189,6 +191,8 @@ namespace Codigames.Game.UI.Presenters
             view.SpeedUpTrainingTapped -= OnSpeedUpTraining;
             view.MakeTapped -= OnMake;
             view.RankPicked -= OnRankPicked;
+            view.TavernHeroesTapped -= OnTavernHeroes;
+            view.TavernCallTapped -= OnTavernCall;
             view.ShrinePickTapped -= OnShrinePick;
             view.ShrineActivateTapped -= OnShrineActivate;
             view.ShrineFlaskTapped -= OnShrineFlask;
@@ -537,6 +541,20 @@ namespace Codigames.Game.UI.Presenters
             Refresh();
         }
 
+        private async void OnTavernHeroes()
+        {
+            _sounds.Play(SoundIds.BUTTON_PRESS);
+            await _ui.HideMenu<DistrictCardMenu>();
+            _ = _ui.ShowMenu<HeroesMenu>();
+        }
+
+        // A call is the store's: its Heroes tab, over the card.
+        private void OnTavernCall()
+        {
+            _sounds.Play(SoundIds.BUTTON_PRESS);
+            _ = _ui.ShowMenu<StoreMenu, string>("heroes");
+        }
+
         // The chapel's painting opens the relic picker over the card.
         private void OnShrinePick()
         {
@@ -590,6 +608,14 @@ namespace Codigames.Game.UI.Presenters
                 SpeedUp = "<sprite name=\"hourglass\"> " + _localizer.Tr("Speed up"),
                 Crew = _crews.HasCrew(district) && district.Built ? Crew(district) : null,
             };
+            // The Tavern hosts the banner: its card is the way to the heroes and to a call.
+            if (district.Built && building.Production.HeroXpBonusPerLevel.Count > 0)
+            {
+                card.TavernHead = _localizer.Tr("Heroes");
+                card.TavernHeroes = "<sprite name=\"helmet\"> " + _localizer.Tr("Heroes");
+                card.TavernCall = "<sprite name=\"star\"> " + _localizer.Tr("Call");
+            }
+
             card.ShrineHead = _localizer.Tr("Relic");
             card.Shrine = district.Built && _shrines.IsShrine(district) ? _shrines.Panel(district, now) : null;
             card.WorkshopHead = _localizer.Tr("Workshop");

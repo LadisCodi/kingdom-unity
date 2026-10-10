@@ -5,6 +5,7 @@ using Codigames.Game.UI.Battles;
 using Codigames.Game.UI.Kit;
 using DG.Tweening;
 using TMPro;
+using Codigames.Game.UI.Stage;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -60,6 +61,10 @@ namespace Codigames.Game.UI.Menus
         private Rect _span;
         private float _scale = 1;
         private Vector2 _measured;
+
+
+        // The way out, kept clear of any tutorial line that points nowhere on this screen.
+        protected override void InitializeInternal() => CoachTarget.Tag(_exit, "battle-leave");
 
         public event Action SpeedTapped;
         public event Action SkipTapped;

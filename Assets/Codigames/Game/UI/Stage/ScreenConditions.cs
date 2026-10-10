@@ -19,6 +19,9 @@ namespace Codigames.Game.UI.Stage
             ["build"] = typeof(BuildMenu),
             ["research"] = typeof(ResearchMenu),
             ["knowledge"] = typeof(KnowledgeSheetMenu),
+            ["bag"] = typeof(BagMenu),
+            ["lair"] = typeof(AttackSheetMenu),
+            ["relicPicker"] = typeof(RelicPickerMenu),
         };
 
         private readonly UIManager _ui;
@@ -28,9 +31,16 @@ namespace Codigames.Game.UI.Stage
         private readonly UiTargets _targets;
         private readonly TapCount _taps;
 
+        private readonly RelicPickerMenuPresenter _relicPicker;
+        private readonly Kingdom.Tutorial.ReachSpots _reach;
+        private readonly Kingdom.City.Placement _rules;
+
         public ScreenConditions(UIManager ui, PlacementMenuPresenter placement, RuinCardMenuPresenter ruinCard, SitesState sites,
-            UiTargets targets, TapCount taps)
+            UiTargets targets, TapCount taps, RelicPickerMenuPresenter relicPicker, Kingdom.Tutorial.ReachSpots reach, Kingdom.City.Placement rules)
         {
+            _relicPicker = relicPicker;
+            _reach = reach;
+            _rules = rules;
             _ui = ui;
             _placement = placement;
             _ruinCard = ruinCard;
@@ -53,12 +63,24 @@ namespace Codigames.Game.UI.Stage
                 ConditionKind.Taps => _taps.Taps - tapsAtStart >= c.AtLeast(),
                 // A ruin's card open, or the ruin already repaired.
                 ConditionKind.SiteOpen => _sites.Repaired.Contains(c.Target) || _ruinCard.Shows(c.Target),
-                ConditionKind.GhostReaches or ConditionKind.WorldOpen => false,
+                ConditionKind.GhostReaches => GhostReaches(c),
+                ConditionKind.ReachCleared => (_reach.Best(c.Target, true)?.Works ?? 0) >= c.AtLeast(),
+                ConditionKind.RelicPicked => _relicPicker.IsShown && _relicPicker.Slot != null && (c.Target == string.Empty || _relicPicker.Slot == c.Target),
+                ConditionKind.WorldOpen => false,
                 _ => null,
             };
 
             holds = answer ?? false;
             return answer.HasValue;
+        }
+
+        // The ghost of the building stands where it may, and its crew would work that many cells there.
+        private bool GhostReaches(Condition c)
+        {
+            var id = _placement.PlacingId ?? (_placement.MovingDistrictId != null ? _placement.MovingId : null);
+            if (id != c.Target || _placement.GhostAnchor is not { } anchor) return false;
+            if (_rules.Check(id, anchor, _placement.MovingDistrictId) != Kingdom.City.PlacementProblem.None) return false;
+            return _reach.WorksAt(id, anchor, _placement.MovingDistrictId) >= c.AtLeast();
         }
     }
 }

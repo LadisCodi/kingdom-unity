@@ -86,7 +86,8 @@ namespace Codigames.Game.Startup
         {
             RegisterBalance(builder);
 
-            builder.Register<IClock, SystemClock>(Lifetime.Singleton);
+            // The system's clock, which a developer may push forward (Kingdom › Dev › Skip); untouched, it is the system's.
+            builder.Register(_ => new WarpClock(Dev.DevSwitches.Warp), Lifetime.Singleton).AsSelf().As<IClock>();
             builder.Register(_ =>
             {
                 var localizer = new Localizer("en-US");

@@ -90,9 +90,10 @@ namespace Codigames.Game.Session
             builder.Register(resolver => new Codigames.Kingdom.Lairs.Lairs(resolver.Resolve<KingdomState>().Lairs, resolver.Resolve<LairGround>(),
                 resolver.Resolve<ILairSettings>(), resolver.Resolve<CityState>(), resolver.Resolve<Stores>(), resolver.Resolve<Workforce>(),
                 resolver.Resolve<KingdomState>().Seed, resolver.Resolve<IBonuses>(), resolver.Resolve<Kingdom.Modifiers.IModifiers>()), Lifetime.Singleton);
-            // No Bag yet: a ruin missing a piece waits for it.
+            // A ruin missing a part takes it from the Bag.
             builder.Register(resolver => new Ruins(resolver.Resolve<SitesState>(), resolver.Resolve<SiteGround>(),
-                resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<Construction>(), resolver.Resolve<IRevealedGround>(), lairs: resolver.Resolve<ILairGround>()),
+                resolver.Resolve<ICatalog<IBuildingDefinition>>(), resolver.Resolve<Construction>(), resolver.Resolve<IRevealedGround>(),
+                resolver.Resolve<Codigames.Kingdom.Bag.Bag>(), resolver.Resolve<ILairGround>()),
                 Lifetime.Singleton);
             builder.Register(resolver => new Footprints(resolver.Resolve<IProvinceMap>(), resolver.Resolve<ICatalog<IFeatureDefinition>>(),
                 resolver.Resolve<SiteGround>().Blocks()), Lifetime.Singleton);
@@ -153,7 +154,7 @@ namespace Codigames.Game.Session
             builder.Register(resolver => new Kingdom.Doors.Doors(resolver.Resolve<KingdomState>().Tutorial, resolver.Resolve<QuestChain>(),
                 resolver.Resolve<ICatalog<IQuestDefinition>>(), resolver.Resolve<Researching>(), resolver.Resolve<CityState>(),
                 resolver.Resolve<KingdomState>().Sites, resolver.Resolve<IProvinceSites>(), resolver.Resolve<IConstructionSettings>(),
-                resolver.Resolve<BagState>()),
+                resolver.Resolve<BagState>(), resolver.Resolve<KingdomState>().Relics),
                 Lifetime.Singleton).AsSelf().As<Kingdom.Doors.IMorning>();
             builder.Register(resolver => new QuestChain(resolver.Resolve<KingdomState>().Quests, resolver.Resolve<ICatalog<IQuestDefinition>>(),
                 resolver.Resolve<IQuestGoals>(), resolver.Resolve<ITreasury>(), resolver.Resolve<CityState>(),

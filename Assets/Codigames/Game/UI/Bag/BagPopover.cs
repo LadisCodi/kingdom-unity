@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Codigames.Game.UI.Kit;
 using TMPro;
+using Codigames.Game.UI.Stage;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,6 +41,7 @@ namespace Codigames.Game.UI.Bag
 
         public void Show(BagPopoverData pop)
         {
+            CoachTarget.Tag(_action, "bag-use");
             _showing = true;
             _name.text = pop.Name;
             _line.text = pop.Line;
