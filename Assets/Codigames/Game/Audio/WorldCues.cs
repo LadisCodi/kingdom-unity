@@ -31,10 +31,15 @@ namespace Codigames.Game.Audio
         private readonly ProvinceMap _map;
         private readonly float[] _voices = new float[STRIKE_VOICES];
         private readonly Feedback.TapPunch _punch;
+        private readonly Feedback.BuildBurst _burst;
+        // A building finished bounces, softer than a tap and without its flash.
+        private const float FINISHED_PUNCH = 0.8f;
 
         public WorldCues(ISoundService sounds, Construction construction, VillagerTraining training, Workforce crews,
-            Kingdom.Harvest.Harvesting harvesting, ICameraRig camera, ProvinceMap map, Feedback.TapPunch punch)
+            Kingdom.Harvest.Harvesting harvesting, ICameraRig camera, ProvinceMap map, Feedback.TapPunch punch,
+            Feedback.BuildBurst burst = null)
         {
+            _burst = burst;
             _punch = punch;
             _sounds = sounds;
             _construction = construction;
@@ -59,7 +64,12 @@ namespace Codigames.Game.Audio
             _crews.Struck -= OnStruck;
         }
 
-        private void OnJobCompleted(ConstructionJob job, DistrictState district) => _sounds.Play(SoundIds.CONSTRUCTION_COMPLETE);
+        private void OnJobCompleted(ConstructionJob job, DistrictState district)
+        {
+            _sounds.Play(SoundIds.CONSTRUCTION_COMPLETE);
+            _punch.District(district.Id, FINISHED_PUNCH);
+            _burst?.At(district.Id);
+        }
 
         private void OnArrived() => _sounds.Play(SoundIds.VILLAGER_TRAINED);
 

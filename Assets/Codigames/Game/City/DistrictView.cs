@@ -27,6 +27,10 @@ namespace Codigames.Game.City
         [SerializeField] private StoreBubbleView _bubble;
         [SerializeField] private WorkingHammer _hammer;
 
+        // How wide its plot is, and the layer its art sorts in: what celebrates it is that size and in that layer.
+        public float PlotWidth => _plotWidth;
+        public int SortingLayerId => _art.sortingLayerID;
+
         // The drawing's box in the world: what stands over the roof sits on it.
         public Bounds ArtBounds => _art.bounds;
 

@@ -99,6 +99,7 @@ namespace Codigames.Game.Startup
             builder.RegisterEntryPoint<WorldCues>();
             builder.RegisterEntryPoint<TapPunch>().AsSelf();
             builder.RegisterEntryPoint<LandingFx>().AsSelf();
+            builder.Register<BuildBurst>(Lifetime.Singleton);
             builder.Register<RewardHold>(Lifetime.Singleton);
             builder.Register<RewardFlight>(Lifetime.Singleton);
             builder.Register<RewardFragments>(Lifetime.Singleton);
