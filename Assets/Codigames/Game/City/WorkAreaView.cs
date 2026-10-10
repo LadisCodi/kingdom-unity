@@ -166,12 +166,12 @@ namespace Codigames.Game.City
         // Each worked feature's drawing, filled white and nudged round it: its rim, behind it.
         private void Rims(IReadOnlyCollection<Vector2Int> worked)
         {
-            var features = _map.Features;
             var rim = _map.Grid.cellSize.x * RIM;
             var needed = 0;
             foreach (var cell in worked)
             {
                 var position = ProvinceCoordinates.ToTilemap(cell);
+                var features = _map.FeatureLayer(position);
                 var sprite = features.GetSprite(position);
                 if (sprite == null) continue;
                 var at = features.GetCellCenterWorld(position);

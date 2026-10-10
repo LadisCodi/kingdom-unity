@@ -26,12 +26,14 @@ namespace Codigames.Game.Data.Harvest
         [SerializeField] private List<TileBase> _exhaustedBlockTiles = new();
         [BoxGroup("Presentation"), Tooltip("Planted and coming up: each stage for an equal share of the wait; empty to draw it emptied.")]
         [SerializeField] private List<TileBase> _growingTiles = new();
+        [SerializeField, Tooltip("Whole or growing, it sways in the wind; emptied, it stands still.")] private bool _sways;
 
         public string Source => _source != null ? _source.Id : null;
         public string RespawnTerrain => _respawnTerrain;
         public int MaxFootprint => _maxFootprint;
         public string DisplayName => _displayName;
         public TileBase Tile => _tile;
+        public bool Sways => _sways;
 
         // What a block of this side is drawn with: the cell's own tile for one, else its block drawing.
         public TileBase TileFor(int size) => Pick(_tile, _blockTiles, size);

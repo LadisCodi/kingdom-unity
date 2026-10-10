@@ -57,8 +57,9 @@ namespace Codigames.Game.Feedback
                 var position = ProvinceCoordinates.ToTilemap(cell);
                 var elapsed = now - punch.Start;
                 var scale = Sample(elapsed, punch.Strength, out var done);
-                _map.Features.SetTileFlags(position, TileFlags.None);
-                _map.Features.SetTransformMatrix(position, Matrix4x4.Scale(new Vector3(scale.x, scale.y, 1f)));
+                var layer = _map.FeatureLayer(position);
+                layer.SetTileFlags(position, TileFlags.None);
+                layer.SetTransformMatrix(position, Matrix4x4.Scale(new Vector3(scale.x, scale.y, 1f)));
                 FlashTile(cell, position, scale, done ? 0f : Flash(elapsed, punch.Strength));
                 if (done) _doneCells.Add(cell);
             }
@@ -98,7 +99,8 @@ namespace Codigames.Game.Feedback
         // The tile's own drawing, added onto it in front of it, punched with it.
         private void FlashTile(ModuleVector2Int cell, Vector3Int position, Vector2 scale, float flash)
         {
-            var sprite = flash > 0.004f ? _map.Features.GetSprite(position) : null;
+            var layer = _map.FeatureLayer(position);
+            var sprite = flash > 0.004f ? layer.GetSprite(position) : null;
             if (_art == null || sprite == null)
             {
                 Release(_cellFlashes, cell);
@@ -106,7 +108,7 @@ namespace Codigames.Game.Feedback
             }
 
             var renderer = Rent(_cellFlashes, cell, _art.Flash);
-            var tint = _map.Features.GetColor(position);
+            var tint = layer.GetColor(position);
             renderer.sprite = sprite;
             renderer.color = new Color(tint.r, tint.g, tint.b, flash);
             renderer.transform.position = _map.Features.GetCellCenterWorld(position) + new Vector3(0f, -IN_FRONT, 0f);

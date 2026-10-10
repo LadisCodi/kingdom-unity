@@ -19,3 +19,7 @@ MonoBehaviour:
   _displayName: Berry bush
   _tile: {fileID: 11400000, guid: dfdaf89d52361e4c2b0931c64a20bd91, type: 2}
   _blockTiles: []
+  _exhaustedTile: {fileID: 0}
+  _exhaustedBlockTiles: []
+  _growingTiles: []
+  _sways: 1

@@ -13,6 +13,7 @@ namespace Codigames.Game.Map
         [SerializeField] private Grid _grid;
         [SerializeField] private Tilemap _terrain;
         [SerializeField] private Tilemap _features;
+        [SerializeField, Tooltip("What sways in the wind stands here instead (Kingdom/Sprite Sway).")] private Tilemap _swaying;
 
         private Dictionary<ModuleVector2Int, string> _terrainByCell;
         private Dictionary<ModuleVector2Int, string> _featureByCell;
@@ -20,6 +21,10 @@ namespace Codigames.Game.Map
         public Grid Grid => _grid;
         public Tilemap Terrain => _terrain;
         public Tilemap Features => _features;
+        public Tilemap Swaying => _swaying != null ? _swaying : _features;
+
+        // The layer a feature's drawing stands on at this tilemap cell: the swaying one when it holds it.
+        public Tilemap FeatureLayer(Vector3Int position) => _swaying != null && _swaying.HasTile(position) ? _swaying : _features;
 
         public IEnumerable<ModuleVector2Int> Cells => TerrainByCell.Keys;
 

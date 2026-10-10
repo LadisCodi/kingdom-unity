@@ -22,3 +22,4 @@ MonoBehaviour:
   _exhaustedTile: {fileID: 11400000, guid: 3e284eb3ed527d684857611625805ea5, type: 2}
   _exhaustedBlockTiles: []
   _growingTiles: []
+  _sways: 0
