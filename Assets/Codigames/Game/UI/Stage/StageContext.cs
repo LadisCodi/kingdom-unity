@@ -10,14 +10,17 @@ namespace Codigames.Game.UI.Stage
     {
         private readonly UIManager _ui;
         private readonly UnlockSplashPresenter _unlocks;
+        private readonly Codigames.Game.Store.PayerGate _payer;
 
-        public StageContext(UIManager ui, UnlockSplashPresenter unlocks)
+        public StageContext(UIManager ui, UnlockSplashPresenter unlocks, Codigames.Game.Store.PayerGate payer = null)
         {
             _ui = ui;
             _unlocks = unlocks;
+            _payer = payer;
         }
 
-        public bool HeldBack => _unlocks.IsPending;
+        // An unlock splash due, or the payer still to be asked.
+        public bool HeldBack => _unlocks.IsPending || (_payer != null && _payer.Due);
 
         public bool OnWorld => false;
 

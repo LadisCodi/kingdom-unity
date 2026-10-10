@@ -33,6 +33,14 @@ namespace Codigames.Game.UI.Menus
         [SerializeField] private TMP_Text _oddsText;
         [SerializeField] private List<BannerPanel> _banners = new();
 
+        [Header("Supplies and Gems")]
+        [SerializeField, Tooltip("A scrolling page each, filled from code.")] private ScrollRect _suppliesPage;
+        [SerializeField] private ScrollRect _gemsPage;
+        [SerializeField] private StoreRibbon _ribbonPrefab;
+        [SerializeField] private StoreCard _cardPrefab;
+        [SerializeField] private StoreWide _widePrefab;
+        [SerializeField, Tooltip("A row of cards: two across, or three for the Gem packs.")] private GridLayoutGroup _gridPrefab;
+
         private readonly List<Sprite> _bag = new();
         private IReadOnlyList<Sprite> _heroes = Array.Empty<Sprite>();
         private Sprite _showing;
@@ -43,6 +51,10 @@ namespace Codigames.Game.UI.Menus
         public event Action<int> TabTapped;
         public event Action<int> OneTapped;
         public event Action<int> TenTapped;
+        // A product's card pressed: its id.
+        public event Action<string> ProductTapped;
+        // A wide row pressed: its id (fragments, builder, heroSlot).
+        public event Action<string> RowTapped;
 
         protected override void InitializeInternal()
         {
@@ -82,15 +94,14 @@ namespace Codigames.Game.UI.Menus
         // The Heroes tab, or what opens it.
         public void ShowLocked(string reason)
         {
-            _heroesPage.SetActive(false);
+            ShowPage(null);
             _locked.SetActive(true);
             _lockedText.text = "<sprite name=\"padlock\"> " + reason;
         }
 
         public void ShowHeroes(string title, string odds, string oddsText, IReadOnlyList<BannerPanelData> banners)
         {
-            _locked.SetActive(false);
-            _heroesPage.SetActive(true);
+            ShowPage(_heroesPage);
             _title.text = title;
             _oddsLabel.text = odds;
             _oddsText.text = oddsText;
@@ -110,6 +121,62 @@ namespace Codigames.Game.UI.Menus
         }
 
         public void HideOdds() => _oddsTip.SetActive(false);
+
+        // ---- Supplies and Gems: shelves of ribbons, card grids and wide rows, rebuilt only when what they show moves
+
+        private string _shown;
+
+        public void ShowShelves(bool gems, IReadOnlyList<StoreShelf> shelves, string signature)
+        {
+            var page = gems ? _gemsPage : _suppliesPage;
+            ShowPage(page.gameObject);
+            var key = (gems ? "g:" : "s:") + signature;
+            if (_shown == key) return;
+            var fresh = _shown == null || _shown[0] != key[0];
+            _shown = key;
+            var content = page.content;
+            for (var i = content.childCount - 1; i >= 0; i--) Destroy(content.GetChild(i).gameObject);
+            foreach (var shelf in shelves)
+            {
+                if (!string.IsNullOrEmpty(shelf.Ribbon)) Instantiate(_ribbonPrefab, content).Show(shelf.Ribbon);
+                if (shelf.Cards.Count > 0)
+                {
+                    var grid = Instantiate(_gridPrefab, content);
+                    grid.constraintCount = shelf.Columns;
+                    var width = ((RectTransform)content).rect.width;
+                    if (width <= 0) width = ((RectTransform)page.transform).rect.width;
+                    var cell = (width - grid.padding.horizontal - grid.spacing.x * (shelf.Columns - 1)) / shelf.Columns;
+                    grid.cellSize = new Vector2(cell, shelf.CardHeight);
+                    foreach (var card in shelf.Cards)
+                    {
+                        var view = Instantiate(_cardPrefab, grid.transform);
+                        view.Show(card.Data);
+                        var id = card.Id;
+                        view.Tapped += () => ProductTapped?.Invoke(id);
+                    }
+                }
+
+                foreach (var row in shelf.Rows)
+                {
+                    var view = Instantiate(_widePrefab, content);
+                    view.Show(row.Data);
+                    var id = row.Id;
+                    view.Tapped += () => RowTapped?.Invoke(id);
+                }
+            }
+
+            WireClicks(content.gameObject);
+            if (fresh) page.verticalNormalizedPosition = 1f;
+        }
+
+        private void ShowPage(GameObject page)
+        {
+            _locked.SetActive(false);
+            _heroesPage.SetActive(page == _heroesPage);
+            _suppliesPage.gameObject.SetActive(page == _suppliesPage.gameObject);
+            _gemsPage.gameObject.SetActive(page == _gemsPage.gameObject);
+            if (page == _heroesPage) _shown = null;
+        }
 
         protected override void PostShowInternal()
         {
